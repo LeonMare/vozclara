@@ -1,0 +1,311 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Brand foundation ──────────────────────────────────────────────────
+   Colours and typography taken verbatim from Brand Foundation v5,
+   Kapitel 16. The design adds editorial polish (gradients, micro
+   animations) without leaving the brand. */
+
+:root {
+  color-scheme: light;
+  --tap-highlight: rgba(201, 162, 75, 0.15);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #f7f3ec; /* CREME */
+  color: #1a1a1a;             /* GRAPHIT */
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-tap-highlight-color: var(--tap-highlight);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Wordmark — Brand Foundation cover page treatment: wide-tracked
+   inscriptional capitals on creme. Cinzel (the open-source Trajan-clone)
+   is closer to the original brand setting than Cormorant Garamond is,
+   because the brand foundation uses Roman capital proportions that
+   Cormorant — as a quattrocento book serif — does not have.
+   Tracking tightens on small screens so the wordmark never wraps. */
+.wordmark {
+  font-family: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: #0a1a3a;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .wordmark {
+    letter-spacing: 0.28em;
+  }
+}
+
+/* Brand mark — the lion+wave monogram SVG. Recoloured via currentColor
+   so we can use it on creme (navy fill), navy (gold fill), or anywhere. */
+.brand-monogram {
+  display: inline-block;
+  color: #0a1a3a;
+}
+.brand-monogram--gold {
+  color: #c9a24b;
+}
+.brand-monogram--creme {
+  color: #f7f3ec;
+}
+
+/* Gold rule under section titles, matching the page-layout of the
+   Brand Foundation document. */
+.gold-rule::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background-color: #c9a24b;
+  margin-top: 0.5rem;
+}
+
+/* Subtitle overlay readability. */
+.subtitle-shadow {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.85),
+    0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Disable iOS double-tap zoom on tappable controls without disabling
+   pinch on the whole page. */
+button,
+.tap-target {
+  touch-action: manipulation;
+}
+
+/* ─── Entrance animations ──────────────────────────────────────────────
+   Used on landing-page sections. Brand Foundation says
+   "Substanz vor Inszenierung" (Kap. 17) — animations are quiet, no
+   slide-from-the-side, no bounce, just opacity + slight translate. */
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-in {
+  animation: fade-in 900ms ease-out both;
+}
+.delay-150 { animation-delay: 150ms; }
+
+/* Scroll-fade — cards reveal as they enter the viewport. Cheap
+   IntersectionObserver-less implementation: each card starts with
+   opacity-0 + translate-y-2, then animation runs on first paint with
+   a stagger delay set inline. */
+.scroll-fade {
+  animation: fade-in-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 80ms;
+}
+
+/* Draw-rule — the gold horizontal rule under section titles draws
+   itself from 0 to its full width on first paint. Subtle "wow" that
+   still feels editorial, not Tech-SaaS. */
+@keyframes draw-rule {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.draw-rule {
+  transform-origin: left center;
+  animation: draw-rule 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 350ms;
+}
+
+/* Word-stagger — wraps each word of a headline in its own span and
+   fades them in 60ms apart. Used on the hero only — overusing it
+   reads as Tech rather than editorial. */
+@keyframes word-fade-in {
+  from { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.word-stagger > span {
+  display: inline-block;
+  animation: word-fade-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* Each word inherits its own --i custom property, which the JSX
+     sets inline to its word index. */
+  animation-delay: calc(var(--i, 0) * 90ms);
+  white-space: pre;
+}
+
+/* Card hover — gold-tinted lift for landing-page sections. */
+.card-hover {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 300ms ease,
+              border-color 300ms ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 2px rgba(10, 26, 58, 0.06),
+    0 8px 24px rgba(201, 162, 75, 0.18);
+  border-color: rgba(201, 162, 75, 0.6);
+}
+
+/* Slow glow — used on the hero's lion ornament for an ambient,
+   "lighthouse" feel. Very subtle. */
+@keyframes slow-glow {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+.slow-glow {
+  animation: slow-glow 4.5s ease-in-out infinite;
+}
+
+/* ─── High-end editorial polish ───────────────────────────────────────
+
+   Six layers that ladder the brand from "tasteful" to "premium-publication"
+   without ever crossing into Tech-SaaS territory:
+
+     1. Paper-grain — subtle SVG noise overlay on creme backgrounds.
+        Echoes the matte stock of an auction catalogue.
+     2. § section ciphers — paragraph-mark prefix on landing sections.
+     3. Editorial-italic loading states (used by GenerationProgress).
+     4. Tipped-in plate effect — drop-shadow + slight tilt on showpieces.
+     5. Slower hero drama — replaces the 700 ms entrance with 1.2 s
+        cubic-bezier(0.16, 1, 0.3, 1).
+     6. Gold-corner ornaments — four thin gold strokes on each corner
+        of a card, evoking framed plates. */
+
+/* (1) Paper grain — SVG-based fractal noise scaled tiny. The url-encoded
+   data URL avoids an extra HTTP request. Layered via ::before so any
+   container can opt in with class="paper". */
+.paper {
+  position: relative;
+}
+.paper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.1 0 0 0 0 0.23 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+.paper > * {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .paper::before { display: none; }
+}
+
+/* (2) Section cipher — §-symbol prefix in Cormorant italic gold. */
+.section-cipher {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: #c9a24b;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  margin-right: 0.5em;
+}
+
+/* (3) Editorial-italic phrase choreography. Used by the loading state:
+   four lines cross-fade with 1.2 s per phrase. Caller sets aria-live. */
+@keyframes phrase-fade {
+  0%, 90%  { opacity: 0; transform: translateY(4px); filter: blur(2px); }
+  10%, 80% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.phrase {
+  animation: phrase-fade 4.8s ease-in-out infinite;
+  animation-fill-mode: both;
+}
+
+/* (4) Tipped-in plate effect — for hero MockInterface and KnowledgePackPreview.
+   Subtle perspective + drop shadow create a "page-in-page" depth without
+   ever using gradients or glassmorphism. */
+.tipped-plate {
+  transform: perspective(1400px) rotateY(-2.5deg) rotateX(0.5deg);
+  transform-origin: center center;
+  box-shadow:
+    0 2px 4px rgba(10, 26, 58, 0.04),
+    0 12px 28px rgba(10, 26, 58, 0.10),
+    0 40px 80px rgba(10, 26, 58, 0.06);
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tipped-plate:hover {
+  transform: perspective(1400px) rotateY(-1deg) rotateX(0.2deg) translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tipped-plate { transform: none; }
+}
+
+/* (5) Slower hero entrance — replaces the default 700 ms with 1.2 s
+   on hero-only elements. Applied via .hero-* utility classes. */
+.hero-rise {
+  animation: fade-in-up 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-rise-slow {
+  animation: fade-in-up 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* (6) Gold-corner ornaments — for cards meant to read as "framed plates".
+   Pure CSS, four 8 px L-shaped marks anchored at the corners. */
+.gold-corners {
+  position: relative;
+}
+.gold-corners::before,
+.gold-corners::after,
+.gold-corners > .corner-tr,
+.gold-corners > .corner-bl {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: #c9a24b;
+  border-style: solid;
+  border-width: 0;
+}
+.gold-corners::before {
+  top: -1px; left: -1px;
+  border-top-width: 1px; border-left-width: 1px;
+}
+.gold-corners::after {
+  bottom: -1px; right: -1px;
+  border-bottom-width: 1px; border-right-width: 1px;
+}
+.gold-corners > .corner-tr {
+  top: -1px; right: -1px;
+  border-top-width: 1px; border-right-width: 1px;
+}
+.gold-corners > .corner-bl {
+  bottom: -1px; left: -1px;
+  border-bottom-width: 1px; border-left-width: 1px;
+}
+
+/* Respect reduced-motion users — animations collapse to nothing. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .scroll-fade {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
