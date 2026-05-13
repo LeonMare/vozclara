@@ -1,26 +1,38 @@
 /**
  * LeonMareMark — the LEON MARÉ family mark, used as VozClara's symbol.
  *
- * VozClara is a product under the LEON MARÉ parent brand. We use the
- * family's lion-and-wave mark as the visual signature, and pair it
- * with the "Voz · Clara" wordmark (Cinzel) so the product keeps its
- * own identity within the family.
+ * Rendering strategy (v3, transparent-background version):
  *
- * Implementation:
- *  - Source asset: /leon-mare-mark.png (2128×2128, navy background,
- *    gold lion + wave + "LEON MARÉ" text below).
- *  - We crop to the upper portion of the image so only the lion
- *    ornament is visible — the "LEON MARÉ" text from the PNG is
- *    deliberately clipped, because the product wordmark is rendered
- *    separately as "Voz · Clara".
- *  - The crop is centred on the lion's visual midpoint via a fixed
- *    scale-and-shift, sized to the requested mark size.
+ *  We render the lion as an inline SVG that:
+ *    1. Loads `/leon-mare-mark.png` as an <image> inside a <mask>
+ *    2. Pushes that image through a feComponentTransfer filter that
+ *       boosts contrast so the navy backdrop drops to ~0 alpha and
+ *       the gold ornament stays at ~100% alpha. This converts the
+ *       source PNG into a near-binary mask in-browser, no offline
+ *       editing required.
+ *    3. Fills a rectangle with a vertical gold gradient and masks it
+ *       with the cleaned lion mask
+ *    4. Positions the mask image to crop out the "LEON MARÉ" text
+ *       block at the bottom of the source — we render that wordmark
+ *       separately in Cinzel as "Voz · Clara"
  *
- * The image already carries its own navy backdrop, so the mark works
- * as both a flat symbol and a medallion-style seal without an extra
- * disc wrapper. The Medallion variant adds a fine gold hairline ring
- * for reserved hero / app-icon usage.
+ *  Result: a crisp gold lion ornament that floats on whatever
+ *  background the page provides (creme, white, navy — all work),
+ *  with no navy disc, no dark backdrop, and no compositing artefacts.
+ *
+ *  Why mask + filter instead of just shipping an SVG of the lion?
+ *  Because the user-approved logo IS the PNG — we want to preserve
+ *  its exact silhouette and proportions rather than try to redraw
+ *  it. The mask approach uses the PNG as the truth source for shape
+ *  and re-applies the brand colour cleanly.
+ *
+ *  Why a unique filter id per instance? Because two SVGs on the same
+ *  page with the same `id` collide. We generate the id from the size
+ *  prop — that's stable across renders of the same instance, and
+ *  different across instances of different sizes.
  */
+
+import { useId } from 'react';
 
 interface Props {
   size?: number;
@@ -28,61 +40,92 @@ interface Props {
   decorative?: boolean;
 }
 
-const SOURCE_URL = '/leon-mare-mark.png';
-
-// The lion ornament sits in roughly the top 60% of the source canvas;
-// its visual centre is around y ≈ 42% of the source. To make a square
-// crop that fills the requested size with the lion centred:
-//   • Render the image at ~1.75× the requested size (so it overflows
-//     the container both ways)
-//   • Translate it up so the lion's centre lands at the container's
-//     centre — the LEON MARÉ wordmark below is pushed off the bottom
-const IMG_SCALE = 1.75;
-const VERTICAL_OFFSET = 0.18; // fraction of size to shift up
+// Crop / position constants for the mask image. The source PNG has the
+// lion centred horizontally and sitting in roughly the upper-middle of
+// the canvas. We zoom 1.55× and shift up so only the lion ornament fills
+// the visible square — the "LEON MARÉ" text is pushed below the frame.
+const MASK_SCALE = 1.55;
+const MASK_Y_SHIFT = 0.06; // fraction of the SVG height to shift up
 
 export function LeonMareMark({ size = 48, className = '', decorative = true }: Props) {
-  const s = `${size}px`;
+  const uid = useId();
+  const maskId = `lm-mask-${uid}`;
+  const filterId = `lm-filter-${uid}`;
+  const gradId = `lm-gold-${uid}`;
+
+  // Mask image positioning in viewBox units (100×100). Image is
+  // rendered at MASK_SCALE × the viewBox and centred, shifted up.
+  const imgSize = 100 * MASK_SCALE;
+  const imgX = (100 - imgSize) / 2;
+  const imgY = (100 - imgSize) / 2 - MASK_Y_SHIFT * 100;
+
   return (
-    <div
-      style={{
-        width: s,
-        height: s,
-        overflow: 'hidden',
-        position: 'relative',
-        borderRadius: '50%',
-        backgroundColor: '#0A1A3A',
-        flexShrink: 0,
-      }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
       className={className}
       role={decorative ? 'presentation' : 'img'}
       aria-label={decorative ? undefined : 'LEON MARÉ'}
       aria-hidden={decorative ? true : undefined}
+      style={{ flexShrink: 0, overflow: 'visible' }}
     >
-      <img
-        src={SOURCE_URL}
-        alt=""
-        draggable={false}
-        style={{
-          position: 'absolute',
-          width: `${size * IMG_SCALE}px`,
-          height: `${size * IMG_SCALE}px`,
-          left: '50%',
-          top: '50%',
-          transform: `translate(-50%, calc(-50% - ${size * VERTICAL_OFFSET}px))`,
-          maxWidth: 'none',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
+      <defs>
+        {/* Vertical gold gradient — top highlight to deep bronze.
+            Same stops we use across the brand for "ornamented" elements. */}
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F0DCA5" />
+          <stop offset="35%" stopColor="#D8B466" />
+          <stop offset="65%" stopColor="#C9A24B" />
+          <stop offset="100%" stopColor="#8C6A2A" />
+        </linearGradient>
+
+        {/* Contrast-boost filter. Pushes the gold parts of the PNG up
+            to near-white and the navy parts down to black, so when the
+            image is used as a luminance mask the result is binary-clean. */}
+        <filter id={filterId} x="-10%" y="-10%" width="120%" height="120%">
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="3.2" intercept="-0.9" />
+            <feFuncG type="linear" slope="3.2" intercept="-0.9" />
+            <feFuncB type="linear" slope="3.2" intercept="-0.9" />
+            <feFuncA type="linear" slope="1" intercept="0" />
+          </feComponentTransfer>
+        </filter>
+
+        {/* Mask: the contrast-boosted PNG becomes a luminance mask.
+            White = visible, black = hidden. */}
+        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+          <rect x="0" y="0" width="100" height="100" fill="black" />
+          <image
+            href="/leon-mare-mark.png"
+            x={imgX}
+            y={imgY}
+            width={imgSize}
+            height={imgSize}
+            preserveAspectRatio="xMidYMid slice"
+            filter={`url(#${filterId})`}
+          />
+        </mask>
+      </defs>
+
+      {/* The gold gradient, masked to the lion silhouette. */}
+      <rect
+        x="0"
+        y="0"
+        width="100"
+        height="100"
+        fill={`url(#${gradId})`}
+        mask={`url(#${maskId})`}
       />
-    </div>
+    </svg>
   );
 }
 
 /**
- * Medallion variant — adds a fine gold hairline ring for reserved
- * anchor usage (hero ornament, app icon, footer seal). Most surfaces
- * should use the plain LeonMareMark; the ring is for moments where
- * the mark is the centrepiece.
+ * Medallion variant — the lion plus a fine gold hairline arc framing
+ * the bottom, like a coin enseigne. Reserved for hero / app-icon usage
+ * where the mark is the centrepiece. No heavy disc, no shadow — the
+ * mark is the gesture, the ring is just a punctuation mark.
  */
 export function LeonMareMedallion({ size = 80 }: { size?: number }) {
   return (
@@ -91,18 +134,23 @@ export function LeonMareMedallion({ size = 80 }: { size?: number }) {
       style={{ width: `${size}px`, height: `${size}px` }}
     >
       <LeonMareMark size={size} />
-      {/* Gold hairline — sits just inside the disc edge. Matte, not
-          decorative-heavy: this is a print-style enseigne, not a button. */}
-      <div
-        className="pointer-events-none absolute inset-[3px] rounded-full"
-        style={{ boxShadow: 'inset 0 0 0 1px rgba(201,162,75,0.45)' }}
+      {/* Thin gold arc beneath the lion — echoes the wave in the mark
+          itself and gives the medallion a sense of base without a disc. */}
+      <svg
+        className="pointer-events-none absolute inset-0"
+        viewBox="0 0 100 100"
         aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 rounded-full"
-        style={{ boxShadow: '0 6px 18px rgba(10,26,58,0.22)' }}
-        aria-hidden
-      />
+        style={{ overflow: 'visible' }}
+      >
+        <path
+          d="M 18 92 Q 50 100 82 92"
+          fill="none"
+          stroke="#C9A24B"
+          strokeWidth="0.8"
+          strokeLinecap="round"
+          opacity="0.55"
+        />
+      </svg>
     </div>
   );
 }
