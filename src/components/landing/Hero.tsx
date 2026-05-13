@@ -21,7 +21,7 @@ import { LeonMareMedallion } from '../LeonMareMark';
  *   • Live Pack preview on the right (HeroPackPreview)
  */
 export function Hero() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -55,12 +55,12 @@ export function Hero() {
 
       {/* Tighter vertical rhythm — was py-14 / sm:py-24 / lg:py-28. */}
       <div className="relative mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-14 lg:py-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+        <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* Left — copy */}
           <div>
-            <div className="animate-fade-in flex items-center gap-3">
-              <LeonMareMedallion size={64} />
-              <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+            <div className="animate-fade-in">
+              <LeonMareMedallion size={88} />
+              <div className="mt-4 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
                 {t.heroEyebrow}
               </div>
             </div>
@@ -115,7 +115,7 @@ export function Hero() {
               </div>
               {/* Trust note — immediately under the input, never far from the CTA. */}
               <p className="mt-2.5 font-sans text-[12px] text-graphit/55">
-                {trustNote(t)}
+                {trustNote(locale)}
               </p>
               {error && (
                 <p role="alert" className="mt-2 font-sans text-sm text-red-700">{error}</p>
@@ -152,18 +152,13 @@ export function Hero() {
   );
 }
 
-// "Free to try. No credit card." — localised. Lives under the paste input
-// so the trust signal arrives at the moment of hesitation, not buried in
-// a footer.
-function trustNote(t: { footerTagline: string }): string {
-  // The string isn't yet in the i18n table; derive from locale at call site
-  // via a small switch — t is the active dictionary so we can lean on a
-  // signal field. Cheaper than wiring four new strings through i18n right
-  // now; can be promoted to a real i18n key in iteration 2.
-  void t;
-  const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
-  if (lang.startsWith('es')) return 'Gratis para probar. Sin tarjeta de crédito.';
-  if (lang.startsWith('pt')) return 'Grátis para experimentar. Sem cartão de crédito.';
-  if (lang.startsWith('de')) return 'Kostenlos testen. Keine Kreditkarte.';
+// "Free to try. No credit card." — localised under the paste input so the
+// trust signal arrives at the moment of hesitation. Takes locale from
+// useLocale's reactive state, never from DOM (DOM reads are not React-
+// reactive and caused mixed-language UI when the user switched picker).
+function trustNote(locale: string): string {
+  if (locale.startsWith('es')) return 'Gratis para probar. Sin tarjeta de crédito.';
+  if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem cartão de crédito.';
+  if (locale.startsWith('de')) return 'Kostenlos testen. Keine Kreditkarte.';
   return 'Free to try. No credit card.';
 }

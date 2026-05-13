@@ -41,11 +41,13 @@ interface Props {
 }
 
 // Crop / position constants for the mask image. The source PNG has the
-// lion centred horizontally and sitting in roughly the upper-middle of
-// the canvas. We zoom 1.55× and shift up so only the lion ornament fills
-// the visible square — the "LEON MARÉ" text is pushed below the frame.
-const MASK_SCALE = 1.55;
-const MASK_Y_SHIFT = 0.06; // fraction of the SVG height to shift up
+// lion ornament occupying roughly the centre 35% of a 2128×2128 canvas
+// (about y=600..1200 of 2128). The "LEON MARÉ" wordmark below sits
+// around y=1450..1700. To show only the lion ornament we zoom 2.4× and
+// shift up so the lion's visual centre lands in the middle of the
+// container and the wordmark falls off the bottom edge.
+const MASK_SCALE = 2.4;
+const MASK_Y_SHIFT = 0.16; // fraction of the SVG height to shift up
 
 export function LeonMareMark({ size = 48, className = '', decorative = true }: Props) {
   const uid = useId();

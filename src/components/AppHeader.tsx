@@ -21,7 +21,7 @@ import { BrandMark } from './BrandMark';
  * brand mark stays prominent.
  */
 export function AppHeader() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const location = useLocation();
   const isLanding = location.pathname === '/';
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,10 +37,10 @@ export function AppHeader() {
         <nav className="hidden items-center gap-5 font-sans text-sm text-graphit/65 md:flex">
           {isLanding ? (
             <>
-              <AnchorLink href="#how">{landingNav(t, 'how')}</AnchorLink>
-              <AnchorLink href="#pricing">{landingNav(t, 'pricing')}</AnchorLink>
+              <AnchorLink href="#how">{landingNav(locale, 'how')}</AnchorLink>
+              <AnchorLink href="#pricing">{landingNav(locale, 'pricing')}</AnchorLink>
               <Link to="/pack/sample" className="transition hover:text-navy">
-                {landingNav(t, 'sample')}
+                {landingNav(locale, 'sample')}
               </Link>
               <HeaderLink to="/library">{t.navLibrary}</HeaderLink>
             </>
@@ -107,13 +107,13 @@ export function AppHeader() {
             {isLanding && (
               <>
                 <a href="#how" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
-                  {landingNav(t, 'how')}
+                  {landingNav(locale, 'how')}
                 </a>
                 <a href="#pricing" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
-                  {landingNav(t, 'pricing')}
+                  {landingNav(locale, 'pricing')}
                 </a>
                 <Link to="/pack/sample" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
-                  {landingNav(t, 'sample')}
+                  {landingNav(locale, 'sample')}
                 </Link>
               </>
             )}
@@ -161,16 +161,17 @@ function AnchorLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-// Local labels for the landing-only nav items. Promoted to the i18n table
-// would be cleaner; for now this keeps the change scoped.
-function landingNav(_t: unknown, key: 'how' | 'pricing' | 'sample'): string {
-  const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
-  const dict = {
+// Local labels for the landing-only nav items. Receives the active
+// locale from useLocale() so React-driven re-renders pick up the
+// right language — reading document.documentElement.lang is not
+// reactive and led to a mixed-language header (Spanish links next
+// to German links) when the user switched in the picker.
+function landingNav(locale: string, key: 'how' | 'pricing' | 'sample'): string {
+  const dict: Record<string, Record<typeof key, string>> = {
     es: { how: 'Cómo funciona', pricing: 'Planes', sample: 'Ejemplo' },
     pt: { how: 'Como funciona', pricing: 'Planos', sample: 'Exemplo' },
     de: { how: 'So funktioniert es', pricing: 'Preise', sample: 'Beispiel' },
     en: { how: 'How it works', pricing: 'Pricing', sample: 'Sample' },
-  } as const;
-  const code = (['es', 'pt', 'de', 'en'].includes(lang) ? lang : 'es') as keyof typeof dict;
-  return dict[code][key];
+  };
+  return dict[locale]?.[key] ?? dict.es[key];
 }

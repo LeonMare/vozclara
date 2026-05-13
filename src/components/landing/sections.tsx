@@ -204,8 +204,8 @@ export function LanguageSection() {
 /* ─── 09 · Pricing ─────────────────────────────────────────────────────── */
 
 export function PricingPreview() {
-  const { t } = useLocale();
-  const ctaLabels = pricingCtaLabels();
+  const { t, locale } = useLocale();
+  const ctaLabels = pricingCtaLabels(locale);
 
   return (
     <section id="pricing" className="bg-white/70 py-16 sm:py-24">
@@ -295,8 +295,8 @@ export function PricingPreview() {
   );
 }
 
-function pricingCtaLabels() {
-  const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
+function pricingCtaLabels(locale: string) {
+  const lang = locale;
   if (lang.startsWith('es')) {
     return {
       startFree: 'Empezar gratis',
@@ -346,8 +346,9 @@ function pricingCtaLabels() {
  *  • they remain in control
  */
 export function TrustSection() {
-  const promises = trustPromises();
-  const heading = trustHeading();
+  const { locale } = useLocale();
+  const promises = trustPromises(locale);
+  const heading = trustHeading(locale);
 
   return (
     <section className="border-t border-navy/10 bg-creme paper py-16 sm:py-20">
@@ -379,8 +380,8 @@ export function TrustSection() {
   );
 }
 
-function trustHeading(): { title: string; sub: string } {
-  const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
+function trustHeading(locale: string): { title: string; sub: string } {
+  const lang = locale;
   if (lang.startsWith('es')) return {
     title: 'Tu biblioteca, bajo tu control.',
     sub: 'VozClara no es una red social. No es un feed público. Es tu archivo privado de conocimiento — y se queda así.',
@@ -399,8 +400,8 @@ function trustHeading(): { title: string; sub: string } {
   };
 }
 
-function trustPromises(): { title: string; body: string }[] {
-  const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
+function trustPromises(locale: string): { title: string; body: string }[] {
+  const lang = locale;
   if (lang.startsWith('es')) return [
     { title: 'Biblioteca privada', body: 'Tus packs viven en tu dispositivo. No los vemos, no los indexamos, no los compartimos.' },
     { title: 'La fuente queda visible', body: 'Cada pack enlaza al vídeo original. La atribución nunca se pierde.' },
