@@ -1,7 +1,11 @@
 # VozClara
 
-Internal LEON MARÉ tool. German YouTube videos with Spanish subtitles and
-optional Spanish voice. Mobile-first, installable on iOS and Android.
+A LEON MARÉ product. Multilingual knowledge cloud for YouTube videos:
+paste a link, get a structured Knowledge Pack — summary, key ideas,
+chapters, vocabulary, quiz, quotes — in your language. Save it to your
+private library. Mobile-first, installable on iOS and Android.
+
+Deployed at https://vozclara.pages.dev.
 
 > *Klassisch in der Haltung, modern im Werkzeug.*
 
