@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { extractVideoId } from '../../lib/youtube';
 import { useLocale } from '../../lib/i18n';
 import { HeroPackPreview } from './HeroPackPreview';
-import { VozClaraMedallion } from '../VozClaraMark';
+import { LeonMareMedallion } from '../LeonMareMark';
 
 /**
  * Hero — the entry point. Tightened above-the-fold so the headline,
@@ -59,7 +59,7 @@ export function Hero() {
           {/* Left — copy */}
           <div>
             <div className="animate-fade-in flex items-center gap-3">
-              <VozClaraMedallion size={56} />
+              <LeonMareMedallion size={64} />
               <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
                 {t.heroEyebrow}
               </div>

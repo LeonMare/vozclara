@@ -1,20 +1,20 @@
-import { VozClaraMark } from './VozClaraMark';
+import { LeonMareMark } from './LeonMareMark';
 
 /**
- * BrandMark — the VozClara product identity in three variants:
+ * BrandMark — official VozClara identity (a LEON MARÉ product).
  *
- *   monogram  — V monogram only. Used in compact spaces.
- *   lockup    — monogram + VozClara wordmark side by side.
- *   stacked   — monogram above wordmark, centered. Ornaments.
+ * Three variants:
  *
- * The monogram is the editorial serif "V" with gold sound-wave arcs,
- * rendered as inline SVG so it stays crisp at any size. The wordmark
- * is Cinzel (Latin caps) to inherit the LEON MARÉ Brand Foundation
- * typography while remaining its own product mark.
+ *   monogram  — LEON MARÉ lion mark only, no wordmark. Compact spaces.
+ *   lockup    — mark + "Voz · Clara" wordmark side by side.
+ *   stacked   — mark above wordmark, centered. Ornaments.
  *
- * "VOZ · CLARA" is rendered as two words divided by an interpunct so
- * the bilingual heritage (voz = voice in ES/PT, clara = clear) shows
- * even in the wordmark.
+ * Identity hierarchy:
+ *   • The lion-and-wave is the LEON MARÉ family signature — every
+ *     product under LEON MARÉ shares it, so users learn to recognise
+ *     it as the "house mark".
+ *   • The wordmark "Voz · Clara" in Cinzel is the product's own name.
+ *   • Together: parent + product, two words, one identity, no clash.
  */
 
 interface Props {
@@ -25,12 +25,12 @@ interface Props {
   decorative?: boolean;
 }
 
-const MONOGRAM_PX: Record<NonNullable<Props['size']>, number> = {
-  xs: 20,
-  sm: 26,
-  md: 34,
-  lg: 46,
-  xl: 78,
+const MARK_PX: Record<NonNullable<Props['size']>, number> = {
+  xs: 22,
+  sm: 28,
+  md: 36,
+  lg: 52,
+  xl: 88,
 };
 
 const WORDMARK_SIZE: Record<NonNullable<Props['size']>, string> = {
@@ -54,13 +54,7 @@ export function BrandMark({
   className = '',
   decorative = false,
 }: Props) {
-  const mark = (
-    <VozClaraMark
-      size={MONOGRAM_PX[size]}
-      className={TONE[tone]}
-      decorative={decorative}
-    />
-  );
+  const mark = <LeonMareMark size={MARK_PX[size]} decorative={decorative} />;
 
   if (variant === 'monogram') {
     return <span className={['inline-flex shrink-0', className].join(' ')}>{mark}</span>;
