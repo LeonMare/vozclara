@@ -1,12 +1,12 @@
 {
-  "name": "VozClara — LEON MARÉ",
-  "short_name": "VozClara",
-  "description": "Subtítulos en castellano y voz natural para vídeos en alemán.",
+  "name": "Voz Clara",
+  "short_name": "Voz Clara",
+  "description": "Multilingual knowledge cloud for videos. Save the knowledge, not just the video. A LEON MARÉ product.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F7F3EC",
+  "background_color": "#0A1A3A",
   "theme_color": "#0A1A3A",
-  "lang": "es-ES",
+  "lang": "es",
   "orientation": "portrait",
   "icons": [
     {
