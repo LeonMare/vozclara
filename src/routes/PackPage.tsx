@@ -7,6 +7,7 @@ import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
+import { PackExport } from '../components/PackExport';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -140,20 +141,24 @@ export function PackPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-3xl px-5 pb-16 pt-6 sm:px-8 sm:pt-10">
-        {/* Back / Delete row */}
-        <div className="flex items-baseline justify-between gap-3">
+        {/* Back / actions row — Export available on every pack, Delete
+            only on real packs (samples are read-only demos). */}
+        <div className="flex items-center justify-between gap-3">
           <Link to="/library" className="font-sans text-sm text-graphit/65 underline-offset-4 hover:text-navy hover:underline">
             {t.packBackToLibrary}
           </Link>
-          {!isSample && (
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="font-sans text-xs text-graphit/45 underline-offset-4 hover:text-red-700 hover:underline"
-            >
-              {t.packDelete}
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            <PackExport pack={pack} />
+            {!isSample && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="font-sans text-xs text-graphit/45 underline-offset-4 hover:text-red-700 hover:underline"
+              >
+                {t.packDelete}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Pack metadata pills — three things the reader needs to see */}
