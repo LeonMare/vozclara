@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { extractVideoId } from '../../lib/youtube';
 import { useLocale } from '../../lib/i18n';
+import { useMagneticHover } from '../../hooks/useMagneticHover';
 import { HeroPackPreview } from './HeroPackPreview';
 import { BrandMark } from '../BrandMark';
 
@@ -25,6 +26,7 @@ export function Hero() {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const ctaRef = useMagneticHover<HTMLButtonElement>(0.22);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -102,12 +104,14 @@ export function Hero() {
                   className="flex-1 rounded-card border border-navy/15 bg-white px-4 py-3.5 font-sans text-base text-graphit placeholder-graphit/40 outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
                 />
                 <button
+                  ref={ctaRef}
                   type="submit"
-                  className="group relative rounded-card bg-navy px-6 py-3.5 font-sans text-base font-medium text-creme transition hover:bg-navy/90"
+                  className="group relative rounded-card bg-navy px-6 py-3.5 font-sans text-base font-medium text-creme will-change-transform hover:bg-navy/90"
+                  style={{ transition: 'transform 400ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease' }}
                 >
                   <span className="relative z-10">{t.primaryCTA}</span>
                   <span
-                    className="absolute inset-0 rounded-card opacity-0 transition group-hover:opacity-100"
+                    className="absolute inset-0 rounded-card opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     style={{ boxShadow: '0 0 0 1px rgba(201,162,75,0.4), 0 0 28px rgba(201,162,75,0.25)' }}
                     aria-hidden
                   />
