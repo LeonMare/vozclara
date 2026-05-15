@@ -67,15 +67,25 @@ export const samplePackBusiness: KnowledgePack = {
       title: 'La política migratoria como línea de ruptura',
       body: 'Voces internas piden un giro más restrictivo, lo que abriría un frente con el SPD y con los socios europeos. La decisión definirá la identidad del gobierno en su segunda mitad de mandato.',
     },
+    {
+      title: 'El reloj presupuestario aprieta',
+      body: 'El próximo presupuesto federal se negocia en otoño, y los ministerios de Finanzas y Trabajo parten con posiciones incompatibles. Sin acuerdo sobre la senda fiscal, la coalición arrastrará la incertidumbre hasta 2027 — algo que ni Merz ni Klingbeil pueden permitirse en términos electorales.',
+    },
   ],
   actionPlan: [
     'Vigilar las próximas votaciones en el Bundestag sobre el paquete de pensiones — son el termómetro de la coalición.',
     'Monitorizar las encuestas regionales en Sajonia y Turingia: la AfD podría superar el 30 % en próximos sondeos.',
     'Identificar a los diputados de la Unión que públicamente piden endurecer la política migratoria — futuras voces clave.',
+    'Seguir los próximos datos económicos del segundo trimestre — un mal Q2 añadiría presión decisiva sobre la reforma fiscal.',
+    'Observar el lenguaje de Lars Klingbeil (SPD) en sus próximas intervenciones: su tono marcará si el SPD se prepara para una salida ordenada o para un enfrentamiento abierto.',
+    'Estudiar a la CSU bávara por separado de la Unión: un realineamiento de Markus Söder podría redefinir la coalición desde dentro antes que cualquier ruptura formal.',
   ],
   keyQuotes: [
     { text: 'Hay en las propias filas un creciente descontento con los compromisos asumidos con el socio de coalición.', original: 'Es gebe in den eigenen Reihen einen größer werdenden Unmut über Kompromisse.', speaker: 'Friedrich Merz', timestampSec: 44 },
     { text: 'Los proyectos de reforma en pensiones y fiscalidad se vuelven difíciles.', original: 'Reformprojekte bei Rente und Steuer gestalten sich schwierig.', speaker: 'Susanne Daubner', timestampSec: 34 },
+    { text: 'Políticamente, Merz está bajo presión un año después de asumir el cargo.', original: 'Politisch steht Merz ein Jahr nach Amtsantritt unter Druck.', speaker: 'Susanne Daubner', timestampSec: 58 },
+    { text: 'En el Este de Alemania la AfD sigue ganando terreno.', original: 'Im Osten Deutschlands legt die AfD weiter zu.', speaker: 'Susanne Daubner', timestampSec: 372 },
+    { text: 'Voces dentro de la propia Unión exigen un enfoque más duro contra la migración.', original: 'Stimmen aus den eigenen Reihen, die ein härteres Vorgehen gegen die Migration fordern.', speaker: 'Susanne Daubner', timestampSec: 554 },
   ],
   vocabulary: [],
   socialAngles: [],
@@ -112,6 +122,10 @@ export const samplePackLearn: KnowledgePack = {
       title: 'Alemania del Este y del Oeste votan distinto',
       body: 'Más de 30 años después de la reunificación, los Estados orientales (Sajonia, Turingia, Brandeburgo) siguen mostrando patrones de voto distintos a los occidentales. La AfD obtiene resultados muy superiores en el Este, donde el descontento con la política migratoria es más fuerte.',
     },
+    {
+      title: 'El lenguaje político alemán es muy preciso',
+      body: 'En alemán cada actor político tiene su nombre exacto: "Bundeskanzler" (canciller federal), "Bundestag" (parlamento federal), "Bundesländer" (estados federados), "Koalitionspartner" (socio de coalición). No hay sinónimos sueltos: si entiendes los términos, entiendes el sistema. Por eso aprender este vocabulario abre la lectura de cualquier periódico alemán (FAZ, SZ, Zeit, taz) en una semana.',
+    },
   ],
   vocabulary: [
     { word: 'die Koalition', translation: 'la coalición', context: 'Seine schwarz-rote Koalition wollte einen schnellen Aufbruch.', partOfSpeech: 'sustantivo (f)' },
@@ -131,8 +145,16 @@ export const samplePackLearn: KnowledgePack = {
     { question: '¿En qué parte de Alemania la AfD está ganando más terreno?', answer: 'En el Este (Sajonia, Turingia, Brandeburgo).', explanation: 'El descontento con la política migratoria es más fuerte allí.' },
     { question: '¿Qué hizo Merz en la entrevista con Caren Miosga que fue políticamente inusual?', answer: 'Reconoció públicamente el malestar dentro de su propio partido por los compromisos con el SPD.', explanation: 'Un canciller raramente admite divisiones internas en público — debilita su posición negociadora.' },
     { question: '¿Qué quiere decir "den Jahrestag" en este contexto?', answer: 'El aniversario — específicamente, el primer año de Merz como canciller.', explanation: '"Tag" = día; "Jahr" = año; "Jahrestag" = el día anual, el aniversario.' },
+    { question: 'En alemán, ¿qué diferencia hay entre "der Bundestag" y "die Bundesländer"?', answer: '"Der Bundestag" es el parlamento federal (una sola cámara nacional). "Die Bundesländer" son los 16 estados federados de Alemania.', explanation: '"Bund" = federación. "Tag" en este contexto significa "asamblea, junta". "Land" = país / estado. Plural: "Länder".' },
+    { question: '¿Qué quiere decir que dos socios de coalición están "zerstritten"?', answer: 'Que están enfrentados, en disputa, desavenidos. La palabra describe un nivel grave de conflicto, no una simple discrepancia.', explanation: 'Verbo base: "streiten" (discutir, pelear). El prefijo "zer-" intensifica y sugiere ruptura. "Zerstritten" es más fuerte que "uneinig" (no estar de acuerdo).' },
   ],
-  actionPlan: [],
+  actionPlan: [
+    'Practica las palabras-clave del vocabulario (Koalition, Bundeskanzler, Unmut, Kompromiss) construyendo dos frases propias para cada una durante esta semana.',
+    'Escucha la próxima edición de la Tagesschau (20:00, ARD) e identifica al menos tres términos políticos del vocabulario en contexto real.',
+    'Anota tres ejemplos de uso de "zerstritten" o "zulegen" que encuentres esta semana en periódicos alemanes (FAZ, Süddeutsche Zeitung, Die Zeit).',
+    'Resume en alemán, en cinco frases, la situación política descrita en el vídeo. Si conoces a un hablante nativo, pídele revisión.',
+    'Repasa el cuestionario en siete días — la memoria activa retiene mucho mejor con repetición espaciada.',
+  ],
   keyQuotes: [],
   socialAngles: [],
 };
@@ -148,9 +170,11 @@ export const samplePackCreator: KnowledgePack = {
     long: 'El primer aniversario del canciller Merz ofrece material rico para contenido en redes. Tres ángulos destacan: la admisión pública del propio Merz sobre el malestar interno en su partido (genera engagement por el "drama"), el avance imparable de la AfD en el Este (controversia + relevancia internacional), y el patrón clásico de las coaliciones alemanas atascadas en pensiones-fiscalidad-migración (educativo + transferible a otros países).',
   },
   chapters: [
-    { startSec: 0, title: 'Apertura del telediario', summary: 'Hook visual fuerte.' },
-    { startSec: 23, title: 'El balance del año', summary: 'Mucho material editorial aquí.' },
-    { startSec: 540, title: 'La AfD como elephant in the room', summary: 'Tema viral por excelencia.' },
+    { startSec: 0, title: 'Apertura del telediario', summary: 'Hook visual fuerte — la presentadora institucional como anclaje de credibilidad.' },
+    { startSec: 23, title: 'El balance del año', summary: 'Mucho material editorial aquí — frases lapidarias, contraste expectativa-realidad.' },
+    { startSec: 180, title: 'La grieta interna como momento viral', summary: 'Merz admitiendo en cámara que su partido está dividido — clip de 15 segundos para Reels y TikTok.' },
+    { startSec: 360, title: 'Material para el ángulo Este vs Oeste', summary: 'Mapas, gráficos y cifras — perfecto para carruseles informativos en Instagram.' },
+    { startSec: 540, title: 'La AfD como elephant in the room', summary: 'Tema viral por excelencia — combinar con contexto histórico para evitar superficialidad.' },
   ],
   keyIdeas: [
     {
@@ -177,6 +201,7 @@ export const samplePackCreator: KnowledgePack = {
     { text: '"Hay en las propias filas un creciente descontento con los compromisos."', original: 'Es gebe in den eigenen Reihen einen größer werdenden Unmut über Kompromisse.', speaker: 'Friedrich Merz', timestampSec: 44 },
     { text: '"Sus proyectos de reforma se vuelven difíciles."', original: 'Reformprojekte gestalten sich schwierig.', speaker: 'Susanne Daubner', timestampSec: 34 },
     { text: '"Políticamente, Merz está bajo presión un año después de asumir."', original: 'Politisch steht Merz ein Jahr nach Amtsantritt unter Druck.', speaker: 'Susanne Daubner', timestampSec: 58 },
+    { text: '"En el Este de Alemania la AfD sigue ganando terreno."', original: 'Im Osten Deutschlands legt die AfD weiter zu.', speaker: 'Susanne Daubner', timestampSec: 372 },
   ],
   actionPlan: [
     'Convertir la admisión de Merz en un Reel de 30 segundos con texto en pantalla.',
