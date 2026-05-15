@@ -51,6 +51,15 @@ export function PackPage() {
     () => new Set<TabKey>(['summary']),
   );
 
+  // Player seek state. Set when the user clicks a transcript timestamp
+  // or a chapter row; the VideoPanel reads this and auto-expands +
+  // jumps to that second. Wrapped in an object so two clicks on the
+  // same second still trigger a re-seek (object identity changes).
+  const [playerSeek, setPlayerSeek] = useState<{ sec: number; nonce: number } | undefined>(undefined);
+  function seekPlayer(sec: number) {
+    setPlayerSeek({ sec, nonce: Date.now() });
+  }
+
   function toggleSection(key: TabKey) {
     setOpenSections((prev) => {
       const next = new Set(prev);
@@ -190,7 +199,7 @@ export function PackPage() {
         {/* Original video — collapsible YouTube embed.
             The card has an "Open on YouTube" link built in, so the
             separate source-link is no longer needed below the title. */}
-        <VideoPanel source={pack.source} />
+        <VideoPanel source={pack.source} seek={playerSeek} />
 
         {/* Language switcher — chips show every materialised translation
             on this pack; clicking switches the view instantly. Missing
@@ -248,7 +257,7 @@ export function PackPage() {
           </nav>
 
           <section className="mt-8 pb-16">
-            {renderTabContent(tab, view, segments, t)}
+            {renderTabContent(tab, view, segments, t, seekPlayer)}
           </section>
         </div>
 
@@ -292,7 +301,7 @@ export function PackPage() {
                 </button>
                 {isOpen && (
                   <div id={`panel-${k}`} className="pb-6 pt-2">
-                    {renderTabContent(k, view, segments, t)}
+                    {renderTabContent(k, view, segments, t, seekPlayer)}
                   </div>
                 )}
               </div>
@@ -491,12 +500,13 @@ function renderTabContent(
   view: PackTranslation,
   segments: Segment[],
   t: ReturnType<typeof useLocale>['t'],
+  onSeek: (sec: number) => void,
 ): React.ReactNode {
   switch (key) {
     case 'summary':
       return <SummaryTab view={view} />;
     case 'chapters':
-      return <ListTab items={view.chapters.map((c) => `${formatTime(c.startSec)} · ${c.title}: ${c.summary}`)} />;
+      return <ChaptersTab view={view} onSeek={onSeek} />;
     case 'insights':
       return <InsightsTab view={view} />;
     case 'actionPlan':
@@ -506,11 +516,11 @@ function renderTabContent(
     case 'quiz':
       return <QuizTab view={view} />;
     case 'quotes':
-      return <QuotesTab view={view} />;
+      return <QuotesTab view={view} onSeek={onSeek} />;
     case 'socialAngles':
       return <SocialAnglesTab view={view} />;
     case 'transcript':
-      return <TranscriptTab segments={segments} />;
+      return <TranscriptTab segments={segments} onSeek={onSeek} />;
     default:
       void t;
       return null;
@@ -642,7 +652,7 @@ function QuizItem({ q, index }: { q: PackTranslation['quiz'][number]; index: num
   );
 }
 
-function QuotesTab({ view }: { view: PackTranslation }) {
+function QuotesTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
   if (view.keyQuotes.length === 0) return <Empty />;
   return (
     <div className="space-y-5">
@@ -653,7 +663,19 @@ function QuotesTab({ view }: { view: PackTranslation }) {
             <footer className="mt-2 font-sans text-[11px] uppercase tracking-widest text-graphit/55">
               {q.speaker && <span>{q.speaker}</span>}
               {q.speaker && q.timestampSec ? ' · ' : ''}
-              {q.timestampSec ? <span className="tabular-nums">{formatTime(q.timestampSec)}</span> : null}
+              {q.timestampSec ? (
+                <button
+                  type="button"
+                  onClick={() => onSeek(q.timestampSec)}
+                  className="inline-flex items-center gap-1 rounded-card tabular-nums text-gold transition hover:text-navy"
+                  aria-label={`Jump to ${formatTime(q.timestampSec)}`}
+                >
+                  <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+                    <path d="M2 1 L8 5 L2 9 Z" fill="currentColor" />
+                  </svg>
+                  {formatTime(q.timestampSec)}
+                </button>
+              ) : null}
             </footer>
           )}
           {q.original && q.original !== q.text && (
@@ -680,7 +702,13 @@ function SocialAnglesTab({ view }: { view: PackTranslation }) {
   );
 }
 
-function TranscriptTab({ segments }: { segments: Segment[] }) {
+function TranscriptTab({
+  segments,
+  onSeek,
+}: {
+  segments: Segment[];
+  onSeek: (sec: number) => void;
+}) {
   if (segments.length === 0) {
     return <p className="font-serif italic text-graphit/55">— —</p>;
   }
@@ -688,9 +716,17 @@ function TranscriptTab({ segments }: { segments: Segment[] }) {
     <div className="space-y-2.5">
       {segments.map((s, i) => (
         <div key={i} className="rounded-card border-l-2 border-navy/15 bg-white/55 px-4 py-3">
-          <div className="font-sans text-[10px] uppercase tracking-widest tabular-nums text-graphit/45">
+          <button
+            type="button"
+            onClick={() => onSeek(s.start)}
+            className="inline-flex items-center gap-1 rounded-card font-sans text-[10px] uppercase tracking-widest tabular-nums text-gold transition hover:text-navy"
+            aria-label={`Jump to ${formatTime(s.start)}`}
+          >
+            <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+              <path d="M2 1 L8 5 L2 9 Z" fill="currentColor" />
+            </svg>
             {formatTime(s.start)}
-          </div>
+          </button>
           <p className="mt-1 font-serif text-base leading-snug text-navy">{s.translated ?? s.text}</p>
           {s.translated && s.translated !== s.text && (
             <p className="mt-1 font-sans text-xs leading-snug text-graphit/55">{s.text}</p>
@@ -698,6 +734,45 @@ function TranscriptTab({ segments }: { segments: Segment[] }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * Chapters tab — replaces the older string-formatted ListTab so each
+ * chapter row can carry a play-button that jumps the YouTube embed
+ * to that timestamp.
+ */
+function ChaptersTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
+  if (view.chapters.length === 0) return <Empty />;
+  return (
+    <ul className="space-y-3">
+      {view.chapters.map((c, i) => (
+        <li
+          key={i}
+          className="flex gap-3 rounded-card border-l-2 border-gold/50 bg-white p-4 sm:p-5"
+        >
+          <button
+            type="button"
+            onClick={() => onSeek(c.startSec)}
+            className="mt-0.5 inline-flex h-7 w-12 shrink-0 items-center justify-center gap-1 rounded-card border border-navy/15 bg-white font-sans text-[11px] tabular-nums text-gold transition hover:border-gold hover:text-navy"
+            aria-label={`Jump to ${formatTime(c.startSec)}`}
+          >
+            <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+              <path d="M2 1 L8 5 L2 9 Z" fill="currentColor" />
+            </svg>
+            {formatTime(c.startSec)}
+          </button>
+          <div className="min-w-0">
+            <h4 className="font-serif text-base leading-snug text-navy sm:text-lg">{c.title}</h4>
+            {c.summary && (
+              <p className="mt-1 font-sans text-sm leading-snug text-graphit/70">
+                {c.summary}
+              </p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 

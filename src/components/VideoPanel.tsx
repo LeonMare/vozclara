@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocale } from '../lib/i18n';
 import type { VideoSource } from '../lib/pack';
 
 interface Props {
   source: VideoSource;
+  /**
+   * Seek-request token from the parent. The `sec` field is the YouTube
+   * `start` parameter. The `nonce` lets consecutive clicks on the
+   * SAME timestamp still re-trigger a remount + seek — without it
+   * React would treat the prop as unchanged and the second click
+   * would be silent. The PackPage's transcript and chapters tabs
+   * drive this.
+   */
+  seek?: { sec: number; nonce: number };
 }
 
 /**
@@ -25,15 +34,28 @@ interface Props {
  *
  * Localised toggles fall back to Spanish for unknown locales.
  */
-export function VideoPanel({ source }: Props) {
+export function VideoPanel({ source, seek }: Props) {
   const { locale } = useLocale();
   const [expanded, setExpanded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // External seek trigger: when the transcript tab or chapters tab asks
+  // the video to jump to a specific second, auto-expand the iframe (if
+  // collapsed) and scroll the panel back into view so the user can
+  // actually see what they just triggered. The effect depends on
+  // `seek` as an object identity so consecutive clicks on the same
+  // second still fire.
+  useEffect(() => {
+    if (!seek) return;
+    setExpanded(true);
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [seek]);
 
   const labels = panelLabels(locale);
   const thumb = source.thumbnailUrl ?? `https://i.ytimg.com/vi/${source.videoId}/hqdefault.jpg`;
 
   return (
-    <section className="mt-6 overflow-hidden rounded-card border border-navy/10 bg-white">
+    <section ref={sectionRef} className="mt-6 overflow-hidden rounded-card border border-navy/10 bg-white">
       {/* Header row — always visible */}
       <div className="flex items-center justify-between gap-3 border-b border-navy/8 bg-creme/40 px-4 py-2.5 sm:px-5">
         <div className="flex items-center gap-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
@@ -100,12 +122,18 @@ export function VideoPanel({ source }: Props) {
         </button>
       )}
 
-      {/* Expanded state — privacy-friendly nocookie embed, 16:9 responsive */}
+      {/* Expanded state — privacy-friendly nocookie embed, 16:9 responsive.
+          When a seek prop was provided, the iframe loads with YouTube's
+          `start` parameter and auto-plays from there. The key bound to
+          seek.nonce forces a remount on every new seek request so even
+          consecutive clicks on the same second always advance the
+          player. */}
       {expanded && (
         <div className="relative aspect-video w-full bg-navy">
           <iframe
+            key={seek?.nonce ?? 'static'}
             title={labels.iframeTitle}
-            src={`https://www.youtube-nocookie.com/embed/${source.videoId}?rel=0&modestbranding=1&playsinline=1`}
+            src={iframeSrc(source.videoId, seek?.sec)}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             className="absolute inset-0 h-full w-full"
@@ -115,6 +143,13 @@ export function VideoPanel({ source }: Props) {
       )}
     </section>
   );
+}
+
+function iframeSrc(videoId: string, startSec: number | undefined): string {
+  const base = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
+  if (startSec === undefined || startSec <= 0) return base;
+  const seconds = Math.max(0, Math.floor(startSec));
+  return `${base}&start=${seconds}&autoplay=1`;
 }
 
 function panelLabels(locale: string) {
