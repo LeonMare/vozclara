@@ -10,12 +10,13 @@ import {
   tagCounts,
   getBrainId,
   activeView,
+  deletePack,
   type KnowledgePack,
   type Mode,
   type Language,
   type LibraryStats,
 } from '../lib/pack';
-import { getRecentlyViewed } from '../lib/recentlyViewed';
+import { getRecentlyViewed, forgetView } from '../lib/recentlyViewed';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 
@@ -43,6 +44,35 @@ export function LibraryPage() {
   const [sinceDays, setSinceDays] = useState<number | undefined>(undefined);
   const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
   const [recentIds, setRecentIds] = useState<string[]>([]);
+
+  // Bulk-select mode: toggled by the "Select" button in the stats row.
+  // selectedIds tracks which packs the user has ticked while in mode.
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+
+  function exitSelectMode() {
+    setSelectMode(false);
+    setSelectedIds(new Set());
+  }
+  function toggleSelected(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  async function handleBulkDelete() {
+    if (selectedIds.size === 0) return;
+    if (!confirm(bulkDeleteConfirm(locale, selectedIds.size))) return;
+    const ids = Array.from(selectedIds);
+    await Promise.all(ids.map((id) => deletePack(id)));
+    ids.forEach((id) => forgetView(id));
+    // Refresh local state without round-tripping a listPacks again.
+    setPacks((prev) => prev.filter((p) => !selectedIds.has(p.id)));
+    setRecentIds((prev) => prev.filter((id) => !selectedIds.has(id)));
+    exitSelectMode();
+  }
 
   useEffect(() => {
     const brainId = getBrainId();
@@ -116,20 +146,48 @@ export function LibraryPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
-        {/* Stats line */}
+        {/* Stats line — switches to a "X selected" summary when bulk-
+            select mode is active. */}
         {stats && stats.totalPacks > 0 && (
           <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-navy/10 pb-4">
-            <p className="font-serif italic text-graphit/70 sm:text-lg">
-              {t.libraryStats(
-                { packs: stats.totalPacks, ideas: stats.totalIdeas, langs: stats.totalLangs, thisWeek: stats.thisWeek },
+            {selectMode ? (
+              <p className="font-serif italic text-graphit/70 sm:text-lg">
+                {selectedSummary(locale, selectedIds.size)}
+              </p>
+            ) : (
+              <p className="font-serif italic text-graphit/70 sm:text-lg">
+                {t.libraryStats(
+                  { packs: stats.totalPacks, ideas: stats.totalIdeas, langs: stats.totalLangs, thisWeek: stats.thisWeek },
+                )}
+              </p>
+            )}
+            <div className="flex shrink-0 items-center gap-2">
+              {!selectMode && (
+                <button
+                  type="button"
+                  onClick={() => setSelectMode(true)}
+                  className="rounded-card border border-navy/20 bg-white px-3 py-2 font-sans text-xs text-graphit/65 transition hover:border-gold hover:text-navy"
+                >
+                  {selectModeLabel(locale)}
+                </button>
               )}
-            </p>
-            <Link
-              to="/new"
-              className="shrink-0 rounded-card border border-navy/20 bg-white px-4 py-2 font-sans text-sm text-navy transition hover:border-gold"
-            >
-              + {t.navNew}
-            </Link>
+              {selectMode ? (
+                <button
+                  type="button"
+                  onClick={exitSelectMode}
+                  className="rounded-card border border-navy/20 bg-white px-3 py-2 font-sans text-xs text-graphit/65 transition hover:border-gold hover:text-navy"
+                >
+                  {cancelLabel(locale)}
+                </button>
+              ) : (
+                <Link
+                  to="/new"
+                  className="rounded-card border border-navy/20 bg-white px-4 py-2 font-sans text-sm text-navy transition hover:border-gold"
+                >
+                  + {t.navNew}
+                </Link>
+              )}
+            </div>
           </div>
         )}
 
@@ -242,12 +300,20 @@ export function LibraryPage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => {
               const view = activeView(p);
+              const selected = selectedIds.has(p.id);
               return (
               <button
                 key={p.id}
                 type="button"
-                onClick={() => navigate(`/pack/${p.id}`)}
-                className="card-hover group flex flex-col overflow-hidden rounded-card border border-navy/10 bg-white text-left transition"
+                onClick={() => {
+                  if (selectMode) toggleSelected(p.id);
+                  else navigate(`/pack/${p.id}`);
+                }}
+                aria-pressed={selectMode ? selected : undefined}
+                className={[
+                  'card-hover group flex flex-col overflow-hidden rounded-card border bg-white text-left transition',
+                  selected ? 'border-gold ring-2 ring-gold/40' : 'border-navy/10',
+                ].join(' ')}
               >
                 {/* Thumbnail */}
                 <div className="relative aspect-video w-full overflow-hidden bg-navy">
@@ -268,6 +334,24 @@ export function LibraryPage() {
                       ? `${p.outputLang.toUpperCase()} +${p.outputLanguages.length - 1}`
                       : p.outputLang.toUpperCase()}
                   </span>
+                  {/* Select-mode checkbox overlay */}
+                  {selectMode && (
+                    <span
+                      aria-hidden
+                      className={[
+                        'absolute bottom-3 right-3 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 backdrop-blur-sm transition',
+                        selected
+                          ? 'border-gold bg-gold text-navy'
+                          : 'border-creme/80 bg-navy/40 text-creme/80',
+                      ].join(' ')}
+                    >
+                      {selected ? (
+                        <svg width="14" height="14" viewBox="0 0 14 14">
+                          <path d="M3 7.5 L6 10 L11 4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : null}
+                    </span>
+                  )}
                 </div>
 
                 {/* Body */}
@@ -301,6 +385,45 @@ export function LibraryPage() {
           </div>
         )}
       </div>
+
+      {/* Fixed bottom action bar — only mounted when bulk-select mode
+          is active. Lifts above the page on mobile + desktop alike. */}
+      {selectMode && (
+        <div
+          role="region"
+          aria-label={bulkActionsLabel(locale)}
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-navy/15 bg-creme/95 px-5 py-3 backdrop-blur sm:px-8"
+          style={{ boxShadow: '0 -8px 24px rgba(10, 26, 58, 0.10)' }}
+        >
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+            <p className="font-serif italic text-graphit/70 sm:text-base">
+              {selectedSummary(locale, selectedIds.size)}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={exitSelectMode}
+                className="rounded-card border border-navy/15 bg-white px-3 py-2 font-sans text-sm text-graphit/65 transition hover:border-gold hover:text-navy"
+              >
+                {cancelLabel(locale)}
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkDelete}
+                disabled={selectedIds.size === 0}
+                className={[
+                  'rounded-card px-4 py-2 font-sans text-sm font-medium transition',
+                  selectedIds.size === 0
+                    ? 'cursor-not-allowed bg-navy/40 text-creme/70'
+                    : 'bg-red-700 text-creme hover:bg-red-800',
+                ].join(' ')}
+              >
+                {deleteLabel(locale, selectedIds.size)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
@@ -358,6 +481,48 @@ function libraryDescription(locale: string): string {
   if (locale.startsWith('pt')) return 'A tua nuvem privada de conhecimento. Pergunta, filtra e exporta os Knowledge Packs que guardaste.';
   if (locale.startsWith('de')) return 'Deine private Wissens-Cloud. Frage, filtere und exportiere die Knowledge Packs die du gespeichert hast.';
   return 'Your private knowledge cloud. Ask, filter, and export the Knowledge Packs you have saved.';
+}
+
+function selectModeLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Seleccionar';
+  if (locale.startsWith('pt')) return 'Selecionar';
+  if (locale.startsWith('de')) return 'Auswählen';
+  return 'Select';
+}
+
+function cancelLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Cancelar';
+  if (locale.startsWith('pt')) return 'Cancelar';
+  if (locale.startsWith('de')) return 'Abbrechen';
+  return 'Cancel';
+}
+
+function bulkActionsLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Acciones en lote';
+  if (locale.startsWith('pt')) return 'Ações em lote';
+  if (locale.startsWith('de')) return 'Bulk-Aktionen';
+  return 'Bulk actions';
+}
+
+function selectedSummary(locale: string, n: number): string {
+  if (locale.startsWith('es')) return n === 0 ? 'Ningún pack seleccionado' : n === 1 ? '1 pack seleccionado' : `${n} packs seleccionados`;
+  if (locale.startsWith('pt')) return n === 0 ? 'Nenhum pack selecionado' : n === 1 ? '1 pack selecionado' : `${n} packs selecionados`;
+  if (locale.startsWith('de')) return n === 0 ? 'Kein Pack ausgewählt' : n === 1 ? '1 Pack ausgewählt' : `${n} Packs ausgewählt`;
+  return n === 0 ? 'No packs selected' : n === 1 ? '1 pack selected' : `${n} packs selected`;
+}
+
+function deleteLabel(locale: string, n: number): string {
+  if (locale.startsWith('es')) return n > 0 ? `Eliminar ${n}` : 'Eliminar';
+  if (locale.startsWith('pt')) return n > 0 ? `Eliminar ${n}` : 'Eliminar';
+  if (locale.startsWith('de')) return n > 0 ? `${n} löschen` : 'Löschen';
+  return n > 0 ? `Delete ${n}` : 'Delete';
+}
+
+function bulkDeleteConfirm(locale: string, n: number): string {
+  if (locale.startsWith('es')) return `¿Eliminar ${n} pack${n === 1 ? '' : 's'}? No se puede deshacer.`;
+  if (locale.startsWith('pt')) return `Eliminar ${n} pack${n === 1 ? '' : 's'}? Não se pode desfazer.`;
+  if (locale.startsWith('de')) return `${n} Pack${n === 1 ? '' : 's'} löschen? Kann nicht rückgängig gemacht werden.`;
+  return `Delete ${n} pack${n === 1 ? '' : 's'}? This cannot be undone.`;
 }
 
 function clearTagsLabel(locale: string): string {
