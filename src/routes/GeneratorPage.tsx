@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { extractVideoId } from '../lib/youtube';
 import { useLocale } from '../lib/i18n';
 import { usePageHead } from '../hooks/usePageHead';
+import { friendlyError, type FriendlyError } from '../lib/errorMessages';
+import { ErrorCard } from '../components/ErrorCard';
 import { ModePicker } from '../components/ModePicker';
 import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
@@ -51,7 +53,7 @@ export function GeneratorPage() {
 
   const [generating, setGenerating] = useState(false);
   const [progressMeta, setProgressMeta] = useState<{ videoMinutes?: number; sentences?: number; insights?: number; targetLang?: string }>({});
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<FriendlyError | null>(null);
 
   usePageHead({
     title: generatorTitle(locale),
@@ -226,8 +228,11 @@ export function GeneratorPage() {
 
       navigate(`/pack/${targetPackId}`);
     } catch (err) {
-      const m = err instanceof Error ? err.message : String(err);
-      setError(m);
+      // Translate the typed worker / network error into a friendly card.
+      // friendlyError() reads .code if the err is a typed instance
+      // (TranscriptError / InsightsError), otherwise falls back through
+      // .message or the raw string.
+      setError(friendlyError(err, locale));
       setGenerating(false);
     }
   }
@@ -264,7 +269,9 @@ export function GeneratorPage() {
                   →
                 </button>
               </div>
-              {pasteError && <p role="alert" className="mt-2 font-sans text-sm text-red-700">{pasteError}</p>}
+              {pasteError && (
+                <ErrorCard error={friendlyError('invalid_id', locale)} />
+              )}
             </form>
           </section>
         )}
@@ -310,7 +317,15 @@ export function GeneratorPage() {
             </div>
 
             {error && (
-              <p role="alert" className="mt-4 font-sans text-sm text-red-700">{error}</p>
+              <ErrorCard
+                error={error}
+                actionLabel={tryAnotherLabel(locale)}
+                onAction={() => {
+                  setError(null);
+                  setVideoId('');
+                  setPasteValue('');
+                }}
+              />
             )}
           </section>
         )}
@@ -325,6 +340,13 @@ export function GeneratorPage() {
       </div>
     </main>
   );
+}
+
+function tryAnotherLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Probar otro vídeo';
+  if (locale.startsWith('pt')) return 'Tentar outro vídeo';
+  if (locale.startsWith('de')) return 'Anderes Video';
+  return 'Try another video';
 }
 
 function generatorTitle(locale: string): string {
