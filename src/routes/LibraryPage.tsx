@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
+import { AskPanel } from '../components/AskPanel';
 import {
   listPacks,
   libraryStats,
@@ -81,7 +82,7 @@ export function LibraryPage() {
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
         {/* Stats line */}
         {stats && stats.totalPacks > 0 && (
-          <div className="mb-8 flex items-baseline justify-between gap-4 border-b border-navy/10 pb-4">
+          <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-navy/10 pb-4">
             <p className="font-serif italic text-graphit/70 sm:text-lg">
               {t.libraryStats(
                 { packs: stats.totalPacks, ideas: stats.totalIdeas, langs: stats.totalLangs, thisWeek: stats.thisWeek },
@@ -93,6 +94,14 @@ export function LibraryPage() {
             >
               + {t.navNew}
             </Link>
+          </div>
+        )}
+
+        {/* Ask My Knowledge — cross-pack Q&A. Sits above search/filter
+            so the user sees the headline capability first. */}
+        {packs.length > 0 && (
+          <div className="mb-8">
+            <AskPanel packs={packs} />
           </div>
         )}
 

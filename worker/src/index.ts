@@ -114,6 +114,10 @@ export default {
       return handleInsights(req, env);
     }
 
+    if (url.pathname === '/api/ask' && req.method === 'POST') {
+      return handleAsk(req, env);
+    }
+
     return json({ error: 'not_found' }, 404);
   },
 };
@@ -900,4 +904,122 @@ function json(body: unknown, status = 200, extraHeaders: Record<string, string> 
       ...extraHeaders,
     },
   });
+}
+
+/* ─── /api/ask ──────────────────────────────────────────────────────────── *
+ *
+ * Cross-pack Q&A for the user's local library. The client condenses each
+ * pack down to title + summary + key ideas and sends them with the user's
+ * question. The LLM answers strictly from that material, citing packs
+ * inline with [pack:<id>] markers. The handler extracts the citations,
+ * de-duplicates them, and returns them alongside the raw answer so the
+ * UI can render pack-chip footnotes.
+ *
+ * No caching — every (question, library) combination is unique.
+ */
+
+interface AskCondensedPack {
+  id: string;
+  title: string;
+  summary: { short: string; long: string };
+  keyIdeas: Array<{ title: string; body: string }>;
+}
+
+interface AskBody {
+  question: string;
+  packs: AskCondensedPack[];
+  locale?: string;
+}
+
+const ASK_LANG_NAME: Record<string, string> = {
+  es: 'Spanish',
+  pt: 'Portuguese',
+  de: 'German',
+  en: 'English',
+  fr: 'French',
+};
+
+async function handleAsk(req: Request, env: Env): Promise<Response> {
+  let body: AskBody;
+  try {
+    body = (await req.json()) as AskBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const question = (body.question ?? '').toString().trim();
+  const packs = Array.isArray(body.packs) ? body.packs : [];
+  const locale = (body.locale ?? 'es').toString().slice(0, 2).toLowerCase();
+
+  if (question.length < 3) return json({ error: 'question_too_short' }, 400);
+  if (packs.length === 0) return json({ error: 'empty_library' }, 400);
+  if (question.length > 500) return json({ error: 'question_too_long' }, 400);
+
+  const langName = ASK_LANG_NAME[locale] ?? 'English';
+
+  // Condense each pack to a fixed shape so the prompt is predictable.
+  // Cap title + summary lengths to keep within the 8K context budget
+  // even when the library is large.
+  const library = packs
+    .slice(0, 40) // upper bound; client should pre-filter for huge libraries
+    .map((p) => renderPackForAsk(p))
+    .join('\n\n');
+
+  const systemPrompt =
+    `You are a research assistant helping a user search their personal Knowledge Pack library. ` +
+    `Each pack is a video summary they have saved. ` +
+    `Answer the user's question strictly from the library content below — do not invent facts. ` +
+    `When you draw on a pack, cite it inline using the marker [pack:<id>] (use the exact id shown in the LIBRARY block). ` +
+    `If the library does not contain enough information to answer, say so plainly. ` +
+    `Respond in ${langName}. Keep the answer focused and editorial — two to four short paragraphs.`;
+
+  const userPrompt = `LIBRARY:\n${library}\n\nQUESTION:\n${question}`;
+
+  let out: Awaited<ReturnType<Env['AI']['run']>>;
+  try {
+    out = await env.AI.run(LLM_MODEL, {
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      max_tokens: 1200,
+      temperature: 0.3,
+    });
+  } catch (err) {
+    return json({ error: 'ai_failed', detail: String(err) }, 502);
+  }
+
+  // Defensive coercion — Llama 3.3 70B occasionally returns the
+  // response wrapped in an object instead of a string.
+  let raw: string;
+  if (typeof out === 'string') raw = out;
+  else if (out && typeof out.response === 'string') raw = out.response;
+  else if (out && out.response != null) raw = JSON.stringify(out.response);
+  else raw = JSON.stringify(out);
+
+  // Extract citation markers. Pack ids are nanoid(12) or 'sample*'.
+  const citations: string[] = [];
+  const seen = new Set<string>();
+  const citationRegex = /\[pack:([A-Za-z0-9_-]+)\]/g;
+  let match: RegExpExecArray | null;
+  while ((match = citationRegex.exec(raw)) !== null) {
+    const id = match[1];
+    if (!seen.has(id) && packs.some((p) => p.id === id)) {
+      seen.add(id);
+      citations.push(id);
+    }
+  }
+
+  return json({ answer: raw.trim(), citations }, 200);
+}
+
+function renderPackForAsk(p: AskCondensedPack): string {
+  const title = (p.title ?? '').toString().slice(0, 200);
+  const short = p.summary?.short?.toString().slice(0, 400) ?? '';
+  const long = p.summary?.long?.toString().slice(0, 1200) ?? '';
+  const ideas = (p.keyIdeas ?? [])
+    .slice(0, 6)
+    .map((k) => `- ${k.title}: ${k.body}`.slice(0, 350))
+    .join('\n');
+  return `[pack:${p.id}]\nTITLE: ${title}\nSUMMARY: ${short}\n${long ? `DETAIL: ${long}\n` : ''}KEY IDEAS:\n${ideas}`;
 }
