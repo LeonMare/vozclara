@@ -75,12 +75,14 @@ export function GeneratorPage() {
     setProgressMeta({ targetLang: outputLang });
 
     try {
-      // 1. Transcript + translation in target language.
+      // 1. Transcript + translation in target language. We no longer
+      //    hint at the source language — the worker auto-detects it
+      //    from whatever native captions YouTube has on the video.
+      //    `transcript.lang` is the truth-source for `sourceLang`.
       const transcript = await fetchTranscript(videoId, {
-        lang: 'de', // future: auto-detect; for MVP defaulting to German source.
         to: outputLang,
       });
-      const sourceLang = transcript.lang as Language;
+      const sourceLang = normaliseLang(transcript.lang);
 
       // Surface concrete numbers to the loading screen.
       const lastSeg = transcript.segments[transcript.segments.length - 1];
@@ -231,6 +233,20 @@ export function GeneratorPage() {
       </div>
     </main>
   );
+}
+
+/**
+ * Normalise whatever the worker reports as the source language into one
+ * of our supported Language codes. YouTube returns BCP-47 tags like
+ * 'de-DE', 'en-GB', 'es-419' etc. — we strip the region. If the base
+ * code is outside our supported set (Italian, Japanese, etc.) we fall
+ * back to 'en' so the pack metadata stays consistent even when the
+ * detected language is one we don't ship a UI for yet.
+ */
+function normaliseLang(raw: string): Language {
+  const base = (raw || '').toLowerCase().split('-')[0] as Language;
+  const supported: Language[] = ['en', 'es', 'de', 'pt', 'fr'];
+  return supported.includes(base) ? base : 'en';
 }
 
 /* Smart-default genre → mode mapping. */

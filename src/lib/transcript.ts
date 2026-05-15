@@ -33,7 +33,12 @@ export class TranscriptError extends Error {
 }
 
 interface FetchOptions {
-  /** Source language code (default 'de'). */
+  /**
+   * Preferred source language code. When omitted (the new default), the
+   * worker asks for the video's native captions and tells us in the
+   * response which language those captions are in. Pass an explicit
+   * value only when you want to force a specific source track.
+   */
   lang?: string;
   /** Target language for translation (e.g. 'es'). Omit for source-only. */
   to?: string;
@@ -41,9 +46,10 @@ interface FetchOptions {
 
 export async function fetchTranscript(
   videoId: string,
-  { lang = 'de', to }: FetchOptions = {},
+  { lang, to }: FetchOptions = {},
 ): Promise<TranscriptResponse> {
-  const params = new URLSearchParams({ v: videoId, lang });
+  const params = new URLSearchParams({ v: videoId });
+  if (lang) params.set('lang', lang);
   if (to) params.set('to', to);
   const url = `${API_BASE}/api/transcript?${params}`;
 

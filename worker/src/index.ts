@@ -122,11 +122,18 @@ export default {
 
 async function handleTranscript(url: URL, env: Env): Promise<Response> {
   const videoId = url.searchParams.get('v') ?? '';
-  const lang = url.searchParams.get('lang') ?? 'de';
+  // `lang` is now optional. When absent, we ask Supadata / Innertube for
+  // the video's native captions and trust the response to tell us which
+  // language those captions are in. When present, we honour it as a
+  // preferred source language hint (legacy behaviour). This fixes the
+  // long-standing bug where the frontend hardcoded lang=de and any
+  // non-German source returned no_captions on the first try.
+  const langParam = url.searchParams.get('lang');
+  const lang: string | null = langParam && langParam.length > 0 ? langParam : null;
   const to = url.searchParams.get('to');
 
   if (!ID_PATTERN.test(videoId)) return json({ error: 'invalid_id' }, 400);
-  if (!LANG_PATTERN.test(lang) || (to && !LANG_PATTERN.test(to))) {
+  if ((lang && !LANG_PATTERN.test(lang)) || (to && !LANG_PATTERN.test(to))) {
     return json({ error: 'invalid_lang' }, 400);
   }
 
@@ -613,7 +620,7 @@ function normaliseKeyQuoteArray(v: unknown): KeyQuoteOutput[] {
 
 async function fetchViaSupadata(
   videoId: string,
-  lang: string,
+  lang: string | null,
   to: string | null,
   apiKey: string,
 ) {
@@ -647,10 +654,13 @@ async function fetchViaSupadata(
 async function supadataCall(
   path: string,
   videoId: string,
-  lang: string,
+  lang: string | null,
   apiKey: string,
 ): Promise<SupadataResponse> {
-  const url = `https://api.supadata.ai${path}?videoId=${videoId}&lang=${lang}&text=false`;
+  // Only append &lang= when a preferred source language was given;
+  // otherwise let Supadata return the video's native captions.
+  const langPart = lang ? `&lang=${lang}` : '';
+  const url = `https://api.supadata.ai${path}?videoId=${videoId}${langPart}&text=false`;
   const res = await fetch(url, {
     headers: {
       'x-api-key': apiKey,
@@ -770,7 +780,7 @@ const CLIENTS: ClientProfile[] = [
   },
 ];
 
-async function fetchViaInnertube(videoId: string, lang: string, to: string | null) {
+async function fetchViaInnertube(videoId: string, lang: string | null, to: string | null) {
   let lastReason = 'no_clients_tried';
   let videoTitle: string | undefined;
   let tracks: CaptionTrack[] | null = null;
@@ -795,7 +805,12 @@ async function fetchViaInnertube(videoId: string, lang: string, to: string | nul
     throw new Error(`innertube_failed: ${lastReason}`);
   }
 
-  const sorted = [...tracks].sort((a, b) => score(b, lang) - score(a, lang));
+  // When a preferred lang was given we sort by score(); without one we just
+  // prefer manual captions over auto-generated and take the first track —
+  // YouTube tends to list the native track first.
+  const sorted = lang
+    ? [...tracks].sort((a, b) => score(b, lang) - score(a, lang))
+    : [...tracks].sort((a, b) => (b.kind === 'asr' ? 0 : 10) - (a.kind === 'asr' ? 0 : 10));
   const track = sorted[0];
 
   const captionRes = await fetch(track.baseUrl + '&fmt=srv3', {
@@ -808,7 +823,9 @@ async function fetchViaInnertube(videoId: string, lang: string, to: string | nul
   let segments = parseTimedText(xml);
   if (segments.length === 0) throw new Error('caption_parse_empty');
 
-  if (to) segments = await attachTranslations(segments, lang, to);
+  // Translation source language is whatever Innertube actually gave us,
+  // not the (possibly null) caller hint.
+  if (to) segments = await attachTranslations(segments, track.languageCode, to);
 
   return {
     videoId,
