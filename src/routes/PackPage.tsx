@@ -42,6 +42,22 @@ export function PackPage() {
   const [tab, setTab] = useState<TabKey>('summary');
   const [notFound, setNotFound] = useState(false);
 
+  // Mobile accordion state. Sections start closed except Summary —
+  // the user can expand others on demand. Independent from `tab`
+  // (which still drives the desktop tabs view).
+  const [openSections, setOpenSections] = useState<Set<TabKey>>(
+    () => new Set<TabKey>(['summary']),
+  );
+
+  function toggleSection(key: TabKey) {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
   useEffect(() => {
     if (!id) return;
     const sample = getSamplePack(id);
@@ -165,52 +181,94 @@ export function PackPage() {
       )}
 
       <div className="mx-auto max-w-3xl px-5 pb-16 sm:px-8">
-        {/* Tabs — bigger hit area, active state visibly underlined in gold */}
-        <nav className="sticky top-[60px] z-10 -mx-5 mt-6 overflow-x-auto border-b border-navy/15 bg-creme/95 px-5 backdrop-blur sm:-mx-8 sm:px-8">
-          <div className="flex min-w-max gap-1">
-            {tabs.map((k) => {
-              const isActive = k === tab;
-              const count = countForTab(pack, k);
-              return (
-                <button
-                  key={k}
-                  type="button"
-                  onClick={() => setTab(k)}
-                  className={[
-                    'relative whitespace-nowrap px-3 py-3.5 font-sans transition-colors',
-                    isActive ? 'text-navy' : 'text-graphit/55 hover:text-navy',
-                  ].join(' ')}
-                >
-                  <span className={[
-                    'text-[15px]',
-                    isActive ? 'font-medium' : '',
-                  ].join(' ')}>{t.packTabs[k]}</span>
-                  {count > 0 && (
-                    <span className="ml-1.5 text-[11px] tabular-nums text-graphit/45">
-                      {count}
-                    </span>
-                  )}
-                  {isActive && (
-                    <span className="absolute inset-x-0 -bottom-px h-[2px] bg-gold" aria-hidden />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
+        {/* Desktop: horizontal tabs nav + single content section.
+            Hidden on mobile in favour of the accordion below. */}
+        <div className="hidden sm:block">
+          <nav className="sticky top-[60px] z-10 -mx-8 overflow-x-auto border-b border-navy/15 bg-creme/95 px-8 backdrop-blur">
+            <div className="flex min-w-max gap-1">
+              {tabs.map((k) => {
+                const isActive = k === tab;
+                const count = countForTab(pack, k);
+                return (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => setTab(k)}
+                    className={[
+                      'relative whitespace-nowrap px-3 py-3.5 font-sans transition-colors',
+                      isActive ? 'text-navy' : 'text-graphit/55 hover:text-navy',
+                    ].join(' ')}
+                  >
+                    <span className={[
+                      'text-[15px]',
+                      isActive ? 'font-medium' : '',
+                    ].join(' ')}>{t.packTabs[k]}</span>
+                    {count > 0 && (
+                      <span className="ml-1.5 text-[11px] tabular-nums text-graphit/45">
+                        {count}
+                      </span>
+                    )}
+                    {isActive && (
+                      <span className="absolute inset-x-0 -bottom-px h-[2px] bg-gold" aria-hidden />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
 
-        {/* Tab content */}
-        <section className="mt-8 pb-16">
-          {tab === 'summary' && <SummaryTab pack={pack} />}
-          {tab === 'chapters' && <ListTab title={t.packTabs.chapters} items={pack.chapters.map((c) => `${formatTime(c.startSec)} · ${c.title}: ${c.summary}`)} />}
-          {tab === 'insights' && <InsightsTab pack={pack} />}
-          {tab === 'actionPlan' && <ListTab title={t.packTabs.actionPlan} items={pack.actionPlan} numbered />}
-          {tab === 'vocabulary' && <VocabularyTab pack={pack} />}
-          {tab === 'quiz' && <QuizTab pack={pack} />}
-          {tab === 'quotes' && <QuotesTab pack={pack} />}
-          {tab === 'socialAngles' && <SocialAnglesTab pack={pack} />}
-          {tab === 'transcript' && <TranscriptTab segments={segments} />}
-        </section>
+          <section className="mt-8 pb-16">
+            {renderTabContent(tab, pack, segments, t)}
+          </section>
+        </div>
+
+        {/* Mobile: accordion. Each section is its own row, click to expand.
+            Multiple sections can be open simultaneously so the reader can
+            keep Summary and Insights both visible while scrolling. */}
+        <div className="sm:hidden mt-6 divide-y divide-navy/10 border-y border-navy/10">
+          {tabs.map((k) => {
+            const isOpen = openSections.has(k);
+            const count = countForTab(pack, k);
+            return (
+              <div key={k}>
+                <button
+                  type="button"
+                  onClick={() => toggleSection(k)}
+                  aria-expanded={isOpen}
+                  aria-controls={`panel-${k}`}
+                  className="flex w-full items-center justify-between gap-3 px-1 py-4 text-left transition hover:bg-white/40"
+                >
+                  <span className="flex items-baseline gap-2.5">
+                    <span className={[
+                      'font-serif text-base',
+                      isOpen ? 'text-navy' : 'text-navy/85',
+                    ].join(' ')}>
+                      {t.packTabs[k]}
+                    </span>
+                    {count > 0 && (
+                      <span className="font-sans text-[11px] tabular-nums text-graphit/55">
+                        {count}
+                      </span>
+                    )}
+                  </span>
+                  <span className={[
+                    'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-all duration-200',
+                    isOpen ? 'bg-gold/15 text-gold rotate-180' : 'text-graphit/45',
+                  ].join(' ')}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
+                      <path d="M2 4 L6 8 L10 4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </button>
+                {isOpen && (
+                  <div id={`panel-${k}`} className="pb-6 pt-2">
+                    {renderTabContent(k, pack, segments, t)}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
 
         {/* Feedback panel — only on real user packs, not samples.
             Lives at the tail of the content so the prompt arrives after
@@ -321,6 +379,42 @@ function deleteConfirmLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Eliminar este pack?';
   if (locale.startsWith('de')) return 'Diesen Pack löschen?';
   return 'Delete this pack?';
+}
+
+/**
+ * Pure dispatch for tab content. Shared between the desktop tab view and
+ * the mobile accordion so both stay in lockstep — adding a new tab here
+ * means it shows up in both layouts without further wiring.
+ */
+function renderTabContent(
+  key: TabKey,
+  pack: KnowledgePack,
+  segments: Segment[],
+  t: ReturnType<typeof useLocale>['t'],
+): React.ReactNode {
+  switch (key) {
+    case 'summary':
+      return <SummaryTab pack={pack} />;
+    case 'chapters':
+      return <ListTab items={pack.chapters.map((c) => `${formatTime(c.startSec)} · ${c.title}: ${c.summary}`)} />;
+    case 'insights':
+      return <InsightsTab pack={pack} />;
+    case 'actionPlan':
+      return <ListTab items={pack.actionPlan} numbered />;
+    case 'vocabulary':
+      return <VocabularyTab pack={pack} />;
+    case 'quiz':
+      return <QuizTab pack={pack} />;
+    case 'quotes':
+      return <QuotesTab pack={pack} />;
+    case 'socialAngles':
+      return <SocialAnglesTab pack={pack} />;
+    case 'transcript':
+      return <TranscriptTab segments={segments} />;
+    default:
+      void t;
+      return null;
+  }
 }
 
 /* ─── Tabs ────────────────────────────────────────────────────────────── */
