@@ -344,15 +344,29 @@ export interface LibraryFilters {
   mode?: Mode | 'all';
   language?: Language | 'all';
   sinceDays?: number;
+  /**
+   * If set, only packs that carry AT LEAST ONE of these tags are
+   * included (OR semantics — picking more tags broadens the result).
+   * Empty set = no tag constraint.
+   */
+  tags?: Set<string>;
 }
 
 export function filterPacks(packs: KnowledgePack[], f: LibraryFilters): KnowledgePack[] {
   const q = f.query?.trim().toLowerCase() ?? '';
   const cutoff = f.sinceDays != null ? Date.now() - f.sinceDays * 24 * 60 * 60 * 1000 : 0;
+  const tagFilter = f.tags && f.tags.size > 0 ? f.tags : null;
   return packs.filter((p) => {
     if (f.mode && f.mode !== 'all' && p.mode !== f.mode) return false;
     if (f.language && f.language !== 'all' && !p.outputLanguages.includes(f.language)) return false;
     if (cutoff > 0 && p.createdAt < cutoff) return false;
+    if (tagFilter) {
+      let hit = false;
+      for (const t of p.tags) {
+        if (tagFilter.has(t)) { hit = true; break; }
+      }
+      if (!hit) return false;
+    }
     if (q) {
       const view = activeView(p);
       const haystack = [
@@ -366,6 +380,22 @@ export function filterPacks(packs: KnowledgePack[], f: LibraryFilters): Knowledg
     }
     return true;
   });
+}
+
+/**
+ * Aggregate unique tags across a pack list with their occurrence count,
+ * sorted by frequency. Used by the library to render tag-filter chips.
+ */
+export function tagCounts(packs: KnowledgePack[]): Array<{ tag: string; count: number }> {
+  const counts = new Map<string, number>();
+  for (const p of packs) {
+    for (const t of p.tags) {
+      counts.set(t, (counts.get(t) ?? 0) + 1);
+    }
+  }
+  return Array.from(counts.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 }
 
 /* ─── Discover all stored keys (for migrations) ─────────────────────────── */

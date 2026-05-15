@@ -7,6 +7,7 @@ import {
   listPacks,
   libraryStats,
   filterPacks,
+  tagCounts,
   getBrainId,
   activeView,
   type KnowledgePack,
@@ -32,6 +33,7 @@ export function LibraryPage() {
   const [mode, setMode] = useState<Mode | 'all'>('all');
   const [language, setLanguage] = useState<Language | 'all'>('all');
   const [sinceDays, setSinceDays] = useState<number | undefined>(undefined);
+  const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     const brainId = getBrainId();
@@ -41,10 +43,23 @@ export function LibraryPage() {
     });
   }, []);
 
+  // Aggregate the top tags across the user's library. Show up to 10
+  // chips so the filter row stays compact.
+  const tags = useMemo(() => tagCounts(packs).slice(0, 10), [packs]);
+
   const filtered = useMemo(
-    () => filterPacks(packs, { query, mode, language, sinceDays }),
-    [packs, query, mode, language, sinceDays],
+    () => filterPacks(packs, { query, mode, language, sinceDays, tags: activeTags }),
+    [packs, query, mode, language, sinceDays, activeTags],
   );
+
+  function toggleTag(t: string) {
+    setActiveTags((prev) => {
+      const next = new Set(prev);
+      if (next.has(t)) next.delete(t);
+      else next.add(t);
+      return next;
+    });
+  }
 
   if (packs.length === 0 && stats) {
     return (
@@ -118,6 +133,47 @@ export function LibraryPage() {
           <FilterPill label={t.filterLang} options={[['all', t.filterAll], ['es', 'ES'], ['en', 'EN'], ['de', 'DE'], ['pt', 'PT']]} value={language} onChange={(v) => setLanguage(v as Language | 'all')} />
           <FilterPill label={t.filterDate} options={[['', t.filterDateAll], ['7', t.filterDate7], ['30', t.filterDate30]]} value={sinceDays?.toString() ?? ''} onChange={(v) => setSinceDays(v ? Number(v) : undefined)} />
         </div>
+
+        {/* Tag filter chips — derived from pack.tags across the library.
+            Multi-select with OR semantics: clicking more tags broadens
+            the result. Click the same chip again to remove it. Only
+            shown when the library has at least one tagged pack. */}
+        {tags.length > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="mr-1 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              {tagFilterLabel(locale)}
+            </span>
+            {tags.map(({ tag, count }) => {
+              const active = activeTags.has(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  aria-pressed={active}
+                  className={[
+                    'inline-flex items-baseline gap-1.5 rounded-card border px-2.5 py-1 font-sans text-xs transition',
+                    active
+                      ? 'border-gold bg-gold/15 text-navy'
+                      : 'border-navy/15 bg-white text-graphit/65 hover:border-gold hover:text-navy',
+                  ].join(' ')}
+                >
+                  <span>{tag}</span>
+                  <span className="text-[10px] tabular-nums text-graphit/45">{count}</span>
+                </button>
+              );
+            })}
+            {activeTags.size > 0 && (
+              <button
+                type="button"
+                onClick={() => setActiveTags(new Set())}
+                className="ml-2 font-sans text-[11px] text-graphit/55 underline-offset-4 hover:text-navy hover:underline"
+              >
+                {clearTagsLabel(locale)}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Grid */}
         {filtered.length === 0 ? (
@@ -214,4 +270,18 @@ function FilterPill({
       </select>
     </label>
   );
+}
+
+function tagFilterLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Etiquetas';
+  if (locale.startsWith('pt')) return 'Etiquetas';
+  if (locale.startsWith('de')) return 'Tags';
+  return 'Tags';
+}
+
+function clearTagsLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Limpiar';
+  if (locale.startsWith('pt')) return 'Limpar';
+  if (locale.startsWith('de')) return 'Zurücksetzen';
+  return 'Clear';
 }

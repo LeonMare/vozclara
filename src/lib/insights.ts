@@ -27,6 +27,7 @@ export interface InsightsResult {
   socialAngles: SocialAngle[];
   chapters: Chapter[];
   keyQuotes: KeyQuote[];
+  tags: string[];
 }
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
@@ -110,7 +111,30 @@ function normalise(raw: Record<string, unknown>): InsightsResult {
     socialAngles: normaliseSocialAngles(raw.socialAngles),
     chapters: normaliseChapters(raw.chapters),
     keyQuotes: normaliseKeyQuotes(raw.keyQuotes),
+    tags: normaliseTags(raw.tags),
   };
+}
+
+/**
+ * Mirror of the worker-side tag cleaner. Strips noise, dedupes, caps
+ * at 6 so cards stay tidy. Lowercase + trim only — the worker should
+ * already do most of this; the client repeats it defensively in case
+ * a cached pack or third-party API returns differently-shaped data.
+ */
+function normaliseTags(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  const stop = new Set(['video', 'idea', 'topic', 'content', 'pack', 'youtube']);
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of v) {
+    if (typeof raw !== 'string') continue;
+    const t = raw.trim().toLowerCase().slice(0, 32);
+    if (!t || t.length < 2 || stop.has(t) || seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+    if (out.length >= 6) break;
+  }
+  return out;
 }
 
 function stringArray(v: unknown): string[] {

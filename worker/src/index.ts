@@ -299,6 +299,7 @@ interface InsightsOutput {
   socialAngles: SocialAngleOutput[];
   chapters: ChapterOutput[];
   keyQuotes: KeyQuoteOutput[];
+  tags: string[];
 }
 
 type Mode = 'learn' | 'business' | 'creator';
@@ -356,7 +357,8 @@ function structuredInstruction(targetLang: string, mode: Mode): string {
   "keyQuotes": [
     { "text": "memorable line translated to ${lang}", "original": "original line in source language", "speaker": "speaker name if known, otherwise null", "timestampSec": 0 },
     ...
-  ]
+  ],
+  "tags": ["3-5 single-word or two-word tags in ${lang}, lowercase. Use the topic / domain / proper nouns / industry — not generic words like 'video' or 'idea'.", ...]
 }`;
 
   const modeRules = {
@@ -489,8 +491,9 @@ function parseInsightsJson(raw: string): InsightsOutput {
   const socialAngles = normaliseSocialAngles(p.socialAngles);
   const chapters = normaliseChapterArray(p.chapters);
   const keyQuotes = normaliseKeyQuoteArray(p.keyQuotes);
+  const tags = normaliseTags(p.tags);
 
-  return { summary, insights, actionPlan, vocabulary, quiz, socialAngles, chapters, keyQuotes };
+  return { summary, insights, actionPlan, vocabulary, quiz, socialAngles, chapters, keyQuotes, tags };
 }
 
 function emptyInsightsOutput(fallbackSummary = ''): InsightsOutput {
@@ -503,7 +506,30 @@ function emptyInsightsOutput(fallbackSummary = ''): InsightsOutput {
     socialAngles: [],
     chapters: [],
     keyQuotes: [],
+    tags: [],
   };
+}
+
+/**
+ * Clean LLM-generated tag list: lowercase, trim, drop empties, dedupe,
+ * cap at 6 to keep card-display tidy. Filters out generic noise words
+ * the model sometimes emits despite the prompt instructions.
+ */
+function normaliseTags(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  const stop = new Set(['video', 'idea', 'topic', 'content', 'pack', 'youtube']);
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of v) {
+    if (typeof raw !== 'string') continue;
+    const tag = raw.trim().toLowerCase().slice(0, 32);
+    if (!tag || tag.length < 2 || stop.has(tag)) continue;
+    if (seen.has(tag)) continue;
+    seen.add(tag);
+    out.push(tag);
+    if (out.length >= 6) break;
+  }
+  return out;
 }
 
 function stringArray(v: unknown): string[] {

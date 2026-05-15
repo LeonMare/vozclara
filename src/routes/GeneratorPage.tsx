@@ -166,11 +166,18 @@ export function GeneratorPage() {
         // promote it as the active view. The transcript is shared
         // across languages so we don't write a new one (and in the
         // fast path we didn't even fetch one).
+        //
+        // Tags: union of whatever the pack already had + whatever the
+        // LLM extracted on this run. That way packs that pre-date the
+        // auto-tagging feature gain tags the first time the user adds
+        // another translation, without losing the old set.
+        const mergedTags = Array.from(new Set([...existingPack.tags, ...result.tags]));
         const merged: KnowledgePack = {
           ...existingPack,
           outputLang,
           outputLanguages: Array.from(new Set([...existingPack.outputLanguages, outputLang])),
           translations: { ...existingPack.translations, [outputLang]: translation },
+          tags: mergedTags,
           updatedAt: Date.now(),
         };
         await savePack(merged);
@@ -200,7 +207,7 @@ export function GeneratorPage() {
           mode,
           genre: result.genre,
           status: 'ready',
-          tags: [],
+          tags: result.tags,
           category: result.genre,
           isPublic: false,
           createdAt: Date.now(),
