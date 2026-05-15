@@ -25,7 +25,7 @@ export function PricingPage() {
   });
 
   return (
-    <main className="bg-creme paper">
+    <main id="main" className="bg-creme paper">
       {/* Back link */}
       <div className="mx-auto max-w-6xl px-5 pt-6 sm:px-8 sm:pt-8">
         <Link

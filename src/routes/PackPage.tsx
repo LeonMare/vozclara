@@ -107,7 +107,7 @@ export function PackPage() {
 
   if (notFound) {
     return (
-      <main className="bg-creme paper">
+      <main id="main" className="bg-creme paper">
         <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8 sm:py-28">
           <BrandMark variant="monogram" size="lg" tone="gold" decorative />
           <p className="mt-6 font-serif italic text-graphit/70 sm:text-lg">
@@ -123,7 +123,7 @@ export function PackPage() {
 
   if (!pack) {
     return (
-      <main className="bg-creme paper">
+      <main id="main" className="bg-creme paper">
         <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">
           <BrandMark variant="monogram" size="lg" tone="gold" decorative />
         </div>

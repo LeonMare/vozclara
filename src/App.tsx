@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppHeader } from './components/AppHeader';
 import { BrandMark } from './components/BrandMark';
 import { Landing } from './components/landing/Landing';
@@ -45,9 +45,35 @@ const PricingPage = lazy(() =>
   import('./routes/PricingPage').then((m) => ({ default: m.PricingPage })),
 );
 
+/**
+ * Scroll to top on every route change. SPA navigation otherwise inherits
+ * the previous route's scroll position, which is jarring when going from
+ * a long pack page back to /library (you land at mid-page where you
+ * happened to click the "back" link). Honours `prefers-reduced-motion`
+ * by skipping the smooth-scroll behaviour for users who opted out.
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'instant' as ScrollBehavior });
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+      {/* Skip-link for keyboard users — invisible until focused, then
+          jumps past the header into the route's <main> content. */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-card focus:bg-navy focus:px-4 focus:py-2 focus:font-sans focus:text-sm focus:font-medium focus:text-creme"
+      >
+        Skip to content
+      </a>
       <Routes>
         <Route path="/" element={<LandingShell />} />
         <Route
@@ -100,7 +126,7 @@ function LandingShell() {
   return (
     <div className="flex min-h-full flex-col">
       <AppHeader />
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <Landing />
       </main>
     </div>

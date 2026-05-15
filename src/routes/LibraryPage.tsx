@@ -84,7 +84,7 @@ export function LibraryPage() {
 
   if (packs.length === 0 && stats) {
     return (
-      <main className="bg-creme paper">
+      <main id="main" className="bg-creme paper">
         <div className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
           <BrandMark variant="monogram" size="xl" tone="gold" decorative />
           <h1 className="mt-8 font-serif text-3xl text-navy sm:text-4xl">

@@ -238,7 +238,7 @@ export function GeneratorPage() {
   }
 
   return (
-    <main className="bg-creme paper">
+    <main id="main" className="bg-creme paper">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="mb-8 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
           § {t.newPageTitle}

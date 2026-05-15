@@ -309,3 +309,20 @@ button,
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ─── A11y polish ────────────────────────────────────────────────────────
+ * Keyboard-only focus indicator. Default browser outlines are inconsistent
+ * across vendors and clash with our brand. :focus-visible only triggers
+ * for keyboard navigation (Tab key), not for mouse clicks — so visual
+ * noise stays low for pointer users. Gold ring matches the brand.
+ */
+:focus-visible {
+  outline: 2px solid #C9A24B;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Suppress focus ring on the body itself. */
+body:focus-visible {
+  outline: none;
+}
