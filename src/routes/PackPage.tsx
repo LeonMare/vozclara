@@ -8,6 +8,7 @@ import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
 import { PackExport } from '../components/PackExport';
+import { PackShare } from '../components/PackShare';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -147,7 +148,8 @@ export function PackPage() {
           <Link to="/library" className="font-sans text-sm text-graphit/65 underline-offset-4 hover:text-navy hover:underline">
             {t.packBackToLibrary}
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <PackShare pack={pack} />
             <PackExport pack={pack} />
             {!isSample && (
               <button
