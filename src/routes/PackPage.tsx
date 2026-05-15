@@ -6,6 +6,7 @@ import { getPack, getTranscript, deletePack, type KnowledgePack, type Segment, t
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
+import { PackFeedback } from '../components/PackFeedback';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -210,6 +211,11 @@ export function PackPage() {
           {tab === 'socialAngles' && <SocialAnglesTab pack={pack} />}
           {tab === 'transcript' && <TranscriptTab segments={segments} />}
         </section>
+
+        {/* Feedback panel — only on real user packs, not samples.
+            Lives at the tail of the content so the prompt arrives after
+            the reader has actually engaged with the pack. */}
+        {!isSample && <PackFeedback pack={pack} />}
       </div>
     </main>
   );
