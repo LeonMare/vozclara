@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
 import { samplePackBusiness, samplePackLearn, samplePackCreator } from '../../lib/samplePack';
-import type { KnowledgePack, Mode } from '../../lib/pack';
+import { activeView, type KnowledgePack, type Mode } from '../../lib/pack';
 
 type TabKey = 'summary' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles';
 
@@ -146,18 +146,19 @@ function packForMode(m: Mode): KnowledgePack {
 }
 
 function tabsForMode(pack: KnowledgePack): TabKey[] {
+  const view = activeView(pack);
   const out: TabKey[] = ['summary', 'insights'];
   if (pack.mode === 'learn') {
-    if (pack.vocabulary.length > 0) out.push('vocabulary');
-    if (pack.quiz.length > 0) out.push('quiz');
+    if (view.vocabulary.length > 0) out.push('vocabulary');
+    if (view.quiz.length > 0) out.push('quiz');
   }
   if (pack.mode === 'business') {
-    if (pack.actionPlan.length > 0) out.push('actionPlan');
-    if (pack.keyQuotes.length > 0) out.push('quotes');
+    if (view.actionPlan.length > 0) out.push('actionPlan');
+    if (view.keyQuotes.length > 0) out.push('quotes');
   }
   if (pack.mode === 'creator') {
-    if (pack.socialAngles.length > 0) out.push('socialAngles');
-    if (pack.keyQuotes.length > 0) out.push('quotes');
+    if (view.socialAngles.length > 0) out.push('socialAngles');
+    if (view.keyQuotes.length > 0) out.push('quotes');
   }
   return out;
 }
@@ -165,15 +166,17 @@ function tabsForMode(pack: KnowledgePack): TabKey[] {
 /* ─── Preview body — compact, snippet-style ────────────────────────────── */
 
 function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
+  const view = activeView(pack);
+
   if (tab === 'summary') {
     return (
       <div>
         <p className="font-serif text-[15px] leading-relaxed text-navy sm:text-base">
-          {pack.summary.short}
+          {view.summary.short}
         </p>
         <div className="my-3 h-px w-6 bg-gold/50" />
         <p className="font-sans text-[13px] leading-relaxed text-graphit/75 line-clamp-4">
-          {pack.summary.long}
+          {view.summary.long}
         </p>
       </div>
     );
@@ -182,7 +185,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'insights') {
     return (
       <div className="space-y-3">
-        {pack.keyIdeas.slice(0, 2).map((idea, i) => (
+        {view.keyIdeas.slice(0, 2).map((idea, i) => (
           <div key={i}>
             <div className="flex items-baseline gap-2">
               <span className="font-serif text-sm text-gold/65 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
@@ -200,7 +203,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'actionPlan') {
     return (
       <ul className="space-y-2">
-        {pack.actionPlan.slice(0, 3).map((line, i) => (
+        {view.actionPlan.slice(0, 3).map((line, i) => (
           <li key={i} className="flex gap-2.5 border-l-2 border-gold/50 bg-creme/50 px-3 py-2">
             <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-gold font-sans text-[9px] text-gold">
               {i + 1}
@@ -215,7 +218,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'vocabulary') {
     return (
       <div className="space-y-3">
-        {pack.vocabulary.slice(0, 4).map((v, i) => (
+        {view.vocabulary.slice(0, 4).map((v, i) => (
           <div key={i} className="flex flex-wrap items-baseline gap-2">
             <span className="font-serif text-base text-navy">{v.word}</span>
             {v.partOfSpeech && (
@@ -234,7 +237,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'quiz') {
     return (
       <div className="space-y-3">
-        {pack.quiz.slice(0, 2).map((q, i) => (
+        {view.quiz.slice(0, 2).map((q, i) => (
           <div key={i} className="border-l-2 border-gold/50 pl-3">
             <div className="flex items-baseline gap-2">
               <span className="font-serif text-sm text-gold/65 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
@@ -250,7 +253,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'quotes') {
     return (
       <div className="space-y-3">
-        {pack.keyQuotes.slice(0, 2).map((q, i) => (
+        {view.keyQuotes.slice(0, 2).map((q, i) => (
           <blockquote key={i} className="border-l-2 border-gold/50 pl-3">
             <p className="font-serif text-[15px] italic leading-snug text-navy">"{q.text}"</p>
             {q.speaker && (
@@ -267,7 +270,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   if (tab === 'socialAngles') {
     return (
       <div className="space-y-3">
-        {pack.socialAngles.slice(0, 2).map((s, i) => (
+        {view.socialAngles.slice(0, 2).map((s, i) => (
           <div key={i} className="border border-navy/10 bg-creme/50 p-3">
             <p className="font-serif text-[14px] font-medium leading-snug text-navy">"{s.hook}"</p>
             <p className="mt-1.5 font-sans text-[11px] leading-snug text-graphit/70 line-clamp-2">

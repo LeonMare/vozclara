@@ -7,6 +7,7 @@ import {
   libraryStats,
   filterPacks,
   getBrainId,
+  activeView,
   type KnowledgePack,
   type Mode,
   type Language,
@@ -114,7 +115,9 @@ export function LibraryPage() {
           <p className="py-12 text-center font-serif italic text-graphit/55">— —</p>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((p) => (
+            {filtered.map((p) => {
+              const view = activeView(p);
+              return (
               <button
                 key={p.id}
                 type="button"
@@ -136,7 +139,9 @@ export function LibraryPage() {
                     {t.modes[p.mode].name}
                   </span>
                   <span className="absolute right-3 top-3 rounded-full bg-creme/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-graphit/70 backdrop-blur-sm">
-                    {p.outputLang.toUpperCase()}
+                    {p.outputLanguages.length > 1
+                      ? `${p.outputLang.toUpperCase()} +${p.outputLanguages.length - 1}`
+                      : p.outputLang.toUpperCase()}
                   </span>
                 </div>
 
@@ -145,9 +150,9 @@ export function LibraryPage() {
                   <h3 className="font-serif text-base leading-snug text-navy sm:text-lg">
                     {p.title}
                   </h3>
-                  {p.summary.short && (
+                  {view.summary.short && (
                     <p className="mt-2 font-sans text-[13px] leading-snug text-graphit/65 line-clamp-2">
-                      {p.summary.short}
+                      {view.summary.short}
                     </p>
                   )}
 
@@ -156,7 +161,7 @@ export function LibraryPage() {
                   {/* Meta row: idea count + date + genre */}
                   <div className="mt-3 flex items-baseline justify-between gap-2 font-sans text-[11px] text-graphit/55">
                     <span className="inline-flex items-baseline gap-1 tabular-nums">
-                      <span className="font-medium text-navy">{p.keyIdeas.length}</span>
+                      <span className="font-medium text-navy">{view.keyIdeas.length}</span>
                       <span className="text-graphit/45">·</span>
                       <span className="italic">{t.genreNames[p.genre] ?? p.genre}</span>
                     </span>
@@ -166,7 +171,8 @@ export function LibraryPage() {
                   </div>
                 </div>
               </button>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

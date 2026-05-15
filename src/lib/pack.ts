@@ -1,11 +1,28 @@
 /**
  * Knowledge Pack — the core domain object.
  *
- * Each video becomes a Knowledge Pack: a structured, searchable,
- * multilingual record of what was said and what matters. Packs live in
- * IndexedDB for the MVP and sync to Cloudflare D1 when accounts arrive.
+ * v2 (multi-locale): a single pack now carries translations for multiple
+ * output languages. The user can switch between them inline in the Pack
+ * view, and on-demand generation merges new translations into the same
+ * pack record rather than creating a new pack.
  *
- * Mode-specific fields:
+ * Field layout
+ *   • `translations: Record<Language, PackTranslation>` — the actual
+ *     per-language content (summary, keyIdeas, chapters, …)
+ *   • `outputLanguages: Language[]` — convenience list of available
+ *     translations, kept in sync with `Object.keys(translations)`.
+ *     Persisted so library filters don't have to inspect the nested
+ *     map.
+ *   • `outputLang: Language` — currently active view. Mutates when the
+ *     user picks a different language in the Pack header.
+ *
+ * Migration
+ *   Existing packs stored with the v1 flat shape (summary/keyIdeas/…
+ *   at the top level) are transformed on read by migrateStoredPack().
+ *   No write-time migration is forced — the next save() naturally
+ *   persists the new shape.
+ *
+ * Mode-specific tabs
  *   Learn:    vocabulary, quiz, chapters (educational pacing)
  *   Business: actionPlan, keyQuotes (decision-maker focus)
  *   Creator:  socialAngles, captionIdeas (repurposing)
@@ -79,17 +96,12 @@ export interface Segment {
   translated?: string;
 }
 
-export interface KnowledgePack {
-  id: string;                       // nanoid(12), used in URLs
-  brainId: string;                  // anonymous owner identifier
-  source: VideoSource;
-  title: string;
-  sourceLang: Language;
-  outputLang: Language;
-  mode: Mode;
-  genre: Genre;
-  status: PackStatus;
-
+/**
+ * Per-language content. Everything that gets translated lives here;
+ * everything that is metadata (mode, genre, dates, source) stays on
+ * the parent pack and is shared across translations.
+ */
+export interface PackTranslation {
   summary: {
     short: string;
     long: string;
@@ -101,6 +113,31 @@ export interface KnowledgePack {
   keyQuotes: KeyQuote[];
   socialAngles: SocialAngle[];
   quiz: QuizQuestion[];
+}
+
+export interface KnowledgePack {
+  id: string;                       // nanoid(12), used in URLs
+  brainId: string;                  // anonymous owner identifier
+  source: VideoSource;
+
+  /** Title from the source video — kept in source language. */
+  title: string;
+
+  /** Detected language of the source captions. */
+  sourceLang: Language;
+
+  /** Currently active output language for this Pack view. */
+  outputLang: Language;
+
+  /** All output languages currently materialised in `translations`. */
+  outputLanguages: Language[];
+
+  /** Per-language content. Keys are members of `outputLanguages`. */
+  translations: Partial<Record<Language, PackTranslation>>;
+
+  mode: Mode;
+  genre: Genre;
+  status: PackStatus;
 
   tags: string[];
   category: string;
@@ -112,6 +149,30 @@ export interface KnowledgePack {
   /** Transcript stored separately under its own key to keep listings light. */
   transcriptKey?: string;
 }
+
+/**
+ * Read-time accessor for the active translation. Falls back to the
+ * first available translation if the active language is somehow not
+ * materialised (shouldn't happen, but lets the UI degrade gracefully).
+ */
+export function activeView(pack: KnowledgePack): PackTranslation {
+  return (
+    pack.translations[pack.outputLang] ??
+    Object.values(pack.translations)[0] ??
+    EMPTY_TRANSLATION
+  );
+}
+
+const EMPTY_TRANSLATION: PackTranslation = {
+  summary: { short: '', long: '' },
+  keyIdeas: [],
+  chapters: [],
+  actionPlan: [],
+  vocabulary: [],
+  keyQuotes: [],
+  socialAngles: [],
+  quiz: [],
+};
 
 /* ─── Brain ID — anonymous owner identifier ─────────────────────────────── */
 
@@ -140,7 +201,9 @@ interface PackIndex {
 }
 
 export async function getPack(id: string): Promise<KnowledgePack | undefined> {
-  return get<KnowledgePack>(packKey(id));
+  const raw = await get<unknown>(packKey(id));
+  if (!raw || typeof raw !== 'object') return undefined;
+  return migrateStoredPack(raw as Record<string, unknown>) ?? undefined;
 }
 
 export async function getTranscript(transcriptKeyValue: string): Promise<{ segments: Segment[] } | undefined> {
@@ -179,8 +242,71 @@ async function removeFromIndex(brainId: string, packId: string): Promise<void> {
 
 export async function listPacks(brainId: string): Promise<KnowledgePack[]> {
   const idx = (await get<PackIndex>(indexKey(brainId))) ?? { ids: [] };
-  const packs = await Promise.all(idx.ids.map((id) => get<KnowledgePack>(packKey(id))));
-  return packs.filter((p): p is KnowledgePack => !!p);
+  const raws = await Promise.all(idx.ids.map((id) => get<unknown>(packKey(id))));
+  return raws
+    .map((r) => (r && typeof r === 'object' ? migrateStoredPack(r as Record<string, unknown>) : null))
+    .filter((p): p is KnowledgePack => !!p);
+}
+
+/* ─── Migration ─────────────────────────────────────────────────────────── */
+
+/**
+ * Read-time migration from the v1 flat shape to the v2 multi-locale shape.
+ * Returns null if the data is genuinely unparseable. v2-shaped packs pass
+ * through unchanged (idempotent — re-migrating costs nothing).
+ */
+function migrateStoredPack(raw: Record<string, unknown>): KnowledgePack | null {
+  if (!raw.id || !raw.brainId) return null;
+
+  // Already v2 if it has a translations map.
+  if (
+    raw.translations &&
+    typeof raw.translations === 'object' &&
+    !Array.isArray(raw.translations)
+  ) {
+    const pack = raw as unknown as KnowledgePack;
+    // Defensive: re-derive outputLanguages from translations keys so
+    // the list stays in sync even if older code wrote stale state.
+    return {
+      ...pack,
+      outputLanguages: Object.keys(pack.translations).filter((k) =>
+        ['en', 'es', 'de', 'pt', 'fr'].includes(k),
+      ) as Language[],
+    };
+  }
+
+  // v1 → v2: lift summary/keyIdeas/etc onto translations[outputLang]
+  const outputLang = (raw.outputLang as Language) ?? 'es';
+  const translation: PackTranslation = {
+    summary: (raw.summary as PackTranslation['summary']) ?? { short: '', long: '' },
+    keyIdeas: (raw.keyIdeas as KeyIdea[]) ?? [],
+    chapters: (raw.chapters as Chapter[]) ?? [],
+    actionPlan: (raw.actionPlan as string[]) ?? [],
+    vocabulary: (raw.vocabulary as VocabularyItem[]) ?? [],
+    keyQuotes: (raw.keyQuotes as KeyQuote[]) ?? [],
+    socialAngles: (raw.socialAngles as SocialAngle[]) ?? [],
+    quiz: (raw.quiz as QuizQuestion[]) ?? [],
+  };
+
+  return {
+    id: raw.id as string,
+    brainId: raw.brainId as string,
+    source: raw.source as VideoSource,
+    title: (raw.title as string) ?? '',
+    sourceLang: (raw.sourceLang as Language) ?? 'en',
+    outputLang,
+    outputLanguages: [outputLang],
+    translations: { [outputLang]: translation },
+    mode: (raw.mode as Mode) ?? 'business',
+    genre: (raw.genre as Genre) ?? 'general',
+    status: (raw.status as PackStatus) ?? 'ready',
+    tags: (raw.tags as string[]) ?? [],
+    category: (raw.category as string) ?? 'general',
+    isPublic: (raw.isPublic as boolean) ?? false,
+    createdAt: (raw.createdAt as number) ?? Date.now(),
+    updatedAt: (raw.updatedAt as number) ?? Date.now(),
+    transcriptKey: raw.transcriptKey as string | undefined,
+  };
 }
 
 /* ─── Library statistics ────────────────────────────────────────────────── */
@@ -199,8 +325,8 @@ export async function libraryStats(brainId: string): Promise<LibraryStats> {
   let ideas = 0;
   let thisWeek = 0;
   for (const p of packs) {
-    langs.add(p.outputLang);
-    ideas += p.keyIdeas.length;
+    for (const lang of p.outputLanguages) langs.add(lang);
+    ideas += activeView(p).keyIdeas.length;
     if (p.createdAt >= weekAgo) thisWeek += 1;
   }
   return {
@@ -225,15 +351,16 @@ export function filterPacks(packs: KnowledgePack[], f: LibraryFilters): Knowledg
   const cutoff = f.sinceDays != null ? Date.now() - f.sinceDays * 24 * 60 * 60 * 1000 : 0;
   return packs.filter((p) => {
     if (f.mode && f.mode !== 'all' && p.mode !== f.mode) return false;
-    if (f.language && f.language !== 'all' && p.outputLang !== f.language) return false;
+    if (f.language && f.language !== 'all' && !p.outputLanguages.includes(f.language)) return false;
     if (cutoff > 0 && p.createdAt < cutoff) return false;
     if (q) {
+      const view = activeView(p);
       const haystack = [
         p.title,
-        p.summary.short,
-        p.summary.long,
+        view.summary.short,
+        view.summary.long,
         p.tags.join(' '),
-        p.keyIdeas.map((k) => k.title + ' ' + k.body).join(' '),
+        view.keyIdeas.map((k) => k.title + ' ' + k.body).join(' '),
       ].join(' ').toLowerCase();
       if (!haystack.includes(q)) return false;
     }

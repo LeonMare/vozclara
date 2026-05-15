@@ -6,7 +6,7 @@ import { ModePicker } from '../components/ModePicker';
 import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
 import { fetchInsights, joinForLLM } from '../lib/insights';
-import { savePack, saveTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type Genre } from '../lib/pack';
+import { savePack, saveTranscript, getPack, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
 import { nanoid } from '../lib/nanoid';
 
 /**
@@ -26,11 +26,15 @@ export function GeneratorPage() {
   const { t, locale } = useLocale();
 
   const initialVideoId = searchParams.get('v') ?? '';
-  // Honor ?lang= and ?mode= pre-selectors. Used by the Pack-view's
-  // "Translate to..." switcher so the user lands on Generate with one
-  // click left to confirm — no silent re-generation, no surprise pack.
+  // Honour ?lang= and ?mode= pre-selectors. Used by the Pack-view's
+  // language switcher so the user lands on Generate with one click
+  // left to confirm — no silent re-generation, no surprise pack.
   const initialLang = (searchParams.get('lang') as Language | null);
   const initialMode = (searchParams.get('mode') as Mode | null);
+  // ?packId=… means "merge the resulting translation into THIS existing
+  // pack as an additional language" rather than creating a new pack.
+  // Drives the multi-locale workflow from the Pack-view + chip.
+  const mergeIntoPackId = searchParams.get('packId');
 
   const [videoId, setVideoId] = useState(initialVideoId);
   const [pasteValue, setPasteValue] = useState(initialVideoId ? `https://www.youtube.com/watch?v=${initialVideoId}` : '');
@@ -101,26 +105,10 @@ export function GeneratorPage() {
       setProgressMeta((m) => ({ ...m, insights: result.insights.length }));
       if (!recommended) setRecommended(modeForGenre(result.genre));
 
-      // 3. Assemble + persist the pack.
-      const id = nanoid(12);
-      const brainId = getBrainId();
-      const transcriptKey = await saveTranscript(id, transcript.segments);
-      const title = transcript.title ?? `Video ${videoId}`;
-      const pack: KnowledgePack = {
-        id,
-        brainId,
-        source: {
-          type: 'youtube',
-          url: `https://www.youtube.com/watch?v=${videoId}`,
-          videoId,
-          thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-        },
-        title,
-        sourceLang,
-        outputLang,
-        mode,
-        genre: result.genre,
-        status: 'ready',
+      // 3. Build the per-language translation slice from the worker
+      //    response. Same shape for both "create new pack" and "merge
+      //    into existing pack" paths — only the wrapping differs.
+      const translation: PackTranslation = {
         summary: result.summary,
         keyIdeas: result.insights,
         chapters: result.chapters,
@@ -129,16 +117,63 @@ export function GeneratorPage() {
         keyQuotes: result.keyQuotes,
         socialAngles: result.socialAngles,
         quiz: result.quiz,
-        tags: [],
-        category: result.genre,
-        isPublic: false,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        transcriptKey,
       };
-      await savePack(pack);
 
-      navigate(`/pack/${id}`);
+      let targetPackId: string;
+
+      if (mergeIntoPackId) {
+        // Merge path — append this translation to an existing pack and
+        // promote it as the active view. The transcript is shared across
+        // languages, so we don't store a new one.
+        const existing = await getPack(mergeIntoPackId);
+        if (!existing) throw new Error('pack_not_found_for_merge');
+
+        const merged: KnowledgePack = {
+          ...existing,
+          outputLang,
+          outputLanguages: Array.from(new Set([...existing.outputLanguages, outputLang])),
+          translations: { ...existing.translations, [outputLang]: translation },
+          updatedAt: Date.now(),
+        };
+        await savePack(merged);
+        targetPackId = existing.id;
+      } else {
+        // Fresh-pack path — assemble a new KnowledgePack carrying one
+        // translation, save the transcript under its own key, and
+        // route the user to the new pack view.
+        const id = nanoid(12);
+        const brainId = getBrainId();
+        const transcriptKey = await saveTranscript(id, transcript.segments);
+        const title = transcript.title ?? `Video ${videoId}`;
+        const pack: KnowledgePack = {
+          id,
+          brainId,
+          source: {
+            type: 'youtube',
+            url: `https://www.youtube.com/watch?v=${videoId}`,
+            videoId,
+            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+          },
+          title,
+          sourceLang,
+          outputLang,
+          outputLanguages: [outputLang],
+          translations: { [outputLang]: translation },
+          mode,
+          genre: result.genre,
+          status: 'ready',
+          tags: [],
+          category: result.genre,
+          isPublic: false,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          transcriptKey,
+        };
+        await savePack(pack);
+        targetPackId = id;
+      }
+
+      navigate(`/pack/${targetPackId}`);
     } catch (err) {
       const m = err instanceof Error ? err.message : String(err);
       setError(m);

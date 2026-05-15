@@ -1,4 +1,4 @@
-import type { KnowledgePack } from './pack';
+import type { KnowledgePack, PackTranslation } from './pack';
 
 /**
  * Pre-baked sample Knowledge Packs — one per mode. Used by:
@@ -9,6 +9,12 @@ import type { KnowledgePack } from './pack';
  * Real-feeling content condensed from actual videos. Same source video
  * for all three so the user sees the SAME content through three different
  * editorial lenses — that's the demonstration of mode value.
+ *
+ * v2 shape: per-mode content is held in named PackTranslation constants
+ * (businessES / learnES / creatorES) and assembled into the pack's
+ * `translations` map. Today every sample ships in Spanish only; when
+ * we add the on-demand translation flow, additional languages will
+ * appear under the same pack id as extra keys in `translations`.
  */
 
 const COMMON = {
@@ -24,6 +30,7 @@ const COMMON = {
   title: 'Tagesschau 20:00 Uhr · 03.05.2026',
   sourceLang: 'de' as const,
   outputLang: 'es' as const,
+  outputLanguages: ['es' as const],
   genre: 'news' as const,
   status: 'ready' as const,
   category: 'news',
@@ -33,12 +40,9 @@ const COMMON = {
   tags: ['política', 'alemania', 'coalición'],
 };
 
-/* ─── Business mode ───────────────────────────────────────────────────── */
+/* ─── Business mode — Spanish translation ─────────────────────────────── */
 
-export const samplePackBusiness: KnowledgePack = {
-  ...COMMON,
-  id: 'sample',
-  mode: 'business',
+const businessES: PackTranslation = {
   summary: {
     short: 'Un año en el cargo, Merz se enfrenta a una coalición tensa, reformas estancadas y la AfD ganando terreno en el este.',
     long: 'El canciller alemán Friedrich Merz cumple un año en el cargo en un momento delicado. Su coalición negro-roja prometía un arranque rápido, pero los proyectos de reforma en pensiones y fiscalidad se han atascado. La relación entre Unión y SPD se ha vuelto cada vez más tensa, y Merz ha reconocido públicamente un creciente descontento dentro de su propio partido por los compromisos alcanzados con el socio de coalición. Mientras tanto, la Alternativa para Alemania sigue ganando apoyo en los Estados del Este, donde el rechazo a la política migratoria de la Unión es alto. Voces dentro de la propia Unión piden un endurecimiento de la política de extranjería.',
@@ -92,12 +96,9 @@ export const samplePackBusiness: KnowledgePack = {
   quiz: [],
 };
 
-/* ─── Learn mode — same video, different lens ─────────────────────────── */
+/* ─── Learn mode — Spanish translation ────────────────────────────────── */
 
-export const samplePackLearn: KnowledgePack = {
-  ...COMMON,
-  id: 'sample-learn',
-  mode: 'learn',
+const learnES: PackTranslation = {
   summary: {
     short: 'Un año del gobierno de Merz: aprende qué es una coalición negro-roja, por qué las reformas se atascan y qué dice este caso sobre la política alemana.',
     long: 'Este vídeo de la Tagesschau analiza el primer año del canciller Friedrich Merz. La pieza ilustra varios conceptos clave de la política alemana: la dinámica de las coaliciones de gobierno (Unión + SPD, "schwarz-rot"), los puntos de fricción habituales entre socios de coalición (pensiones, fiscalidad, migración), y el papel de la AfD como tercera fuerza emergente sobre todo en los Estados del Este. Es un buen ejemplo para entender cómo funciona el sistema parlamentario alemán bajo presión.',
@@ -159,12 +160,9 @@ export const samplePackLearn: KnowledgePack = {
   socialAngles: [],
 };
 
-/* ─── Creator mode — same video, repurposing lens ─────────────────────── */
+/* ─── Creator mode — Spanish translation ──────────────────────────────── */
 
-export const samplePackCreator: KnowledgePack = {
-  ...COMMON,
-  id: 'sample-creator',
-  mode: 'creator',
+const creatorES: PackTranslation = {
   summary: {
     short: 'Tres ángulos virales del primer aniversario de Merz: la grieta interna, el ascenso de la AfD en el Este, y por qué las reformas alemanas se atascan.',
     long: 'El primer aniversario del canciller Merz ofrece material rico para contenido en redes. Tres ángulos destacan: la admisión pública del propio Merz sobre el malestar interno en su partido (genera engagement por el "drama"), el avance imparable de la AfD en el Este (controversia + relevancia internacional), y el patrón clásico de las coaliciones alemanas atascadas en pensiones-fiscalidad-migración (educativo + transferible a otros países).',
@@ -210,6 +208,29 @@ export const samplePackCreator: KnowledgePack = {
   ],
   vocabulary: [],
   quiz: [],
+};
+
+/* ─── Pack assembly ───────────────────────────────────────────────────── */
+
+export const samplePackBusiness: KnowledgePack = {
+  ...COMMON,
+  id: 'sample',
+  mode: 'business',
+  translations: { es: businessES },
+};
+
+export const samplePackLearn: KnowledgePack = {
+  ...COMMON,
+  id: 'sample-learn',
+  mode: 'learn',
+  translations: { es: learnES },
+};
+
+export const samplePackCreator: KnowledgePack = {
+  ...COMMON,
+  id: 'sample-creator',
+  mode: 'creator',
+  translations: { es: creatorES },
 };
 
 /** Lookup by id — used by PackPage when ?id is sample / sample-learn / sample-creator. */

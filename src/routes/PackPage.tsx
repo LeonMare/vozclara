@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
-import { getPack, getTranscript, deletePack, type KnowledgePack, type Segment, type Language } from '../lib/pack';
+import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
@@ -21,13 +21,12 @@ const TRANSLATABLE_LANGS: Language[] = ['es', 'en', 'de', 'pt'];
  *   • content genre
  *   • creation date
  *
- * Translate-switcher:
- *   The pack carries exactly one output language. If the user wants
- *   another language, the switcher links to /new with the same video
- *   pre-selected and the new target language + mode pre-filled. The
- *   user confirms with a single click; a new pack is created and
- *   stored in the library alongside the original. No silent re-runs,
- *   no half-translated states.
+ * Language switcher:
+ *   Packs carry a Record<Language, PackTranslation> map. The chips in
+ *   the header switch the active view instantly between materialised
+ *   translations. To add a NEW language the user hops to /new with
+ *   ?packId=... — the Generator merges the result into this pack as
+ *   an additional translation rather than creating a separate pack.
  *
  * Tabs are mode-aware. The audio player sits between the header and
  * the tab strip — no longer sticky so it doesn't cover the content.
@@ -109,9 +108,27 @@ export function PackPage() {
     );
   }
 
-  const tabs: TabKey[] = tabsForMode(pack);
+  const view = activeView(pack);
+  const tabs: TabKey[] = tabsForMode(pack, view);
   const isSample = pack.id.startsWith('sample');
   const titleClean = displayTitle(pack);
+
+  async function handleSwitchLanguage(lang: Language) {
+    // Re-narrow inside the async closure — TS widens `pack` back to
+    // `KnowledgePack | null` across the await boundary.
+    const current = pack;
+    if (!current) return;
+    if (lang === current.outputLang) return;
+    if (!current.translations[lang]) return; // not yet generated
+    if (isSample) {
+      // Samples are read-only — switch the local copy without persisting.
+      setPack({ ...current, outputLang: lang });
+      return;
+    }
+    const updated: KnowledgePack = { ...current, outputLang: lang };
+    await savePack(updated);
+    setPack(updated);
+  }
 
   async function handleDelete() {
     if (!pack || isSample) return;
@@ -167,12 +184,17 @@ export function PackPage() {
             separate source-link is no longer needed below the title. */}
         <VideoPanel source={pack.source} />
 
-        {/* Translate-to switcher — pragmatic: links to /new with the same video
-            pre-selected and the new target language + mode pre-filled. The
-            original pack stays untouched in the library. */}
-        {!isSample && (
-          <TranslateSwitcher pack={pack} />
-        )}
+        {/* Language switcher — chips show every materialised translation
+            on this pack; clicking switches the view instantly. Missing
+            languages are surfaced as dashed "+ DE" CTAs that route to
+            /new?packId=… so the Generator merges the new translation
+            back into this pack. Sample packs are read-only so they
+            hide the add-CTAs but keep the switcher. */}
+        <LanguageSwitcher
+          pack={pack}
+          onSwitch={handleSwitchLanguage}
+          hideAddCta={isSample}
+        />
       </div>
 
       {/* Audio companion — non-sticky, in document flow. */}
@@ -188,7 +210,7 @@ export function PackPage() {
             <div className="flex min-w-max gap-1">
               {tabs.map((k) => {
                 const isActive = k === tab;
-                const count = countForTab(pack, k);
+                const count = countForTab(view, k);
                 return (
                   <button
                     key={k}
@@ -218,7 +240,7 @@ export function PackPage() {
           </nav>
 
           <section className="mt-8 pb-16">
-            {renderTabContent(tab, pack, segments, t)}
+            {renderTabContent(tab, view, segments, t)}
           </section>
         </div>
 
@@ -228,7 +250,7 @@ export function PackPage() {
         <div className="sm:hidden mt-6 divide-y divide-navy/10 border-y border-navy/10">
           {tabs.map((k) => {
             const isOpen = openSections.has(k);
-            const count = countForTab(pack, k);
+            const count = countForTab(view, k);
             return (
               <div key={k}>
                 <button
@@ -262,7 +284,7 @@ export function PackPage() {
                 </button>
                 {isOpen && (
                   <div id={`panel-${k}`} className="pb-6 pt-2">
-                    {renderTabContent(k, pack, segments, t)}
+                    {renderTabContent(k, view, segments, t)}
                   </div>
                 )}
               </div>
@@ -279,63 +301,116 @@ export function PackPage() {
   );
 }
 
-/* ─── Translate switcher ───────────────────────────────────────────────── */
+/* ─── Language switcher ─────────────────────────────────────────────────
+ * Two roles in one panel:
+ *   1. Inline switch between already-materialised translations of this
+ *      pack — clicking an available language code re-renders the Pack
+ *      view in that language instantly (no worker round-trip).
+ *   2. "Add a language" — clicking a language not yet in the pack
+ *      hops to /new?v=…&lang=…&mode=…&packId=… so the Generator can
+ *      merge the new translation into THIS pack instead of creating
+ *      a new one. (Sample packs hide this CTA — they're read-only.)
+ */
 
-function TranslateSwitcher({ pack }: { pack: KnowledgePack }) {
+function LanguageSwitcher({
+  pack,
+  onSwitch,
+  hideAddCta,
+}: {
+  pack: KnowledgePack;
+  onSwitch: (lang: Language) => void;
+  hideAddCta: boolean;
+}) {
   const { locale } = useLocale();
-  const others = TRANSLATABLE_LANGS.filter((l) => l !== pack.outputLang);
+  const available = pack.outputLanguages;
+  const missing = TRANSLATABLE_LANGS.filter((l) => !available.includes(l));
 
   return (
-    <div className="mt-5 flex flex-wrap items-center gap-2 rounded-card border border-navy/10 bg-white/70 px-4 py-2.5">
+    <div className="mt-5 flex flex-wrap items-center gap-3 rounded-card border border-navy/10 bg-white/70 px-4 py-2.5">
+      {/* Already-materialised translations — instant switch */}
       <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
-        {translateLabel(locale)}
+        {viewInLabel(locale)}
       </span>
-      {others.map((l) => (
-        <Link
-          key={l}
-          to={`/new?v=${pack.source.videoId}&lang=${l}&mode=${pack.mode}`}
-          className="rounded-card border border-navy/15 bg-white px-2.5 py-1 font-sans text-xs uppercase tracking-widest text-graphit/65 transition hover:border-gold hover:text-navy"
-          title={translateTooltip(locale, l)}
-        >
-          {l.toUpperCase()}
-        </Link>
-      ))}
+      <div className="flex flex-wrap gap-1.5">
+        {available.map((l) => {
+          const isActive = l === pack.outputLang;
+          return (
+            <button
+              key={l}
+              type="button"
+              onClick={() => onSwitch(l)}
+              aria-pressed={isActive}
+              className={[
+                'rounded-card border px-2.5 py-1 font-sans text-xs uppercase tracking-widest transition',
+                isActive
+                  ? 'border-navy bg-navy text-creme'
+                  : 'border-navy/15 bg-white text-graphit/70 hover:border-gold hover:text-navy',
+              ].join(' ')}
+            >
+              {l.toUpperCase()}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* "Add a language" CTAs — generate a new translation that merges
+          back into THIS pack via the Generator's packId param. */}
+      {!hideAddCta && missing.length > 0 && (
+        <>
+          <span className="hidden text-navy/20 sm:inline">·</span>
+          <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+            {addLanguageLabel(locale)}
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {missing.map((l) => (
+              <Link
+                key={l}
+                to={`/new?v=${pack.source.videoId}&lang=${l}&mode=${pack.mode}&packId=${pack.id}`}
+                className="rounded-card border border-dashed border-navy/20 bg-white px-2.5 py-1 font-sans text-xs uppercase tracking-widest text-graphit/55 transition hover:border-gold hover:text-navy"
+                title={addLanguageTooltip(locale, l)}
+              >
+                + {l.toUpperCase()}
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-function tabsForMode(pack: KnowledgePack): TabKey[] {
+function tabsForMode(pack: KnowledgePack, view: PackTranslation): TabKey[] {
   const base: TabKey[] = ['summary'];
-  if (pack.chapters.length > 0) base.push('chapters');
+  if (view.chapters.length > 0) base.push('chapters');
   base.push('insights');
 
   if (pack.mode === 'learn') {
-    if (pack.vocabulary.length > 0) base.push('vocabulary');
-    if (pack.quiz.length > 0) base.push('quiz');
-    if (pack.actionPlan.length > 0) base.push('actionPlan');
+    if (view.vocabulary.length > 0) base.push('vocabulary');
+    if (view.quiz.length > 0) base.push('quiz');
+    if (view.actionPlan.length > 0) base.push('actionPlan');
   }
   if (pack.mode === 'business') {
-    if (pack.actionPlan.length > 0) base.push('actionPlan');
-    if (pack.keyQuotes.length > 0) base.push('quotes');
+    if (view.actionPlan.length > 0) base.push('actionPlan');
+    if (view.keyQuotes.length > 0) base.push('quotes');
   }
   if (pack.mode === 'creator') {
-    if (pack.socialAngles.length > 0) base.push('socialAngles');
-    if (pack.keyQuotes.length > 0) base.push('quotes');
+    if (view.socialAngles.length > 0) base.push('socialAngles');
+    if (view.keyQuotes.length > 0) base.push('quotes');
   }
 
   base.push('transcript');
   return base;
 }
 
-function countForTab(pack: KnowledgePack, k: TabKey): number {
+function countForTab(view: PackTranslation, k: TabKey): number {
   switch (k) {
-    case 'insights': return pack.keyIdeas.length;
-    case 'actionPlan': return pack.actionPlan.length;
-    case 'chapters': return pack.chapters.length;
-    case 'vocabulary': return pack.vocabulary.length;
-    case 'quiz': return pack.quiz.length;
-    case 'quotes': return pack.keyQuotes.length;
-    case 'socialAngles': return pack.socialAngles.length;
+    case 'insights': return view.keyIdeas.length;
+    case 'actionPlan': return view.actionPlan.length;
+    case 'chapters': return view.chapters.length;
+    case 'vocabulary': return view.vocabulary.length;
+    case 'quiz': return view.quiz.length;
+    case 'quotes': return view.keyQuotes.length;
+    case 'socialAngles': return view.socialAngles.length;
     default: return 0;
   }
 }
@@ -360,18 +435,25 @@ function unnamedLabel(locale: string): string {
   return 'Untitled video';
 }
 
-function translateLabel(locale: string): string {
-  if (locale.startsWith('es')) return 'Traducir a';
-  if (locale.startsWith('pt')) return 'Traduzir para';
-  if (locale.startsWith('de')) return 'Übersetzen nach';
-  return 'Translate to';
+function viewInLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Idioma';
+  if (locale.startsWith('pt')) return 'Idioma';
+  if (locale.startsWith('de')) return 'Sprache';
+  return 'Language';
 }
 
-function translateTooltip(locale: string, lang: Language): string {
-  if (locale.startsWith('es')) return `Generar Knowledge Pack en ${lang.toUpperCase()} (crea un pack nuevo)`;
-  if (locale.startsWith('pt')) return `Gerar Knowledge Pack em ${lang.toUpperCase()} (cria um pack novo)`;
-  if (locale.startsWith('de')) return `Knowledge Pack auf ${lang.toUpperCase()} erzeugen (erstellt einen neuen Pack)`;
-  return `Generate Knowledge Pack in ${lang.toUpperCase()} (creates a new pack)`;
+function addLanguageLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Añadir';
+  if (locale.startsWith('pt')) return 'Adicionar';
+  if (locale.startsWith('de')) return 'Hinzufügen';
+  return 'Add';
+}
+
+function addLanguageTooltip(locale: string, lang: Language): string {
+  if (locale.startsWith('es')) return `Generar traducción al ${lang.toUpperCase()} y añadirla a este Pack`;
+  if (locale.startsWith('pt')) return `Gerar tradução para ${lang.toUpperCase()} e adicionar a este Pack`;
+  if (locale.startsWith('de')) return `${lang.toUpperCase()}-Übersetzung erzeugen und zu diesem Pack hinzufügen`;
+  return `Generate a ${lang.toUpperCase()} translation and add it to this Pack`;
 }
 
 function deleteConfirmLabel(locale: string): string {
@@ -388,27 +470,27 @@ function deleteConfirmLabel(locale: string): string {
  */
 function renderTabContent(
   key: TabKey,
-  pack: KnowledgePack,
+  view: PackTranslation,
   segments: Segment[],
   t: ReturnType<typeof useLocale>['t'],
 ): React.ReactNode {
   switch (key) {
     case 'summary':
-      return <SummaryTab pack={pack} />;
+      return <SummaryTab view={view} />;
     case 'chapters':
-      return <ListTab items={pack.chapters.map((c) => `${formatTime(c.startSec)} · ${c.title}: ${c.summary}`)} />;
+      return <ListTab items={view.chapters.map((c) => `${formatTime(c.startSec)} · ${c.title}: ${c.summary}`)} />;
     case 'insights':
-      return <InsightsTab pack={pack} />;
+      return <InsightsTab view={view} />;
     case 'actionPlan':
-      return <ListTab items={pack.actionPlan} numbered />;
+      return <ListTab items={view.actionPlan} numbered />;
     case 'vocabulary':
-      return <VocabularyTab pack={pack} />;
+      return <VocabularyTab view={view} />;
     case 'quiz':
-      return <QuizTab pack={pack} />;
+      return <QuizTab view={view} />;
     case 'quotes':
-      return <QuotesTab pack={pack} />;
+      return <QuotesTab view={view} />;
     case 'socialAngles':
-      return <SocialAnglesTab pack={pack} />;
+      return <SocialAnglesTab view={view} />;
     case 'transcript':
       return <TranscriptTab segments={segments} />;
     default:
@@ -419,19 +501,19 @@ function renderTabContent(
 
 /* ─── Tabs ────────────────────────────────────────────────────────────── */
 
-function SummaryTab({ pack }: { pack: KnowledgePack }) {
+function SummaryTab({ view }: { view: PackTranslation }) {
   return (
     <div>
-      {pack.summary.short && (
+      {view.summary.short && (
         <p className="font-serif text-xl leading-snug text-navy sm:text-2xl">
-          {pack.summary.short}
+          {view.summary.short}
         </p>
       )}
-      {pack.summary.long && (
+      {view.summary.long && (
         <>
           <div className="my-6 h-px w-8 bg-gold/50" aria-hidden />
           <p className="font-sans text-base leading-relaxed text-graphit/85 sm:text-lg">
-            {pack.summary.long}
+            {view.summary.long}
           </p>
         </>
       )}
@@ -439,11 +521,11 @@ function SummaryTab({ pack }: { pack: KnowledgePack }) {
   );
 }
 
-function InsightsTab({ pack }: { pack: KnowledgePack }) {
-  if (pack.keyIdeas.length === 0) return <Empty />;
+function InsightsTab({ view }: { view: PackTranslation }) {
+  if (view.keyIdeas.length === 0) return <Empty />;
   return (
     <div className="space-y-6">
-      {pack.keyIdeas.map((idea, i) => (
+      {view.keyIdeas.map((idea, i) => (
         <article key={i} className="rounded-card border-l-2 border-gold/50 bg-white p-5 transition-all hover:border-gold hover:shadow-card sm:p-6">
           <div className="flex items-baseline gap-3">
             <span className="font-serif text-lg text-gold/55 tabular-nums" aria-hidden>
@@ -476,11 +558,11 @@ function ListTab({ items, numbered = false }: { title?: string; items: string[];
   );
 }
 
-function VocabularyTab({ pack }: { pack: KnowledgePack }) {
-  if (pack.vocabulary.length === 0) return <Empty />;
+function VocabularyTab({ view }: { view: PackTranslation }) {
+  if (view.vocabulary.length === 0) return <Empty />;
   return (
     <div className="space-y-4">
-      {pack.vocabulary.map((v, i) => (
+      {view.vocabulary.map((v, i) => (
         <div key={i} className="rounded-card border border-navy/10 bg-white p-5">
           <div className="flex flex-wrap items-baseline gap-3">
             <span className="font-serif text-xl text-navy">{v.word}</span>
@@ -503,18 +585,18 @@ function VocabularyTab({ pack }: { pack: KnowledgePack }) {
   );
 }
 
-function QuizTab({ pack }: { pack: KnowledgePack }) {
-  if (pack.quiz.length === 0) return <Empty />;
+function QuizTab({ view }: { view: PackTranslation }) {
+  if (view.quiz.length === 0) return <Empty />;
   return (
     <ol className="space-y-5">
-      {pack.quiz.map((q, i) => (
+      {view.quiz.map((q, i) => (
         <QuizItem key={i} q={q} index={i} />
       ))}
     </ol>
   );
 }
 
-function QuizItem({ q, index }: { q: KnowledgePack['quiz'][number]; index: number }) {
+function QuizItem({ q, index }: { q: PackTranslation['quiz'][number]; index: number }) {
   const [revealed, setRevealed] = useState(false);
   return (
     <li className="rounded-card border-l-2 border-gold/50 bg-white p-5 sm:p-6">
@@ -542,11 +624,11 @@ function QuizItem({ q, index }: { q: KnowledgePack['quiz'][number]; index: numbe
   );
 }
 
-function QuotesTab({ pack }: { pack: KnowledgePack }) {
-  if (pack.keyQuotes.length === 0) return <Empty />;
+function QuotesTab({ view }: { view: PackTranslation }) {
+  if (view.keyQuotes.length === 0) return <Empty />;
   return (
     <div className="space-y-5">
-      {pack.keyQuotes.map((q, i) => (
+      {view.keyQuotes.map((q, i) => (
         <blockquote key={i} className="border-l-2 border-gold/50 pl-5 sm:pl-6">
           <p className="font-serif text-xl italic leading-snug text-navy sm:text-2xl">“{q.text}”</p>
           {(q.speaker || q.timestampSec) && (
@@ -565,11 +647,11 @@ function QuotesTab({ pack }: { pack: KnowledgePack }) {
   );
 }
 
-function SocialAnglesTab({ pack }: { pack: KnowledgePack }) {
-  if (pack.socialAngles.length === 0) return <Empty />;
+function SocialAnglesTab({ view }: { view: PackTranslation }) {
+  if (view.socialAngles.length === 0) return <Empty />;
   return (
     <div className="space-y-5">
-      {pack.socialAngles.map((s, i) => (
+      {view.socialAngles.map((s, i) => (
         <div key={i} className="rounded-card border border-navy/10 bg-white p-5 sm:p-6">
           <p className="font-serif text-xl font-medium leading-snug text-navy">“{s.hook}”</p>
           <div className="mt-3 h-px w-6 bg-gold/50" aria-hidden />
