@@ -41,6 +41,9 @@ const LibraryPage = lazy(() =>
 const PackPage = lazy(() =>
   import('./routes/PackPage').then((m) => ({ default: m.PackPage })),
 );
+const PricingPage = lazy(() =>
+  import('./routes/PricingPage').then((m) => ({ default: m.PricingPage })),
+);
 
 export default function App() {
   return (
@@ -73,6 +76,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteLoader />}>
                 <PackPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/pricing"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteLoader />}>
+                <PricingPage />
               </Suspense>
             </AppShell>
           }

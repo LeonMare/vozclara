@@ -48,6 +48,7 @@ export function AppHeader() {
             <>
               <HeaderLink to="/library">{t.navLibrary}</HeaderLink>
               <HeaderLink to="/new">{t.navNew}</HeaderLink>
+              <HeaderLink to="/pricing">{landingNav(locale, 'pricing')}</HeaderLink>
             </>
           )}
         </nav>
@@ -120,6 +121,11 @@ export function AppHeader() {
             <Link to="/library" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
               {t.navLibrary}
             </Link>
+            {!isLanding && (
+              <Link to="/pricing" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
+                {landingNav(locale, 'pricing')}
+              </Link>
+            )}
             <Link to="/new" className="rounded-card bg-navy px-3 py-2 text-creme transition hover:bg-navy/90">
               + {t.navNew}
             </Link>
