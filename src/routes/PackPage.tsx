@@ -5,6 +5,7 @@ import { BrandMark } from '../components/BrandMark';
 import { getPack, getTranscript, deletePack, type KnowledgePack, type Segment, type Language } from '../lib/pack';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
+import { VideoPanel } from '../components/VideoPanel';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -144,16 +145,10 @@ export function PackPage() {
         </h1>
         <div className="mt-3 h-px w-12 bg-gold" aria-hidden />
 
-        {/* Source link */}
-        <a
-          href={pack.source.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-1.5 font-sans text-[12px] text-graphit/55 underline-offset-4 hover:text-navy hover:underline"
-        >
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
-          {sourceLinkLabel(locale)} ↗
-        </a>
+        {/* Original video — collapsible YouTube embed.
+            The card has an "Open on YouTube" link built in, so the
+            separate source-link is no longer needed below the title. */}
+        <VideoPanel source={pack.source} />
 
         {/* Translate-to switcher — pragmatic: links to /new with the same video
             pre-selected and the new target language + mode pre-filled. The
@@ -299,13 +294,6 @@ function unnamedLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Vídeo sem título';
   if (locale.startsWith('de')) return 'Unbenanntes Video';
   return 'Untitled video';
-}
-
-function sourceLinkLabel(locale: string): string {
-  if (locale.startsWith('es')) return 'Ver fuente original';
-  if (locale.startsWith('pt')) return 'Ver fonte original';
-  if (locale.startsWith('de')) return 'Originalquelle ansehen';
-  return 'View original source';
 }
 
 function translateLabel(locale: string): string {
