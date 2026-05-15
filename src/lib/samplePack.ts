@@ -96,6 +96,62 @@ const businessES: PackTranslation = {
   quiz: [],
 };
 
+/* ─── Business mode — English translation ─────────────────────────────── */
+
+const businessEN: PackTranslation = {
+  summary: {
+    short: 'One year in office, Merz faces a strained coalition, stalled reforms, and the AfD gaining ground in the east.',
+    long: 'German chancellor Friedrich Merz marks his first year in office at a delicate moment. His black-red coalition promised a quick start, but reform projects on pensions and taxation have stalled. The relationship between the Union and the SPD has become increasingly tense, and Merz has publicly acknowledged growing dissatisfaction within his own party over compromises reached with the coalition partner. Meanwhile, the Alternative for Germany continues to gain support in the eastern states, where rejection of the Union’s migration policy is high. Voices within the Union itself are calling for a tightening of immigration policy.',
+  },
+  chapters: [
+    { startSec: 0, title: 'Opening', summary: 'Greeting and headline summary.' },
+    { startSec: 23, title: 'Merz one year in office', summary: 'Political assessment after twelve months.' },
+    { startSec: 180, title: 'Stalled reforms', summary: 'Pensions and taxation at a standstill.' },
+    { startSec: 360, title: 'AfD in the East', summary: 'The party advances in the eastern Länder.' },
+    { startSec: 540, title: 'Migration as a friction point', summary: 'Internal voices call for a harder line.' },
+  ],
+  keyIdeas: [
+    {
+      title: 'The black-red coalition is eroding',
+      body: 'The relationship between the Union and the SPD has tensed to the point of blocking the reforms both parties championed during the campaign. The lack of agreement on pensions and taxation undermines the government’s credibility before its second year.',
+    },
+    {
+      title: 'Merz acknowledges internal unease',
+      body: 'In his interview with Caren Miosga, the chancellor admitted that disquiet is growing within his own party over compromises with the coalition partner. The public statement is unusual and weakens his negotiating position.',
+    },
+    {
+      title: 'The AfD settles in the East',
+      body: 'The party continues consolidating in the eastern states, fuelled by rejection of the Union’s migration policy. Any hardening of Merz’s position would force him to compete directly on the AfD’s home turf.',
+    },
+    {
+      title: 'Migration policy as a fracture line',
+      body: 'Internal voices demand a more restrictive turn, which would open a front with the SPD and with European partners. The decision will define the government’s identity in the second half of its mandate.',
+    },
+    {
+      title: 'The budget clock is tightening',
+      body: 'The next federal budget is negotiated in autumn, and the Finance and Labour ministries start from incompatible positions. Without agreement on the fiscal path, the coalition will drag uncertainty into 2027 — something neither Merz nor Klingbeil can afford electorally.',
+    },
+  ],
+  actionPlan: [
+    'Track the upcoming Bundestag votes on the pension package — they are the coalition’s thermometer.',
+    'Watch regional polls in Saxony and Thuringia: the AfD could clear 30 % in upcoming surveys.',
+    'Identify Union MPs publicly calling to tighten migration policy — these are the future key voices.',
+    'Follow the next Q2 economic data — a weak quarter would add decisive pressure on the tax reform.',
+    'Listen to Lars Klingbeil’s (SPD) language in his next speeches: his tone signals whether the SPD is preparing for an orderly exit or open confrontation.',
+    'Study the Bavarian CSU separately from the Union — a realignment by Markus Söder could redefine the coalition from within before any formal rupture.',
+  ],
+  keyQuotes: [
+    { text: 'There is growing dissatisfaction in our own ranks with the compromises made with the coalition partner.', original: 'Es gebe in den eigenen Reihen einen größer werdenden Unmut über Kompromisse.', speaker: 'Friedrich Merz', timestampSec: 44 },
+    { text: 'The reform projects on pensions and taxation are becoming difficult.', original: 'Reformprojekte bei Rente und Steuer gestalten sich schwierig.', speaker: 'Susanne Daubner', timestampSec: 34 },
+    { text: 'Politically, Merz is under pressure one year after taking office.', original: 'Politisch steht Merz ein Jahr nach Amtsantritt unter Druck.', speaker: 'Susanne Daubner', timestampSec: 58 },
+    { text: 'In eastern Germany, the AfD continues to gain ground.', original: 'Im Osten Deutschlands legt die AfD weiter zu.', speaker: 'Susanne Daubner', timestampSec: 372 },
+    { text: 'Voices within the Union itself are demanding a tougher approach to migration.', original: 'Stimmen aus den eigenen Reihen, die ein härteres Vorgehen gegen die Migration fordern.', speaker: 'Susanne Daubner', timestampSec: 554 },
+  ],
+  vocabulary: [],
+  socialAngles: [],
+  quiz: [],
+};
+
 /* ─── Learn mode — Spanish translation ────────────────────────────────── */
 
 const learnES: PackTranslation = {
@@ -216,7 +272,11 @@ export const samplePackBusiness: KnowledgePack = {
   ...COMMON,
   id: 'sample',
   mode: 'business',
-  translations: { es: businessES },
+  // Business sample ships in both Spanish and English so visitors can
+  // see the language-switcher in action on /pack/sample without
+  // having to generate anything themselves.
+  outputLanguages: ['es', 'en'],
+  translations: { es: businessES, en: businessEN },
 };
 
 export const samplePackLearn: KnowledgePack = {
