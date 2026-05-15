@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
 import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
+import { recordView, forgetView } from '../lib/recentlyViewed';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
@@ -75,6 +76,7 @@ export function PackPage() {
     if (sample) {
       setPack(sample);
       setSegments([]);
+      recordView(sample.id);
       return;
     }
     let cancelled = false;
@@ -86,6 +88,7 @@ export function PackPage() {
         return;
       }
       setPack(p);
+      recordView(p.id);
       if (p.transcriptKey) {
         const data = await getTranscript(p.transcriptKey);
         if (!cancelled && data) setSegments(data.segments);
@@ -146,6 +149,7 @@ export function PackPage() {
     if (!pack || isSample) return;
     if (!confirm(deleteConfirmLabel(locale))) return;
     await deletePack(pack.id);
+    forgetView(pack.id);
     navigate('/library');
   }
 

@@ -15,6 +15,8 @@ import {
   type Language,
   type LibraryStats,
 } from '../lib/pack';
+import { getRecentlyViewed } from '../lib/recentlyViewed';
+import { getSamplePack } from '../lib/samplePack';
 
 /**
  * /library — your saved Knowledge Packs.
@@ -34,6 +36,7 @@ export function LibraryPage() {
   const [language, setLanguage] = useState<Language | 'all'>('all');
   const [sinceDays, setSinceDays] = useState<number | undefined>(undefined);
   const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
+  const [recentIds, setRecentIds] = useState<string[]>([]);
 
   useEffect(() => {
     const brainId = getBrainId();
@@ -41,7 +44,19 @@ export function LibraryPage() {
       setPacks(p);
       setStats(s);
     });
+    setRecentIds(getRecentlyViewed());
   }, []);
+
+  // Resolve recently-viewed pack IDs against the user's library + the
+  // built-in samples. Order is preserved (most recent first). Drop
+  // entries we can't resolve any more (deleted packs).
+  const recentPacks = useMemo<KnowledgePack[]>(() => {
+    if (recentIds.length === 0) return [];
+    return recentIds
+      .map((rid) => packs.find((p) => p.id === rid) ?? getSamplePack(rid))
+      .filter((p): p is KnowledgePack => !!p)
+      .slice(0, 5);
+  }, [recentIds, packs]);
 
   // Aggregate the top tags across the user's library. Show up to 10
   // chips so the filter row stays compact.
@@ -109,6 +124,45 @@ export function LibraryPage() {
             >
               + {t.navNew}
             </Link>
+          </div>
+        )}
+
+        {/* Recently viewed — horizontal compact-card row. Hidden when
+            the user has never opened a pack. Each card is a quick way
+            back into what they were just reading. */}
+        {recentPacks.length > 1 && (
+          <div className="mb-6">
+            <div className="mb-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              {recentlyViewedLabel(locale)}
+            </div>
+            <div className="-mx-2 flex gap-3 overflow-x-auto px-2 pb-1">
+              {recentPacks.map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/pack/${p.id}`}
+                  className="group flex w-44 shrink-0 flex-col overflow-hidden rounded-card border border-navy/10 bg-white transition hover:border-gold sm:w-52"
+                >
+                  <div className="relative aspect-video w-full overflow-hidden bg-navy">
+                    {p.source.thumbnailUrl && (
+                      <img
+                        src={p.source.thumbnailUrl}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+                      />
+                    )}
+                    <span className="absolute left-2 top-2 rounded-full bg-navy/90 px-1.5 py-0.5 font-sans text-[8px] uppercase tracking-widest text-gold backdrop-blur-sm">
+                      {t.modes[p.mode].name}
+                    </span>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="line-clamp-2 font-serif text-[13px] leading-snug text-navy sm:text-sm">
+                      {p.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
@@ -277,6 +331,13 @@ function tagFilterLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Etiquetas';
   if (locale.startsWith('de')) return 'Tags';
   return 'Tags';
+}
+
+function recentlyViewedLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Vistos recientemente';
+  if (locale.startsWith('pt')) return 'Vistos recentemente';
+  if (locale.startsWith('de')) return 'Zuletzt angesehen';
+  return 'Recently viewed';
 }
 
 function clearTagsLabel(locale: string): string {
