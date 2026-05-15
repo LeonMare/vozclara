@@ -17,22 +17,39 @@ interface ProgressMeta {
 interface Props {
   active: boolean;
   meta?: ProgressMeta;
+  /**
+   * Adjusts the loading narration when we're adding a translation to an
+   * existing Pack rather than creating one from scratch. The user already
+   * knows the video — they're waiting for a new language to land — so
+   * the copy stops talking about minutes of footage and centres on the
+   * translation itself.
+   */
+  mergeMode?: boolean;
 }
 
 /**
- * Editorial loading state. Now narrates the actual work happening:
+ * Editorial loading state. Narrates the actual work happening.
  *
- *   "Reading 14 minutes of footage."
- *   "247 sentences identified."
- *   "Translating to Spanish."
- *   "Distilling 4 strategic insights."
+ * Two modes:
+ *  • Default (creating a new pack):
+ *      "Reading 14 minutes of footage."
+ *      "247 sentences identified."
+ *      "Translating to Spanish."
+ *      "Distilling 4 key ideas."
+ *      "Composing the Knowledge Pack."
+ *
+ *  • mergeMode (adding a language to an existing pack):
+ *      "Re-reading the source captions."
+ *      "Translating to English."
+ *      "Distilling key ideas in English."
+ *      "Adding English to your Pack."
  *
  * Specifics come from the live work (transcript fetch returns
  * sentence count; LLM call returns insight count). Numbers fade
  * in as they become known. Falls back to generic phrases until
  * the data arrives.
  */
-export function GenerationProgress({ active, meta }: Props) {
+export function GenerationProgress({ active, meta, mergeMode }: Props) {
   const { locale } = useLocale();
   const [tick, setTick] = useState(0);
 
@@ -44,7 +61,9 @@ export function GenerationProgress({ active, meta }: Props) {
 
   if (!active) return null;
 
-  const lines = buildLines(locale, meta);
+  const lines = mergeMode
+    ? buildMergeLines(locale, meta)
+    : buildLines(locale, meta);
   const visibleUpTo = Math.min(lines.length, tick + 1);
 
   return (
@@ -163,5 +182,66 @@ function buildLines(
     `Translating to ${targetName}.`,
     meta?.insights ? `Distilling {${meta.insights}} key ideas.` : 'Distilling key ideas.',
     'Composing the Knowledge Pack.',
+  ];
+}
+
+/**
+ * Merge-mode copy — the user has an existing pack and just clicked
+ * "+ EN" / "+ DE" / "+ PT". They don't need to hear about minutes of
+ * footage; they want to know "is the translation done yet?". Lines
+ * focus on translating + adding, and reference the target language
+ * by name on every step so the wait feels concrete.
+ */
+function buildMergeLines(
+  locale: ReturnType<typeof useLocale>['locale'],
+  meta?: ProgressMeta,
+): string[] {
+  const langName: Record<string, Record<typeof locale, string>> = {
+    es: { es: 'castellano', pt: 'castelhano', de: 'Spanisch', en: 'Spanish' },
+    pt: { es: 'portugués', pt: 'português', de: 'Portugiesisch', en: 'Portuguese' },
+    de: { es: 'alemán', pt: 'alemão', de: 'Deutsch', en: 'German' },
+    en: { es: 'inglés', pt: 'inglês', de: 'Englisch', en: 'English' },
+    fr: { es: 'francés', pt: 'francês', de: 'Französisch', en: 'French' },
+  };
+  const target = meta?.targetLang ?? locale;
+  const targetName = langName[target]?.[locale] ?? target;
+
+  if (locale === 'es') {
+    return [
+      'Releyendo las subtítulos originales.',
+      `Traduciendo al ${targetName}.`,
+      meta?.insights
+        ? `Destilando {${meta.insights}} ideas clave en ${targetName}.`
+        : `Destilando ideas clave en ${targetName}.`,
+      `Añadiendo ${targetName} a tu Pack.`,
+    ];
+  }
+  if (locale === 'pt') {
+    return [
+      'A reler as legendas originais.',
+      `A traduzir para ${targetName}.`,
+      meta?.insights
+        ? `A destilar {${meta.insights}} ideias-chave em ${targetName}.`
+        : `A destilar ideias-chave em ${targetName}.`,
+      `A adicionar ${targetName} ao seu Pack.`,
+    ];
+  }
+  if (locale === 'de') {
+    return [
+      'Lese die Originalquelle erneut.',
+      `Übersetze nach ${targetName}.`,
+      meta?.insights
+        ? `Destilliere {${meta.insights}} Kernideen auf ${targetName}.`
+        : `Destilliere Kernideen auf ${targetName}.`,
+      `Füge ${targetName} zu deinem Pack hinzu.`,
+    ];
+  }
+  return [
+    'Re-reading the source captions.',
+    `Translating to ${targetName}.`,
+    meta?.insights
+      ? `Distilling {${meta.insights}} key ideas in ${targetName}.`
+      : `Distilling key ideas in ${targetName}.`,
+    `Adding ${targetName} to your Pack.`,
   ];
 }

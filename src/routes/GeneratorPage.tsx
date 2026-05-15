@@ -264,7 +264,13 @@ export function GeneratorPage() {
           </section>
         )}
 
-        {generating && <GenerationProgress active meta={progressMeta} />}
+        {generating && (
+          <GenerationProgress
+            active
+            meta={progressMeta}
+            mergeMode={!!mergeIntoPackId}
+          />
+        )}
       </div>
     </main>
   );
