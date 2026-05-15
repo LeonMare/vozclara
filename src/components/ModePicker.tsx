@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Mode } from '../lib/pack';
 import { useLocale } from '../lib/i18n';
 
@@ -8,62 +9,231 @@ interface Props {
 }
 
 /**
- * Three editorial mode cards instead of a dropdown. Each card has a
- * bespoke ornamental cipher (book/compass/quill), a tagline in serif,
- * a description in sans, and a short feature list. The recommended
- * mode (based on detected genre) gets a discrete "Recomendado" badge.
+ * Three editorial mode cards plus a live preview panel underneath.
+ *
+ * The preview shows two concrete example snippets in the user's UI
+ * language for whichever mode they're currently hovering — or, when
+ * no card is hovered, for the currently selected mode. This lets the
+ * visitor see what the chosen mode actually produces before they
+ * commit to generation. Cuts the "wait, which one is right for me?"
+ * hesitation that a name-only selector causes.
+ *
+ * On touch devices there's no hover; the preview just tracks the
+ * selected mode and updates whenever the user taps a different card.
+ *
+ * The recommended mode (based on detected genre) gets a discrete
+ * "Recomendado" badge.
  */
 export function ModePicker({ value, onChange, recommended }: Props) {
   const { t } = useLocale();
   const modes: Mode[] = ['learn', 'business', 'creator'];
+  const [hovered, setHovered] = useState<Mode | null>(null);
+  const previewMode = hovered ?? value;
 
   return (
-    <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-      {modes.map((m) => {
-        const selected = m === value;
-        const isRecommended = m === recommended;
-        const meta = t.modes[m];
-        return (
-          <button
-            key={m}
-            type="button"
-            onClick={() => onChange(m)}
-            aria-pressed={selected}
-            className={[
-              'group relative flex flex-col rounded-card border bg-white p-5 text-left transition-all duration-300 sm:p-6',
-              selected
-                ? 'border-gold shadow-card -translate-y-0.5'
-                : 'border-navy/15 hover:border-gold/60 hover:-translate-y-0.5',
-            ].join(' ')}
-          >
-            {isRecommended && (
-              <span className="absolute right-4 top-4 rounded-full bg-navy px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold">
-                {t.modeRecommended}
-              </span>
-            )}
+    <div>
+      <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
+        {modes.map((m) => {
+          const selected = m === value;
+          const isRecommended = m === recommended;
+          const meta = t.modes[m];
+          return (
+            <button
+              key={m}
+              type="button"
+              onClick={() => onChange(m)}
+              onMouseEnter={() => setHovered(m)}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(m)}
+              onBlur={() => setHovered(null)}
+              aria-pressed={selected}
+              className={[
+                'group relative flex flex-col rounded-card border bg-white p-5 text-left transition-all duration-300 sm:p-6',
+                selected
+                  ? 'border-gold shadow-card -translate-y-0.5'
+                  : 'border-navy/15 hover:border-gold/60 hover:-translate-y-0.5',
+              ].join(' ')}
+            >
+              {isRecommended && (
+                <span className="absolute right-4 top-4 rounded-full bg-navy px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold">
+                  {t.modeRecommended}
+                </span>
+              )}
 
-            <div className={selected ? 'text-gold' : 'text-graphit/55 group-hover:text-gold'}>
-              <ModeCipher mode={m} />
-            </div>
+              <div className={selected ? 'text-gold' : 'text-graphit/55 group-hover:text-gold'}>
+                <ModeCipher mode={m} />
+              </div>
 
-            <h3 className="mt-4 font-serif text-2xl text-navy">{meta.name}</h3>
-            <p className="mt-1 font-serif italic text-graphit/70">{meta.tagline}</p>
-            <div className="mt-3 h-px w-8 bg-gold/50" aria-hidden />
-            <p className="mt-3 font-sans text-sm leading-relaxed text-graphit/75">{meta.description}</p>
+              <h3 className="mt-4 font-serif text-2xl text-navy">{meta.name}</h3>
+              <p className="mt-1 font-serif italic text-graphit/70">{meta.tagline}</p>
+              <div className="mt-3 h-px w-8 bg-gold/50" aria-hidden />
+              <p className="mt-3 font-sans text-sm leading-relaxed text-graphit/75">{meta.description}</p>
 
-            <ul className="mt-4 space-y-1.5 font-sans text-[13px] text-graphit/70">
-              {meta.bullets.map((b, i) => (
-                <li key={i} className="flex items-baseline gap-2">
-                  <span className="text-gold/70">·</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          </button>
-        );
-      })}
+              <ul className="mt-4 space-y-1.5 font-sans text-[13px] text-graphit/70">
+                {meta.bullets.map((b, i) => (
+                  <li key={i} className="flex items-baseline gap-2">
+                    <span className="text-gold/70">·</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </button>
+          );
+        })}
+      </div>
+
+      <ModePreview mode={previewMode} isHover={hovered !== null} />
     </div>
   );
+}
+
+/* ─── Live preview panel ──────────────────────────────────────────────── */
+
+/**
+ * Two-column preview of concrete snippets the chosen mode produces.
+ * The `key={mode}` on the wrapper forces a re-mount on every mode
+ * change so the fade-in animation re-triggers — it gives the panel
+ * a "swapping in fresh content" feel rather than silently mutating.
+ */
+function ModePreview({ mode, isHover }: { mode: Mode; isHover: boolean }) {
+  const { locale } = useLocale();
+  const examples = previewExamples(locale, mode);
+  const labels = previewLabels(locale);
+
+  return (
+    <div className="mt-6">
+      <div className="mb-3 flex items-baseline justify-between gap-3 font-sans text-[10px] uppercase tracking-widest">
+        <span className="text-gold">
+          {isHover ? labels.headingHover : labels.headingActive}
+        </span>
+        <span className="text-graphit/40">
+          {labels.modeLabel}: <span className="text-graphit/70">{labels.modes[mode]}</span>
+        </span>
+      </div>
+      <div
+        key={mode}
+        className="animate-fade-in rounded-card border border-navy/10 bg-white/55 p-4 sm:p-5"
+        style={{ animationDuration: '350ms' }}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {examples.map((ex, i) => (
+            <div key={i} className="border-l-2 border-gold/40 pl-3.5">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+                {ex.label}
+              </div>
+              <p className="mt-1.5 font-serif text-[14px] leading-snug text-navy sm:text-[15px]">
+                {ex.body}
+              </p>
+              {ex.sub && (
+                <p className="mt-1 font-sans text-[12px] leading-snug text-graphit/65">
+                  {ex.sub}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface PreviewExample {
+  label: string;
+  body: string;
+  sub?: string;
+}
+
+function previewLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    headingActive: 'Así se ve este modo',
+    headingHover: 'Vista previa',
+    modeLabel: 'Modo',
+    modes: { learn: 'Aprender', business: 'Business', creator: 'Creador' } satisfies Record<Mode, string>,
+  };
+  if (locale.startsWith('pt')) return {
+    headingActive: 'É assim que este modo se vê',
+    headingHover: 'Pré-visualização',
+    modeLabel: 'Modo',
+    modes: { learn: 'Aprender', business: 'Business', creator: 'Criador' } satisfies Record<Mode, string>,
+  };
+  if (locale.startsWith('de')) return {
+    headingActive: 'So sieht dieser Modus aus',
+    headingHover: 'Vorschau',
+    modeLabel: 'Modus',
+    modes: { learn: 'Lernen', business: 'Business', creator: 'Creator' } satisfies Record<Mode, string>,
+  };
+  return {
+    headingActive: 'What this mode looks like',
+    headingHover: 'Preview',
+    modeLabel: 'Mode',
+    modes: { learn: 'Learn', business: 'Business', creator: 'Creator' } satisfies Record<Mode, string>,
+  };
+}
+
+/**
+ * Two concrete preview snippets per mode, in the user's UI language.
+ * Pulled in the spirit of the existing sample packs so the visitor
+ * sees real-looking output, not lorem ipsum.
+ */
+function previewExamples(locale: string, mode: Mode): PreviewExample[] {
+  if (locale.startsWith('es')) {
+    if (mode === 'learn') return [
+      { label: 'Vocabulario', body: 'die Koalition', sub: '→ la coalición · sustantivo (f)' },
+      { label: 'Cuestionario', body: '¿Qué significa "schwarz-rote Koalition"?', sub: 'Coalición negro-roja: la alianza Unión + SPD.' },
+    ];
+    if (mode === 'business') return [
+      { label: 'Acción 01', body: 'Monitorizar las encuestas regionales en Sajonia y Turingia.', sub: 'La AfD podría superar el 30 % en próximos sondeos.' },
+      { label: 'Cita clave', body: '"Hay un creciente descontento con los compromisos asumidos."', sub: '— Friedrich Merz · 0:44' },
+    ];
+    return [
+      { label: 'Hook', body: '"Un canciller alemán acaba de admitir que su propio partido está harto de sus compromisos."', sub: 'Apertura para Reel / TikTok' },
+      { label: 'Caption', body: 'Friedrich Merz cumple un año y dijo lo que ningún canciller dice…', sub: 'Carrusel Instagram, 3-5 frases' },
+    ];
+  }
+
+  if (locale.startsWith('pt')) {
+    if (mode === 'learn') return [
+      { label: 'Vocabulário', body: 'die Koalition', sub: '→ a coligação · substantivo (f)' },
+      { label: 'Questionário', body: 'O que significa "schwarz-rote Koalition"?', sub: 'Coligação negro-vermelha: aliança União + SPD.' },
+    ];
+    if (mode === 'business') return [
+      { label: 'Ação 01', body: 'Monitorizar as sondagens regionais na Saxónia e na Turíngia.', sub: 'A AfD pode ultrapassar os 30 % nas próximas sondagens.' },
+      { label: 'Citação-chave', body: '"Há um descontentamento crescente com os compromissos assumidos."', sub: '— Friedrich Merz · 0:44' },
+    ];
+    return [
+      { label: 'Hook', body: '"Um chanceler alemão acaba de admitir que o próprio partido está farto dos seus compromissos."', sub: 'Abertura para Reel / TikTok' },
+      { label: 'Caption', body: 'Friedrich Merz cumpre um ano e disse o que nenhum chanceler diz…', sub: 'Carrossel Instagram, 3-5 frases' },
+    ];
+  }
+
+  if (locale.startsWith('de')) {
+    if (mode === 'learn') return [
+      { label: 'Vokabel', body: 'die Koalition', sub: '→ la coalición · Substantiv (f)' },
+      { label: 'Quizfrage', body: 'Was bedeutet "schwarz-rote Koalition"?', sub: 'Die historische Großkoalition aus Union (schwarz) und SPD (rot).' },
+    ];
+    if (mode === 'business') return [
+      { label: 'Aktion 01', body: 'Die regionalen Umfragen in Sachsen und Thüringen genau beobachten.', sub: 'Die AfD könnte in den nächsten Wochen 30 % überschreiten.' },
+      { label: 'Schlüsselzitat', body: '„Es gibt einen wachsenden Unmut über die Kompromisse."', sub: '— Friedrich Merz · 0:44' },
+    ];
+    return [
+      { label: 'Hook', body: '„Ein Bundeskanzler hat eben zugegeben dass seine eigene Partei mit ihm fertig ist."', sub: 'Eröffnung für Reel / TikTok' },
+      { label: 'Caption', body: 'Friedrich Merz ist ein Jahr im Amt und sagte was sonst kein Kanzler sagt…', sub: 'Instagram-Carousel, 3-5 Sätze' },
+    ];
+  }
+
+  // English
+  if (mode === 'learn') return [
+    { label: 'Vocabulary', body: 'die Koalition', sub: '→ the coalition · noun (f)' },
+    { label: 'Quiz', body: 'What does "schwarz-rote Koalition" mean?', sub: 'The historic grand coalition of CDU/CSU (black) and SPD (red).' },
+  ];
+  if (mode === 'business') return [
+    { label: 'Action 01', body: 'Track the regional polls in Saxony and Thuringia.', sub: 'AfD could clear 30 % in upcoming surveys.' },
+    { label: 'Key quote', body: '"There is growing dissatisfaction inside the party with the compromises."', sub: '— Friedrich Merz · 0:44' },
+  ];
+  return [
+    { label: 'Hook', body: '"A German chancellor just admitted on national TV that his own party is done with his compromises."', sub: 'Opening line for a Reel / TikTok' },
+    { label: 'Caption', body: 'Merz is one year in office and said what no chancellor usually says…', sub: 'Instagram carousel, 3-5 sentences' },
+  ];
 }
 
 /* ─── Bespoke ornamental ciphers ──────────────────────────────────────── */
