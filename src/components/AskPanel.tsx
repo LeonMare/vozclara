@@ -6,6 +6,14 @@ import type { KnowledgePack } from '../lib/pack';
 
 interface Props {
   packs: KnowledgePack[];
+  /**
+   * Controlled question value. When provided, the consumer manages the
+   * input state externally — useful for the landing demo where clicking
+   * an example chip writes into the field. When omitted, AskPanel
+   * manages its own state, which is the right pattern for /library.
+   */
+  question?: string;
+  onQuestionChange?: (q: string) => void;
 }
 
 /**
@@ -25,9 +33,14 @@ interface Props {
  * The condensed shape (title + summary + key ideas) is enough for
  * most questions a user is likely to ask about their library.
  */
-export function AskPanel({ packs }: Props) {
+export function AskPanel({ packs, question: questionProp, onQuestionChange }: Props) {
   const { locale } = useLocale();
-  const [question, setQuestion] = useState('');
+  const [internalQ, setInternalQ] = useState('');
+  const question = questionProp !== undefined ? questionProp : internalQ;
+  const setQuestion = (v: string) => {
+    if (onQuestionChange) onQuestionChange(v);
+    else setInternalQ(v);
+  };
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AskResult | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -11,6 +11,7 @@
 import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
+import { LandingAskDemo } from './LandingAskDemo';
 
 /* ─── 02 · Problem ─────────────────────────────────────────────────────── */
 
@@ -160,17 +161,12 @@ export function AskMyKnowledge() {
           {t.askSub}
         </p>
 
-        <div className="mx-auto mt-10 grid max-w-3xl gap-3 text-left">
-          {t.askExamples.map((q, i) => (
-            <div
-              key={i}
-              className="rounded-card border-l-2 border-gold/60 bg-navy/55 px-5 py-4 backdrop-blur-sm"
-            >
-              <p className="font-serif text-lg italic leading-snug text-creme/90 sm:text-xl">
-                “{q}”
-              </p>
-            </div>
-          ))}
+        {/* Interactive demo — the visitor can ask the sample library
+            of three Tagesschau packs and get a real LLM answer with
+            citations linking back to the sample pages. The strongest
+            single proof on the landing that the product works. */}
+        <div className="mt-10">
+          <LandingAskDemo />
         </div>
       </div>
     </section>
