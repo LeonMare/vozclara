@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { extractVideoId } from '../lib/youtube';
 import { useLocale } from '../lib/i18n';
+import { usePageHead } from '../hooks/usePageHead';
 import { ModePicker } from '../components/ModePicker';
 import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
@@ -51,6 +52,11 @@ export function GeneratorPage() {
   const [generating, setGenerating] = useState(false);
   const [progressMeta, setProgressMeta] = useState<{ videoMinutes?: number; sentences?: number; insights?: number; targetLang?: string }>({});
   const [error, setError] = useState<string | null>(null);
+
+  usePageHead({
+    title: generatorTitle(locale),
+    description: generatorDescription(locale),
+  });
 
   // Smart default — detect genre lightly via transcript title or genre hint.
   // We don't fetch insights here; we'll let the user choose and then run
@@ -319,6 +325,20 @@ export function GeneratorPage() {
       </div>
     </main>
   );
+}
+
+function generatorTitle(locale: string): string {
+  if (locale.startsWith('es')) return 'Crear Knowledge Pack';
+  if (locale.startsWith('pt')) return 'Criar Knowledge Pack';
+  if (locale.startsWith('de')) return 'Knowledge Pack erstellen';
+  return 'Create a Knowledge Pack';
+}
+
+function generatorDescription(locale: string): string {
+  if (locale.startsWith('es')) return 'Pega un enlace de YouTube y obtén un Knowledge Pack estructurado en tu idioma — resumen, ideas clave, vocabulario, quiz, citas.';
+  if (locale.startsWith('pt')) return 'Cole um link do YouTube e receba um Knowledge Pack estruturado no seu idioma — resumo, ideias-chave, vocabulário, quiz, citações.';
+  if (locale.startsWith('de')) return 'YouTube-Link einfügen und einen strukturierten Knowledge Pack in deiner Sprache bekommen — Summary, Kernideen, Vokabeln, Quiz, Zitate.';
+  return 'Paste a YouTube link, get a structured Knowledge Pack in your language — summary, key ideas, vocabulary, quiz, quotes.';
 }
 
 /**

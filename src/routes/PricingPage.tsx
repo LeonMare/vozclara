@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { PricingPreview, TrustSection } from '../components/landing/sections';
+import { usePageHead } from '../hooks/usePageHead';
 
 /**
  * /pricing — standalone pricing page for external linking.
@@ -17,6 +18,11 @@ import { PricingPreview, TrustSection } from '../components/landing/sections';
 export function PricingPage() {
   const { locale } = useLocale();
   const labels = pricingPageLabels(locale);
+
+  usePageHead({
+    title: pricingHeadTitle(locale),
+    description: pricingHeadDescription(locale),
+  });
 
   return (
     <main className="bg-creme paper">
@@ -65,6 +71,20 @@ export function PricingPage() {
       </section>
     </main>
   );
+}
+
+function pricingHeadTitle(locale: string): string {
+  if (locale.startsWith('es')) return 'Planes y precios';
+  if (locale.startsWith('pt')) return 'Planos e preços';
+  if (locale.startsWith('de')) return 'Preise';
+  return 'Pricing';
+}
+
+function pricingHeadDescription(locale: string): string {
+  if (locale.startsWith('es')) return 'Empieza gratis. Planes para usuarios avanzados y creadores cuando los necesites — sin tarjeta hasta entonces.';
+  if (locale.startsWith('pt')) return 'Comece grátis. Planos para utilizadores avançados e criadores quando precisar — sem cartão até lá.';
+  if (locale.startsWith('de')) return 'Kostenlos starten. Pläne für Power-User und Creator wenn du sie brauchst — keine Karte bis dahin.';
+  return 'Start free. Plans for power users and creators when you need them — no card required until then.';
 }
 
 function pricingPageLabels(locale: string) {

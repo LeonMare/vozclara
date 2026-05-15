@@ -17,6 +17,7 @@ import {
 } from '../lib/pack';
 import { getRecentlyViewed } from '../lib/recentlyViewed';
 import { getSamplePack } from '../lib/samplePack';
+import { usePageHead } from '../hooks/usePageHead';
 
 /**
  * /library — your saved Knowledge Packs.
@@ -30,6 +31,11 @@ export function LibraryPage() {
   const navigate = useNavigate();
   const [packs, setPacks] = useState<KnowledgePack[]>([]);
   const [stats, setStats] = useState<LibraryStats | null>(null);
+
+  usePageHead({
+    title: libraryTitle(locale),
+    description: libraryDescription(locale),
+  });
 
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<Mode | 'all'>('all');
@@ -338,6 +344,20 @@ function recentlyViewedLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Vistos recentemente';
   if (locale.startsWith('de')) return 'Zuletzt angesehen';
   return 'Recently viewed';
+}
+
+function libraryTitle(locale: string): string {
+  if (locale.startsWith('es')) return 'Tu biblioteca';
+  if (locale.startsWith('pt')) return 'A tua biblioteca';
+  if (locale.startsWith('de')) return 'Deine Bibliothek';
+  return 'Your library';
+}
+
+function libraryDescription(locale: string): string {
+  if (locale.startsWith('es')) return 'Tu nube privada de conocimiento. Pregunta, filtra y exporta los Knowledge Packs que has guardado.';
+  if (locale.startsWith('pt')) return 'A tua nuvem privada de conhecimento. Pergunta, filtra e exporta os Knowledge Packs que guardaste.';
+  if (locale.startsWith('de')) return 'Deine private Wissens-Cloud. Frage, filtere und exportiere die Knowledge Packs die du gespeichert hast.';
+  return 'Your private knowledge cloud. Ask, filter, and export the Knowledge Packs you have saved.';
 }
 
 function clearTagsLabel(locale: string): string {

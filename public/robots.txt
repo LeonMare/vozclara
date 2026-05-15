@@ -1,0 +1,12 @@
+# Voz Clara — multilingual knowledge cloud for videos.
+#
+# Public marketing routes (/, /pricing, /pack/sample, …) are intended
+# for crawlers. App routes (/new, /library, /pack/<userId>) are local-
+# first and read user-private data from IndexedDB, so they're empty for
+# crawlers anyway — we don't block them explicitly so that previews
+# in chat apps and SEO snapshots can still render the SPA shell.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://vozclara.pages.dev/sitemap.xml

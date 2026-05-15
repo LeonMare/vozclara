@@ -4,6 +4,7 @@ import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
 import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { recordView, forgetView } from '../lib/recentlyViewed';
+import { usePageHead } from '../hooks/usePageHead';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { VideoPanel } from '../components/VideoPanel';
@@ -96,6 +97,13 @@ export function PackPage() {
     })();
     return () => { cancelled = true; };
   }, [id]);
+
+  // Pre-derive title + description for the document head. Has to run on
+  // every render (Rules of Hooks) so we compute it BEFORE the early
+  // returns and feed it sensible values when pack is still loading.
+  const headTitle = pack ? displayTitle(pack) : packLoadingTitle(locale);
+  const headDesc = pack ? activeView(pack).summary.short : undefined;
+  usePageHead({ title: headTitle, description: headDesc });
 
   if (notFound) {
     return (
@@ -492,6 +500,13 @@ function deleteConfirmLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Eliminar este pack?';
   if (locale.startsWith('de')) return 'Diesen Pack löschen?';
   return 'Delete this pack?';
+}
+
+function packLoadingTitle(locale: string): string {
+  if (locale.startsWith('es')) return 'Cargando Pack…';
+  if (locale.startsWith('pt')) return 'A carregar Pack…';
+  if (locale.startsWith('de')) return 'Pack lädt…';
+  return 'Loading Pack…';
 }
 
 /**
