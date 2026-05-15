@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
 import { samplePackBusiness, samplePackLearn, samplePackCreator } from '../../lib/samplePack';
-import { activeView, type KnowledgePack, type Mode } from '../../lib/pack';
+import { activeView, type KnowledgePack, type Language, type Mode } from '../../lib/pack';
 
 type TabKey = 'summary' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles';
 
@@ -25,8 +25,17 @@ export function HeroPackPreview() {
   const { t } = useLocale();
   const [mode, setMode] = useState<Mode>('business');
   const [tab, setTab] = useState<TabKey>('summary');
+  const [lang, setLang] = useState<Language>('es');
 
-  const pack = packForMode(mode);
+  // The base pack for the current mode. We then create a derived
+  // `displayPack` whose `outputLang` reflects the visitor's chosen
+  // language chip — that drives `activeView()` everywhere downstream.
+  const basePack = packForMode(mode);
+  const supportedLang = basePack.outputLanguages.includes(lang) ? lang : basePack.outputLang;
+  const pack: KnowledgePack = supportedLang === basePack.outputLang
+    ? basePack
+    : { ...basePack, outputLang: supportedLang };
+
   const availableTabs = tabsForMode(pack);
 
   // Reset tab if it becomes invalid for the chosen mode.
@@ -71,13 +80,45 @@ export function HeroPackPreview() {
 
         {/* Pack header */}
         <div className="border-b border-navy/10 bg-creme px-5 py-4">
-          <div className="flex flex-wrap items-baseline gap-1.5 font-sans text-[9px] uppercase tracking-widest">
+          <div className="flex flex-wrap items-center gap-1.5 font-sans text-[9px] uppercase tracking-widest">
             <span className="rounded-full bg-navy px-2 py-0.5 text-gold">
               {t.modes[pack.mode].name}
             </span>
-            <span className="rounded-full bg-navy/8 px-2 py-0.5 text-graphit/70">
-              {pack.outputLang.toUpperCase()}
-            </span>
+            {/* Language chips — interactive when the pack ships multiple
+                translations (Business sample does, learn/creator don't).
+                Click a chip to swap the entire pack body into that
+                language without leaving the hero. */}
+            {pack.outputLanguages.length > 1 ? (
+              <span
+                role="group"
+                aria-label="Language"
+                className="inline-flex overflow-hidden rounded-full border border-navy/15 bg-white"
+              >
+                {pack.outputLanguages.map((l) => {
+                  const active = l === pack.outputLang;
+                  return (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => setLang(l)}
+                      aria-pressed={active}
+                      className={[
+                        'px-2 py-0.5 font-medium transition',
+                        active
+                          ? 'bg-navy text-gold'
+                          : 'bg-white text-graphit/55 hover:bg-creme hover:text-navy',
+                      ].join(' ')}
+                    >
+                      {l.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </span>
+            ) : (
+              <span className="rounded-full bg-navy/8 px-2 py-0.5 text-graphit/70">
+                {pack.outputLang.toUpperCase()}
+              </span>
+            )}
             <span className="rounded-full bg-navy/8 px-2 py-0.5 text-graphit/70">
               {t.genreNames[pack.genre]}
             </span>
