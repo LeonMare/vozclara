@@ -216,6 +216,70 @@ const learnES: PackTranslation = {
   socialAngles: [],
 };
 
+/* ─── Learn mode — English translation ────────────────────────────────── */
+
+const learnEN: PackTranslation = {
+  summary: {
+    short: 'One year of the Merz government: learn what a black-red coalition is, why the reforms are stalling, and what this case says about German politics.',
+    long: 'This Tagesschau report analyses the first year of chancellor Friedrich Merz. The piece illustrates several key concepts of German politics: the dynamics of governing coalitions (Union + SPD, "schwarz-rot"), the usual friction points between coalition partners (pensions, taxation, migration), and the role of the AfD as a third emergent force, particularly in the eastern states. A good example for understanding how the German parliamentary system operates under pressure.',
+  },
+  chapters: [
+    { startSec: 0, title: 'News opening', summary: 'The typical structure of the German evening news.' },
+    { startSec: 23, title: 'The black-red coalition concept', summary: 'What the Union + SPD combination means.' },
+    { startSec: 180, title: 'Structural reforms', summary: 'Pensions and taxation as classic friction topics.' },
+    { startSec: 360, title: 'The German federal system', summary: 'Differences between eastern and western Länder.' },
+    { startSec: 540, title: 'The AfD as a new political actor', summary: 'Why it grows, and where.' },
+  ],
+  keyIdeas: [
+    {
+      title: 'German coalitions are named by colour',
+      body: 'Black = Union (CDU/CSU, conservatives). Red = SPD (social democrats). "Schwarz-Rot" is Germany’s historic grand coalition, combining the two traditional parties. Other combinations have their own names: "Ampel" (traffic light: SPD + Greens + Liberals), "Jamaika" (CDU + Greens + Liberals), and so on.',
+    },
+    {
+      title: 'The friction points are always the same',
+      body: 'Pensions, taxation and migration are the three topics where German coalitions tend to stall. Each party holds positions that are hard to reconcile. When a chancellor talks about "difficult compromises", they are usually referring to one of these three areas.',
+    },
+    {
+      title: 'East and West Germany still vote differently',
+      body: 'More than 30 years after reunification, the eastern states (Saxony, Thuringia, Brandenburg) still show voting patterns distinct from the western ones. The AfD gets much stronger results in the East, where dissatisfaction with migration policy runs deeper.',
+    },
+    {
+      title: 'German political vocabulary is precise',
+      body: 'In German every political actor has an exact name: "Bundeskanzler" (federal chancellor), "Bundestag" (federal parliament), "Bundesländer" (federal states), "Koalitionspartner" (coalition partner). No loose synonyms — if you understand the terms, you understand the system. That is why learning this vocabulary unlocks reading any German newspaper (FAZ, SZ, Zeit, taz) within a week.',
+    },
+  ],
+  vocabulary: [
+    { word: 'die Koalition', translation: 'the coalition', context: 'Seine schwarz-rote Koalition wollte einen schnellen Aufbruch.', partOfSpeech: 'noun (f)' },
+    { word: 'der Bundeskanzler', translation: 'the federal chancellor', context: 'Bundeskanzler Merz ist ein Jahr im Amt.', partOfSpeech: 'noun (m)' },
+    { word: 'die Rente', translation: 'the pension', context: 'Reformprojekte bei Rente und Steuer gestalten sich schwierig.', partOfSpeech: 'noun (f)' },
+    { word: 'die Steuer', translation: 'the tax / taxation', context: 'Reformprojekte bei Rente und Steuer.', partOfSpeech: 'noun (f)' },
+    { word: 'der Unmut', translation: 'dissatisfaction, unease', context: 'Einen größer werdenden Unmut über Kompromisse.', partOfSpeech: 'noun (m)' },
+    { word: 'der Kompromiss', translation: 'the compromise', context: 'Über Kompromisse, die eingegangen werden.', partOfSpeech: 'noun (m)' },
+    { word: 'der Jahrestag', translation: 'the anniversary', context: 'Kurz vor dem Jahrestag steckt sie im Stimmungstief.', partOfSpeech: 'noun (m)' },
+    { word: 'zerstritten', translation: 'at loggerheads, in dispute', context: 'Union und SPD wirken zunehmend zerstritten.', partOfSpeech: 'adjective' },
+    { word: 'zulegen', translation: 'to gain ground, to grow', context: 'Im Osten Deutschlands legt die AfD weiter zu.', partOfSpeech: 'verb' },
+    { word: 'die Migration', translation: 'migration', context: 'Stimmen die ein härteres Vorgehen gegen die Migration fordern.', partOfSpeech: 'noun (f)' },
+  ],
+  quiz: [
+    { question: 'What does "schwarz-rote Koalition" mean?', answer: 'Black-red coalition: the alliance between the Union (CDU/CSU, conservatives, black) and the SPD (social democrats, red).', explanation: 'In Germany coalitions are named by the parties’ colours: black = Union, red = SPD, green = Die Grünen, yellow = FDP.' },
+    { question: 'According to the video, which three areas is Merz’s coalition getting stuck on?', answer: 'Pensions (Rente), taxation (Steuer) and migration.', explanation: 'These are the three classic friction topics in large German coalitions.' },
+    { question: 'Where in Germany is the AfD gaining the most ground?', answer: 'In the East (Saxony, Thuringia, Brandenburg).', explanation: 'Dissatisfaction with migration policy runs deeper there.' },
+    { question: 'What did Merz do in his interview with Caren Miosga that was politically unusual?', answer: 'He publicly acknowledged the unease inside his own party about the compromises with the SPD.', explanation: 'A chancellor rarely admits internal divisions in public — it weakens his negotiating position.' },
+    { question: 'What does "den Jahrestag" mean in this context?', answer: 'The anniversary — specifically, Merz’s first year as chancellor.', explanation: '"Tag" = day; "Jahr" = year; "Jahrestag" = the yearly day, i.e. anniversary.' },
+    { question: 'In German, what is the difference between "der Bundestag" and "die Bundesländer"?', answer: '"Der Bundestag" is the federal parliament (a single national chamber). "Die Bundesländer" are Germany’s 16 federal states.', explanation: '"Bund" = federation. "Tag" here means "assembly, council". "Land" = country / state. Plural: "Länder".' },
+    { question: 'What does it mean for two coalition partners to be "zerstritten"?', answer: 'It means they are in serious dispute, at loggerheads. The word describes a deep level of conflict, not a mere disagreement.', explanation: 'Base verb: "streiten" (to argue, to fight). The prefix "zer-" intensifies and suggests breakage. "Zerstritten" is stronger than "uneinig" (not in agreement).' },
+  ],
+  actionPlan: [
+    'Practise the vocabulary keywords (Koalition, Bundeskanzler, Unmut, Kompromiss) by building two of your own sentences for each one this week.',
+    'Watch the next Tagesschau edition (20:00, ARD) and spot at least three political vocabulary terms from this pack in real context.',
+    'Note three uses of "zerstritten" or "zulegen" you find this week in German newspapers (FAZ, Süddeutsche Zeitung, Die Zeit).',
+    'In German, summarise the political situation described in the video in five sentences. If you know a native speaker, ask them to review.',
+    'Revisit the quiz in seven days — active recall with spaced repetition retains far better than cramming.',
+  ],
+  keyQuotes: [],
+  socialAngles: [],
+};
+
 /* ─── Creator mode — Spanish translation ──────────────────────────────── */
 
 const creatorES: PackTranslation = {
@@ -266,6 +330,56 @@ const creatorES: PackTranslation = {
   quiz: [],
 };
 
+/* ─── Creator mode — English translation ──────────────────────────────── */
+
+const creatorEN: PackTranslation = {
+  summary: {
+    short: 'Three viral angles from Merz’s first anniversary: the internal fracture, the AfD’s rise in the East, and why German reforms keep stalling.',
+    long: 'Chancellor Merz’s first anniversary offers rich material for social content. Three angles stand out: Merz’s own public admission of internal party unease (drives engagement through the "drama"), the AfD’s unstoppable advance in the East (controversy plus international relevance), and the classic pattern of German coalitions getting stuck on pensions-taxation-migration (educational plus transferable to other countries).',
+  },
+  chapters: [
+    { startSec: 0, title: 'News opening', summary: 'Strong visual hook — the institutional anchor as a credibility anchor.' },
+    { startSec: 23, title: 'The one-year balance', summary: 'Plenty of editorial material here — clipped phrases, expectation-vs-reality contrast.' },
+    { startSec: 180, title: 'The internal fracture as a viral moment', summary: 'Merz admitting on camera that his party is divided — a 15-second clip for Reels and TikTok.' },
+    { startSec: 360, title: 'Material for the East-vs-West angle', summary: 'Maps, graphs and figures — perfect for informational carousels on Instagram.' },
+    { startSec: 540, title: 'The AfD as the elephant in the room', summary: 'A viral topic by definition — pair with historical context to avoid superficiality.' },
+  ],
+  keyIdeas: [
+    {
+      title: 'The chancellor admitting his party is divided',
+      body: 'Merz acknowledging the internal unease is exceptional. For content: the angle isn’t the politics — it’s the human admission. It plays to any audience.',
+    },
+    {
+      title: 'The German East as a recurring story',
+      body: 'Every AfD surge is news. But the real story is structural: 35 years after reunification, voting patterns remain split. That’s a series, not a single post.',
+    },
+    {
+      title: 'Pensions-taxation-migration: the eternal triangle',
+      body: 'The same three topics get German coalitions stuck decade after decade. Excellent material for an educational explainer (TikTok, Reels): "Why German governments always break on the same three things".',
+    },
+  ],
+  socialAngles: [
+    { hook: 'A German chancellor just admitted on national TV that his own party is fed up with his compromises.', caption: 'Friedrich Merz hits his one-year mark and said what no chancellor says: there is "growing dissatisfaction" inside the Union with the SPD deals. In German politics, that is practically an announcement of a fracture.' },
+    { hook: 'The AfD could clear 30 % in Saxony. When does it stop being an anomaly and start being the system?', caption: 'Three elections in we’ve been calling it a peak. The German East has voted differently for decades, and nobody in Berlin has found the answer. Thread below.' },
+    { hook: 'Pensions. Taxation. Migration. Three words that break every German coalition since 1949.', caption: 'The chancellor changes, the party combination changes, the decade changes — the three topics stay the same. Understand this, and you understand German politics.' },
+    { hook: 'In Germany, coalitions are named after flags. Merz’s one is called "black-red".', caption: 'Here’s the 60-second decode: schwarz-rot, Ampel, Jamaika, Kenia, Deutschland — every party combination has its name. Express-course political literacy.' },
+    { hook: 'Susanne Daubner is the most recognisable face on German television. And tonight she led with this.', caption: 'The Tagesschau anchor has been an institutional reference in Germany for decades. Her tone calibrates the weight of every story. Tonight she led in earnest.' },
+  ],
+  keyQuotes: [
+    { text: '"There is growing dissatisfaction in our own ranks with the compromises."', original: 'Es gebe in den eigenen Reihen einen größer werdenden Unmut über Kompromisse.', speaker: 'Friedrich Merz', timestampSec: 44 },
+    { text: '"His reform projects are becoming difficult."', original: 'Reformprojekte gestalten sich schwierig.', speaker: 'Susanne Daubner', timestampSec: 34 },
+    { text: '"Politically, Merz is under pressure one year after taking office."', original: 'Politisch steht Merz ein Jahr nach Amtsantritt unter Druck.', speaker: 'Susanne Daubner', timestampSec: 58 },
+    { text: '"In eastern Germany the AfD continues to gain ground."', original: 'Im Osten Deutschlands legt die AfD weiter zu.', speaker: 'Susanne Daubner', timestampSec: 372 },
+  ],
+  actionPlan: [
+    'Turn Merz’s admission into a 30-second Reel with on-screen text.',
+    'A Twitter/X thread on the logic behind German coalition naming — high educational value.',
+    'An Instagram carousel on the pensions-taxation-migration pattern: a 70-year story in five frames.',
+  ],
+  vocabulary: [],
+  quiz: [],
+};
+
 /* ─── Pack assembly ───────────────────────────────────────────────────── */
 
 export const samplePackBusiness: KnowledgePack = {
@@ -283,14 +397,16 @@ export const samplePackLearn: KnowledgePack = {
   ...COMMON,
   id: 'sample-learn',
   mode: 'learn',
-  translations: { es: learnES },
+  outputLanguages: ['es', 'en'],
+  translations: { es: learnES, en: learnEN },
 };
 
 export const samplePackCreator: KnowledgePack = {
   ...COMMON,
   id: 'sample-creator',
   mode: 'creator',
-  translations: { es: creatorES },
+  outputLanguages: ['es', 'en'],
+  translations: { es: creatorES, en: creatorEN },
 };
 
 /** Lookup by id — used by PackPage when ?id is sample / sample-learn / sample-creator. */
