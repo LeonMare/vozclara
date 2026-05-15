@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
+import { RouteSkeleton } from '../components/RouteSkeleton';
 import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { recordView, forgetView } from '../lib/recentlyViewed';
 import { usePageHead } from '../hooks/usePageHead';
@@ -124,9 +125,7 @@ export function PackPage() {
   if (!pack) {
     return (
       <main id="main" className="bg-creme paper">
-        <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">
-          <BrandMark variant="monogram" size="lg" tone="gold" decorative />
-        </div>
+        <RouteSkeleton />
       </main>
     );
   }

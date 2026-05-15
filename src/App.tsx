@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppHeader } from './components/AppHeader';
-import { BrandMark } from './components/BrandMark';
 import { Landing } from './components/landing/Landing';
+import { RouteSkeleton } from './components/RouteSkeleton';
 
 /**
  * VozClara — multilingual knowledge cloud for videos.
@@ -24,7 +24,7 @@ import { Landing } from './components/landing/Landing';
  *
  *   First-load cost on / is dominated by Landing now, not the entire
  *   app surface. The other routes warm up in <100 ms on a typical
- *   network — there's a small RouteLoader fallback for slower
+ *   network — there's a small RouteSkeleton fallback for slower
  *   connections so the navigation feels intentional.
  *
  * Header is rendered on every route except Landing (Landing has its own
@@ -80,7 +80,7 @@ export default function App() {
           path="/new"
           element={
             <AppShell>
-              <Suspense fallback={<RouteLoader />}>
+              <Suspense fallback={<RouteSkeleton />}>
                 <GeneratorPage />
               </Suspense>
             </AppShell>
@@ -90,7 +90,7 @@ export default function App() {
           path="/library"
           element={
             <AppShell>
-              <Suspense fallback={<RouteLoader />}>
+              <Suspense fallback={<RouteSkeleton />}>
                 <LibraryPage />
               </Suspense>
             </AppShell>
@@ -100,7 +100,7 @@ export default function App() {
           path="/pack/:id"
           element={
             <AppShell>
-              <Suspense fallback={<RouteLoader />}>
+              <Suspense fallback={<RouteSkeleton />}>
                 <PackPage />
               </Suspense>
             </AppShell>
@@ -110,7 +110,7 @@ export default function App() {
           path="/pricing"
           element={
             <AppShell>
-              <Suspense fallback={<RouteLoader />}>
+              <Suspense fallback={<RouteSkeleton />}>
                 <PricingPage />
               </Suspense>
             </AppShell>
@@ -142,24 +142,3 @@ function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Quiet, brand-conform fallback while a route chunk downloads. Uses the
- * gold lighthouse mark with the existing slow-glow keyframe so the load
- * state reads as "voz clara is fetching" rather than "something
- * unexpected is happening". Visible only on slow networks — Vite chunks
- * gzip to 10-30 kB and arrive in <200 ms on broadband.
- */
-function RouteLoader() {
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      aria-label="Loading"
-      className="flex min-h-[45vh] items-center justify-center"
-    >
-      <span className="slow-glow inline-block">
-        <BrandMark variant="monogram" size="lg" tone="gold" decorative />
-      </span>
-    </div>
-  );
-}
