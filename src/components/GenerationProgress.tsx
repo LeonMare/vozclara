@@ -208,7 +208,7 @@ function buildMergeLines(
 
   if (locale === 'es') {
     return [
-      'Releyendo las subtítulos originales.',
+      'Cargando los subtítulos guardados.',
       `Traduciendo al ${targetName}.`,
       meta?.insights
         ? `Destilando {${meta.insights}} ideas clave en ${targetName}.`
@@ -218,7 +218,7 @@ function buildMergeLines(
   }
   if (locale === 'pt') {
     return [
-      'A reler as legendas originais.',
+      'A carregar as legendas guardadas.',
       `A traduzir para ${targetName}.`,
       meta?.insights
         ? `A destilar {${meta.insights}} ideias-chave em ${targetName}.`
@@ -228,7 +228,7 @@ function buildMergeLines(
   }
   if (locale === 'de') {
     return [
-      'Lese die Originalquelle erneut.',
+      'Lade die gespeicherten Untertitel.',
       `Übersetze nach ${targetName}.`,
       meta?.insights
         ? `Destilliere {${meta.insights}} Kernideen auf ${targetName}.`
@@ -237,7 +237,7 @@ function buildMergeLines(
     ];
   }
   return [
-    'Re-reading the source captions.',
+    'Loading the saved captions.',
     `Translating to ${targetName}.`,
     meta?.insights
       ? `Distilling {${meta.insights}} key ideas in ${targetName}.`

@@ -6,7 +6,7 @@ import { ModePicker } from '../components/ModePicker';
 import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
 import { fetchInsights, joinForLLM } from '../lib/insights';
-import { savePack, saveTranscript, getPack, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
+import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
 import { nanoid } from '../lib/nanoid';
 
 /**
@@ -79,25 +79,65 @@ export function GeneratorPage() {
     setProgressMeta({ targetLang: outputLang });
 
     try {
-      // 1. Transcript + translation in target language. We no longer
-      //    hint at the source language — the worker auto-detects it
-      //    from whatever native captions YouTube has on the video.
-      //    `transcript.lang` is the truth-source for `sourceLang`.
-      const transcript = await fetchTranscript(videoId, {
-        to: outputLang,
-      });
-      const sourceLang = normaliseLang(transcript.lang);
+      // 1. Acquire the transcript. Two paths:
+      //    • Merge mode (?packId=…) → try cached transcript from IDB.
+      //      Skips Supadata entirely, saving a credit and ~10s per
+      //      added language. The cached segments hold the original-
+      //      language text we need to feed the LLM.
+      //    • Otherwise → fetch fresh from /api/transcript. The worker
+      //      also handles Lingva translation into the target lang,
+      //      which we save as part of the new pack.
 
-      // Surface concrete numbers to the loading screen.
-      const lastSeg = transcript.segments[transcript.segments.length - 1];
-      const videoMinutes = lastSeg ? Math.max(1, Math.round((lastSeg.start + lastSeg.dur) / 60)) : undefined;
-      setProgressMeta((m) => ({ ...m, videoMinutes, sentences: transcript.segments.length }));
+      let existingPack: KnowledgePack | undefined;
+      if (mergeIntoPackId) {
+        existingPack = await getPack(mergeIntoPackId);
+        if (!existingPack) throw new Error('pack_not_found_for_merge');
+      }
+
+      const cachedSegments = existingPack?.transcriptKey
+        ? (await getTranscript(existingPack.transcriptKey))?.segments
+        : undefined;
+
+      let sourceLang: Language;
+      let title: string;
+      let joinedTranscript: string;
+      // freshSegments is only populated when we actually called Supadata;
+      // we need it later to persist as the new pack's transcript. For
+      // the cached-merge path we reuse the existing transcriptKey and
+      // never create a new one.
+      let freshSegments: import('../lib/pack').Segment[] | undefined;
+
+      if (existingPack && cachedSegments && cachedSegments.length > 0) {
+        // FAST PATH: cached transcript for merge.
+        sourceLang = existingPack.sourceLang;
+        title = existingPack.title;
+
+        // Force the source-language text by stripping the `translated`
+        // field — joinForLLM falls back to `text` when there's no
+        // translation. Passing the original text yields cleaner LLM
+        // output than chaining old-target → new-target translations.
+        joinedTranscript = joinForLLM(cachedSegments.map((s) => ({ text: s.text })));
+
+        const lastSeg = cachedSegments[cachedSegments.length - 1];
+        const videoMinutes = lastSeg ? Math.max(1, Math.round((lastSeg.start + lastSeg.dur) / 60)) : undefined;
+        setProgressMeta((m) => ({ ...m, videoMinutes, sentences: cachedSegments.length }));
+      } else {
+        // FRESH (or fallback) PATH: hit /api/transcript.
+        const transcript = await fetchTranscript(videoId, { to: outputLang });
+        sourceLang = normaliseLang(transcript.lang);
+        title = transcript.title ?? (existingPack?.title ?? `Video ${videoId}`);
+        freshSegments = transcript.segments;
+        joinedTranscript = joinForLLM(transcript.segments);
+
+        const lastSeg = transcript.segments[transcript.segments.length - 1];
+        const videoMinutes = lastSeg ? Math.max(1, Math.round((lastSeg.start + lastSeg.dur) / 60)) : undefined;
+        setProgressMeta((m) => ({ ...m, videoMinutes, sentences: transcript.segments.length }));
+      }
 
       // 2. Insights (mode-aware).
-      const joined = joinForLLM(transcript.segments);
       const result = await fetchInsights({
         videoId,
-        transcript: joined,
+        transcript: joinedTranscript,
         sourceLang,
         targetLang: outputLang,
         mode,
@@ -121,30 +161,28 @@ export function GeneratorPage() {
 
       let targetPackId: string;
 
-      if (mergeIntoPackId) {
-        // Merge path — append this translation to an existing pack and
-        // promote it as the active view. The transcript is shared across
-        // languages, so we don't store a new one.
-        const existing = await getPack(mergeIntoPackId);
-        if (!existing) throw new Error('pack_not_found_for_merge');
-
+      if (existingPack) {
+        // Merge path — append this translation to the existing pack and
+        // promote it as the active view. The transcript is shared
+        // across languages so we don't write a new one (and in the
+        // fast path we didn't even fetch one).
         const merged: KnowledgePack = {
-          ...existing,
+          ...existingPack,
           outputLang,
-          outputLanguages: Array.from(new Set([...existing.outputLanguages, outputLang])),
-          translations: { ...existing.translations, [outputLang]: translation },
+          outputLanguages: Array.from(new Set([...existingPack.outputLanguages, outputLang])),
+          translations: { ...existingPack.translations, [outputLang]: translation },
           updatedAt: Date.now(),
         };
         await savePack(merged);
-        targetPackId = existing.id;
+        targetPackId = existingPack.id;
       } else {
         // Fresh-pack path — assemble a new KnowledgePack carrying one
         // translation, save the transcript under its own key, and
         // route the user to the new pack view.
+        if (!freshSegments) throw new Error('missing_transcript_for_new_pack');
         const id = nanoid(12);
         const brainId = getBrainId();
-        const transcriptKey = await saveTranscript(id, transcript.segments);
-        const title = transcript.title ?? `Video ${videoId}`;
+        const transcriptKey = await saveTranscript(id, freshSegments);
         const pack: KnowledgePack = {
           id,
           brainId,
