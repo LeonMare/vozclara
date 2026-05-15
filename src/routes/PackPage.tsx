@@ -709,32 +709,155 @@ function TranscriptTab({
   segments: Segment[];
   onSeek: (sec: number) => void;
 }) {
+  const { locale } = useLocale();
+  const [query, setQuery] = useState('');
+  const trimmed = query.trim();
+  const labels = transcriptLabels(locale);
+
   if (segments.length === 0) {
     return <p className="font-serif italic text-graphit/55">— —</p>;
   }
+
+  // Filter to matching segments when there's a query. Case-insensitive
+  // substring search across BOTH the translated and original-language
+  // text — readers may search for a German word even while viewing the
+  // Spanish translation.
+  const matches = trimmed
+    ? segments.filter((s) => {
+        const haystack = `${s.translated ?? ''} ${s.text ?? ''}`.toLowerCase();
+        return haystack.includes(trimmed.toLowerCase());
+      })
+    : segments;
+
   return (
-    <div className="space-y-2.5">
-      {segments.map((s, i) => (
-        <div key={i} className="rounded-card border-l-2 border-navy/15 bg-white/55 px-4 py-3">
-          <button
-            type="button"
-            onClick={() => onSeek(s.start)}
-            className="inline-flex items-center gap-1 rounded-card font-sans text-[10px] uppercase tracking-widest tabular-nums text-gold transition hover:text-navy"
-            aria-label={`Jump to ${formatTime(s.start)}`}
-          >
-            <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
-              <path d="M2 1 L8 5 L2 9 Z" fill="currentColor" />
-            </svg>
-            {formatTime(s.start)}
-          </button>
-          <p className="mt-1 font-serif text-base leading-snug text-navy">{s.translated ?? s.text}</p>
-          {s.translated && s.translated !== s.text && (
-            <p className="mt-1 font-sans text-xs leading-snug text-graphit/55">{s.text}</p>
-          )}
+    <div>
+      {/* Search row — sticky inside the tab content so the input stays
+          reachable while the reader scrolls through long transcripts. */}
+      <div className="sticky top-[104px] z-10 mb-3 flex items-center gap-2 rounded-card border border-navy/15 bg-creme/95 px-3 py-2 backdrop-blur sm:top-[112px]">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden className="shrink-0 text-graphit/55">
+          <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
+          <path d="M10.5 10.5 L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={labels.searchPlaceholder}
+          className="flex-1 bg-transparent font-sans text-sm text-navy placeholder-graphit/40 outline-none"
+        />
+        {trimmed && (
+          <>
+            <span className="font-sans text-[11px] tabular-nums text-graphit/55">
+              {matches.length === 1
+                ? `1 ${labels.matchSingular}`
+                : `${matches.length} ${labels.matchPlural}`}
+            </span>
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label={labels.clear}
+              className="rounded-card px-1.5 py-0.5 font-sans text-[11px] text-graphit/55 transition hover:text-navy"
+            >
+              ✕
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Empty-state for an active search with zero matches. */}
+      {trimmed && matches.length === 0 ? (
+        <p className="py-10 text-center font-serif italic text-graphit/55">
+          {labels.noMatches}
+        </p>
+      ) : (
+        <div className="space-y-2.5">
+          {matches.map((s, i) => (
+            <div key={i} className="rounded-card border-l-2 border-navy/15 bg-white/55 px-4 py-3">
+              <button
+                type="button"
+                onClick={() => onSeek(s.start)}
+                className="inline-flex items-center gap-1 rounded-card font-sans text-[10px] uppercase tracking-widest tabular-nums text-gold transition hover:text-navy"
+                aria-label={`Jump to ${formatTime(s.start)}`}
+              >
+                <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+                  <path d="M2 1 L8 5 L2 9 Z" fill="currentColor" />
+                </svg>
+                {formatTime(s.start)}
+              </button>
+              <p className="mt-1 font-serif text-base leading-snug text-navy">
+                <HighlightedText text={s.translated ?? s.text} query={trimmed} />
+              </p>
+              {s.translated && s.translated !== s.text && (
+                <p className="mt-1 font-sans text-xs leading-snug text-graphit/55">
+                  <HighlightedText text={s.text} query={trimmed} />
+                </p>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
+}
+
+/**
+ * Renders text with case-insensitive matches of `query` wrapped in a
+ * gold-tinted <mark>. Falls through to plain text when query is empty
+ * or no matches are found. Splits the haystack into alternating
+ * literal / matched slices so React renders just plain strings — no
+ * dangerously-set-inner-HTML.
+ */
+function HighlightedText({ text, query }: { text: string; query: string }) {
+  if (!query) return <>{text}</>;
+  const q = query.toLowerCase();
+  const lower = text.toLowerCase();
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
+  let idx = lower.indexOf(q, cursor);
+  let key = 0;
+  while (idx !== -1) {
+    if (idx > cursor) parts.push(<span key={key++}>{text.slice(cursor, idx)}</span>);
+    parts.push(
+      <mark key={key++} className="rounded-sm bg-gold/25 px-0.5 text-navy">
+        {text.slice(idx, idx + query.length)}
+      </mark>,
+    );
+    cursor = idx + query.length;
+    idx = lower.indexOf(q, cursor);
+  }
+  if (cursor < text.length) parts.push(<span key={key++}>{text.slice(cursor)}</span>);
+  return <>{parts}</>;
+}
+
+function transcriptLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    searchPlaceholder: 'Buscar en la transcripción…',
+    matchSingular: 'coincidencia',
+    matchPlural: 'coincidencias',
+    noMatches: 'Sin coincidencias.',
+    clear: 'Limpiar',
+  };
+  if (locale.startsWith('pt')) return {
+    searchPlaceholder: 'Procurar na transcrição…',
+    matchSingular: 'correspondência',
+    matchPlural: 'correspondências',
+    noMatches: 'Sem correspondências.',
+    clear: 'Limpar',
+  };
+  if (locale.startsWith('de')) return {
+    searchPlaceholder: 'Im Transkript suchen…',
+    matchSingular: 'Treffer',
+    matchPlural: 'Treffer',
+    noMatches: 'Keine Treffer.',
+    clear: 'Zurücksetzen',
+  };
+  return {
+    searchPlaceholder: 'Search the transcript…',
+    matchSingular: 'match',
+    matchPlural: 'matches',
+    noMatches: 'No matches.',
+    clear: 'Clear',
+  };
 }
 
 /**
