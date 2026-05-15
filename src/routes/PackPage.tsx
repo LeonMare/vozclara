@@ -9,6 +9,7 @@ import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
 import { PackExport } from '../components/PackExport';
 import { PackShare } from '../components/PackShare';
+import { AskPanel } from '../components/AskPanel';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -297,6 +298,16 @@ export function PackPage() {
               </div>
             );
           })}
+        </div>
+
+        {/* Ask about THIS pack — in-context Q&A. Reuses AskPanel with a
+            single-pack scope: the LLM gets just this pack's condensed
+            content, the panel labels itself accordingly, and the
+            citation chip row is suppressed (there's nothing to choose
+            among). Available on every pack including samples — asking
+            a follow-up about a sample is a strong demo of the feature. */}
+        <div className="mt-10">
+          <AskPanel packs={[pack]} scope="single-pack" />
         </div>
 
         {/* Feedback panel — only on real user packs, not samples.

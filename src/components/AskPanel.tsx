@@ -14,6 +14,13 @@ interface Props {
    */
   question?: string;
   onQuestionChange?: (q: string) => void;
+  /**
+   * Which scope the panel is asking against. Affects the labels only —
+   * the underlying /api/ask call shape is identical.
+   *   • 'library' (default) — "Ask anything across your library"
+   *   • 'single-pack' — "Ask about this pack" (used inside PackPage)
+   */
+  scope?: 'library' | 'single-pack';
 }
 
 /**
@@ -33,7 +40,12 @@ interface Props {
  * The condensed shape (title + summary + key ideas) is enough for
  * most questions a user is likely to ask about their library.
  */
-export function AskPanel({ packs, question: questionProp, onQuestionChange }: Props) {
+export function AskPanel({
+  packs,
+  question: questionProp,
+  onQuestionChange,
+  scope = 'library',
+}: Props) {
   const { locale } = useLocale();
   const [internalQ, setInternalQ] = useState('');
   const question = questionProp !== undefined ? questionProp : internalQ;
@@ -45,7 +57,7 @@ export function AskPanel({ packs, question: questionProp, onQuestionChange }: Pr
   const [result, setResult] = useState<AskResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const labels = askLabels(locale);
+  const labels = askLabels(locale, scope);
   const disabled = loading || question.trim().length < 3;
 
   async function handleSubmit(e: FormEvent) {
@@ -88,10 +100,12 @@ export function AskPanel({ packs, question: questionProp, onQuestionChange }: Pr
             {labels.heading}
           </h2>
         </div>
-        <span className="hidden text-[11px] tabular-nums text-graphit/45 sm:inline">
-          {packs.length}{' '}
-          {packs.length === 1 ? labels.packsSingular : labels.packsPlural}
-        </span>
+        {scope === 'library' && (
+          <span className="hidden text-[11px] tabular-nums text-graphit/45 sm:inline">
+            {packs.length}{' '}
+            {packs.length === 1 ? labels.packsSingular : labels.packsPlural}
+          </span>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -134,7 +148,7 @@ export function AskPanel({ packs, question: questionProp, onQuestionChange }: Pr
       {result && !error && (
         <article className="mt-5 border-t border-navy/10 pt-5">
           <AnswerBody answer={result.answer} />
-          {citedPacks.length > 0 && (
+          {scope === 'library' && citedPacks.length > 0 && (
             <div className="mt-5">
               <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
                 {labels.citations}
@@ -194,17 +208,20 @@ function AnswerBody({ answer }: { answer: string }) {
 
 /* ─── Localised strings ────────────────────────────────────────────────── */
 
-function askLabels(locale: string) {
+function askLabels(locale: string, scope: 'library' | 'single-pack' = 'library') {
+  const lib = scope === 'library';
   if (locale.startsWith('es')) return {
-    eyebrow: 'Pregunta a tu biblioteca',
-    heading: '¿Qué quieres saber?',
-    placeholder: '¿Qué dijo el video sobre…?',
+    eyebrow: lib ? 'Pregunta a tu biblioteca' : 'Pregunta sobre este pack',
+    heading: lib ? '¿Qué quieres saber?' : '¿Qué quieres profundizar?',
+    placeholder: lib ? '¿Qué dijo el video sobre…?' : '¿Por qué dijo…?',
     submit: 'Preguntar',
     loading: 'Buscando…',
     packsSingular: 'pack',
     packsPlural: 'packs',
-    runningNote: 'Buscando entre tu biblioteca…',
-    privacyNote: 'La pregunta y un resumen de tus packs viajan a la IA. El resto se queda en este dispositivo.',
+    runningNote: lib ? 'Buscando entre tu biblioteca…' : 'Analizando este pack…',
+    privacyNote: lib
+      ? 'La pregunta y un resumen de tus packs viajan a la IA. El resto se queda en este dispositivo.'
+      : 'La pregunta y el contenido de este pack viajan a la IA. Nada más.',
     citations: 'Packs citados',
     errors: {
       empty_library: 'Tu biblioteca está vacía. Crea un Knowledge Pack primero.',
@@ -215,15 +232,17 @@ function askLabels(locale: string) {
     },
   };
   if (locale.startsWith('pt')) return {
-    eyebrow: 'Pergunta à tua biblioteca',
-    heading: 'O que queres saber?',
-    placeholder: 'O que disse o vídeo sobre…?',
+    eyebrow: lib ? 'Pergunta à tua biblioteca' : 'Pergunta sobre este pack',
+    heading: lib ? 'O que queres saber?' : 'O que queres aprofundar?',
+    placeholder: lib ? 'O que disse o vídeo sobre…?' : 'Porque é que disse…?',
     submit: 'Perguntar',
     loading: 'A procurar…',
     packsSingular: 'pack',
     packsPlural: 'packs',
-    runningNote: 'A procurar na tua biblioteca…',
-    privacyNote: 'A pergunta e um resumo dos teus packs viajam para a IA. O resto fica neste dispositivo.',
+    runningNote: lib ? 'A procurar na tua biblioteca…' : 'A analisar este pack…',
+    privacyNote: lib
+      ? 'A pergunta e um resumo dos teus packs viajam para a IA. O resto fica neste dispositivo.'
+      : 'A pergunta e o conteúdo deste pack viajam para a IA. Nada mais.',
     citations: 'Packs citados',
     errors: {
       empty_library: 'A tua biblioteca está vazia. Cria primeiro um Knowledge Pack.',
@@ -234,15 +253,17 @@ function askLabels(locale: string) {
     },
   };
   if (locale.startsWith('de')) return {
-    eyebrow: 'Frag deine Bibliothek',
-    heading: 'Was möchtest du wissen?',
-    placeholder: 'Was sagte das Video über…?',
+    eyebrow: lib ? 'Frag deine Bibliothek' : 'Frag zu diesem Pack',
+    heading: lib ? 'Was möchtest du wissen?' : 'Was möchtest du vertiefen?',
+    placeholder: lib ? 'Was sagte das Video über…?' : 'Warum hieß es…?',
     submit: 'Fragen',
     loading: 'Suche…',
     packsSingular: 'Pack',
     packsPlural: 'Packs',
-    runningNote: 'Durchsuche deine Bibliothek…',
-    privacyNote: 'Die Frage und eine Zusammenfassung deiner Packs gehen an die KI. Der Rest bleibt auf diesem Gerät.',
+    runningNote: lib ? 'Durchsuche deine Bibliothek…' : 'Analysiere diesen Pack…',
+    privacyNote: lib
+      ? 'Die Frage und eine Zusammenfassung deiner Packs gehen an die KI. Der Rest bleibt auf diesem Gerät.'
+      : 'Die Frage und der Inhalt dieses Packs gehen an die KI. Nichts weiter.',
     citations: 'Zitierte Packs',
     errors: {
       empty_library: 'Deine Bibliothek ist leer. Erstelle erst einen Knowledge Pack.',
@@ -253,15 +274,17 @@ function askLabels(locale: string) {
     },
   };
   return {
-    eyebrow: 'Ask your library',
-    heading: 'What do you want to know?',
-    placeholder: 'What did the video say about…?',
+    eyebrow: lib ? 'Ask your library' : 'Ask about this pack',
+    heading: lib ? 'What do you want to know?' : 'What do you want to dig into?',
+    placeholder: lib ? 'What did the video say about…?' : 'Why did they say…?',
     submit: 'Ask',
     loading: 'Searching…',
     packsSingular: 'pack',
     packsPlural: 'packs',
-    runningNote: 'Searching across your library…',
-    privacyNote: 'The question and a summary of your packs go to the AI. Everything else stays on this device.',
+    runningNote: lib ? 'Searching across your library…' : 'Analysing this pack…',
+    privacyNote: lib
+      ? 'The question and a summary of your packs go to the AI. Everything else stays on this device.'
+      : 'The question and this pack’s content go to the AI. Nothing more.',
     citations: 'Cited packs',
     errors: {
       empty_library: 'Your library is empty. Create a Knowledge Pack first.',
