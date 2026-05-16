@@ -126,6 +126,9 @@ export function AppHeader() {
                 {landingNav(locale, 'pricing')}
               </Link>
             )}
+            <Link to="/about" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
+              {aboutNavLabel(locale)}
+            </Link>
             <Link to="/new" className="rounded-card bg-navy px-3 py-2 text-creme transition hover:bg-navy/90">
               + {t.navNew}
             </Link>
@@ -180,4 +183,11 @@ function landingNav(locale: string, key: 'how' | 'pricing' | 'sample'): string {
     en: { how: 'How it works', pricing: 'Pricing', sample: 'Sample' },
   };
   return dict[locale]?.[key] ?? dict.es[key];
+}
+
+function aboutNavLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Sobre';
+  if (locale.startsWith('pt')) return 'Sobre';
+  if (locale.startsWith('de')) return 'Über';
+  return 'About';
 }

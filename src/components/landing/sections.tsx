@@ -489,6 +489,7 @@ export function FounderNote() {
 
 export function LandingFooter() {
   const { t, locale } = useLocale();
+  const cols = footerColumns(locale);
 
   const trust: Record<typeof locale, string> = {
     es: 'Tu biblioteca permanece en tu dispositivo. Sin rastreo. Sin anuncios. Solo el análisis con IA sale de tu navegador.',
@@ -506,16 +507,179 @@ export function LandingFooter() {
         </p>
       </div>
 
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 py-8 sm:flex-row sm:justify-between sm:px-8 sm:py-10">
-        <div className="flex items-center gap-3">
-          <BrandMark variant="monogram" size="sm" tone="navy" decorative />
-          <span className="font-serif text-base italic text-navy">voz clara</span>
+      {/* Site-nav columns — three groups so the footer reads like a
+          proper colophon rather than a single closing line. */}
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+          <div>
+            <div className="flex items-center gap-3">
+              <BrandMark variant="monogram" size="md" tone="navy" decorative />
+              <span className="wordmark text-lg text-navy" style={{ letterSpacing: '0.18em' }}>
+                VOZ&nbsp;·&nbsp;CLARA
+              </span>
+            </div>
+            <p className="mt-5 max-w-sm font-serif italic leading-relaxed text-graphit/65 sm:text-lg">
+              {cols.tagline}
+            </p>
+          </div>
+
+          {cols.groups.map((g, gi) => (
+            <div key={gi}>
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+                {g.heading}
+              </div>
+              <ul className="mt-4 space-y-2.5 font-sans text-sm text-graphit/75">
+                {g.items.map((it, i) => (
+                  <li key={i}>
+                    {it.href.startsWith('http') ? (
+                      <a
+                        href={it.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition hover:text-navy hover:underline underline-offset-4"
+                      >
+                        {it.label} ↗
+                      </a>
+                    ) : it.href.startsWith('#') ? (
+                      <a href={it.href} className="transition hover:text-navy">
+                        {it.label}
+                      </a>
+                    ) : (
+                      <Link to={it.href} className="transition hover:text-navy">
+                        {it.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div className="text-center font-sans text-[11px] tracking-wide text-graphit/55 sm:text-right">
+
+        <div className="mt-10 flex flex-col items-baseline justify-between gap-3 border-t border-navy/8 pt-6 font-sans text-[11px] tracking-wide text-graphit/55 sm:flex-row">
           <div className="italic">{t.footerBuiltBy}</div>
-          <div className="mt-0.5 wordmark text-[10px]">{t.footerTagline}</div>
+          <div className="wordmark text-[10px]">{t.footerTagline}</div>
         </div>
       </div>
     </footer>
   );
+}
+
+function footerColumns(locale: string) {
+  if (locale.startsWith('es')) return {
+    tagline: 'Nube multilingüe de conocimiento para vídeos. Guarda el conocimiento, no solo el vídeo.',
+    groups: [
+      {
+        heading: 'Producto',
+        items: [
+          { label: 'Crear Knowledge Pack', href: '/new' },
+          { label: 'Mi biblioteca', href: '/library' },
+          { label: 'Pack de ejemplo', href: '/pack/sample' },
+          { label: 'Cómo funciona', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Sobre',
+        items: [
+          { label: 'Sobre Voz Clara', href: '/about' },
+          { label: 'Planes y precios', href: '/pricing' },
+          { label: 'LEON MARÉ', href: 'https://leonmare.de' },
+        ],
+      },
+      {
+        heading: 'Técnico',
+        items: [
+          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
+          { label: 'Sitemap', href: '/sitemap.xml' },
+        ],
+      },
+    ],
+  };
+  if (locale.startsWith('pt')) return {
+    tagline: 'Nuvem multilingue de conhecimento para vídeos. Guarda o conhecimento, não apenas o vídeo.',
+    groups: [
+      {
+        heading: 'Produto',
+        items: [
+          { label: 'Criar Knowledge Pack', href: '/new' },
+          { label: 'A minha biblioteca', href: '/library' },
+          { label: 'Pack de exemplo', href: '/pack/sample' },
+          { label: 'Como funciona', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Sobre',
+        items: [
+          { label: 'Sobre a Voz Clara', href: '/about' },
+          { label: 'Planos e preços', href: '/pricing' },
+          { label: 'LEON MARÉ', href: 'https://leonmare.de' },
+        ],
+      },
+      {
+        heading: 'Técnico',
+        items: [
+          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
+          { label: 'Sitemap', href: '/sitemap.xml' },
+        ],
+      },
+    ],
+  };
+  if (locale.startsWith('de')) return {
+    tagline: 'Mehrsprachige Wissens-Cloud für Videos. Speichere das Wissen, nicht nur das Video.',
+    groups: [
+      {
+        heading: 'Produkt',
+        items: [
+          { label: 'Knowledge Pack erstellen', href: '/new' },
+          { label: 'Meine Bibliothek', href: '/library' },
+          { label: 'Beispiel-Pack', href: '/pack/sample' },
+          { label: 'So funktioniert es', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Über',
+        items: [
+          { label: 'Über Voz Clara', href: '/about' },
+          { label: 'Preise', href: '/pricing' },
+          { label: 'LEON MARÉ', href: 'https://leonmare.de' },
+        ],
+      },
+      {
+        heading: 'Technisch',
+        items: [
+          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
+          { label: 'Sitemap', href: '/sitemap.xml' },
+        ],
+      },
+    ],
+  };
+  return {
+    tagline: 'Multilingual knowledge cloud for videos. Save the knowledge, not just the video.',
+    groups: [
+      {
+        heading: 'Product',
+        items: [
+          { label: 'Create Knowledge Pack', href: '/new' },
+          { label: 'My library', href: '/library' },
+          { label: 'Sample pack', href: '/pack/sample' },
+          { label: 'How it works', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'About',
+        items: [
+          { label: 'About Voz Clara', href: '/about' },
+          { label: 'Pricing', href: '/pricing' },
+          { label: 'LEON MARÉ', href: 'https://leonmare.de' },
+        ],
+      },
+      {
+        heading: 'Technical',
+        items: [
+          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
+          { label: 'Sitemap', href: '/sitemap.xml' },
+        ],
+      },
+    ],
+  };
 }

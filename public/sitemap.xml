@@ -14,6 +14,13 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- About — founder story + roadmap -->
+  <url>
+    <loc>https://vozclara.pages.dev/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Public sample packs — full sales-demo content, deep-linkable -->
   <url>
     <loc>https://vozclara.pages.dev/pack/sample</loc>
