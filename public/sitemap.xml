@@ -38,6 +38,18 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Legal — required for launch transparency, low priority for search -->
+  <url>
+    <loc>https://vozclara.pages.dev/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.pages.dev/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
   <!-- App routes — leave for navigation but lower priority -->
   <url>
     <loc>https://vozclara.pages.dev/new</loc>

@@ -47,6 +47,12 @@ const PricingPage = lazy(() =>
 const AboutPage = lazy(() =>
   import('./routes/AboutPage').then((m) => ({ default: m.AboutPage })),
 );
+const PrivacyPage = lazy(() =>
+  import('./routes/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
+);
+const TermsPage = lazy(() =>
+  import('./routes/TermsPage').then((m) => ({ default: m.TermsPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -125,6 +131,26 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <AboutPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <PrivacyPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/terms"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <TermsPage />
               </Suspense>
             </AppShell>
           }

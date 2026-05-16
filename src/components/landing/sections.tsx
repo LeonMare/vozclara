@@ -587,8 +587,10 @@ function footerColumns(locale: string) {
         ],
       },
       {
-        heading: 'Técnico',
+        heading: 'Legal',
         items: [
+          { label: 'Privacidad', href: '/privacy' },
+          { label: 'Términos', href: '/terms' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -616,8 +618,10 @@ function footerColumns(locale: string) {
         ],
       },
       {
-        heading: 'Técnico',
+        heading: 'Legal',
         items: [
+          { label: 'Privacidade', href: '/privacy' },
+          { label: 'Termos', href: '/terms' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -645,8 +649,10 @@ function footerColumns(locale: string) {
         ],
       },
       {
-        heading: 'Technisch',
+        heading: 'Rechtliches',
         items: [
+          { label: 'Datenschutz', href: '/privacy' },
+          { label: 'Nutzungsbedingungen', href: '/terms' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -674,8 +680,10 @@ function footerColumns(locale: string) {
         ],
       },
       {
-        heading: 'Technical',
+        heading: 'Legal',
         items: [
+          { label: 'Privacy', href: '/privacy' },
+          { label: 'Terms', href: '/terms' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
