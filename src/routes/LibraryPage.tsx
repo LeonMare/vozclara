@@ -18,6 +18,7 @@ import {
 } from '../lib/pack';
 import { getRecentlyViewed, forgetView } from '../lib/recentlyViewed';
 import { deindexPack, ensureLibraryIndexed } from '../lib/packIndex';
+import { dueSummary, syncCardsFromLibrary, type DueSummary } from '../lib/srs';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 
@@ -45,6 +46,7 @@ export function LibraryPage() {
   const [sinceDays, setSinceDays] = useState<number | undefined>(undefined);
   const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
   const [recentIds, setRecentIds] = useState<string[]>([]);
+  const [due, setDue] = useState<DueSummary | null>(null);
 
   // Bulk-select mode: toggled by the "Select" button in the stats row.
   // selectedIds tracks which packs the user has ticked while in mode.
@@ -86,6 +88,11 @@ export function LibraryPage() {
     // Background back-fill: any pack saved before Vectorize was available
     // gets indexed now so it becomes findable via Ask My Knowledge.
     void ensureLibraryIndexed(brainId);
+    // Sync vocabulary → SRS cards, then count what's due today.
+    void (async () => {
+      await syncCardsFromLibrary(brainId);
+      setDue(await dueSummary(brainId));
+    })();
   }, []);
 
   // Resolve recently-viewed pack IDs against the user's library + the
@@ -148,9 +155,28 @@ export function LibraryPage() {
     );
   }
 
+  const reviewBannerCount = (due?.due ?? 0) + (due?.fresh ?? 0);
+
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
+        {/* Review banner — surfaces SRS due-today count and routes to
+            the daily review session. Hidden when nothing is due. */}
+        {!selectMode && reviewBannerCount > 0 && (
+          <Link
+            to="/review"
+            className="mb-6 flex items-center justify-between gap-3 rounded-card border border-gold/40 bg-gold/10 px-5 py-4 text-navy transition hover:bg-gold/20"
+          >
+            <span className="flex items-baseline gap-3">
+              <span className="font-serif text-2xl">{reviewBannerCount}</span>
+              <span className="font-sans text-sm">{reviewBannerLabel(locale, due!)}</span>
+            </span>
+            <span className="font-sans text-sm font-medium text-navy">
+              {reviewStartLabel(locale)} →
+            </span>
+          </Link>
+        )}
+
         {/* Stats line — switches to a "X selected" summary when bulk-
             select mode is active. */}
         {stats && stats.totalPacks > 0 && (
@@ -538,4 +564,43 @@ function clearTagsLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Limpar';
   if (locale.startsWith('de')) return 'Zurücksetzen';
   return 'Clear';
+}
+
+/**
+ * Subtitle for the review banner. The big number on the left already
+ * shows the total — this line breaks it down by type without
+ * duplicating the count, except when there are both types in the
+ * queue (then we show the split so the user knows it's a mix).
+ */
+function reviewBannerLabel(locale: string, due: DueSummary): string {
+  const mix = due.due > 0 && due.fresh > 0;
+  if (locale.startsWith('es')) {
+    if (mix) return `${due.due} para repasar · ${due.fresh} ${due.fresh === 1 ? 'palabra nueva' : 'nuevas'}`;
+    if (due.due > 0) return due.due === 1 ? 'tarjeta para repasar' : 'tarjetas para repasar';
+    if (due.fresh > 0) return due.fresh === 1 ? 'palabra nueva por aprender' : 'palabras nuevas por aprender';
+    return 'nada pendiente';
+  }
+  if (locale.startsWith('pt')) {
+    if (mix) return `${due.due} para rever · ${due.fresh} ${due.fresh === 1 ? 'palavra nova' : 'novas'}`;
+    if (due.due > 0) return due.due === 1 ? 'cartão para rever' : 'cartões para rever';
+    if (due.fresh > 0) return due.fresh === 1 ? 'palavra nova para aprender' : 'palavras novas para aprender';
+    return 'nada pendente';
+  }
+  if (locale.startsWith('de')) {
+    if (mix) return `${due.due} zu wiederholen · ${due.fresh} ${due.fresh === 1 ? 'neues Wort' : 'neue'}`;
+    if (due.due > 0) return due.due === 1 ? 'Karte zu wiederholen' : 'Karten zu wiederholen';
+    if (due.fresh > 0) return due.fresh === 1 ? 'neues Wort zu lernen' : 'neue Wörter zu lernen';
+    return 'nichts offen';
+  }
+  if (mix) return `${due.due} due · ${due.fresh} new`;
+  if (due.due > 0) return due.due === 1 ? 'card due for review' : 'cards due for review';
+  if (due.fresh > 0) return due.fresh === 1 ? 'new word to learn' : 'new words to learn';
+  return 'nothing due';
+}
+
+function reviewStartLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Empezar repaso';
+  if (locale.startsWith('pt')) return 'Começar revisão';
+  if (locale.startsWith('de')) return 'Wiederholung starten';
+  return 'Start review';
 }
