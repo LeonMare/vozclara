@@ -287,7 +287,7 @@ export function PackPage() {
           </nav>
 
           <section className="mt-8 pb-16">
-            {renderTabContent(tab, view, segments, t, seekPlayer)}
+            {renderTabContent(tab, view, segments, t, seekPlayer, pack.title)}
           </section>
         </div>
 
@@ -331,7 +331,7 @@ export function PackPage() {
                 </button>
                 {isOpen && (
                   <div id={`panel-${k}`} className="pb-6 pt-2">
-                    {renderTabContent(k, view, segments, t, seekPlayer)}
+                    {renderTabContent(k, view, segments, t, seekPlayer, pack.title)}
                   </div>
                 )}
               </div>
@@ -538,6 +538,7 @@ function renderTabContent(
   segments: Segment[],
   t: ReturnType<typeof useLocale>['t'],
   onSeek: (sec: number) => void,
+  packTitle: string,
 ): React.ReactNode {
   switch (key) {
     case 'summary':
@@ -553,7 +554,7 @@ function renderTabContent(
     case 'quiz':
       return <QuizTab view={view} />;
     case 'quotes':
-      return <QuotesTab view={view} onSeek={onSeek} />;
+      return <QuotesTab view={view} onSeek={onSeek} packTitle={packTitle} />;
     case 'socialAngles':
       return <SocialAnglesTab view={view} />;
     case 'transcript':
@@ -689,13 +690,33 @@ function QuizItem({ q, index }: { q: PackTranslation['quiz'][number]; index: num
   );
 }
 
-function QuotesTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
+function QuotesTab({
+  view,
+  onSeek,
+  packTitle,
+}: {
+  view: PackTranslation;
+  onSeek: (sec: number) => void;
+  packTitle: string;
+}) {
+  const { locale } = useLocale();
   if (view.keyQuotes.length === 0) return <Empty />;
+
+  function quoteCardUrl(q: PackTranslation['keyQuotes'][number]): string {
+    const base = (import.meta.env.VITE_API_BASE ?? '') + '/api/quote-card';
+    const params = new URLSearchParams({ text: q.text });
+    if (q.speaker) params.set('speaker', q.speaker);
+    if (q.timestampSec) params.set('time', formatTime(q.timestampSec));
+    if (q.original && q.original !== q.text) params.set('original', q.original);
+    if (packTitle) params.set('packTitle', packTitle);
+    return `${base}?${params.toString()}`;
+  }
+
   return (
     <div className="space-y-5">
       {view.keyQuotes.map((q, i) => (
-        <blockquote key={i} className="border-l-2 border-gold/50 pl-5 sm:pl-6">
-          <p className="font-serif text-xl italic leading-snug text-navy sm:text-2xl">“{q.text}”</p>
+        <blockquote key={i} className="group relative border-l-2 border-gold/50 pl-5 sm:pl-6">
+          <p className="pr-12 font-serif text-xl italic leading-snug text-navy sm:text-2xl">“{q.text}”</p>
           {(q.speaker || q.timestampSec) && (
             <footer className="mt-2 font-sans text-[11px] uppercase tracking-widest text-graphit/55">
               {q.speaker && <span>{q.speaker}</span>}
@@ -718,10 +739,37 @@ function QuotesTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: numb
           {q.original && q.original !== q.text && (
             <p className="mt-2 font-sans text-sm italic text-graphit/55">{q.original}</p>
           )}
+
+          {/* Share-as-image affordance — opens the brand-styled 1080×1080
+              quote card in a new tab where the user can right-click /
+              long-press to save or share. Visible on hover (desktop)
+              and always on touch (since :hover is unreliable there). */}
+          <a
+            href={quoteCardUrl(q)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={quoteCardLabel(locale)}
+            title={quoteCardLabel(locale)}
+            className="absolute right-0 top-0 inline-flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-graphit/65 opacity-100 transition hover:border-gold hover:text-navy sm:opacity-0 sm:group-hover:opacity-100"
+          >
+            <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+              {/* Square frame with a small mountain motif — "image" glyph */}
+              <rect x="1.5" y="2.5" width="11" height="9" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" />
+              <circle cx="5" cy="6" r="0.9" fill="currentColor" />
+              <path d="M3 10 L6 7 L8.5 9 L11 6.5 L11 11 L3 11 Z" fill="currentColor" opacity="0.5" />
+            </svg>
+          </a>
         </blockquote>
       ))}
     </div>
   );
+}
+
+function quoteCardLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Crear imagen para compartir';
+  if (locale.startsWith('pt')) return 'Criar imagem para partilhar';
+  if (locale.startsWith('de')) return 'Bild zum Teilen erstellen';
+  return 'Create share image';
 }
 
 function SocialAnglesTab({ view }: { view: PackTranslation }) {

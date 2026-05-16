@@ -189,6 +189,10 @@ export default {
       return handleOG(url);
     }
 
+    if (url.pathname === '/api/quote-card' && req.method === 'GET') {
+      return handleQuoteCard(url);
+    }
+
     return json({ error: 'not_found' }, 404);
   },
 };
@@ -1558,4 +1562,153 @@ function wrapTitle(title: string, maxChars: number, maxLines: number): string[] 
     lines[lines.length - 1] = lines[lines.length - 1].replace(/\W+$/, '') + '…';
   }
   return lines;
+}
+
+/* ─── /api/quote-card ───────────────────────────────────────────────────
+ *
+ * Sharable 1080×1080 SVG card for a single key quote. Same brand
+ * language as /api/og but laid out for Instagram / square share
+ * surfaces: a large pull-quote in editorial serif, speaker + timestamp
+ * underneath, optional original-language line beneath the translated
+ * one, Voz Clara seal + brand strip in the corner.
+ *
+ * The QuotesTab in the Pack view links each quote's "share" button at
+ * this URL with the quote's params encoded in the querystring, so a
+ * user can open / right-click-save / share with one click. No
+ * server-side data needed — the URL fully describes the card.
+ *
+ * Cached at the edge for a year (immutable per URL).
+ */
+
+interface QuoteCardParams {
+  text: string;
+  speaker?: string;
+  time?: string;
+  original?: string;
+  packTitle?: string;
+}
+
+function handleQuoteCard(url: URL): Response {
+  const p = url.searchParams;
+  const params: QuoteCardParams = {
+    text: (p.get('text') ?? '').slice(0, 400),
+    speaker: p.get('speaker')?.slice(0, 80) ?? undefined,
+    time: p.get('time')?.slice(0, 12) ?? undefined,
+    original: p.get('original')?.slice(0, 400) ?? undefined,
+    packTitle: p.get('packTitle')?.slice(0, 120) ?? undefined,
+  };
+
+  if (!params.text) {
+    return json({ error: 'missing_text' }, 400);
+  }
+
+  const svg = renderQuoteCardSVG(params);
+  return new Response(svg, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/svg+xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      ...CORS_HEADERS,
+    },
+  });
+}
+
+function renderQuoteCardSVG({ text, speaker, time, original, packTitle }: QuoteCardParams): string {
+  const esc = (s: string) =>
+    s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+  // Quote text wrapping — longer quotes get smaller font.
+  const cleanText = text.replace(/^["“„]+|["”„]+$/g, '');
+  const len = cleanText.length;
+  const fontSize = len < 80 ? 56 : len < 160 ? 48 : len < 240 ? 40 : 34;
+  const charsPerLine = len < 80 ? 24 : len < 160 ? 28 : 32;
+  const maxLines = len < 80 ? 4 : len < 160 ? 6 : 8;
+  const wrapped = wrapTitle(cleanText, charsPerLine, maxLines);
+  const lineHeight = Math.round(fontSize * 1.25);
+  // Vertically centre the quote block in the available 1080-ish area.
+  const blockHeight = wrapped.length * lineHeight;
+  const topY = 320 + (480 - blockHeight) / 2;
+
+  // Optional original-language line beneath the translated quote.
+  const showOriginal = original && original !== text && original.length < 200;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A1A3A"/>
+      <stop offset="100%" stop-color="#091532"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="20%" cy="22%" r="60%">
+      <stop offset="0%" stop-color="#C9A24B" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#C9A24B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D29A"/>
+      <stop offset="50%" stop-color="#C9A24B"/>
+      <stop offset="100%" stop-color="#8C6A2A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <rect width="1080" height="1080" fill="url(#aura)"/>
+
+  <!-- Brand seal corner: lighthouse mark + wordmark -->
+  <g transform="translate(70 80) scale(0.78)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="44" stroke-width="2.6"/>
+    <circle cx="50" cy="50" r="40.7" stroke-width="2.0"/>
+    <path d="M50 16V26" stroke-width="2.0"/>
+    <path d="M33 25l10 6" stroke-width="1.8"/>
+    <path d="M67 25l-10 6" stroke-width="1.8"/>
+    <path d="M31 36l12-3" stroke-width="1.8"/>
+    <path d="M69 36l-12-3" stroke-width="1.8"/>
+    <path d="M46.5 30h7" stroke-width="1.8"/>
+    <path d="M44.4 31.2l5.6-4.1 5.6 4.1" stroke-width="2.0"/>
+    <path d="M45.6 31.4h8.8v5.7h-8.8z" stroke-width="1.7"/>
+    <path d="M47.3 31.4v5.7M50 31.4v5.7M52.7 31.4v5.7" stroke-width="1.3"/>
+    <path d="M43.8 37.1h12.4" stroke-width="2.0"/>
+    <path d="M44.7 39h10.6" stroke-width="1.4"/>
+    <path d="M45.3 39.1 42.3 73.7M54.7 39.1 57.7 73.7" stroke-width="1.9"/>
+    <path d="M46.8 48h6.4" stroke-width="1.5"/>
+    <rect x="48.6" y="50.2" width="2.8" height="5.5" rx="0.2" stroke-width="1.6"/>
+    <path d="M41.2 73.8h17.6" stroke-width="2.0"/>
+    <path d="M24.6 79.4C33.7 73.8 43 72.2 50 72.2s16.3 1.6 25.4 7.2" stroke-width="2.1"/>
+  </g>
+
+  <text x="190" y="135" font-family="Georgia, 'Times New Roman', serif" font-size="34" letter-spacing="8" fill="#F7F3EC" font-weight="500">
+    VOZ · CLARA
+  </text>
+
+  <!-- Oversized opening quotation mark, decorative -->
+  <text x="80" y="370" font-family="Georgia, 'Times New Roman', serif" font-size="160" fill="#C9A24B" opacity="0.45">
+    “
+  </text>
+
+  <!-- The pull quote, multi-line, editorial serif -->
+  ${wrapped
+    .map(
+      (line, i) =>
+        `<text x="540" y="${topY + lineHeight + i * lineHeight}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="${fontSize}" font-weight="500" fill="#F7F3EC">${esc(line)}</text>`,
+    )
+    .join('\n  ')}
+
+  <!-- Gold divider -->
+  <rect x="490" y="${topY + blockHeight + 60}" width="100" height="2" fill="url(#gold)"/>
+
+  <!-- Speaker + timestamp underneath -->
+  ${speaker || time ? `<text x="540" y="${topY + blockHeight + 120}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="22" letter-spacing="6" fill="#C9A24B" font-weight="500">${esc((speaker ?? '').toUpperCase())}${speaker && time ? '  ·  ' : ''}${time ? esc(time) : ''}</text>` : ''}
+
+  <!-- Optional original-language line (e.g. German source line) -->
+  ${showOriginal ? `<text x="540" y="${topY + blockHeight + 170}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-style="italic" fill="#F7F3EC80">${esc(original!)}</text>` : ''}
+
+  <!-- Pack-title attribution at the bottom -->
+  ${packTitle ? `<text x="540" y="970" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="20" fill="#F7F3EC99" font-style="italic">${esc(packTitle)}</text>` : ''}
+  <text x="540" y="1010" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#C9A24B">
+    VOZCLARA.PAGES.DEV
+  </text>
+</svg>`;
 }
