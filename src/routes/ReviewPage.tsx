@@ -158,6 +158,12 @@ export function ReviewPage() {
           <NotificationToggle />
 
           <div className="mt-8 flex justify-center gap-3">
+            <Link
+              to="/progress"
+              className="rounded-card bg-navy px-5 py-2.5 font-sans text-sm text-creme transition hover:bg-graphit"
+            >
+              {labels.viewProgress} →
+            </Link>
             <button
               type="button"
               onClick={() => navigate('/library')}
@@ -290,6 +296,7 @@ function reviewLabels(locale: string) {
     emptyTitle: 'Nada que repasar hoy.',
     emptyBody: 'Cuando guardes Knowledge Packs con vocabulario, las palabras aparecerán aquí en intervalos crecientes.',
     backToLibrary: 'Volver a la biblioteca',
+    viewProgress: 'Ver mi progreso',
     doneTitle: 'Sesión terminada.',
     doneBody: (n: number) => `Has repasado ${n} ${n === 1 ? 'tarjeta' : 'tarjetas'}. Vuelve mañana para reforzar lo aprendido.`,
     streakLabel: 'Racha',
@@ -311,6 +318,7 @@ function reviewLabels(locale: string) {
     emptyTitle: 'Nada para rever hoje.',
     emptyBody: 'Quando guardares Knowledge Packs com vocabulário, as palavras aparecerão aqui em intervalos crescentes.',
     backToLibrary: 'Voltar à biblioteca',
+    viewProgress: 'Ver o meu progresso',
     doneTitle: 'Sessão terminada.',
     doneBody: (n: number) => `Reviste ${n} ${n === 1 ? 'cartão' : 'cartões'}. Volta amanhã para reforçar o que aprendeste.`,
     streakLabel: 'Sequência',
@@ -332,6 +340,7 @@ function reviewLabels(locale: string) {
     emptyTitle: 'Heute nichts zu wiederholen.',
     emptyBody: 'Sobald du Knowledge Packs mit Vokabular speicherst, erscheinen die Wörter hier in zunehmenden Intervallen.',
     backToLibrary: 'Zurück zur Bibliothek',
+    viewProgress: 'Fortschritt ansehen',
     doneTitle: 'Sitzung beendet.',
     doneBody: (n: number) => `Du hast ${n} ${n === 1 ? 'Karte' : 'Karten'} wiederholt. Komm morgen wieder, um das Gelernte zu festigen.`,
     streakLabel: 'Streak',
@@ -353,6 +362,7 @@ function reviewLabels(locale: string) {
     emptyTitle: 'Nothing to review today.',
     emptyBody: 'Once you save Knowledge Packs with vocabulary, those words will appear here on rising intervals.',
     backToLibrary: 'Back to library',
+    viewProgress: 'View my progress',
     doneTitle: 'Session complete.',
     doneBody: (n: number) => `You reviewed ${n} ${n === 1 ? 'card' : 'cards'}. Come back tomorrow to lock it in.`,
     streakLabel: 'Streak',

@@ -362,3 +362,114 @@ export async function getNextDueAt(brainId?: string): Promise<number> {
   }
   return earliest;
 }
+
+/* ─── Progress aggregation ────────────────────────────────────────── */
+
+export type CefrLevel = 'A0' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
+export interface LanguageProgress {
+  /** ISO code, e.g. "de". This is the source-language of the cards. */
+  sourceLang: string;
+  /** Total cards in this language. */
+  total: number;
+  /** Cards reviewed at least once. */
+  seen: number;
+  /** Cards with reps >= 3 (well-learned). */
+  mastered: number;
+  /** Latest CEFR level estimate based on mastered vocabulary breadth. */
+  cefr: CefrLevel;
+}
+
+export interface ProgressStats {
+  /** Number of cards reviewed in the last 7 days. */
+  reviewedThisWeek: number;
+  /** Sum of all cards across the library. */
+  totalCards: number;
+  /** All cards reviewed at least once. */
+  totalSeen: number;
+  /** All cards with reps >= 3. */
+  totalMastered: number;
+  /** Per-source-language breakdown, sorted by total desc. */
+  byLanguage: LanguageProgress[];
+  streak: StreakState;
+}
+
+/**
+ * Map mastered-vocabulary count to a CEFR level. Calibrated to be
+ * conservative: real CEFR requires four skills (reading, listening,
+ * speaking, writing) — we only see vocabulary breadth, so we keep
+ * the bands wide and the language honest in the UI.
+ */
+export function cefrFromMastered(mastered: number): CefrLevel {
+  if (mastered < 50) return 'A0';
+  if (mastered < 250) return 'A1';
+  if (mastered < 800) return 'A2';
+  if (mastered < 2000) return 'B1';
+  if (mastered < 4000) return 'B2';
+  if (mastered < 8000) return 'C1';
+  return 'C2';
+}
+
+export async function getProgressStats(brainId?: string): Promise<ProgressStats> {
+  const id = brainId ?? getBrainId();
+  if (id === 'server') {
+    return {
+      reviewedThisWeek: 0,
+      totalCards: 0,
+      totalSeen: 0,
+      totalMastered: 0,
+      byLanguage: [],
+      streak: { ...EMPTY_STREAK },
+    };
+  }
+  const store = await loadStore(id);
+  const cards = Object.values(store.cards);
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+  let reviewedThisWeek = 0;
+  let totalSeen = 0;
+  let totalMastered = 0;
+
+  // Per-language accumulators keyed by sourceLang.
+  const byLang = new Map<string, { total: number; seen: number; mastered: number }>();
+
+  for (const c of cards) {
+    const lang = c.sourceLang || 'unknown';
+    let bucket = byLang.get(lang);
+    if (!bucket) {
+      bucket = { total: 0, seen: 0, mastered: 0 };
+      byLang.set(lang, bucket);
+    }
+    bucket.total += 1;
+    if (c.lastReviewedAt !== null) {
+      bucket.seen += 1;
+      totalSeen += 1;
+      if (c.lastReviewedAt >= weekAgo) reviewedThisWeek += 1;
+    }
+    if (c.reps >= 3) {
+      bucket.mastered += 1;
+      totalMastered += 1;
+    }
+  }
+
+  const byLanguage: LanguageProgress[] = [];
+  for (const [sourceLang, b] of byLang.entries()) {
+    byLanguage.push({
+      sourceLang,
+      total: b.total,
+      seen: b.seen,
+      mastered: b.mastered,
+      cefr: cefrFromMastered(b.mastered),
+    });
+  }
+  byLanguage.sort((a, b) => b.total - a.total);
+
+  return {
+    reviewedThisWeek,
+    totalCards: cards.length,
+    totalSeen,
+    totalMastered,
+    byLanguage,
+    streak: store.streak,
+  };
+}

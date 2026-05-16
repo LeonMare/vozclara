@@ -56,6 +56,9 @@ const TermsPage = lazy(() =>
 const ReviewPage = lazy(() =>
   import('./routes/ReviewPage').then((m) => ({ default: m.ReviewPage })),
 );
+const ProgressPage = lazy(() =>
+  import('./routes/ProgressPage').then((m) => ({ default: m.ProgressPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -114,6 +117,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <ReviewPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/progress"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <ProgressPage />
               </Suspense>
             </AppShell>
           }

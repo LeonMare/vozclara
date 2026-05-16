@@ -209,6 +209,14 @@ export function LibraryPage() {
             )}
             <div className="flex shrink-0 items-center gap-2">
               {!selectMode && (
+                <Link
+                  to="/progress"
+                  className="rounded-card border border-navy/20 bg-white px-3 py-2 font-sans text-xs text-graphit/65 transition hover:border-gold hover:text-navy"
+                >
+                  {progressLinkLabel(locale)}
+                </Link>
+              )}
+              {!selectMode && (
                 <button
                   type="button"
                   onClick={() => setSelectMode(true)}
@@ -618,4 +626,11 @@ function reviewStartLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Começar revisão';
   if (locale.startsWith('de')) return 'Wiederholung starten';
   return 'Start review';
+}
+
+function progressLinkLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Progreso';
+  if (locale.startsWith('pt')) return 'Progresso';
+  if (locale.startsWith('de')) return 'Fortschritt';
+  return 'Progress';
 }
