@@ -8,7 +8,7 @@ import {
   packToText,
   type ExportFormat,
 } from '../lib/export';
-import type { KnowledgePack } from '../lib/pack';
+import { activeView, type KnowledgePack } from '../lib/pack';
 
 interface Props {
   pack: KnowledgePack;
@@ -76,6 +76,35 @@ export function PackExport({ pack }: Props) {
     flashToast(ok ? labels.copied : labels.copyFailed);
   }
 
+  async function handleAnki() {
+    setOpen(false);
+    flashToast(labels.ankiPreparing);
+    try {
+      // Lazy-load: the .apkg generator pulls in sql.js (≈600 KB) and
+      // jszip, so the cost is only paid when a user actually exports.
+      const { packToAnkiDeck, ankiFilename } = await import('../lib/anki');
+      const blob = await packToAnkiDeck(pack);
+      if (!blob) {
+        flashToast(labels.ankiEmpty);
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = ankiFilename(pack);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      flashToast(labels.downloaded);
+    } catch (err) {
+      console.warn('Anki export failed:', err);
+      flashToast(labels.ankiFailed);
+    }
+  }
+
+  const hasVocabulary = activeView(pack).vocabulary.length > 0;
+
   return (
     <div className="relative inline-block">
       <button
@@ -109,6 +138,16 @@ export function PackExport({ pack }: Props) {
             hint=".txt"
             onClick={() => handleDownload('text')}
           />
+          {hasVocabulary && (
+            <>
+              <div className="border-t border-navy/8" />
+              <MenuItem
+                label={labels.anki}
+                hint=".apkg"
+                onClick={handleAnki}
+              />
+            </>
+          )}
           <div className="border-t border-navy/8" />
           <MenuItem
             label={labels.copy}
@@ -157,36 +196,52 @@ function exportLabels(locale: string) {
     button: 'Exportar',
     markdown: 'Descargar como Markdown',
     text: 'Descargar como texto',
+    anki: 'Mazo Anki (vocabulario)',
     copy: 'Copiar al portapapeles',
     downloaded: 'Archivo guardado',
     copied: 'Copiado al portapapeles',
     copyFailed: 'No se pudo copiar',
+    ankiPreparing: 'Generando mazo Anki…',
+    ankiEmpty: 'Este Pack no tiene vocabulario',
+    ankiFailed: 'No se pudo generar el mazo',
   };
   if (locale.startsWith('pt')) return {
     button: 'Exportar',
     markdown: 'Descarregar como Markdown',
     text: 'Descarregar como texto',
+    anki: 'Baralho Anki (vocabulário)',
     copy: 'Copiar para a área de transferência',
     downloaded: 'Ficheiro guardado',
     copied: 'Copiado',
     copyFailed: 'Não foi possível copiar',
+    ankiPreparing: 'A gerar baralho Anki…',
+    ankiEmpty: 'Este Pack não tem vocabulário',
+    ankiFailed: 'Não foi possível gerar o baralho',
   };
   if (locale.startsWith('de')) return {
     button: 'Exportieren',
     markdown: 'Als Markdown herunterladen',
     text: 'Als Text herunterladen',
+    anki: 'Anki-Deck (Vokabular)',
     copy: 'In die Zwischenablage kopieren',
     downloaded: 'Datei gespeichert',
     copied: 'In Zwischenablage kopiert',
     copyFailed: 'Kopieren fehlgeschlagen',
+    ankiPreparing: 'Anki-Deck wird erstellt…',
+    ankiEmpty: 'Dieses Pack hat kein Vokabular',
+    ankiFailed: 'Deck konnte nicht erstellt werden',
   };
   return {
     button: 'Export',
     markdown: 'Download as Markdown',
     text: 'Download as plain text',
+    anki: 'Anki deck (vocabulary)',
     copy: 'Copy to clipboard',
     downloaded: 'File saved',
     copied: 'Copied to clipboard',
     copyFailed: 'Copy failed',
+    ankiPreparing: 'Building Anki deck…',
+    ankiEmpty: 'This Pack has no vocabulary',
+    ankiFailed: 'Could not build deck',
   };
 }
