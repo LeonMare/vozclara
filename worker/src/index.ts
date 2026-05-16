@@ -208,6 +208,10 @@ export default {
       return handleQuoteCard(url);
     }
 
+    if (url.pathname === '/api/curated' && req.method === 'GET') {
+      return handleCurated(env);
+    }
+
     if (url.pathname === '/api/push/config' && req.method === 'GET') {
       return json({
         available: !!(env.PUSH_SUBS && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY),
@@ -2011,4 +2015,77 @@ function notificationPayload(
     tag: test ? 'vozclara-test' : 'vozclara-daily',
     url: '/review?source=push',
   };
+}
+
+/* ─── /api/curated ────────────────────────────────────────────────── *
+ *
+ * Featured Knowledge Packs surfaced on the Library home. The list is
+ * read from KV under "curated:index"; when KV is empty (first-deploy
+ * state or push KV not bound) we fall back to a static set of the
+ * sample packs so new users always see something there.
+ *
+ * Items reference existing /pack/:id routes — for now, the sample
+ * pack ids the client ships. A follow-up sprint will add automated
+ * daily generation (cron + YouTube RSS + the existing /api/insights
+ * pipeline) writing fresh entries into the same KV index.
+ */
+
+interface CuratedItem {
+  id: string;              // /pack/:id navigates here
+  title: string;           // video title
+  sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
+  packLangs: string[];     // languages the pack is generated in
+  mode: 'learn' | 'business' | 'creator';
+  publishedAt: number;     // ms epoch — source video publication date
+  source: string;          // channel name, e.g. "Tagesschau"
+  excerpt: string;         // one-line teaser shown on the card
+}
+
+const FALLBACK_CURATED: CuratedItem[] = [
+  {
+    id: 'sample',
+    title: 'Tagesschau 20:00 Uhr · 03.05.2026',
+    sourceLang: 'de',
+    packLangs: ['es', 'en'],
+    mode: 'business',
+    publishedAt: Date.UTC(2026, 4, 3),
+    source: 'Tagesschau',
+    excerpt: 'Ein Jahr Kanzler Merz, atmende Koalition, AfD im Osten.',
+  },
+  {
+    id: 'sample-learn',
+    title: 'Tagesschau · Politik lernen',
+    sourceLang: 'de',
+    packLangs: ['es', 'en'],
+    mode: 'learn',
+    publishedAt: Date.UTC(2026, 4, 3),
+    source: 'Tagesschau',
+    excerpt: 'Vokabular, Quiz und Erklärungen rund um deutsche Koalitionspolitik.',
+  },
+  {
+    id: 'sample-creator',
+    title: 'Tagesschau · Drei virale Angles',
+    sourceLang: 'de',
+    packLangs: ['es', 'en'],
+    mode: 'creator',
+    publishedAt: Date.UTC(2026, 4, 3),
+    source: 'Tagesschau',
+    excerpt: 'Hooks, Captions und Social-Angles aus dem Tagesschau-Bericht.',
+  },
+];
+
+async function handleCurated(env: Env): Promise<Response> {
+  const headers = { 'Cache-Control': 'public, max-age=300' };
+  if (!env.PUSH_SUBS) return json({ items: FALLBACK_CURATED }, 200, headers);
+  try {
+    const raw = await env.PUSH_SUBS.get('curated:index');
+    if (!raw) return json({ items: FALLBACK_CURATED }, 200, headers);
+    const parsed = JSON.parse(raw) as { items?: CuratedItem[] };
+    if (!Array.isArray(parsed.items) || parsed.items.length === 0) {
+      return json({ items: FALLBACK_CURATED }, 200, headers);
+    }
+    return json({ items: parsed.items }, 200, headers);
+  } catch {
+    return json({ items: FALLBACK_CURATED }, 200, headers);
+  }
 }

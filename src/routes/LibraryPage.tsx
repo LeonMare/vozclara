@@ -19,6 +19,8 @@ import {
 import { getRecentlyViewed, forgetView } from '../lib/recentlyViewed';
 import { deindexPack, ensureLibraryIndexed } from '../lib/packIndex';
 import { dueSummary, syncCardsFromLibrary, type DueSummary } from '../lib/srs';
+import { getCurated, type CuratedItem } from '../lib/curated';
+import { CuratedSection } from '../components/CuratedSection';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 
@@ -47,6 +49,7 @@ export function LibraryPage() {
   const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
   const [recentIds, setRecentIds] = useState<string[]>([]);
   const [due, setDue] = useState<DueSummary | null>(null);
+  const [curated, setCurated] = useState<CuratedItem[]>([]);
 
   // Bulk-select mode: toggled by the "Select" button in the stats row.
   // selectedIds tracks which packs the user has ticked while in mode.
@@ -92,6 +95,10 @@ export function LibraryPage() {
     void (async () => {
       await syncCardsFromLibrary(brainId);
       setDue(await dueSummary(brainId));
+    })();
+    // Fetch curated packs (cached) to render the Featured section.
+    void (async () => {
+      setCurated(await getCurated());
     })();
   }, []);
 
@@ -150,6 +157,10 @@ export function LibraryPage() {
               {t.trySamplePack}
             </Link>
           </div>
+
+          {curated.length > 0 && (
+            <CuratedSection items={curated} locale={locale} variant="empty" />
+          )}
         </div>
       </main>
     );
@@ -160,6 +171,10 @@ export function LibraryPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
+        {curated.length > 0 && !selectMode && (
+          <CuratedSection items={curated} locale={locale} variant="header" />
+        )}
+
         {/* Review banner — surfaces SRS due-today count and routes to
             the daily review session. Hidden when nothing is due. */}
         {!selectMode && reviewBannerCount > 0 && (
