@@ -25,6 +25,8 @@ export interface AskCondensedPack {
 export interface AskResult {
   answer: string;
   citations: string[];
+  /** Tells the client which retrieval path the worker used. */
+  strategy?: 'vector' | 'stuff';
 }
 
 export class AskError extends Error {
@@ -61,13 +63,14 @@ export async function askKnowledge(
   question: string,
   packs: AskCondensedPack[],
   locale: string,
+  brainId?: string,
 ): Promise<AskResult> {
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/api/ask`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, packs, locale }),
+      body: JSON.stringify({ question, packs, locale, brainId }),
     });
   } catch (err) {
     throw new AskError('network', `network error: ${String(err)}`);

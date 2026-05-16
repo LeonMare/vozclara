@@ -5,6 +5,7 @@ import { BrandMark } from '../components/BrandMark';
 import { RouteSkeleton } from '../components/RouteSkeleton';
 import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { recordView, forgetView } from '../lib/recentlyViewed';
+import { deindexPack } from '../lib/packIndex';
 import { usePageHead } from '../hooks/usePageHead';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
@@ -172,6 +173,7 @@ export function PackPage() {
     if (!confirm(deleteConfirmLabel(locale))) return;
     await deletePack(pack.id);
     forgetView(pack.id);
+    void deindexPack(pack.id);
     navigate('/library');
   }
 

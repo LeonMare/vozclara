@@ -17,6 +17,7 @@ import {
   type LibraryStats,
 } from '../lib/pack';
 import { getRecentlyViewed, forgetView } from '../lib/recentlyViewed';
+import { deindexPack } from '../lib/packIndex';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 
@@ -68,6 +69,7 @@ export function LibraryPage() {
     const ids = Array.from(selectedIds);
     await Promise.all(ids.map((id) => deletePack(id)));
     ids.forEach((id) => forgetView(id));
+    ids.forEach((id) => { void deindexPack(id); });
     // Refresh local state without round-tripping a listPacks again.
     setPacks((prev) => prev.filter((p) => !selectedIds.has(p.id)));
     setRecentIds((prev) => prev.filter((id) => !selectedIds.has(id)));

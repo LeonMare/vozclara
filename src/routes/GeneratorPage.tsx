@@ -11,6 +11,7 @@ import { fetchTranscript } from '../lib/transcript';
 import { fetchInsights, joinForLLM } from '../lib/insights';
 import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
 import { nanoid } from '../lib/nanoid';
+import { indexPack } from '../lib/packIndex';
 
 /**
  * /new — the generator flow.
@@ -189,6 +190,10 @@ export function GeneratorPage() {
           updatedAt: Date.now(),
         };
         await savePack(merged);
+        // Re-index — the new translation adds fresh chunks the vector
+        // store should know about. Fire-and-forget; no-op if Vectorize
+        // isn't bound on the worker.
+        void indexPack(merged);
         targetPackId = existingPack.id;
       } else {
         // Fresh-pack path — assemble a new KnowledgePack carrying one
@@ -223,6 +228,7 @@ export function GeneratorPage() {
           transcriptKey,
         };
         await savePack(pack);
+        void indexPack(pack);
         targetPackId = id;
       }
 

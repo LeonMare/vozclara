@@ -67,7 +67,11 @@ export function AskPanel({
     setLoading(true);
     try {
       const condensed = packs.map(condensePack);
-      const res = await askKnowledge(question.trim(), condensed, locale);
+      // brainId scopes vector retrieval to this user's index — without
+      // it the worker's vector path can't filter to the right library
+      // (samples have brainId 'sample', real packs have the user's id).
+      const brainId = packs[0]?.brainId;
+      const res = await askKnowledge(question.trim(), condensed, locale, brainId);
       setResult(res);
     } catch (err) {
       if (err instanceof AskError) {

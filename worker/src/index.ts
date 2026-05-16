@@ -31,7 +31,38 @@ interface Env {
       input: Record<string, unknown>,
     ) => Promise<{ response?: string | unknown } & Record<string, unknown>>;
   };
+  /**
+   * Optional Vectorize index for semantic search in /api/ask. Provision
+   * with `wrangler vectorize create vozclara-knowledge --dimensions=768
+   * --metric=cosine` and bind via the [[vectorize]] block in
+   * wrangler.toml. When absent, /api/ask falls back to prompt-stuffing
+   * the entire library (capped at ~40 packs).
+   */
+  VECTORIZE?: {
+    upsert: (vectors: Array<{
+      id: string;
+      values: number[];
+      metadata?: Record<string, string | number | boolean>;
+    }>) => Promise<{ count: number; ids: string[] }>;
+    query: (vector: number[], options: {
+      topK?: number;
+      filter?: Record<string, unknown>;
+      returnValues?: boolean;
+      returnMetadata?: boolean;
+    }) => Promise<{
+      matches: Array<{
+        id: string;
+        score: number;
+        values?: number[];
+        metadata?: Record<string, unknown>;
+      }>;
+    }>;
+    deleteByIds: (ids: string[]) => Promise<{ count: number; ids: string[] }>;
+  };
 }
+
+const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
+const EMBEDDING_DIM = 768;
 
 interface SupadataSegment {
   text: string;
@@ -135,6 +166,23 @@ export default {
 
     if (url.pathname === '/api/tts' && req.method === 'POST') {
       return handleTTS(req, env);
+    }
+
+    if (url.pathname === '/api/index/health' && req.method === 'GET') {
+      return json({
+        available: !!env.VECTORIZE,
+        provider: env.VECTORIZE ? 'cloudflare-vectorize' : null,
+        model: env.VECTORIZE ? EMBEDDING_MODEL : null,
+        dimensions: env.VECTORIZE ? EMBEDDING_DIM : null,
+      });
+    }
+
+    if (url.pathname === '/api/index' && req.method === 'POST') {
+      return handleIndex(req, env);
+    }
+
+    if (url.pathname === '/api/index' && req.method === 'DELETE') {
+      return handleIndexDelete(req, env);
     }
 
     return json({ error: 'not_found' }, 404);
@@ -974,6 +1022,8 @@ interface AskBody {
   question: string;
   packs: AskCondensedPack[];
   locale?: string;
+  /** Anonymous owner id — used to scope vector retrieval to this user. */
+  brainId?: string;
 }
 
 const ASK_LANG_NAME: Record<string, string> = {
@@ -995,6 +1045,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
   const question = (body.question ?? '').toString().trim();
   const packs = Array.isArray(body.packs) ? body.packs : [];
   const locale = (body.locale ?? 'es').toString().slice(0, 2).toLowerCase();
+  const brainId = typeof body.brainId === 'string' ? body.brainId : null;
 
   if (question.length < 3) return json({ error: 'question_too_short' }, 400);
   if (packs.length === 0) return json({ error: 'empty_library' }, 400);
@@ -1002,13 +1053,28 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
 
   const langName = ASK_LANG_NAME[locale] ?? 'English';
 
-  // Condense each pack to a fixed shape so the prompt is predictable.
-  // Cap title + summary lengths to keep within the 8K context budget
-  // even when the library is large.
-  const library = packs
-    .slice(0, 40) // upper bound; client should pre-filter for huge libraries
-    .map((p) => renderPackForAsk(p))
-    .join('\n\n');
+  // Two retrieval paths:
+  //   • Vector path (preferred): embed the question, query Vectorize for
+  //     the top-K most relevant chunks across this brainId's indexed
+  //     packs. Pass only those to the LLM. Scales to thousands of packs.
+  //   • Stuff path (fallback): condense every pack in the request to
+  //     title + summary + key ideas and pass the whole library. Caps at
+  //     40 packs because the 8K context budget runs out beyond that.
+
+  let library: string;
+  let strategy: 'vector' | 'stuff';
+  if (env.VECTORIZE && brainId) {
+    try {
+      library = await retrieveViaVectorize(question, brainId, env);
+      strategy = 'vector';
+    } catch {
+      library = packs.slice(0, 40).map(renderPackForAsk).join('\n\n');
+      strategy = 'stuff';
+    }
+  } else {
+    library = packs.slice(0, 40).map(renderPackForAsk).join('\n\n');
+    strategy = 'stuff';
+  }
 
   const systemPrompt =
     `You are a research assistant helping a user search their personal Knowledge Pack library. ` +
@@ -1055,7 +1121,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
     }
   }
 
-  return json({ answer: raw.trim(), citations }, 200);
+  return json({ answer: raw.trim(), citations, strategy }, 200);
 }
 
 function renderPackForAsk(p: AskCondensedPack): string {
@@ -1067,6 +1133,163 @@ function renderPackForAsk(p: AskCondensedPack): string {
     .map((k) => `- ${k.title}: ${k.body}`.slice(0, 350))
     .join('\n');
   return `[pack:${p.id}]\nTITLE: ${title}\nSUMMARY: ${short}\n${long ? `DETAIL: ${long}\n` : ''}KEY IDEAS:\n${ideas}`;
+}
+
+/* ─── Vector retrieval ────────────────────────────────────────────────── *
+ *
+ * Given a question, embed it via Workers AI and query the user's
+ * vectorised pack library for the top-K most semantically relevant
+ * chunks. Returns the same `[pack:<id>]` blocks the prompt-stuff path
+ * produces, so the rest of the /api/ask pipeline (LLM prompt,
+ * citation extraction) is identical.
+ */
+async function retrieveViaVectorize(
+  question: string,
+  brainId: string,
+  env: Env,
+): Promise<string> {
+  if (!env.VECTORIZE) throw new Error('vectorize_unbound');
+  const qVec = await embedText(question, env);
+  const result = await env.VECTORIZE.query(qVec, {
+    topK: 12,
+    filter: { brainId },
+    returnMetadata: true,
+  });
+  if (!result.matches.length) return '';
+
+  // Group chunks by pack so the LLM sees coherent context per source.
+  const byPack = new Map<string, Array<{ kind: string; text: string; title: string }>>();
+  for (const m of result.matches) {
+    const meta = (m.metadata ?? {}) as Record<string, string>;
+    const packId = meta.packId ?? 'unknown';
+    if (!byPack.has(packId)) byPack.set(packId, []);
+    byPack.get(packId)!.push({
+      kind: meta.kind ?? 'chunk',
+      title: meta.packTitle ?? '',
+      text: meta.text ?? '',
+    });
+  }
+
+  const blocks: string[] = [];
+  for (const [packId, chunks] of byPack.entries()) {
+    const title = chunks[0]?.title ?? '';
+    const body = chunks
+      .map((c) => `- (${c.kind}) ${c.text}`)
+      .join('\n');
+    blocks.push(`[pack:${packId}]\nTITLE: ${title}\nRELEVANT:\n${body}`);
+  }
+  return blocks.join('\n\n');
+}
+
+async function embedText(text: string, env: Env): Promise<number[]> {
+  const trimmed = text.slice(0, 2000);
+  const out = await env.AI.run(EMBEDDING_MODEL, { text: [trimmed] });
+  // Workers AI shape: { data: number[][], shape: [n, dim] }
+  const data = (out as { data?: number[][] }).data;
+  if (!Array.isArray(data) || !Array.isArray(data[0])) {
+    throw new Error('embedding_unexpected_shape');
+  }
+  return data[0];
+}
+
+/* ─── /api/index ──────────────────────────────────────────────────────── *
+ *
+ * Index a pack's content into Vectorize for later semantic retrieval.
+ * The client breaks a pack into chunks (summary, key ideas, action
+ * plan items, quotes, social angles, etc.) and posts them here. Each
+ * chunk is embedded via Workers AI and upserted into the vector
+ * index, keyed by a deterministic id derived from packId + chunk
+ * kind + index. Re-indexing a pack overwrites the old vectors.
+ */
+
+interface IndexChunk {
+  kind: string;          // 'summary' | 'idea' | 'quote' | 'action' | …
+  text: string;
+  title?: string;
+}
+
+interface IndexBody {
+  packId: string;
+  brainId: string;
+  packTitle: string;
+  lang: string;
+  mode: string;
+  chunks: IndexChunk[];
+}
+
+async function handleIndex(req: Request, env: Env): Promise<Response> {
+  if (!env.VECTORIZE) {
+    return json(
+      {
+        error: 'index_disabled',
+        detail: 'Vectorize is not bound. Provision with `wrangler vectorize create vozclara-knowledge --dimensions=768 --metric=cosine` and add the binding to wrangler.toml.',
+      },
+      503,
+    );
+  }
+
+  let body: IndexBody;
+  try {
+    body = (await req.json()) as IndexBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+  const { packId, brainId, packTitle, lang, mode } = body;
+  const chunks = Array.isArray(body.chunks) ? body.chunks : [];
+
+  if (!packId || !brainId) return json({ error: 'missing_ids' }, 400);
+  if (chunks.length === 0) return json({ error: 'empty_chunks' }, 400);
+  if (chunks.length > 60) return json({ error: 'too_many_chunks' }, 400);
+
+  try {
+    // Embed in parallel — Workers AI handles a small batch well.
+    const vectors = await Promise.all(
+      chunks.map(async (c, i) => {
+        const values = await embedText(c.text, env);
+        return {
+          id: `${packId}::${c.kind}::${i}`,
+          values,
+          metadata: {
+            packId,
+            brainId,
+            packTitle: packTitle.slice(0, 200),
+            lang,
+            mode,
+            kind: c.kind,
+            title: (c.title ?? '').slice(0, 200),
+            text: c.text.slice(0, 800),
+          },
+        };
+      }),
+    );
+    await env.VECTORIZE.upsert(vectors);
+    return json({ indexed: vectors.length, packId }, 200);
+  } catch (err) {
+    return json({ error: 'index_failed', detail: String(err) }, 502);
+  }
+}
+
+async function handleIndexDelete(req: Request, env: Env): Promise<Response> {
+  if (!env.VECTORIZE) {
+    return json({ error: 'index_disabled' }, 503);
+  }
+  const url = new URL(req.url);
+  const packId = url.searchParams.get('packId') ?? '';
+  if (!packId) return json({ error: 'missing_packId' }, 400);
+
+  try {
+    // Delete by id-prefix isn't directly supported; we delete a known
+    // range of suffix indices. 60 covers our maximum chunk count.
+    const ids: string[] = [];
+    const kinds = ['summary', 'summaryLong', 'idea', 'chapter', 'action', 'quote', 'angle', 'vocab', 'quiz'];
+    for (const kind of kinds) {
+      for (let i = 0; i < 60; i++) ids.push(`${packId}::${kind}::${i}`);
+    }
+    const res = await env.VECTORIZE.deleteByIds(ids);
+    return json({ deleted: res.count, packId }, 200);
+  } catch (err) {
+    return json({ error: 'delete_failed', detail: String(err) }, 502);
+  }
 }
 
 /* ─── /api/tts ──────────────────────────────────────────────────────────── *
