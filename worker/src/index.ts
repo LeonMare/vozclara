@@ -185,6 +185,10 @@ export default {
       return handleIndexDelete(req, env);
     }
 
+    if (url.pathname === '/api/og' && req.method === 'GET') {
+      return handleOG(url);
+    }
+
     return json({ error: 'not_found' }, 404);
   },
 };
@@ -1383,4 +1387,175 @@ async function handleTTS(req: Request, env: Env): Promise<Response> {
   } catch (err) {
     return json({ error: 'tts_fetch_failed', detail: String(err) }, 502);
   }
+}
+
+/* ─── /api/og ────────────────────────────────────────────────────────────
+ *
+ * Per-pack Open Graph image generator. Returns a brand-styled 1200×630
+ * SVG image which Twitter / LinkedIn / Discord / Slack render directly
+ * as the share-card preview when a /pack/<id> URL is posted.
+ *
+ * SVG over PNG: keeps the worker bundle tiny (no satori, no resvg-wasm)
+ * at the cost of platform coverage — Meta-family crawlers (FB,
+ * WhatsApp) silently fall back to the static /og-image.png that's
+ * still listed as the default og:image in index.html. Acceptable
+ * trade-off for v1; we can swap in satori later if WhatsApp/FB
+ * previews become a real channel.
+ *
+ * Query params (all optional, sensible defaults):
+ *   title  — main headline (1-200 chars)
+ *   mode   — learn | business | creator
+ *   lang   — output language code (es / en / de / pt)
+ *   genre  — content genre label (politics, education, …)
+ *   author — small attribution line (e.g. channel name)
+ *
+ * Cached aggressively (immutable + 1 year) — the URL fully encodes
+ * the image contents, so two different packs get two different
+ * cache keys, and a re-share of the same pack hits the edge.
+ */
+
+interface OGParams {
+  title: string;
+  mode: string;
+  lang: string;
+  genre: string;
+  author?: string;
+}
+
+function handleOG(url: URL): Response {
+  const p = url.searchParams;
+  const params: OGParams = {
+    title: (p.get('title') ?? 'Knowledge Pack').slice(0, 200),
+    mode: (p.get('mode') ?? 'business').slice(0, 20),
+    lang: (p.get('lang') ?? 'es').slice(0, 5).toLowerCase(),
+    genre: (p.get('genre') ?? 'general').slice(0, 30),
+    author: p.get('author')?.slice(0, 60) ?? undefined,
+  };
+
+  const svg = renderOGSVG(params);
+  return new Response(svg, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/svg+xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      ...CORS_HEADERS,
+    },
+  });
+}
+
+function renderOGSVG({ title, mode, lang, genre, author }: OGParams): string {
+  // XML-safe text escape — prevents the SVG from being broken by quotes
+  // or angle brackets in the pack title.
+  const esc = (s: string) =>
+    s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+  // Wrap title to two lines manually — SVG <text> doesn't auto-wrap.
+  // Aim for ~24 chars per line; cut at word boundaries.
+  const wrapped = wrapTitle(title, 24, 3);
+
+  const modeLabel = mode === 'learn' ? 'LEARN' : mode === 'creator' ? 'CREATOR' : 'BUSINESS';
+  const langLabel = lang.toUpperCase();
+  const genreLabel = genre.toUpperCase();
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A1A3A"/>
+      <stop offset="100%" stop-color="#091532"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="20%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="#C9A24B" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#C9A24B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D29A"/>
+      <stop offset="50%" stop-color="#C9A24B"/>
+      <stop offset="100%" stop-color="#8C6A2A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Navy background with a soft gold aura top-left -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#aura)"/>
+
+  <!-- Voz Clara lighthouse mark, top-left, scaled to fit -->
+  <g transform="translate(80 75) scale(1.0)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="44" stroke-width="2.6"/>
+    <circle cx="50" cy="50" r="40.7" stroke-width="2.0"/>
+    <path d="M50 16V26" stroke-width="2.0"/>
+    <path d="M33 25l10 6" stroke-width="1.8"/>
+    <path d="M67 25l-10 6" stroke-width="1.8"/>
+    <path d="M31 36l12-3" stroke-width="1.8"/>
+    <path d="M69 36l-12-3" stroke-width="1.8"/>
+    <path d="M46.5 30h7" stroke-width="1.8"/>
+    <path d="M44.4 31.2l5.6-4.1 5.6 4.1" stroke-width="2.0"/>
+    <path d="M45.6 31.4h8.8v5.7h-8.8z" stroke-width="1.7"/>
+    <path d="M47.3 31.4v5.7M50 31.4v5.7M52.7 31.4v5.7" stroke-width="1.3"/>
+    <path d="M43.8 37.1h12.4" stroke-width="2.0"/>
+    <path d="M44.7 39h10.6" stroke-width="1.4"/>
+    <path d="M45.3 39.1 42.3 73.7M54.7 39.1 57.7 73.7" stroke-width="1.9"/>
+    <path d="M46.8 48h6.4" stroke-width="1.5"/>
+    <rect x="48.6" y="50.2" width="2.8" height="5.5" rx="0.2" stroke-width="1.6"/>
+    <path d="M41.2 73.8h17.6" stroke-width="2.0"/>
+    <path d="M24.6 79.4C33.7 73.8 43 72.2 50 72.2s16.3 1.6 25.4 7.2" stroke-width="2.1"/>
+  </g>
+
+  <!-- "VOZ · CLARA" wordmark inline with the mark -->
+  <text x="220" y="135" font-family="Georgia, 'Times New Roman', serif" font-size="40" letter-spacing="9" fill="#F7F3EC" font-weight="500">
+    VOZ · CLARA
+  </text>
+
+  <!-- Mode + Lang + Genre pill row, top-right -->
+  <g transform="translate(1120 130)" text-anchor="end" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="18" letter-spacing="3">
+    <text fill="#C9A24B" font-weight="600">${esc(modeLabel)}</text>
+    <text y="32" fill="#F7F3ECB3">${esc(langLabel)} · ${esc(genreLabel)}</text>
+  </g>
+
+  <!-- Gold hairline divider -->
+  <rect x="80" y="280" width="80" height="2" fill="url(#gold)"/>
+
+  <!-- Title — two-or-three line wrap -->
+  ${wrapped
+    .map(
+      (line, i) =>
+        `<text x="80" y="${360 + i * 78}" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="500" fill="#F7F3EC">${esc(line)}</text>`,
+    )
+    .join('\n  ')}
+
+  <!-- Bottom-row attribution + brand footer -->
+  ${author ? `<text x="80" y="560" font-family="Inter, system-ui, sans-serif" font-size="22" fill="#F7F3EC99" font-style="italic">${esc(author)}</text>` : ''}
+  <text x="1120" y="560" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="20" fill="#F7F3EC99" letter-spacing="3">
+    SAVE THE KNOWLEDGE
+  </text>
+  <text x="1120" y="588" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="18" fill="#C9A24B" letter-spacing="2">
+    VOZCLARA.PAGES.DEV
+  </text>
+</svg>`;
+}
+
+function wrapTitle(title: string, maxChars: number, maxLines: number): string[] {
+  const words = title.trim().split(/\s+/);
+  const lines: string[] = [];
+  let current = '';
+  for (const word of words) {
+    if ((current + ' ' + word).trim().length <= maxChars) {
+      current = (current ? current + ' ' : '') + word;
+    } else {
+      if (current) lines.push(current);
+      current = word;
+      if (lines.length >= maxLines - 1) break;
+    }
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  // If we truncated, append an ellipsis to the last line.
+  const consumed = lines.join(' ').split(/\s+/).length;
+  if (consumed < words.length && lines.length > 0) {
+    lines[lines.length - 1] = lines[lines.length - 1].replace(/\W+$/, '') + '…';
+  }
+  return lines;
 }
