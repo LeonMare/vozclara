@@ -1,13 +1,15 @@
 {
+  "id": "/?app=vozclara",
   "name": "Voz Clara",
   "short_name": "Voz Clara",
   "description": "Multilingual knowledge cloud for videos. Save the knowledge, not just the video. A LEON MARÉ product.",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0A1A3A",
   "theme_color": "#0A1A3A",
-  "lang": "es",
   "orientation": "portrait",
+  "categories": ["education", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -26,6 +28,22 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Knowledge Pack",
+      "short_name": "New",
+      "description": "Paste a YouTube link and generate a new Knowledge Pack",
+      "url": "/new?source=pwa-shortcut",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Library",
+      "short_name": "Library",
+      "description": "Open your saved Knowledge Packs",
+      "url": "/library?source=pwa-shortcut",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

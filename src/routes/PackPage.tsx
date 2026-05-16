@@ -253,7 +253,7 @@ export function PackPage() {
         {/* Desktop: horizontal tabs nav + single content section.
             Hidden on mobile in favour of the accordion below. */}
         <div className="hidden sm:block">
-          <nav className="sticky top-[60px] z-10 -mx-8 overflow-x-auto border-b border-navy/15 bg-creme/95 px-8 backdrop-blur">
+          <nav className="sticky top-[calc(60px+env(safe-area-inset-top))] z-10 -mx-8 overflow-x-auto border-b border-navy/15 bg-creme/95 px-8 backdrop-blur">
             <div className="flex min-w-max gap-1">
               {tabs.map((k) => {
                 const isActive = k === tab;
@@ -818,7 +818,7 @@ function TranscriptTab({
     <div>
       {/* Search row — sticky inside the tab content so the input stays
           reachable while the reader scrolls through long transcripts. */}
-      <div className="sticky top-[104px] z-10 mb-3 flex items-center gap-2 rounded-card border border-navy/15 bg-creme/95 px-3 py-2 backdrop-blur sm:top-[112px]">
+      <div className="sticky top-[calc(104px+env(safe-area-inset-top))] z-10 mb-3 flex items-center gap-2 rounded-card border border-navy/15 bg-creme/95 px-3 py-2 backdrop-blur sm:top-[calc(112px+env(safe-area-inset-top))]">
         <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden className="shrink-0 text-graphit/55">
           <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
           <path d="M10.5 10.5 L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />

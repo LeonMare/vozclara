@@ -397,8 +397,11 @@ export function LibraryPage() {
         <div
           role="region"
           aria-label={bulkActionsLabel(locale)}
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-navy/15 bg-creme/95 px-5 py-3 backdrop-blur sm:px-8"
-          style={{ boxShadow: '0 -8px 24px rgba(10, 26, 58, 0.10)' }}
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-navy/15 bg-creme/95 px-5 pt-3 backdrop-blur sm:px-8"
+          style={{
+            boxShadow: '0 -8px 24px rgba(10, 26, 58, 0.10)',
+            paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))',
+          }}
         >
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
             <p className="font-serif italic text-graphit/70 sm:text-base">

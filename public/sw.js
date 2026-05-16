@@ -7,11 +7,16 @@
  *   • Pass-through for YouTube and MyMemory third-party resources — those
  *     have their own CDN caches and we shouldn't try to outsmart them.
  *
- * Bump APP_CACHE on each release; the activate handler purges old caches.
+ * Cache name carries the build timestamp (__BUILD_ID__ stamped by
+ * scripts/stamp-sw.mjs at build time). On each deploy the cache name
+ * changes, the install handler caches fresh assets, and the activate
+ * handler purges the old cache — so installed PWAs pick up the new
+ * bundle automatically on next visit.
  */
 
-const APP_CACHE = 'vozclara-shell-v1';
-const RUNTIME_CACHE = 'vozclara-runtime-v1';
+const BUILD_ID = '__BUILD_ID__';
+const APP_CACHE = `vozclara-shell-${BUILD_ID}`;
+const RUNTIME_CACHE = `vozclara-runtime-${BUILD_ID}`;
 
 const APP_SHELL = [
   '/',

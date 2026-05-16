@@ -27,7 +27,10 @@ export function AppHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-navy/10 bg-creme/95 backdrop-blur supports-[backdrop-filter]:bg-creme/85">
+    <header
+      className="sticky top-0 z-30 border-b border-navy/10 bg-creme/95 backdrop-blur supports-[backdrop-filter]:bg-creme/85"
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3 sm:px-8">
         <Link to="/" className="min-w-0">
           <BrandMark variant="lockup" size="md" tone="navy" />
