@@ -18,6 +18,13 @@
 
 interface Env {
   SUPADATA_API_KEY?: string;
+  /**
+   * Optional OpenAI key for premium text-to-speech via /api/tts.
+   * Set via `wrangler secret put OPENAI_API_KEY` to enable. When
+   * absent, /api/tts responds 503 with code "tts_disabled" and the
+   * client gracefully falls back to browser Web Speech API.
+   */
+  OPENAI_API_KEY?: string;
   AI: {
     run: (
       model: string,
@@ -116,6 +123,18 @@ export default {
 
     if (url.pathname === '/api/ask' && req.method === 'POST') {
       return handleAsk(req, env);
+    }
+
+    if (url.pathname === '/api/tts/health' && req.method === 'GET') {
+      return json({
+        available: !!env.OPENAI_API_KEY,
+        provider: env.OPENAI_API_KEY ? 'openai' : null,
+        model: env.OPENAI_API_KEY ? 'tts-1' : null,
+      });
+    }
+
+    if (url.pathname === '/api/tts' && req.method === 'POST') {
+      return handleTTS(req, env);
     }
 
     return json({ error: 'not_found' }, 404);
@@ -1048,4 +1067,97 @@ function renderPackForAsk(p: AskCondensedPack): string {
     .map((k) => `- ${k.title}: ${k.body}`.slice(0, 350))
     .join('\n');
   return `[pack:${p.id}]\nTITLE: ${title}\nSUMMARY: ${short}\n${long ? `DETAIL: ${long}\n` : ''}KEY IDEAS:\n${ideas}`;
+}
+
+/* ─── /api/tts ──────────────────────────────────────────────────────────── *
+ *
+ * Server-side text-to-speech. Currently wired to OpenAI's `tts-1` model
+ * because it's the cheapest multilingual option per character ($15/M)
+ * with quality far above the browser Web Speech API. Returns raw audio
+ * MP3 bytes with a long Cache-Control so repeated plays of the same
+ * segment hit the Cloudflare edge cache for free.
+ *
+ * Voice selection: `alloy` as default — neutral, slightly warm, handles
+ * ES / PT / DE / EN well without an accent shift. Client can override
+ * via the `voice` field.
+ *
+ * No fallback to Cloudflare Workers AI: their melotts model is English-
+ * only, which would silently break for our other three languages.
+ * Better to return 503 and let the client use Web Speech API.
+ */
+
+interface TTSBody {
+  text: string;
+  lang?: string;
+  voice?: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+  speed?: number; // 0.25 – 4.0
+}
+
+async function handleTTS(req: Request, env: Env): Promise<Response> {
+  if (!env.OPENAI_API_KEY) {
+    return json(
+      {
+        error: 'tts_disabled',
+        detail: 'Server TTS is not configured. Set OPENAI_API_KEY via `wrangler secret put OPENAI_API_KEY` to enable.',
+      },
+      503,
+    );
+  }
+
+  let body: TTSBody;
+  try {
+    body = (await req.json()) as TTSBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const text = (body.text ?? '').toString().trim();
+  if (!text) return json({ error: 'empty_text' }, 400);
+  if (text.length > 4096) return json({ error: 'text_too_long' }, 400);
+
+  const voice = body.voice && ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'].includes(body.voice)
+    ? body.voice
+    : 'alloy';
+  const speed = body.speed && body.speed >= 0.25 && body.speed <= 4.0 ? body.speed : 1.0;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'tts-1',
+        voice,
+        speed,
+        input: text,
+        response_format: 'mp3',
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      return json(
+        { error: 'tts_failed', status: res.status, detail: errText.slice(0, 400) },
+        502,
+      );
+    }
+
+    // Pipe the MP3 through with cache headers. Cloudflare's edge cache
+    // doesn't cache POST responses by default, but we set the headers
+    // anyway so a future GET-with-hash variant can short-circuit.
+    const audio = await res.arrayBuffer();
+    return new Response(audio, {
+      status: 200,
+      headers: {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': audio.byteLength.toString(),
+        'Cache-Control': 'public, max-age=2592000, immutable',
+        ...CORS_HEADERS,
+      },
+    });
+  } catch (err) {
+    return json({ error: 'tts_fetch_failed', detail: String(err) }, 502);
+  }
 }

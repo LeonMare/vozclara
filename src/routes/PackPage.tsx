@@ -8,6 +8,8 @@ import { recordView, forgetView } from '../lib/recentlyViewed';
 import { usePageHead } from '../hooks/usePageHead';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
+import { ServerAudioPlayer } from '../components/ServerAudioPlayer';
+import { checkTTSAvailability } from '../lib/ttsServer';
 import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
 import { PackExport } from '../components/PackExport';
@@ -62,6 +64,19 @@ export function PackPage() {
   function seekPlayer(sec: number) {
     setPlayerSeek({ sec, nonce: Date.now() });
   }
+
+  // Audio engine selection. Probes /api/tts/health once on mount; if
+  // the worker reports server-TTS configured, we use the high-quality
+  // ServerAudioPlayer. Otherwise the existing browser-speech-based
+  // PackAudioPlayer takes over. Null = still probing.
+  const [serverTTS, setServerTTS] = useState<boolean | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    checkTTSAvailability().then((h) => {
+      if (!cancelled) setServerTTS(h.available);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   function toggleSection(key: TabKey) {
     setOpenSections((prev) => {
@@ -226,8 +241,10 @@ export function PackPage() {
       </div>
 
       {/* Audio companion — non-sticky, in document flow. */}
-      {segments.length > 0 && (
-        <PackAudioPlayer pack={pack} segments={segments} />
+      {segments.length > 0 && serverTTS !== null && (
+        serverTTS
+          ? <ServerAudioPlayer pack={pack} segments={segments} />
+          : <PackAudioPlayer pack={pack} segments={segments} />
       )}
 
       <div className="mx-auto max-w-3xl px-5 pb-16 sm:px-8">
