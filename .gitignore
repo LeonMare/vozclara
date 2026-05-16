@@ -13,8 +13,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local env (defensive — anything with .local stays out of git)
-.env
+# Local env. Keep .env committed for shared non-secret defaults
+# (VITE_SITE_URL, etc.). Anything with .local stays out of git, plus
+# .env.development.local / .env.production.local for personal overrides.
 .env.local
 .env.*.local
 

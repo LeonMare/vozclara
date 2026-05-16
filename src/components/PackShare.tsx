@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocale } from '../lib/i18n';
 import { activeView, type KnowledgePack } from '../lib/pack';
 import { copyToClipboard } from '../lib/export';
+import { SITE_URL } from '../lib/site';
 
 interface Props {
   pack: KnowledgePack;
@@ -37,7 +38,7 @@ export function PackShare({ pack }: Props) {
     const view = activeView(pack);
     const url = typeof window !== 'undefined'
       ? `${window.location.origin}/pack/${pack.id}`
-      : `https://vozclara.pages.dev/pack/${pack.id}`;
+      : `${SITE_URL}/pack/${pack.id}`;
 
     const text = view.summary.short
       ? `${pack.title}\n\n${view.summary.short}\n\n— ${labels.viaLine}`

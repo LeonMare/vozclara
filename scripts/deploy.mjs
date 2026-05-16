@@ -10,7 +10,7 @@
  * On success, prints the public URLs you can open on your phone.
  */
 import { spawn } from 'node:child_process';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -60,12 +60,32 @@ if (!workerUrlMatch) {
 const workerUrl = workerUrlMatch[0];
 console.log(`\n└─ Worker URL: ${workerUrl}\n`);
 
+// Same-origin mode: if wrangler.toml has an active [[routes]] block,
+// the Worker is on the production domain (e.g. vozclara.app/api/*) and
+//   • frontend calls /api/* same-origin → VITE_API_BASE stays empty
+//   • the same host is the canonical site URL → derive VITE_SITE_URL
+//     from the route's pattern instead of the pages.dev staging URL
+// Without an active route, fall back to the workers.dev subdomain and
+// keep the staging site URL.
+const wranglerToml = await readFile(resolve(workerDir, 'wrangler.toml'), 'utf8');
+const routePattern = wranglerToml
+  .split(/^\s*#.*$/gm)
+  .join('')
+  .match(/\[\[routes\]\][\s\S]*?pattern\s*=\s*"([^"\/]+)\/api\/\*"/m);
+const customHost = routePattern?.[1];
+const apiBase = customHost ? '' : workerUrl;
+const siteUrl = customHost ? `https://${customHost}` : 'https://vozclara.pages.dev';
+
 console.log('┌─ 2/4  Writing .env.production with Worker URL ─────────────');
 await writeFile(
   resolve(repoRoot, '.env.production'),
-  `# Auto-written by scripts/deploy.mjs.\nVITE_API_BASE=${workerUrl}\n`,
+  `# Auto-written by scripts/deploy.mjs.\nVITE_API_BASE=${apiBase}\nVITE_SITE_URL=${siteUrl}\n`,
 );
-console.log(`└─ wrote .env.production\n`);
+console.log(
+  customHost
+    ? `└─ wrote .env.production (same-origin on ${customHost})\n`
+    : `└─ wrote .env.production (API at ${workerUrl}, site at vozclara.pages.dev)\n`,
+);
 
 console.log('┌─ 3/4  Building frontend ────────────────────────────────────');
 await run('npm', ['run', 'build']);

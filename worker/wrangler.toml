@@ -29,6 +29,16 @@ index_name = "vozclara-knowledge"
 # Local dev runs on http://localhost:8787 — the Vite dev server in
 # /vite.config.ts proxies /api/* to that port.
 
+# Custom-domain route. Uncomment after vozclara.app is registered at
+# Cloudflare Registrar and added as a zone (auto on purchase). With
+# this active, the frontend hits /api/* same-origin and VITE_API_BASE
+# stays empty — scripts/deploy.mjs detects this block and writes the
+# right .env.production automatically.
+#
+# [[routes]]
+# pattern = "vozclara.app/api/*"
+# zone_name = "vozclara.app"
+
 [observability]
 enabled = true
 

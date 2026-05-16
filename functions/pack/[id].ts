@@ -21,6 +21,9 @@
  * the OG/Twitter meta tags.
  */
 
+// Hardcoded because Pages Functions don't see Vite env. Once vozclara.app
+// is attached and the worker route in wrangler.toml is active, this can
+// switch to `${new URL(request.url).origin}` for same-origin /api/og.
 const WORKER_BASE = 'https://vozclara-transcript.salvador7eon.workers.dev';
 
 interface SamplePackMeta {
@@ -106,7 +109,10 @@ export async function onRequestGet(context: FunctionContext): Promise<Response> 
     `&genre=${encodeURIComponent(sample.genre)}` +
     `&author=${encodeURIComponent(sample.author)}`;
 
-  const canonical = `https://vozclara.pages.dev/pack/${packId}`;
+  // Canonical URL = the origin this Function was hit on. Tracks the
+  // custom domain automatically once vozclara.app (or any future host)
+  // is attached to the Pages project.
+  const canonical = `${new URL(request.url).origin}/pack/${packId}`;
 
   const escAttr = (s: string) =>
     s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');

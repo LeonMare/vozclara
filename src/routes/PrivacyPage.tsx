@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { usePageHead } from '../hooks/usePageHead';
+import { SITE_URL } from '../lib/site';
+
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, '');
 
 /**
  * /privacy — Privacy notice.
@@ -161,7 +164,7 @@ function privacyLabels(locale: string) {
         heading: 'Tus derechos',
         body: [
           'Como no recopilamos datos personales identificables, no hay un "perfil de usuario" que solicitar, exportar o eliminar de nuestros servidores. Todo lo que controla tu experiencia vive en tu navegador.',
-          'Para borrar todo: ajustes del navegador → "Borrar datos del sitio" para vozclara.pages.dev. Eso elimina la biblioteca, las preferencias y el brainId. La próxima visita empieza desde cero.',
+          `Para borrar todo: ajustes del navegador → "Borrar datos del sitio" para ${SITE_HOST}. Eso elimina la biblioteca, las preferencias y el brainId. La próxima visita empieza desde cero.`,
         ],
       },
     ],
@@ -225,7 +228,7 @@ function privacyLabels(locale: string) {
         heading: 'Os teus direitos',
         body: [
           'Como não recolhemos dados pessoais identificáveis, não há um "perfil de utilizador" para solicitar, exportar ou eliminar dos nossos servidores. Tudo o que controla a tua experiência vive no teu navegador.',
-          'Para apagar tudo: definições do navegador → "Limpar dados do site" para vozclara.pages.dev. Isso elimina a biblioteca, as preferências e o brainId. A próxima visita começa do zero.',
+          `Para apagar tudo: definições do navegador → "Limpar dados do site" para ${SITE_HOST}. Isso elimina a biblioteca, as preferências e o brainId. A próxima visita começa do zero.`,
         ],
       },
     ],
@@ -289,7 +292,7 @@ function privacyLabels(locale: string) {
         heading: 'Deine Rechte',
         body: [
           'Da wir keine personenbeziehbaren Daten erheben, gibt es kein „Nutzerprofil" das von unseren Servern angefordert, exportiert oder gelöscht werden könnte. Alles was dein Erlebnis steuert lebt in deinem Browser.',
-          'Um alles zu löschen: Browser-Einstellungen → „Site-Daten löschen" für vozclara.pages.dev. Das entfernt Bibliothek, Präferenzen und brainId. Der nächste Besuch beginnt bei null.',
+          `Um alles zu löschen: Browser-Einstellungen → „Site-Daten löschen" für ${SITE_HOST}. Das entfernt Bibliothek, Präferenzen und brainId. Der nächste Besuch beginnt bei null.`,
         ],
       },
     ],
@@ -353,7 +356,7 @@ function privacyLabels(locale: string) {
         heading: 'Your rights',
         body: [
           'Because we collect no personally identifiable data, there is no "user profile" to request, export, or delete from our servers. Everything that shapes your experience lives in your browser.',
-          'To wipe everything: browser settings → "Clear site data" for vozclara.pages.dev. That removes the library, the preferences, and the brainId. The next visit starts from zero.',
+          `To wipe everything: browser settings → "Clear site data" for ${SITE_HOST}. That removes the library, the preferences, and the brainId. The next visit starts from zero.`,
         ],
       },
     ],
