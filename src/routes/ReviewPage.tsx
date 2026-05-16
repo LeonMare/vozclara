@@ -4,6 +4,7 @@ import { useLocale } from '../lib/i18n';
 import { usePageHead } from '../hooks/usePageHead';
 import {
   buildReviewQueue,
+  getNextDueAt,
   rateCard,
   syncCardsFromLibrary,
   type ReviewCard,
@@ -11,6 +12,8 @@ import {
   type Rating,
   type StreakState,
 } from '../lib/srs';
+import { syncDueState } from '../lib/notifications';
+import { NotificationToggle } from '../components/NotificationToggle';
 
 /**
  * /review — the daily spaced-repetition session.
@@ -67,6 +70,12 @@ export function ReviewPage() {
       setReviewed((n) => n + 1);
       setRevealed(false);
       setIndex((i) => i + 1);
+      // Tell the push worker when the next review will be due so the
+      // cron knows when to fire the daily reminder. Fire-and-forget.
+      void (async () => {
+        const nextDueAt = await getNextDueAt();
+        if (Number.isFinite(nextDueAt)) void syncDueState(nextDueAt);
+      })();
     },
     [current],
   );
@@ -145,6 +154,8 @@ export function ReviewPage() {
               </p>
             </div>
           )}
+
+          <NotificationToggle />
 
           <div className="mt-8 flex justify-center gap-3">
             <button

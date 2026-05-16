@@ -16,6 +16,8 @@
  * client-side in IndexedDB since they're user-specific.
  */
 
+import { sendPush, type PushSubscriptionData } from './webpush';
+
 interface Env {
   SUPADATA_API_KEY?: string;
   /**
@@ -59,6 +61,19 @@ interface Env {
     }>;
     deleteByIds: (ids: string[]) => Promise<{ count: number; ids: string[] }>;
   };
+  /**
+   * KV namespace storing one entry per brainId — the user's push
+   * subscription, locale, preferred reminder hour, current
+   * next-due-at timestamp from the client's SRS, and bookkeeping.
+   *
+   * Absence of this binding disables /api/push/* and the scheduled
+   * cron handler short-circuits with a single log line.
+   */
+  PUSH_SUBS?: KVNamespace;
+  /** VAPID secrets — required for any /api/push/* call to function. */
+  VAPID_PUBLIC_KEY?: string;
+  VAPID_PRIVATE_KEY?: string;
+  VAPID_SUBJECT?: string;
 }
 
 const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
@@ -193,7 +208,37 @@ export default {
       return handleQuoteCard(url);
     }
 
+    if (url.pathname === '/api/push/config' && req.method === 'GET') {
+      return json({
+        available: !!(env.PUSH_SUBS && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY),
+        publicKey: env.VAPID_PUBLIC_KEY ?? null,
+      });
+    }
+
+    if (url.pathname === '/api/push/subscribe' && req.method === 'POST') {
+      return handlePushSubscribe(req, env);
+    }
+
+    if (url.pathname === '/api/push/state' && req.method === 'POST') {
+      return handlePushState(req, env);
+    }
+
+    if (url.pathname === '/api/push/unsubscribe' && req.method === 'POST') {
+      return handlePushUnsubscribe(req, env);
+    }
+
+    if (url.pathname === '/api/push/test' && req.method === 'POST') {
+      // Authenticated only by knowledge of the brainId. Sends a single
+      // push to the caller's subscription so they can verify the round
+      // trip works before relying on the cron.
+      return handlePushTest(req, env);
+    }
+
     return json({ error: 'not_found' }, 404);
+  },
+
+  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(runPushCron(env));
   },
 };
 
@@ -1711,4 +1756,259 @@ function renderQuoteCardSVG({ text, speaker, time, original, packTitle }: QuoteC
     VOZCLARA.PAGES.DEV
   </text>
 </svg>`;
+}
+
+/* ─── /api/push/* ──────────────────────────────────────────────────── *
+ *
+ * Daily-reminder push notifications. Anonymous: the user's brainId
+ * is the only identifier on the server. We store
+ *
+ *   sub:<brainId> → {
+ *     subscription,         // PushSubscription JSON from the browser
+ *     locale,               // 'es' | 'pt' | 'de' | 'en' for the body
+ *     reminderHour,         // 0-23, local time
+ *     tzOffsetMinutes,      // local time offset vs UTC, browser-reported
+ *     nextDueAt,            // ms epoch of the next due card, from client SRS
+ *     lastNotifiedYmd,      // local-date yyyy-mm-dd; dedup so we don't
+ *                           // re-notify within the same calendar day
+ *     createdAt, updatedAt,
+ *   }
+ *
+ * Cron tick runs hourly. For each entry, we check whether the user's
+ * current local hour equals reminderHour AND nextDueAt ≤ now AND
+ * lastNotifiedYmd is not today. If so → send push, record ymd.
+ */
+
+interface PushSub {
+  subscription: PushSubscriptionData;
+  locale: 'es' | 'pt' | 'de' | 'en';
+  reminderHour: number;
+  tzOffsetMinutes: number;
+  nextDueAt: number;
+  lastNotifiedYmd: string | null;
+  createdAt: number;
+  updatedAt: number;
+}
+
+interface SubscribeBody {
+  brainId: string;
+  subscription: PushSubscriptionData;
+  locale: string;
+  reminderHour: number;
+  tzOffsetMinutes: number;
+  nextDueAt: number;
+}
+
+function vapidConfigured(env: Env): boolean {
+  return !!(env.PUSH_SUBS && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY && env.VAPID_SUBJECT);
+}
+
+async function handlePushSubscribe(req: Request, env: Env): Promise<Response> {
+  if (!vapidConfigured(env)) return json({ error: 'push_disabled' }, 503);
+
+  let body: SubscribeBody;
+  try {
+    body = (await req.json()) as SubscribeBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const brainId = (body.brainId ?? '').toString().trim();
+  if (!brainId || brainId.length > 64) return json({ error: 'invalid_brain_id' }, 400);
+  if (!body.subscription?.endpoint || !body.subscription?.keys?.p256dh || !body.subscription?.keys?.auth) {
+    return json({ error: 'invalid_subscription' }, 400);
+  }
+  const locale = ['es', 'pt', 'de', 'en'].includes(body.locale) ? body.locale as PushSub['locale'] : 'en';
+  const hour = Number.isInteger(body.reminderHour) ? Math.max(0, Math.min(23, body.reminderHour)) : 9;
+  const tz = Number.isInteger(body.tzOffsetMinutes) ? body.tzOffsetMinutes : 0;
+  const nextDueAt = Number.isFinite(body.nextDueAt) ? body.nextDueAt : Date.now();
+
+  const now = Date.now();
+  const sub: PushSub = {
+    subscription: body.subscription,
+    locale,
+    reminderHour: hour,
+    tzOffsetMinutes: tz,
+    nextDueAt,
+    lastNotifiedYmd: null,
+    createdAt: now,
+    updatedAt: now,
+  };
+  await env.PUSH_SUBS!.put(`sub:${brainId}`, JSON.stringify(sub));
+  return json({ ok: true });
+}
+
+interface StateBody {
+  brainId: string;
+  nextDueAt: number;
+}
+
+async function handlePushState(req: Request, env: Env): Promise<Response> {
+  if (!vapidConfigured(env)) return json({ error: 'push_disabled' }, 503);
+
+  let body: StateBody;
+  try {
+    body = (await req.json()) as StateBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const brainId = (body.brainId ?? '').toString().trim();
+  if (!brainId || brainId.length > 64) return json({ error: 'invalid_brain_id' }, 400);
+  if (!Number.isFinite(body.nextDueAt)) return json({ error: 'invalid_next_due_at' }, 400);
+
+  const raw = await env.PUSH_SUBS!.get(`sub:${brainId}`);
+  if (!raw) return json({ error: 'not_subscribed' }, 404);
+  const sub = JSON.parse(raw) as PushSub;
+  sub.nextDueAt = body.nextDueAt;
+  sub.updatedAt = Date.now();
+  await env.PUSH_SUBS!.put(`sub:${brainId}`, JSON.stringify(sub));
+  return json({ ok: true });
+}
+
+async function handlePushUnsubscribe(req: Request, env: Env): Promise<Response> {
+  if (!vapidConfigured(env)) return json({ error: 'push_disabled' }, 503);
+  let body: { brainId?: string };
+  try {
+    body = (await req.json()) as { brainId?: string };
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+  const brainId = (body.brainId ?? '').toString().trim();
+  if (!brainId || brainId.length > 64) return json({ error: 'invalid_brain_id' }, 400);
+  await env.PUSH_SUBS!.delete(`sub:${brainId}`);
+  return json({ ok: true });
+}
+
+async function handlePushTest(req: Request, env: Env): Promise<Response> {
+  if (!vapidConfigured(env)) return json({ error: 'push_disabled' }, 503);
+  let body: { brainId?: string };
+  try {
+    body = (await req.json()) as { brainId?: string };
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+  const brainId = (body.brainId ?? '').toString().trim();
+  if (!brainId) return json({ error: 'invalid_brain_id' }, 400);
+  const raw = await env.PUSH_SUBS!.get(`sub:${brainId}`);
+  if (!raw) return json({ error: 'not_subscribed' }, 404);
+  const sub = JSON.parse(raw) as PushSub;
+
+  const result = await sendPush({
+    subscription: sub.subscription,
+    payload: notificationPayload(sub.locale, 0, 0, true),
+    vapid: {
+      publicKey: env.VAPID_PUBLIC_KEY!,
+      privateKey: env.VAPID_PRIVATE_KEY!,
+      subject: env.VAPID_SUBJECT!,
+    },
+    ttl: 60,
+    urgency: 'normal',
+    topic: 'vozclara-test',
+  });
+
+  if (result.gone) {
+    await env.PUSH_SUBS!.delete(`sub:${brainId}`);
+  }
+  return json({ status: result.status, gone: result.gone });
+}
+
+/* ─── Cron tick ────────────────────────────────────────────────────── */
+
+async function runPushCron(env: Env): Promise<void> {
+  if (!vapidConfigured(env)) {
+    console.log('push_cron_skip: vapid_or_kv_unbound');
+    return;
+  }
+
+  const nowMs = Date.now();
+  let cursor: string | undefined;
+  let totalSeen = 0;
+  let totalSent = 0;
+  let totalGone = 0;
+
+  do {
+    const page = await env.PUSH_SUBS!.list({ prefix: 'sub:', cursor });
+    for (const k of page.keys) {
+      totalSeen += 1;
+      const raw = await env.PUSH_SUBS!.get(k.name);
+      if (!raw) continue;
+      const sub = JSON.parse(raw) as PushSub;
+
+      // Local-time hour for the user; tzOffsetMinutes is the value
+      // returned by `new Date().getTimezoneOffset()` from the browser
+      // (positive west of UTC, so subtract).
+      const localMs = nowMs - sub.tzOffsetMinutes * 60 * 1000;
+      const localDate = new Date(localMs);
+      const localHour = localDate.getUTCHours();
+      const localYmd = `${localDate.getUTCFullYear()}-${String(localDate.getUTCMonth() + 1).padStart(2, '0')}-${String(localDate.getUTCDate()).padStart(2, '0')}`;
+
+      // Three conditions: it's the user's reminder hour, they have cards
+      // due now, and we haven't already buzzed them today.
+      if (localHour !== sub.reminderHour) continue;
+      if (sub.nextDueAt > nowMs) continue;
+      if (sub.lastNotifiedYmd === localYmd) continue;
+
+      const result = await sendPush({
+        subscription: sub.subscription,
+        payload: notificationPayload(sub.locale, 0, 0, false),
+        vapid: {
+          publicKey: env.VAPID_PUBLIC_KEY!,
+          privateKey: env.VAPID_PRIVATE_KEY!,
+          subject: env.VAPID_SUBJECT!,
+        },
+        ttl: 24 * 60 * 60,
+        urgency: 'normal',
+        topic: 'vozclara-daily',
+      });
+
+      if (result.gone) {
+        await env.PUSH_SUBS!.delete(k.name);
+        totalGone += 1;
+        continue;
+      }
+
+      sub.lastNotifiedYmd = localYmd;
+      sub.updatedAt = nowMs;
+      await env.PUSH_SUBS!.put(k.name, JSON.stringify(sub));
+      totalSent += 1;
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+
+  console.log(`push_cron: seen=${totalSeen} sent=${totalSent} gone=${totalGone}`);
+}
+
+/**
+ * Notification body text. Counts are intentionally omitted from the
+ * payload — the worker only knows there is *something* due, not how
+ * much, because exact counts live in the user's IndexedDB. The SW
+ * fills them in client-side when it displays the notification.
+ */
+function notificationPayload(
+  locale: PushSub['locale'],
+  _due: number,
+  _fresh: number,
+  test: boolean,
+): object {
+  const title: Record<PushSub['locale'], string> = {
+    es: 'Voz Clara · Toca para repasar',
+    pt: 'Voz Clara · Toca para rever',
+    de: 'Voz Clara · Zeit zum Wiederholen',
+    en: 'Voz Clara · Time to review',
+  };
+  const body: Record<PushSub['locale'], string> = {
+    es: 'Tienes tarjetas esperando en tu biblioteca.',
+    pt: 'Tens cartões à espera na tua biblioteca.',
+    de: 'In deiner Bibliothek warten Karten auf dich.',
+    en: 'Your library has cards waiting for review.',
+  };
+  return {
+    title: title[locale],
+    body: body[locale],
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    tag: test ? 'vozclara-test' : 'vozclara-daily',
+    url: '/review?source=push',
+  };
 }

@@ -342,3 +342,23 @@ export async function getStreak(brainId?: string): Promise<StreakState> {
   const store = await loadStore(id);
   return store.streak;
 }
+
+/**
+ * Earliest due-time across all cards in the store. Returns Date.now()
+ * when there are fresh cards waiting (so push fires immediately on
+ * the user's next reminder hour). Returns Infinity when the library
+ * is empty — caller can interpret that as "nothing to push about".
+ */
+export async function getNextDueAt(brainId?: string): Promise<number> {
+  const id = brainId ?? getBrainId();
+  if (id === 'server') return Infinity;
+  const store = await loadStore(id);
+  let earliest = Infinity;
+  for (const c of Object.values(store.cards)) {
+    if (c.reps === 0 && c.lastReviewedAt === null) {
+      return Date.now();
+    }
+    if (c.due < earliest) earliest = c.due;
+  }
+  return earliest;
+}

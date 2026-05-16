@@ -101,3 +101,53 @@ async function networkFirst(req) {
     return Response.error();
   }
 }
+
+/* ─── Web Push handlers ───────────────────────────────────────────── */
+
+// Payload comes from the worker's notificationPayload() —
+// { title, body, icon, badge, tag, url }. We show it as a notification
+// and remember the URL so notificationclick knows where to navigate.
+self.addEventListener('push', (event) => {
+  let payload = { title: 'Voz Clara', body: '', icon: '/icon-192.png', tag: 'vozclara' };
+  if (event.data) {
+    try {
+      payload = { ...payload, ...event.data.json() };
+    } catch {
+      payload.body = event.data.text() || '';
+    }
+  }
+  const { title, body, icon, badge, tag, url } = payload;
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: icon ?? '/icon-192.png',
+      badge: badge ?? '/icon-192.png',
+      tag: tag ?? 'vozclara',
+      data: { url: url ?? '/review' },
+      // requireInteraction false so iOS auto-dismisses; the URL is
+      // recoverable from the notification list.
+      requireInteraction: false,
+    }),
+  );
+});
+
+// Tap on a notification → focus an existing tab if one is open,
+// otherwise open the deep-linked URL in a new window.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || '/review';
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clients) => {
+        for (const c of clients) {
+          if (c.url.endsWith(targetUrl) && 'focus' in c) return c.focus();
+        }
+        const open = clients[0];
+        if (open && 'navigate' in open) {
+          return open.navigate(targetUrl).then(() => open.focus());
+        }
+        return self.clients.openWindow(targetUrl);
+      }),
+  );
+});
