@@ -187,6 +187,12 @@ export function PackPage() {
             {t.packBackToLibrary}
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to={`/pack/${pack.id}/shadow`}
+              className="inline-flex items-center gap-1.5 rounded-card border border-navy/15 bg-white px-2.5 py-1 font-sans text-[11px] uppercase tracking-widest text-graphit/70 transition hover:border-gold hover:text-navy"
+            >
+              🎙 {shadowCtaLabel(locale)}
+            </Link>
             <PackShare pack={pack} />
             <PackExport pack={pack} />
             {!isSample && (
@@ -518,6 +524,13 @@ function deleteConfirmLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Eliminar este pack?';
   if (locale.startsWith('de')) return 'Diesen Pack löschen?';
   return 'Delete this pack?';
+}
+
+function shadowCtaLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Shadowing';
+  if (locale.startsWith('pt')) return 'Shadowing';
+  if (locale.startsWith('de')) return 'Nachsprechen';
+  return 'Shadow';
 }
 
 function packLoadingTitle(locale: string): string {
