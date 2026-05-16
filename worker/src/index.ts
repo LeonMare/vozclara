@@ -171,6 +171,10 @@ export default {
       return handleAsk(req, env);
     }
 
+    if (url.pathname === '/api/chat' && req.method === 'POST') {
+      return handleChat(req, env);
+    }
+
     if (url.pathname === '/api/tts/health' && req.method === 'GET') {
       return json({
         available: !!env.OPENAI_API_KEY,
@@ -2088,4 +2092,138 @@ async function handleCurated(env: Env): Promise<Response> {
   } catch {
     return json({ items: FALLBACK_CURATED }, 200, headers);
   }
+}
+
+/* ─── /api/chat ───────────────────────────────────────────────────── *
+ *
+ * Multi-turn conversation about a specific pack. The user is learning
+ * the pack's output language — the model plays a patient, native-speaker
+ * tutor inside that language, drawing on the pack's title, summary,
+ * key ideas, vocabulary and key quotes as the conversation topic.
+ *
+ * No server-side state: the client sends the full message history each
+ * turn (capped). Storage of chat history is the client's responsibility
+ * — local-first, like everything else in VozClara.
+ */
+
+interface ChatPackContext {
+  title: string;
+  outputLang: 'es' | 'pt' | 'de' | 'en' | 'fr';
+  sourceLang: string;
+  mode: string;
+  summary: { short: string; long: string };
+  keyIdeas: Array<{ title: string; body: string }>;
+  vocabulary: Array<{ word: string; translation: string; context?: string }>;
+  keyQuotes: Array<{ text: string; speaker?: string }>;
+}
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+interface ChatBody {
+  pack: ChatPackContext;
+  history: ChatMessage[];
+  message: string;
+}
+
+interface ChatResult {
+  reply: string;
+  model: string;
+}
+
+const CHAT_LANG_NAME: Record<string, string> = {
+  es: 'Spanish',
+  pt: 'Portuguese',
+  de: 'German',
+  en: 'English',
+  fr: 'French',
+};
+
+async function handleChat(req: Request, env: Env): Promise<Response> {
+  let body: ChatBody;
+  try {
+    body = (await req.json()) as ChatBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const message = (body.message ?? '').toString().trim();
+  if (message.length < 1) return json({ error: 'message_empty' }, 400);
+  if (message.length > 1000) return json({ error: 'message_too_long' }, 400);
+
+  const pack = body.pack;
+  if (!pack?.title || !pack?.outputLang) return json({ error: 'invalid_pack' }, 400);
+  const targetLang = pack.outputLang;
+  const langName = CHAT_LANG_NAME[targetLang] ?? 'English';
+
+  // Cap history to last 10 turns to keep context bounded and latency low.
+  const history = Array.isArray(body.history) ? body.history.slice(-10) : [];
+
+  const systemPrompt = buildChatSystemPrompt(pack, langName);
+
+  const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
+    { role: 'system', content: systemPrompt },
+    ...history
+      .filter((m) => (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map((m) => ({ role: m.role, content: m.content.slice(0, 1500) })),
+    { role: 'user', content: message.slice(0, 1000) },
+  ];
+
+  let out: Awaited<ReturnType<Env['AI']['run']>>;
+  try {
+    out = await env.AI.run(LLM_MODEL, {
+      messages,
+      max_tokens: 600,
+      temperature: 0.6,
+    });
+  } catch (err) {
+    return json({ error: 'ai_failed', detail: String(err).slice(0, 200) }, 502);
+  }
+
+  let raw: string;
+  if (typeof out === 'string') raw = out;
+  else if (out && typeof out.response === 'string') raw = out.response;
+  else if (out && out.response != null) raw = JSON.stringify(out.response);
+  else raw = JSON.stringify(out);
+
+  const result: ChatResult = { reply: raw.trim(), model: LLM_MODEL };
+  return json(result);
+}
+
+function buildChatSystemPrompt(pack: ChatPackContext, langName: string): string {
+  const ideas = pack.keyIdeas
+    .slice(0, 6)
+    .map((k, i) => `${i + 1}. ${k.title}: ${k.body}`)
+    .join('\n');
+  const vocab = pack.vocabulary
+    .slice(0, 12)
+    .map((v) => `- ${v.word} (${v.translation})${v.context ? ` — "${v.context}"` : ''}`)
+    .join('\n');
+  const quotes = pack.keyQuotes
+    .slice(0, 4)
+    .map((q) => (q.speaker ? `"${q.text}" — ${q.speaker}` : `"${q.text}"`))
+    .join('\n');
+
+  return [
+    `You are a patient, encouraging native-${langName} tutor having a real conversation about a video the learner just watched.`,
+    `Speak in ${langName} only. Match the learner's level — if they make small mistakes, respond naturally first, then add one short gentle correction in a separate sentence. If they ask for an explanation, give it in plain ${langName}.`,
+    ``,
+    `Keep replies short (1-3 sentences usually). Ask a follow-up question often — you are a conversation partner, not a lecturer. Do not summarise the video unless the learner explicitly asks; they have the pack already.`,
+    ``,
+    `TOPIC — the video the learner watched:`,
+    `Title: ${pack.title}`,
+    `Source language: ${pack.sourceLang}. Pack mode: ${pack.mode}.`,
+    ``,
+    `Short summary: ${pack.summary.short}`,
+    pack.summary.long ? `\nLonger summary: ${pack.summary.long}` : '',
+    ideas ? `\nKey ideas:\n${ideas}` : '',
+    vocab ? `\nUseful vocabulary (try to weave some of these in):\n${vocab}` : '',
+    quotes ? `\nKey quotes:\n${quotes}` : '',
+    ``,
+    `Stay anchored to this topic. If the learner drifts onto something unrelated, redirect gently with a question that brings them back. Never break character to mention you are an AI.`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 }

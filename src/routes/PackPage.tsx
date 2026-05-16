@@ -6,6 +6,7 @@ import { RouteSkeleton } from '../components/RouteSkeleton';
 import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { recordView, forgetView } from '../lib/recentlyViewed';
 import { deindexPack } from '../lib/packIndex';
+import { clearChat } from '../lib/chat';
 import { usePageHead } from '../hooks/usePageHead';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
@@ -174,6 +175,7 @@ export function PackPage() {
     await deletePack(pack.id);
     forgetView(pack.id);
     void deindexPack(pack.id);
+    void clearChat(pack.id);
     navigate('/library');
   }
 
@@ -187,6 +189,12 @@ export function PackPage() {
             {t.packBackToLibrary}
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to={`/pack/${pack.id}/chat`}
+              className="inline-flex items-center gap-1.5 rounded-card border border-navy/15 bg-white px-2.5 py-1 font-sans text-[11px] uppercase tracking-widest text-graphit/70 transition hover:border-gold hover:text-navy"
+            >
+              💬 {chatCtaLabel(locale)}
+            </Link>
             <Link
               to={`/pack/${pack.id}/shadow`}
               className="inline-flex items-center gap-1.5 rounded-card border border-navy/15 bg-white px-2.5 py-1 font-sans text-[11px] uppercase tracking-widest text-graphit/70 transition hover:border-gold hover:text-navy"
@@ -531,6 +539,13 @@ function shadowCtaLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Shadowing';
   if (locale.startsWith('de')) return 'Nachsprechen';
   return 'Shadow';
+}
+
+function chatCtaLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Conversar';
+  if (locale.startsWith('pt')) return 'Conversar';
+  if (locale.startsWith('de')) return 'Gespräch';
+  return 'Chat';
 }
 
 function packLoadingTitle(locale: string): string {
