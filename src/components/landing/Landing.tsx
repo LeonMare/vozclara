@@ -24,7 +24,7 @@ import { FinalCTA } from './FinalCTA';
  *   § 04 How it works (5 steps)
  *   § 05 Knowledge Pack Preview (showpiece)
  *   § 06 Library Preview
- *   § 07 Ask My Knowledge (coming soon)
+ *   § 07 Ask My Knowledge (live demo)
  *   § 08 Languages
  *   § 09 Pricing
  *   § 10 Final CTA

@@ -195,7 +195,7 @@ export const STRINGS: Record<Locale, Strings> = {
       'Tres modos: Learn, Business y Creator. Cada uno con su propia voz.',
       'Resumen, ideas, plan de acción, vocabulario y más — adaptados a tu modo.',
       'Etiquetado, organizado y buscable. Permanece en tu dispositivo.',
-      'Haz preguntas sobre todo lo que has guardado (próximamente).',
+      'Haz preguntas sobre todo lo que has guardado.',
     ],
 
     kpTitle: 'Anatomía de un Knowledge Pack',
@@ -216,7 +216,7 @@ export const STRINGS: Record<Locale, Strings> = {
     libraryTitle: 'Tu biblioteca, no la de YouTube',
     librarySub: 'Todo lo que guardas, organizado. Filtros por idioma, modo, categoría y fecha.',
 
-    askEyebrow: 'PRÓXIMAMENTE',
+    askEyebrow: 'PREGUNTAS · BIBLIOTECA · IA',
     askTitle: 'Pregúntale a tu biblioteca.',
     askSub: 'Habla con tu propio archivo de conocimiento:',
     askExamples: [
@@ -233,7 +233,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingSub: 'Sin tarjeta para empezar.',
     tiers: [
       { name: 'Free', price: '0 €', period: '', blurb: 'Para probar VozClara.', features: ['3 Knowledge Packs al mes', 'Biblioteca local en tu dispositivo', 'Todos los modos', 'Exportar como texto'], cta: 'Empezar' },
-      { name: 'Pro', price: '9 €', period: '/ mes', blurb: 'Para uso personal regular.', features: ['50 Knowledge Packs al mes', 'Sincronización entre dispositivos', 'Etiquetas y colecciones', 'Ask My Knowledge (próximamente)'], cta: 'Elegir Pro' },
+      { name: 'Pro', price: '9 €', period: '/ mes', blurb: 'Para uso personal regular.', features: ['50 Knowledge Packs al mes', 'Sincronización entre dispositivos', 'Etiquetas y colecciones', 'Ask My Knowledge'], cta: 'Elegir Pro' },
       { name: 'Power Learner', price: '19 €', period: '/ mes', blurb: 'Para quien aprende a fondo.', features: ['Packs ilimitados', 'Generador de planes de aprendizaje', 'Repaso espaciado de vocabulario', 'Exportar a PDF y Notion'], cta: 'Elegir Power' },
       { name: 'Creator / Business', price: '49 €', period: '/ mes', blurb: 'Para creadores y equipos.', features: ['Todo lo anterior', 'Quote-cards con tu marca', 'Workspace para equipos', 'Prompts personalizables'], cta: 'Elegir Creator' },
     ],
@@ -361,7 +361,7 @@ export const STRINGS: Record<Locale, Strings> = {
       'Três modos: Learn, Business e Creator. Cada um com a sua voz.',
       'Resumo, ideias, plano de ação, vocabulário e mais — adaptado ao seu modo.',
       'Etiquetado, organizado e pesquisável. Fica no seu dispositivo.',
-      'Faça perguntas sobre tudo o que guardou (em breve).',
+      'Faça perguntas sobre tudo o que guardou.',
     ],
 
     kpTitle: 'Anatomia de um Knowledge Pack',
@@ -382,7 +382,7 @@ export const STRINGS: Record<Locale, Strings> = {
     libraryTitle: 'A sua biblioteca, não a do YouTube',
     librarySub: 'Tudo o que guarda, organizado. Filtros por idioma, modo, categoria e data.',
 
-    askEyebrow: 'EM BREVE',
+    askEyebrow: 'PERGUNTAS · BIBLIOTECA · IA',
     askTitle: 'Pergunte à sua biblioteca.',
     askSub: 'Fale com o seu próprio arquivo de conhecimento:',
     askExamples: [
@@ -399,7 +399,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingSub: 'Sem cartão para começar.',
     tiers: [
       { name: 'Free', price: '0 €', period: '', blurb: 'Para experimentar.', features: ['3 Knowledge Packs por mês', 'Biblioteca local', 'Todos os modos', 'Exportar como texto'], cta: 'Começar' },
-      { name: 'Pro', price: '9 €', period: '/ mês', blurb: 'Para uso pessoal regular.', features: ['50 packs por mês', 'Sincronização entre dispositivos', 'Etiquetas e coleções', 'Ask My Knowledge (em breve)'], cta: 'Escolher Pro' },
+      { name: 'Pro', price: '9 €', period: '/ mês', blurb: 'Para uso pessoal regular.', features: ['50 packs por mês', 'Sincronização entre dispositivos', 'Etiquetas e coleções', 'Ask My Knowledge'], cta: 'Escolher Pro' },
       { name: 'Power Learner', price: '19 €', period: '/ mês', blurb: 'Para quem aprende a fundo.', features: ['Packs ilimitados', 'Planos de aprendizagem', 'Revisão espaçada', 'Exportar para PDF e Notion'], cta: 'Escolher Power' },
       { name: 'Creator / Business', price: '49 €', period: '/ mês', blurb: 'Para criadores e equipas.', features: ['Tudo o anterior', 'Quote-cards com a sua marca', 'Workspace para equipas', 'Prompts personalizáveis'], cta: 'Escolher Creator' },
     ],
@@ -516,7 +516,7 @@ export const STRINGS: Record<Locale, Strings> = {
       'Drei Modi: Learn, Business, Creator. Jeder mit eigener Stimme.',
       'Zusammenfassung, Ideen, Aktionsplan, Vokabular und mehr.',
       'Mit Tags, organisiert, durchsuchbar. Bleibt auf Ihrem Gerät.',
-      'Stellen Sie Fragen zu allem was Sie gespeichert haben (bald).',
+      'Stellen Sie Fragen zu allem was Sie gespeichert haben.',
     ],
 
     kpTitle: 'Anatomie eines Knowledge Packs',
@@ -537,7 +537,7 @@ export const STRINGS: Record<Locale, Strings> = {
     libraryTitle: 'Ihre Bibliothek, nicht die von YouTube',
     librarySub: 'Alles was Sie speichern, organisiert. Filter nach Sprache, Modus, Kategorie und Datum.',
 
-    askEyebrow: 'BALD VERFÜGBAR',
+    askEyebrow: 'FRAGEN · BIBLIOTHEK · KI',
     askTitle: 'Fragen Sie Ihre Bibliothek.',
     askSub: 'Sprechen Sie mit Ihrem eigenen Wissensarchiv:',
     askExamples: [
@@ -554,7 +554,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingSub: 'Keine Kreditkarte zum Start.',
     tiers: [
       { name: 'Free', price: '0 €', period: '', blurb: 'Zum Ausprobieren.', features: ['3 Packs / Monat', 'Lokale Bibliothek', 'Alle Modi', 'Text-Export'], cta: 'Starten' },
-      { name: 'Pro', price: '9 €', period: '/ Monat', blurb: 'Für regelmäßigen Gebrauch.', features: ['50 Packs / Monat', 'Geräte-Sync', 'Tags & Sammlungen', 'Ask My Knowledge (bald)'], cta: 'Pro wählen' },
+      { name: 'Pro', price: '9 €', period: '/ Monat', blurb: 'Für regelmäßigen Gebrauch.', features: ['50 Packs / Monat', 'Geräte-Sync', 'Tags & Sammlungen', 'Ask My Knowledge'], cta: 'Pro wählen' },
       { name: 'Power Learner', price: '19 €', period: '/ Monat', blurb: 'Für tiefes Lernen.', features: ['Unbegrenzte Packs', 'Lernpläne', 'Spaced Repetition', 'Export nach PDF und Notion'], cta: 'Power wählen' },
       { name: 'Creator / Business', price: '49 €', period: '/ Monat', blurb: 'Für Creators und Teams.', features: ['Alles vorherige', 'Quote-Cards mit Branding', 'Team-Workspace', 'Eigene Prompts'], cta: 'Creator wählen' },
     ],
@@ -671,7 +671,7 @@ export const STRINGS: Record<Locale, Strings> = {
       'Three modes: Learn, Business, Creator. Each with its own voice.',
       'Summary, ideas, action plan, vocabulary and more — adapted to your mode.',
       'Tagged, organised, searchable. Stays on your device.',
-      'Ask questions across everything you saved (coming soon).',
+      'Ask questions across everything you saved.',
     ],
 
     kpTitle: 'Anatomy of a Knowledge Pack',
@@ -692,7 +692,7 @@ export const STRINGS: Record<Locale, Strings> = {
     libraryTitle: 'Your library, not YouTube’s',
     librarySub: 'Everything you save, organised. Filters by language, mode, category and date.',
 
-    askEyebrow: 'COMING SOON',
+    askEyebrow: 'QUESTIONS · LIBRARY · AI',
     askTitle: 'Ask your library.',
     askSub: 'Talk to your own knowledge archive:',
     askExamples: [
@@ -709,7 +709,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingSub: 'No card required to start.',
     tiers: [
       { name: 'Free', price: '€0', period: '', blurb: 'To try VozClara.', features: ['3 Knowledge Packs / month', 'Local library on device', 'All modes', 'Export as text'], cta: 'Start' },
-      { name: 'Pro', price: '€9', period: '/ month', blurb: 'For regular personal use.', features: ['50 packs / month', 'Sync across devices', 'Tags and collections', 'Ask My Knowledge (coming)'], cta: 'Choose Pro' },
+      { name: 'Pro', price: '€9', period: '/ month', blurb: 'For regular personal use.', features: ['50 packs / month', 'Sync across devices', 'Tags and collections', 'Ask My Knowledge'], cta: 'Choose Pro' },
       { name: 'Power Learner', price: '€19', period: '/ month', blurb: 'For deep learners.', features: ['Unlimited packs', 'Learning-plan generator', 'Spaced repetition for vocabulary', 'PDF and Notion export'], cta: 'Choose Power' },
       { name: 'Creator / Business', price: '€49', period: '/ month', blurb: 'For creators and teams.', features: ['Everything above', 'Quote-cards with your branding', 'Team workspace', 'Custom prompts'], cta: 'Choose Creator' },
     ],

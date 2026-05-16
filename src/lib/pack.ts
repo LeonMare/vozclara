@@ -148,6 +148,14 @@ export interface KnowledgePack {
 
   /** Transcript stored separately under its own key to keep listings light. */
   transcriptKey?: string;
+
+  /**
+   * Last successful Vectorize upsert for this pack. Absent on packs that
+   * were generated before Vectorize was bound, or while the index was
+   * unreachable. Used by the library to back-fill the index in the
+   * background.
+   */
+  indexedAt?: number;
 }
 
 /**
@@ -213,6 +221,17 @@ export async function getTranscript(transcriptKeyValue: string): Promise<{ segme
 export async function savePack(pack: KnowledgePack): Promise<void> {
   await set(packKey(pack.id), { ...pack, updatedAt: Date.now() });
   await touchIndex(pack.brainId, pack.id);
+}
+
+/**
+ * Persist `indexedAt` without bumping `updatedAt` or the recency-ordered
+ * library index. Vectorize back-fill is a background detail and must not
+ * disturb the user's "Recently viewed" ordering.
+ */
+export async function markPackIndexed(packId: string, at: number = Date.now()): Promise<void> {
+  const pack = await getPack(packId);
+  if (!pack) return;
+  await set(packKey(packId), { ...pack, indexedAt: at });
 }
 
 export async function saveTranscript(packId: string, segments: Segment[]): Promise<string> {

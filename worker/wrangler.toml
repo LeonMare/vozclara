@@ -12,23 +12,19 @@ workers_dev = true
 [ai]
 binding = "AI"
 
-# Vectorize binding — semantic search backend for /api/ask. Activates
-# the vector-retrieval path; without it, /api/ask falls back to
-# prompt-stuffing the entire library (capped at 40 packs).
+# Vectorize binding — semantic search backend for /api/ask. Without it,
+# /api/ask falls back to prompt-stuffing the entire library (capped at
+# 40 packs). The index must be provisioned once before `wrangler deploy`:
 #
-# Activation steps:
-#   1. wrangler vectorize create vozclara-knowledge --dimensions=768 --metric=cosine
-#   2. Uncomment the block below
-#   3. wrangler deploy
+#   wrangler vectorize create vozclara-knowledge --dimensions=768 --metric=cosine
 #
 # Free tier: 30M queried / 50M stored vector dimensions per month.
 # At 768 dims × ~40 chunks per pack that's roughly 1.5k packs of
-# headroom on storage and effectively unlimited query volume for
-# personal-scale usage.
-#
-# [[vectorize]]
-# binding = "VECTORIZE"
-# index_name = "vozclara-knowledge"
+# headroom and effectively unlimited queries for personal-scale usage.
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "vozclara-knowledge"
 
 # Local dev runs on http://localhost:8787 — the Vite dev server in
 # /vite.config.ts proxies /api/* to that port.

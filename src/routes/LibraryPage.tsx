@@ -17,7 +17,7 @@ import {
   type LibraryStats,
 } from '../lib/pack';
 import { getRecentlyViewed, forgetView } from '../lib/recentlyViewed';
-import { deindexPack } from '../lib/packIndex';
+import { deindexPack, ensureLibraryIndexed } from '../lib/packIndex';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 
@@ -83,6 +83,9 @@ export function LibraryPage() {
       setStats(s);
     });
     setRecentIds(getRecentlyViewed());
+    // Background back-fill: any pack saved before Vectorize was available
+    // gets indexed now so it becomes findable via Ask My Knowledge.
+    void ensureLibraryIndexed(brainId);
   }, []);
 
   // Resolve recently-viewed pack IDs against the user's library + the

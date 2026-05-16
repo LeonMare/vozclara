@@ -12,7 +12,7 @@
  * prompt-stuffing /api/ask path keeps working without change.
  */
 
-import { activeView, type KnowledgePack } from './pack';
+import { activeView, listPacks, markPackIndexed, type KnowledgePack } from './pack';
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -117,16 +117,19 @@ export function packToChunks(pack: KnowledgePack): IndexChunk[] {
  * need to await — if the worker doesn't have Vectorize bound, the
  * request 503s and we silently move on. Failures here never break
  * pack generation; the ask path still works through the fallback.
+ *
+ * On success, stamps `indexedAt` on the pack so the library back-fill
+ * skips it next time.
  */
-export async function indexPack(pack: KnowledgePack): Promise<void> {
+export async function indexPack(pack: KnowledgePack): Promise<boolean> {
   const health = await checkIndexAvailability();
-  if (!health.available) return;
+  if (!health.available) return false;
 
   const chunks = packToChunks(pack);
-  if (chunks.length === 0) return;
+  if (chunks.length === 0) return false;
 
   try {
-    await fetch(`${API_BASE}/api/index`, {
+    const res = await fetch(`${API_BASE}/api/index`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -138,9 +141,38 @@ export async function indexPack(pack: KnowledgePack): Promise<void> {
         chunks,
       }),
     });
+    if (!res.ok) return false;
+    await markPackIndexed(pack.id);
+    return true;
   } catch {
-    // Network blip — no user-facing impact, just skip indexing.
+    return false;
   }
+}
+
+/**
+ * Background back-fill: walk the library and index every pack that
+ * doesn't yet have `indexedAt`. Runs after Vectorize becomes available
+ * so existing packs become searchable without forcing the user to
+ * regenerate anything. No-op when Vectorize is unbound. Throttled to
+ * a small concurrency so we don't spike Workers AI neurons.
+ */
+export async function ensureLibraryIndexed(brainId: string): Promise<void> {
+  const health = await checkIndexAvailability();
+  if (!health.available) return;
+
+  const packs = await listPacks(brainId);
+  const pending = packs.filter((p) => !p.indexedAt && p.brainId !== 'sample');
+  if (pending.length === 0) return;
+
+  const CONCURRENCY = 3;
+  let cursor = 0;
+  async function worker() {
+    while (cursor < pending.length) {
+      const pack = pending[cursor++];
+      await indexPack(pack);
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 }
 
 /**
