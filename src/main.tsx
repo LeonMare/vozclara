@@ -2,6 +2,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { initSentry } from './lib/sentry';
+
+// Initialise error reporting before React mounts so render-phase
+// exceptions are captured. No-op when VITE_SENTRY_DSN is unset.
+initSentry();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,0 +1,49 @@
+name: CI
+
+# Catches breakage before it reaches main. Runs on every PR and on
+# direct pushes to main. Two short jobs in parallel — frontend
+# (tsc + vite build + tests) and worker (tsc). Both must pass.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  frontend:
+    name: Frontend · tsc + build + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc -b
+      - name: Test
+        run: npm test --if-present -- --run
+      - name: Build
+        # Doesn't need real .env.production — the committed .env has
+        # the staging defaults that satisfy index.html substitution.
+        run: npm run build
+
+  worker:
+    name: Worker · tsc
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit

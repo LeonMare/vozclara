@@ -9,10 +9,11 @@ import { usePageHead } from '../hooks/usePageHead';
  * never need it — but a German visitor (or, more importantly, a
  * Wettbewerber-Anwalt) clicking the footer needs to land here.
  *
- * The placeholders bracketed with [TODO …] need real values before
- * we accept any payment or run paid ads to .de visitors. Without
- * them the page is incomplete and the page itself is technically
- * non-compliant.
+ * The current address (Frauenhofstraße 7, 60528 Frankfurt) is the
+ * founder's private home address — legally compliant as a
+ * ladungsfähige Anschrift for a sole proprietor, but worth replacing
+ * with a paid Impressum-service forwarding address (~ €12/month)
+ * once the project is live and traffic justifies the spend.
  */
 export function ImpressumPage() {
   const { locale } = useLocale();
@@ -56,8 +57,8 @@ export function ImpressumPage() {
           <div className="mt-6 space-y-2 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
             <p>Christian Leon</p>
             <p>LEON MARÉ</p>
-            <p>[TODO: Straße + Hausnummer]</p>
-            <p>[TODO: PLZ] Frankfurt am Main</p>
+            <p>Frauenhofstraße 7</p>
+            <p>60528 Frankfurt am Main</p>
             <p>{labels.country}</p>
           </div>
         </div>
@@ -91,7 +92,7 @@ export function ImpressumPage() {
             {labels.responsibilityBody}
           </p>
           <p className="mt-4 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
-            Christian Leon · [TODO: Straße] · [TODO: PLZ] Frankfurt am Main
+            Christian Leon · [TODO: Straße] · 60528 Frankfurt am Main
           </p>
         </div>
       </section>

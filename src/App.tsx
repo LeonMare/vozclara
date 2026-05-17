@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AppHeader } from './components/AppHeader';
 import { Landing } from './components/landing/Landing';
 import { RouteSkeleton } from './components/RouteSkeleton';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 /**
  * VozClara — multilingual knowledge cloud for videos.
@@ -89,7 +90,8 @@ function ScrollToTop() {
 export default function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
+      <ErrorBoundary>
+        <ScrollToTop />
       {/* Skip-link for keyboard users — invisible until focused, then
           jumps past the header into the route's <main> content. */}
       <a
@@ -222,6 +224,7 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

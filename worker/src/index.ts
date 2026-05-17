@@ -164,14 +164,20 @@ export default {
     }
 
     if (url.pathname === '/api/insights' && req.method === 'POST') {
+      const limit = await rateLimit(env, req, 'insights', 5);
+      if (limit) return limit;
       return handleInsights(req, env);
     }
 
     if (url.pathname === '/api/ask' && req.method === 'POST') {
+      const limit = await rateLimit(env, req, 'ask', 10);
+      if (limit) return limit;
       return handleAsk(req, env);
     }
 
     if (url.pathname === '/api/chat' && req.method === 'POST') {
+      const limit = await rateLimit(env, req, 'chat', 20);
+      if (limit) return limit;
       return handleChat(req, env);
     }
 
@@ -2418,4 +2424,60 @@ function unescapeXml(s: string): string {
 function ymdLocal(ms: number): string {
   const d = new Date(ms);
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+}
+
+/* ─── Rate limiting ───────────────────────────────────────────────── *
+ *
+ * Cheap per-IP-per-minute counter backed by the PUSH_SUBS KV
+ * namespace under a separate `rl:` prefix. Not as precise as a proper
+ * Durable-Object sliding-window limiter — KV writes are eventually
+ * consistent, the counter can underreport by 1-2 calls during a
+ * burst — but more than enough to stop the cheap-abuse case where
+ * someone scripts 1000 /api/insights calls and burns through the
+ * Workers AI free-tier neuron budget.
+ *
+ * Returns null when the request is allowed; returns a 429 Response
+ * with Retry-After when the bucket overflows. KV-unbound deploys
+ * pass through (better to serve than crash).
+ */
+async function rateLimit(
+  env: Env,
+  req: Request,
+  endpoint: string,
+  perMinute: number,
+): Promise<Response | null> {
+  if (!env.PUSH_SUBS) return null;
+  const ip =
+    req.headers.get('CF-Connecting-IP') ??
+    req.headers.get('X-Real-IP') ??
+    '0.0.0.0';
+  const minute = Math.floor(Date.now() / 60_000);
+  const key = `rl:${endpoint}:${ip}:${minute}`;
+
+  let count = 0;
+  try {
+    const raw = await env.PUSH_SUBS.get(key);
+    count = raw ? parseInt(raw, 10) || 0 : 0;
+  } catch {
+    return null;  // KV down — fail open
+  }
+
+  if (count >= perMinute) {
+    return json(
+      {
+        error: 'rate_limited',
+        detail: `${perMinute} requests / minute / IP for ${endpoint}. Try again shortly.`,
+      },
+      429,
+      { 'Retry-After': '60' },
+    );
+  }
+
+  // Best-effort write; 2-minute TTL lets the bucket roll over naturally.
+  try {
+    await env.PUSH_SUBS.put(key, String(count + 1), { expirationTtl: 120 });
+  } catch {
+    /* ignore — write failure shouldn't block the user */
+  }
+  return null;
 }
