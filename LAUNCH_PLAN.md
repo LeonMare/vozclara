@@ -1,0 +1,496 @@
+# VozClara — Launch-Plan & Strategie
+
+> Lebt-Dokument. Erfasst die strategischen Entscheidungen, den Sprint-Plan
+> und alle offenen Fragen vor dem Reddit/HN-Launch.
+>
+> Stand: Sa 17.5.2026 nach der Pre-Launch-Beratung mit Claude.
+> Letzter Commit dieses Dokuments: siehe `git log LAUNCH_PLAN.md`.
+
+---
+
+## 1 · Launch-Datum
+
+**Ziel: Mo 26.5.2026 oder Di 27.5.2026** (je nach Tempo).
+Heute Sa 17.5.2026 → 9–10 Tage konzentrierter Sprint.
+
+Verschoben von ursprünglich Di 20.5.2026, weil wir den Funktionsumfang
+deutlich erweitert haben (Auth, Pack-Rating, Blog, Folders, Public URLs).
+
+---
+
+## 2 · Positionierung — die große Wende
+
+VozClara ist **nicht** „YouTube Summarizer für Sprachlerner". Das ist zu eng.
+
+VozClara ist die **Knowledge-Layer über allem was du schaust** — für drei
+Personae, ein Produkt, drei Eingangstüren:
+
+| Persona | Pain | Pull |
+|---|---|---|
+| **Sprachlerner** | YouTube ist Gold, aber nichts bleibt hängen | Vocab+SRS+Shadowing aus echtem Video |
+| **Knowledge Worker / News-Junkies** | Talks, Podcasts, KI-News verschwinden | Persistente, durchsuchbare Library + Cross-Pack-Synthese |
+| **Studenten** | Vorlesungen + Lehrvideos zu Studienmaterial machen | Kapitel-Summaries + Quiz + Citations |
+
+**Launch-Pitch:** „The Michelin Guide for YouTube" — über das Pack-Rating-
+System (siehe §6) positionieren wir uns als der erste *Qualitäts*-Index für
+Bildungsvideos. Niemand hat das. YouTube hat Likes (Vanity). Wir haben
+Qualitäts-Signale.
+
+---
+
+## 3 · Was schon live ist (Stand 17.5.)
+
+Committed bis `561385c` und auf `vozclara.app` + Worker deployed:
+
+- **Hero neu** (4 Locales): „Stop losing what you watch." + Parallel-Übersetzungen
+- **§ 01·c AudienceTiles** — 3 Audience-Karten direkt nach Hero
+- **§ 08·b WhyNotChatGPT** — 4-Zeilen-Vergleichstabelle vor Pricing
+- **Pack-Tiering nach Länge** — Worker derived Micro/Standard/Deep/Comprehensive
+- **TL;DR-Box** in Pack-SummaryTab + Library-Card-Preview
+- **CEFR-Difficulty-Badge** (A1–C2) auf Library + PackPage
+- **PT komplett auf „tu"** statt „você"
+- **DE komplett auf „du"** statt „Sie"
+- **ES/EN/PT/DE Hero-Subs auf gleicher Länge** (14–16 Wörter)
+- Cloudflare Web Analytics + Sentry (DE-Region) aktiv
+- 31/31 Unit-Tests grün, tsc clean, CI grün
+- PWA mit korrigierten VozClara-Splash-Screens
+
+---
+
+## 4 · Die 4 Modi (Refactor — Tag 1)
+
+**Vorher:** `learn` / `business` / `creator`
+**Nachher:** `learn` / `brief` / `study` / `creator`
+
+| Key | Sichtbarer Name | Persona | Was sich ändert |
+|---|---|---|---|
+| `learn` | Lernen (Sprache) | Sprachlerner | unverändert |
+| `brief` *(war `business`)* | Recherchieren / Briefing | News, Podcasts, Exec | gleicher Prompt, neuer Name |
+| `study` ⭐ NEU | Studieren | Studenten | neuer Prompt: Kapitel-tief, Quiz, Citations |
+| `creator` | Erstellen | Content-Creator | unverändert |
+
+**Auto-Pick-Map erweitern:**
+- `news`, `business`, `interview`, `coaching`, `general` → `brief`
+- `education` → `study`
+- `creator` → `creator`
+- Sprache-Lerner-Default ist `learn` *nur* wenn User im Onboarding „Sprache lernen" gewählt
+
+**Mode-Picker entfällt** im Generator — User pastet Link, Mode wird automatisch gewählt, Override-Toggle erscheint nach Generierung in PackPage.
+
+---
+
+## 5 · Pack-Rating-System („Michelin for YouTube") ⭐ BREAKOUT-FEATURE
+
+Das **wird** der Reddit-Launch-Pitch.
+
+**Mechanik:**
+- Anonyme 👍/👎 (kein Account nötig — verhindert Reibung)
+- 5-Sterne-Rating + Text-Review nur mit Account (verhindert Spam)
+- 4 zusätzliche 1-Tap-Signale: 💡 mind-blowing / 🤔 verwirrend / 🚫 irreführend / ⏱️ zu lang
+- Aggregiert pro **Video** (nicht pro Pack), da ein Video mehrere Packs haben kann
+
+**Wo sichtbar:**
+- Auf jedem Pack (oben rechts neben dem Mode-Badge)
+- Library-Card: kleines Stern-Aggregat
+- `/discover/top-rated` — Top-bewertete Packs/Videos der Woche/Monats/all-time
+- Sortierung in `/discover` nach Rating + Recency
+
+**Spätere B2B-Erweiterung (Woche 3+):**
+- `/creator/@channelhandle` — YouTuber claimen ihren Kanal
+- Sehen anonymisierte Rating-Trends + Feedback-Reasons
+- Pro-Pfad: kostenpflichtige Analytics für Creator
+
+**Aufwand vor Launch:** ~2 Tage (Basis + Discover-Page)
+
+---
+
+## 6 · Auth-System
+
+**Stack:** Workers + KV + JWT-Cookies. Eigener Auth-Endpoint im bestehenden Worker. Keine externe Auth-as-a-Service.
+
+**Login-Methoden (Launch):**
+1. **Magic Link Email** (passwortlos — primär)
+2. **Google OAuth** (für 80% der User der schnellste Weg)
+
+**Post-Launch:**
+- Apple OAuth (für späteren App Store)
+- Passkeys (WebAuthn)
+
+**Anonymous-First-Flow:**
+1. User kann sofort Pack erzeugen (anonyme Brain-ID, IndexedDB lokal)
+2. Nach dem 3. Pack: dezenter Upgrade-Prompt „Sync auf alle Geräte"
+3. Bei Account-Anlage: anonyme Brain-ID wird zum Account migriert (alle Packs erhalten)
+
+**Profile-Page `/me`:**
+- Avatar (Gravatar fallback), Display-Name, Bio
+- Lieblings-Sprachen, Streak, Public-Profile-Toggle
+- Account-Settings: Email ändern, DSGVO-Daten-Export, Account löschen
+- Security: Session-Liste, „Log out everywhere"
+
+**Aufwand:** 2.5–3 Tage. Größter Single-Block im Sprint.
+
+---
+
+## 7 · Free vs Pro vs Founder Deal
+
+### Free (Akquise)
+- 5 Packs / Monat
+- Videos bis 20 Min
+- Standard-LLM (Workers AI Llama)
+- **Vollständig:** SRS, Shadowing, Anki-Export, Progress, AI-Conversation
+- 1 Lernsprache aktiv
+- Basis-Vokabeln (10 / Pack)
+
+### Pro (€9/Mo oder €72/Jahr)
+- Unlimited Packs
+- Videos bis 3h
+- Premium-LLM (Claude Sonnet 4.5 / GPT-5)
+- **Watch Mode** (Woche 2)
+- **Cross-Pack-Synthese** (Woche 3)
+- **Long-form Article Generator** (Woche 3)
+- **Grammar Spotlight + Cultural Notes + Discussion Prompts**
+- **Comprehension Quiz**
+- **Channel-Subscriptions**
+- Mehrere Lernsprachen parallel
+- Priority Queue
+- Highlights & Annotations
+- Notion / Markdown / Obsidian Export
+- PDF-Export
+- Daily Curated History
+- MP3/MP4-Uploads (eigene Audio/Video-Files)
+
+### Founder Deal (Launch-Hook)
+**€99 Lifetime, limitiert auf erste 100 User.**
+- Alle Pro-Features für immer
+- „Founding Member"-Badge im Profil
+- Direkter Discord-Zugang zu mir
+- Stimmrecht für nächste Features
+- Frühzeitiger Zugang zu Beta-Features
+
+Cashflow-Potenzial: 100 × €99 = €9.900 sofort. Reddit-Hook: „Erste 100 Founder bekommen Pro Lifetime für €99 — hilft mir das ohne VC zu bauen."
+
+### Team Plan (Woche 4+)
+**€15/Seat/Monat**
+- Shared Library, Permissions, Org-Search, Comments
+- Erst manuell aktiviert für 5 Pilot-Teams
+- Outreach zu Sprachschulen, Unis, Studienkreisen
+
+### Pro+ (später)
+**€19/Mo — Bring-Your-Own-Model**
+- Eigenen OpenAI/Anthropic-Key einkleben
+- Custom Prompts
+- API Access
+
+### Student/Teacher Discount
+**50% off mit .edu-Email-Verifikation**
+
+### Affiliate Program
+**30% Provision pro paid referral** (Sprachlehrer, YouTuber, Educators)
+
+---
+
+## 8 · Video-Quellen — was rein kommt, was nicht
+
+**Launch-Day:**
+- ✅ YouTube (öffentliche Videos)
+- ✅ Eigene MP3/MP4-Uploads (Whisper-Pipeline) — Pro-Feature
+
+**Woche 2 nach Launch:**
+- ✅ Podcast-RSS-URLs (öffentliche Podcasts)
+
+**Bewusst NICHT (siehe Strategie-Beratung):**
+- ❌ TikTok — API-Lockdown, rechtlich grau, zu kurze Videos, keine Wissensdichte
+- ❌ Instagram — Reels zu kurz, Scraping-Verbot
+- ✋ Vimeo / Loom / Wistia — Nische, irrelevant für Launch
+
+---
+
+## 9 · Blog — Option A (VozClara-authored, statisch)
+
+**Setup:** `/blog`-Route mit MDX, statisch generiert, kein DB.
+
+**Launch-Posts (10, im Sprint geschrieben):**
+1. „Introducing the Michelin Guide for YouTube" — der Launch-Pitch
+2. „How to learn German B2 with YouTube in 30 days"
+3. „Best AI YouTube channels in 2026 — rated by VozClara users"
+4. „From 90-minute lecture to study notes in 60 seconds"
+5. „Knowledge Pack of the Week: [topical pick]"
+6. „Why your second brain should live outside ChatGPT"
+7. „Building VozClara in public — Week 1"
+8. „A founder's case for the lifetime deal"
+9. „The 7-day VozClara workflow for researchers"
+10. „Roadmap: what's coming in the next 30 days"
+
+**Workflow:** Claude drafted, du machst Final-Edit + persönliche Stimme rein.
+
+**User-Generated-Content (Option B) NICHT** vor Q3, weil leere Community = tot wirkt + Solo-Founder kann Moderation nicht stemmen.
+
+---
+
+## 10 · Sprint-Plan — Tag für Tag
+
+**Heute Sa 17.5. — Pause + Strategie-Update**
+- ✅ Hero-Repositionierung deployed
+- ✅ Pack-Tiering + TL;DR + Difficulty deployed
+- ⏳ Nach Pause: Mode-Rebrand + Auto-Pick (2h)
+
+**So 18.5. — Auth Foundation**
+- Auth-System Teil 1: Worker-Endpoints + KV-Schema + Magic-Link
+- Email-Provider auswählen (Resend / Loops / MailerLite)
+
+**Mo 19.5. — Auth Complete**
+- Auth Teil 2: Google-OAuth + Login/Signup/Profile-Pages
+- Anonyme-Daten-Migration zum Account
+
+**Di 20.5. — Michelin Rating ⭐**
+- Pack-Rating-System (👍/👎 + 5-Sterne + 4 1-Tap-Signale)
+- `/discover/top-rated`
+- Library-Card-Stern-Aggregate
+
+**Mi 21.5. — Polish + Distribution**
+- Folders + Bulk Actions in Library
+- Public Pack URLs (Toggle pro Pack)
+- Pack-Generation-Fortschritts-Stepper + ETA + Tips
+
+**Do 22.5. — Pro-Pipeline**
+- Email-to-Pack (`save@vozclara.app`)
+- MP3/MP4-Uploads (Whisper)
+- Founder Deal: `/founder` Landing + Stripe Payment Link
+
+**Fr 23.5. — Activation Layer**
+- Onboarding-Wizard (4 Audience-Schritte)
+- 5 manuell *herausragend* polierte Sample-Packs
+- Recent-Packs Live-Feed (Social Proof)
+- Quality-Feedback-Loop (👍/👎 mit Grund)
+- Citation-Mode + Copy-Quote-Button
+
+**Sa 24.5. — Content + Tracking**
+- Blog mit 10 Launch-Posts (Claude drafted, du editest)
+- `/roadmap` + `/changelog` + `/help`
+- PostHog Event-Tracking
+- Email-Sequenz (4 Welcome-Mails)
+- `support@vozclara.app` Email-Forward (Cloudflare Email Routing)
+
+**So 25.5. — Polish**
+- Mobile-First-Polish-Pass (iPhone 14 viewport, alles fixen)
+- 404 + Error-Page
+- Status-Page (`status.vozclara.app`)
+- SEO: sitemap, robots, structured data, OG-Images
+- Final QA in allen 4 Locales
+
+**Mo 26.5. ODER Di 27.5. — LAUNCH**
+- Reddit-Posts (r/languagelearning, r/learnGerman, r/Spanish, r/productivity, r/getstudying, r/de)
+- HN-Submission („Show HN: VozClara — Michelin Guide for YouTube")
+- X/Twitter-Thread
+- Discord-Community öffnen
+- Founder-Deal aktivieren
+
+---
+
+## 11 · Post-Launch-Roadmap (4 Wochen)
+
+| Woche | Hauptthema | Reddit/HN-Re-Pitch-Story |
+|---|---|---|
+| Launch | Founder Deal + Michelin Rating + Sample Packs | „I built VozClara — first 100 founders get lifetime" |
+| Woche 2 | **Watch Mode** + **Browser Extension** + **Highlights & Annotations** + Audio Mode | „Now with synced video translation + Chrome extension + Readwise-style highlights" |
+| Woche 3 | **Cross-Pack-Synthese** + **Long-form Article Generator** + Mind-Map View + Notion Export | „Ask questions across ALL your saved videos — turn your library into a research assistant" |
+| Woche 4 | **Team Workspaces** Beta + Comprehension Quiz + Cultural/Grammar Spotlight + YouTuber-Claim-Pages | „Turn any video into an interactive study session + Teams for orgs and schools" |
+
+---
+
+## 12 · Channel-Subscriptions (Pro-Feature, Woche 2)
+
+Für News-Junkies / Kanal-Sammler:
+
+- Settings-Seite: User pastet YouTube-Channel-URL
+- Worker-Cron prüft täglich auf neue Videos
+- Auto-Pack-Generierung in User-Library
+- Personal Daily Digest Email
+- `/discover/channels` mit kuratierten Channel-Listen pro Thema (AI/Tech, Politik DE, Business, Sprachen)
+- „Folge diesem Kanal automatisch?" CTA in Pack-Footer
+
+---
+
+## 13 · Onboarding-Personalisierung
+
+Beim Signup: „Wofür nutzt du VozClara?" → 4 Optionen, prägt:
+- Default-Mode bei neuen Packs
+- Welche 3 Sample-Packs auf dem Home-Dashboard
+- Welche Tooltips erscheinen
+- Welche Email-Onboarding-Sequenz
+
+---
+
+## 14 · Welcome-Email-Sequenz
+
+- **Day 0:** „Willkommen, hier ist dein erstes Sample-Pack zum Probieren"
+- **Day 1:** „Drei Wege, deinen ersten Pack zu nutzen"
+- **Day 3:** „Du hast 0 / X Packs erstellt — brauchst du Hilfe?"
+- **Day 7:** „Diese Features wirst du gut finden"
+
+---
+
+## 15 · KI-Strategie (ehrlich)
+
+**VozClara hat keine eigene KI** — keiner baut eigene Modelle, nicht mal Notion oder Granola.
+
+**Was VozClara stark macht:**
+1. Prompt-Engineering pro Sprache + CEFR-Level
+2. Pipeline-Komposition (Transcript → Chunking → Vocab → Translation → Embedding → Summary)
+3. Caching (gleiches Video = null Re-Kosten)
+4. **Hybrid-Modell-Strategie:**
+   - **Free:** Workers AI Llama 3.3 70B (~€0.001/Pack, fast gratis)
+   - **Pro:** Claude Sonnet 4.5 oder GPT-5
+   - **Pro+:** User klebt eigenen API-Key rein (BYOM)
+
+**Was wir dem Markt sagen:** Nicht „beste KI". Sondern „Beste Pipeline für Video-Wissen". Niemand kauft KI — alle kaufen Workflows.
+
+---
+
+## 16 · Der Moat — warum keiner es einfach nachbaut
+
+Ehrlich: technisch *könnte* ein Entwickler die Basis in 2 Wochen mit Claude nachbauen. Das ist nicht der Schutz.
+
+Der echte Moat ist **Compound Advantage:**
+
+1. **Editorial Polish-Decke** — LEON MARÉ Design, Cormorant + Cinzel, redaktioneller Ton. Kostet Monate. Hält 95% der Klone ab.
+2. **Daten-Compound** — Prompts, CEFR-Mapping, Channel-Directory, Curated Daily Picks, Frequenz-Listen werden wöchentlich besser.
+3. **Multi-Sprachen-Pipeline** — 4 Locales konsistentes „Du" + DSGVO + DE-Hosting. Wochen pro Locale.
+4. **Cross-Pack-Intelligence** — Vectorize + Embeddings + Synthese + UI ist 2–3 Wochen für Solo-Dev. Ohne User-Daten lohnt sich Aufwand nicht.
+5. **Geschwindigkeit + Brand** — du bist Dienstag/Montag live. Bis jemand nachbaut hast du Reddit, Signups, Cases.
+6. **Pack-Rating-Daten** — wird nach 6 Monaten zur unique Quality-Datenbank für YouTube-Bildungsinhalte. Niemand sonst hat das.
+
+---
+
+## 17 · Was wir explizit NICHT bauen (jetzt)
+
+- **TikTok / Instagram-Integration** — API-Lockdown + zu kurze Videos + rechtlich grau
+- **Autonome KI-Agenten** — falscher Abstraktionslevel, teuer + riskant. Tools statt Agenten.
+- **User-Generated-Blog** — Solo-Founder kann Moderation nicht stemmen
+- **Eigenes LLM-Modell** — irrational, Off-the-shelf reicht
+- **Native iOS App** — TWA reicht erstmal, App Store kommt bei 200+ WAU
+- **Stripe-Subscriptions** — nur Payment-Link für Founder Deal jetzt. Subscriptions erst bei 30+ Signups
+- **Apple App Store + Google Play** — bei 200+ / 50+ WAU
+- **Worker-Code-Split** — defer bis post-launch (2611-Zeilen-Monolith ist ok für jetzt)
+
+---
+
+## 18 · Quality-Sicherheitsnetz
+
+**Vor jeder Pack-Anzeige:**
+1. Quality Auto-Eval (Score 0–1): hat TL;DR? hat N Sections? hat Vocab mit Translations?
+2. Wenn Score <0.7 → automatisch regenerieren
+3. Bei zweitem Fail → Pack mit Warnung anzeigen + Feedback-Prompt
+
+**User-Feedback-Loop:**
+- 👍/👎 unten an jedem Pack
+- Bei 👎: Grund-Picker („Übersetzung falsch / Vokabeln zu einfach / Summary unklar / KI hat halluziniert")
+- Daten in KV, wöchentlicher Claude-Job analysiert + schlägt Prompt-Verbesserungen vor
+
+**Quality-Regression-Alert:**
+- Wenn >20% Packs in 24h Negative-Feedback bekommen → Email an Christian
+
+---
+
+## 19 · Reddit-Launch-Strategie
+
+**Subreddits (in Reihenfolge der Reihenfolge):**
+1. **r/languagelearning** (1.4M) — primärer Sub, Sprachlerner-Pitch
+2. **r/learnGerman / r/Spanish** (je 200k+) — Sprache-spezifisch
+3. **r/productivity** (3M) — Knowledge Worker Pitch
+4. **r/getstudying** (700k) — Studenten-Pitch
+5. **r/de** (1M) — DE-Markt
+6. **HackerNews** — „Show HN: VozClara — Michelin Guide for YouTube"
+
+**Title-Templates (je Subreddit angepasst):**
+- r/languagelearning: „I built a tool that turns YouTube into structured language-learning material (with Anki export + SRS)"
+- r/productivity: „I built a 'Michelin Guide' for YouTube — rate the quality of educational videos"
+- HN: „Show HN: VozClara — knowledge layer over everything you watch"
+
+**Wichtig:**
+- Nicht alle gleichzeitig — Mo Reddit + Di HN + Mi X/Twitter
+- Echte Antworten auf Comments (nicht Marketing-Sprech)
+- Founder-Deal-Limit als „Soft Urgency" — *nicht* hyped, *nicht* aggressiv
+
+---
+
+## 20 · Offene Entscheidungen (zu klären beim PC-Start)
+
+1. **Auth-Provider:** Magic-Link + Google → ja. Apple/Passkey später → ja (oder bei Launch?)
+2. **Rating-Mechanik:** Anonyme 👍/👎 + Account-Pflicht für 5-Sterne → ja oder nein?
+3. **Launch-Tag final:** Mo 26.5. oder Di 27.5.?
+4. **Blog-Drafting:** Claude drafted, Christian editet → ja oder anders?
+5. **Founder-Deal-Preis:** €99 für erste 100? Oder €79 (erste 50) + €99 (nächste 50) gestaffelt?
+6. **Pro-Preis:** €9/Mo (Default) oder €8 oder €10?
+7. **Welcome-Email-Provider:** Resend (€20/Mo, dev-friendly) / Loops (€49/Mo, polished) / MailerLite (€10/Mo, ältere UI)?
+8. **Pack-Rating: nur public Packs oder alle?** Mein Vote: nur public, sonst Privacy-Issues.
+
+---
+
+## 21 · Tech-Stack (Referenz)
+
+- **Frontend:** Vite + React 18 + TS + Tailwind + React Router 7
+- **Worker:** Cloudflare Workers + KV + Vectorize + Workers AI
+- **AI-Modelle:** Llama 3.3 70B (Free) / Claude Sonnet 4.5 oder GPT-5 (Pro)
+- **Auth:** Workers + KV + JWT-Cookies + Magic-Link + Google-OAuth
+- **Email:** Resend/Loops/MailerLite (zu entscheiden)
+- **Analytics:** Cloudflare Web Analytics + PostHog
+- **Errors:** Sentry (DE-Region)
+- **Payments:** Stripe Payment Links (Founder Deal), Subscriptions später
+- **PWA:** Service Worker + Manifest + Splash Screens
+- **CI:** GitHub Actions
+- **Hosting:** Cloudflare Pages + Workers + Vectorize
+- **Domain:** vozclara.app (Cloudflare Registrar)
+
+---
+
+## 22 · Repo-Layout (Referenz)
+
+```
+/src                    # React frontend
+  /components/landing  # Landing page sections
+  /routes              # Pages (PackPage, LibraryPage, etc.)
+  /lib                 # Domain libs (pack, srs, anki, shadowing, etc.)
+  /hooks               # React hooks
+/worker                # Cloudflare Worker (monolith, 2611 LOC)
+  /src/index.ts        # All endpoints
+  /src/webpush.ts      # Web Push protocol
+  /src/sentry.ts       # Sentry envelope
+/scripts               # Build scripts (splash gen, etc.)
+/public                # Static assets, manifest
+LAUNCH_PLAN.md         # This file
+```
+
+---
+
+## 23 · Wenn du am PC weitermachst — Quick Start
+
+```bash
+git pull
+npm install
+npm run dev            # Frontend auf localhost:5173
+cd worker && npm run dev  # Worker auf localhost:8787
+```
+
+Erster Schritt aus dem Sprint: **Mode-Rebrand + Auto-Pick** (2h).
+Dann: **Auth Foundation** (So) → **Auth Complete** (Mo) → **Michelin Rating** (Di) → siehe §10.
+
+---
+
+## 24 · Vision (langfristig)
+
+> VozClara ist das **persönliche zweite Gehirn für alles was du schaust**.
+> Sprachlerner nutzen es um sich Material zu bauen. Knowledge Worker nutzen
+> es um Talks und Podcasts zu verlieren. Studenten verwandeln Vorlesungen in
+> Studienmaterial. Und jeder dieser Use-Cases füttert die gleiche
+> Knowledge-Graph-Infrastruktur, die mit jedem Pack wertvoller wird.
+>
+> In 12 Monaten: VozClara ist DIE Marke für Video-Wissen. „Hast du den
+> Pack davon?" wird so selbstverständlich wie „Hast du das Notion-Doc?"
+>
+> Wirtschaftlich: 10.000 Pro-User → €1M ARR. Plus B2B Team-Pläne. Plus
+> White-Label für Sprachschulen.
+
+Mache es gut. Bleib geduldig. Ship wöchentlich.
+
+— Letzte Pre-Launch-Beratung, 17.5.2026
