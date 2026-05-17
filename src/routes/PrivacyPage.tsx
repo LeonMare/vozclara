@@ -106,7 +106,14 @@ export function PrivacyPage() {
 }
 
 function privacyLabels(locale: string) {
-  const lastUpdated = 'May 2026';
+  // Month name varies per locale — May / Mayo / Maio / Mai.
+  const lastUpdated = locale.startsWith('es')
+    ? 'mayo 2026'
+    : locale.startsWith('pt')
+      ? 'maio 2026'
+      : locale.startsWith('de')
+        ? 'Mai 2026'
+        : 'May 2026';
 
   if (locale.startsWith('es')) return {
     headTitle: 'Privacidad — Voz Clara',

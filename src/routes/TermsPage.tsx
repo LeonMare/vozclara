@@ -99,7 +99,13 @@ export function TermsPage() {
 }
 
 function termsLabels(locale: string) {
-  const lastUpdated = 'May 2026';
+  const lastUpdated = locale.startsWith('es')
+    ? 'mayo 2026'
+    : locale.startsWith('pt')
+      ? 'maio 2026'
+      : locale.startsWith('de')
+        ? 'Mai 2026'
+        : 'May 2026';
 
   if (locale.startsWith('es')) return {
     headTitle: 'Términos de uso — Voz Clara',

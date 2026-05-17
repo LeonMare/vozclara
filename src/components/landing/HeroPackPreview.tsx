@@ -22,7 +22,8 @@ type TabKey = 'summary' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'q
  * plate effect on the outer frame, no glassmorphism.
  */
 export function HeroPackPreview() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const cta = previewCta(locale);
   const [mode, setMode] = useState<Mode>('business');
   const [tab, setTab] = useState<TabKey>('summary');
   const [lang, setLang] = useState<Language>('es');
@@ -168,13 +169,13 @@ export function HeroPackPreview() {
             to={`/pack/${pack.id}`}
             className="font-sans text-[11px] text-graphit/65 transition hover:text-gold"
           >
-            Ver el Knowledge Pack completo →
+            {cta.viewFull} →
           </Link>
         </div>
       </div>
 
       <p className="mt-4 text-center font-serif text-xs italic text-graphit/55">
-        Cambia el modo o explora las pestañas — todo es contenido real.
+        {cta.tip}
       </p>
     </div>
   );
@@ -324,4 +325,31 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
   }
 
   return null;
+}
+
+/**
+ * Tiny i18n table for the two strings beneath the preview that aren't
+ * worth a full Strings entry. Falls back to English. The CTAs follow
+ * the visitor's interface locale, NOT the pack's outputLang — the pack
+ * content stays in its sample-pack language (Spanish for the business
+ * sample) but "View the full pack" + the tip line belong to the
+ * surrounding UI.
+ */
+function previewCta(locale: string) {
+  if (locale.startsWith('es')) return {
+    viewFull: 'Ver el Knowledge Pack completo',
+    tip: 'Cambia el modo o explora las pestañas — todo es contenido real.',
+  };
+  if (locale.startsWith('pt')) return {
+    viewFull: 'Ver o Knowledge Pack completo',
+    tip: 'Muda o modo ou explora as abas — tudo é conteúdo real.',
+  };
+  if (locale.startsWith('de')) return {
+    viewFull: 'Den vollen Knowledge Pack ansehen',
+    tip: 'Wechsel den Modus oder erkund die Tabs — alles ist echter Inhalt.',
+  };
+  return {
+    viewFull: 'See the full Knowledge Pack',
+    tip: 'Switch mode or explore the tabs — every line is real content.',
+  };
 }

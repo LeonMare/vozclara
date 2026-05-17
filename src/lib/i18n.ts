@@ -491,15 +491,15 @@ export const STRINGS: Record<Locale, Strings> = {
     cambiarVideo: 'Video wechseln',
 
     heroEyebrow: 'WISSENS-CLOUD · VIDEO · KI',
-    heroHeadline: 'Ihre mehrsprachige Wissens-Cloud für Videos.',
-    heroSub: 'Speichern Sie jedes Video, extrahieren Sie die Kernideen, übersetzen Sie sie in Ihre Sprache und bauen Sie eine durchsuchbare Lernbibliothek aus allem auf, was Sie sehen.',
+    heroHeadline: 'Deine mehrsprachige Wissens-Cloud für Videos.',
+    heroSub: 'Speichere jedes Video, extrahiere die Kernideen, bau dir eine durchsuchbare Lernbibliothek — in deiner Sprache.',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Wissens-Cloud starten',
     seeHowCTA: 'So funktioniert es',
     invalidUrl: 'YouTube-Link nicht erkannt.',
     trySamplePack: 'Beispiel-Pack ansehen',
 
-    problemTitle: 'Sie konsumieren Stunden an Videos. Sie behalten kaum etwas.',
+    problemTitle: 'Du konsumierst Stunden an Videos. Du behältst kaum etwas.',
     problemBody: 'Wir sehen täglich YouTube, Podcasts und Kurse. Die wertvollsten Ideen verschwinden innerhalb einer Woche. Schlimmer: sie sind nicht durchsuchbar. Das Wissen bleibt im Video gefangen.',
 
     solutionTitle: 'Video rein. Strukturiertes Wissen raus.',
@@ -511,8 +511,8 @@ export const STRINGS: Record<Locale, Strings> = {
       'Jedes YouTube-Video auf Englisch, Spanisch oder Deutsch.',
       'Drei Modi: Learn, Business, Creator. Jeder mit eigener Stimme.',
       'Zusammenfassung, Ideen, Aktionsplan, Vokabular und mehr.',
-      'Mit Tags, organisiert, durchsuchbar. Bleibt auf Ihrem Gerät.',
-      'Stellen Sie Fragen zu allem was Sie gespeichert haben.',
+      'Mit Tags, organisiert, durchsuchbar. Bleibt auf deinem Gerät.',
+      'Stell Fragen zu allem was du gespeichert hast.',
     ],
 
     kpTitle: 'Anatomie eines Knowledge Packs',
@@ -525,17 +525,17 @@ export const STRINGS: Record<Locale, Strings> = {
       { label: 'Action Plan', example: 'Konkrete Schritte für diese Woche.' },
       { label: 'Vokabular', example: 'Wichtige Begriffe mit Kontext und Übersetzung.' },
       { label: 'Zitate', example: 'Prägnante Sätze mit Zeitstempel und Sprecher.' },
-      { label: 'Quiz', example: 'Fragen zur Überprüfung Ihres Verständnisses.' },
+      { label: 'Quiz', example: 'Fragen zur Überprüfung deines Verständnisses.' },
       { label: 'Transkription', example: 'Vollständiger Text mit Video-Sync.' },
-      { label: 'Tags', example: 'Kategorien zur Organisation Ihrer Bibliothek.' },
+      { label: 'Tags', example: 'Kategorien zur Organisation deiner Bibliothek.' },
     ],
 
-    libraryTitle: 'Ihre Bibliothek, nicht die von YouTube',
-    librarySub: 'Alles was Sie speichern, organisiert. Filter nach Sprache, Modus, Kategorie und Datum.',
+    libraryTitle: 'Deine Bibliothek, nicht die von YouTube',
+    librarySub: 'Alles was du speicherst, organisiert. Filter nach Sprache, Modus, Kategorie und Datum.',
 
     askEyebrow: 'FRAGEN · BIBLIOTHEK · KI',
-    askTitle: 'Fragen Sie Ihre Bibliothek.',
-    askSub: 'Sprechen Sie mit Ihrem eigenen Wissensarchiv:',
+    askTitle: 'Frag deine Bibliothek.',
+    askSub: 'Sprich mit deinem eigenen Wissensarchiv:',
     askExamples: [
       'Was haben meine gespeicherten Videos über Vertrieb gesagt?',
       'Fasse alles zusammen was ich über KI gespeichert habe, auf Deutsch.',
@@ -553,8 +553,8 @@ export const STRINGS: Record<Locale, Strings> = {
       { name: 'Pro · in Kürze', price: '9 €', period: '/ Monat', blurb: 'Wenn es kommt: was der Free-Plan nicht leisten kann.', features: ['Geräte-Sync', 'Premium-Stimme für Text-to-Speech', 'Export nach PDF und Notion', 'Quote-Cards mit deinem Branding', 'Priority-Support'], cta: 'Auf Warteliste' },
     ],
 
-    finalTitle: 'Beginnen Sie das Wissen hinter jedem Video zu speichern.',
-    finalSub: 'Ihr erster Knowledge Pack in unter einer Minute.',
+    finalTitle: 'Fang an, das Wissen hinter jedem Video zu speichern.',
+    finalSub: 'Dein erster Knowledge Pack in unter einer Minute.',
     finalCTA: 'Jetzt starten',
 
     newPageTitle: 'Neuer Knowledge Pack',
@@ -562,7 +562,7 @@ export const STRINGS: Record<Locale, Strings> = {
     stepMode: 'Modus',
     stepLanguage: 'Sprache',
     stepGenerate: 'Erzeugen',
-    chooseModeTitle: 'Wählen Sie wie Sie dieses Video lesen wollen',
+    chooseModeTitle: 'Wähl wie du dieses Video lesen willst',
     chooseModeSub: 'Der Modus bestimmt was extrahiert und wie es präsentiert wird.',
     modeRecommended: 'Empfohlen',
     outputLangLabel: 'Sprache des Knowledge Packs',
@@ -599,8 +599,8 @@ export const STRINGS: Record<Locale, Strings> = {
       quotes: 'Zitate', socialAngles: 'Social', transcript: 'Transkription',
     },
 
-    libraryEmptyTitle: 'Ihre Bibliothek ist leer.',
-    libraryEmptyBody: 'Erstellen Sie Ihren ersten Knowledge Pack aus einem YouTube-Video.',
+    libraryEmptyTitle: 'Deine Bibliothek ist leer.',
+    libraryEmptyBody: 'Erstell deinen ersten Knowledge Pack aus einem YouTube-Video.',
     libraryEmptyCTA: 'Neuer Knowledge Pack',
     libraryStats: ({ packs, ideas, langs, thisWeek }) =>
       `${packs} ${packs === 1 ? 'Pack' : 'Packs'} · ${ideas} Kernideen · ${langs} ${langs === 1 ? 'Sprache' : 'Sprachen'} · diese Woche: ${thisWeek}`,
@@ -613,7 +613,7 @@ export const STRINGS: Record<Locale, Strings> = {
     filterDate30: '30 Tage',
     filterDateAll: 'Immer',
 
-    pulsaReproducir: 'Drücken Sie Wiedergabe.',
+    pulsaReproducir: 'Drück Wiedergabe.',
     iniciarVoz: 'Stimme starten',
     vozActivada: 'Stimme aktiv',
     mostrarOriginal: 'Original anzeigen',
