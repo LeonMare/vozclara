@@ -17,6 +17,7 @@
  */
 
 import { sendPush, type PushSubscriptionData } from './webpush';
+import { captureWorkerError } from './sentry';
 
 interface Env {
   SUPADATA_API_KEY?: string;
@@ -74,6 +75,18 @@ interface Env {
   VAPID_PUBLIC_KEY?: string;
   VAPID_PRIVATE_KEY?: string;
   VAPID_SUBJECT?: string;
+  /**
+   * Shared secret for admin-only endpoints (currently
+   * /api/curated/refresh). Set via `wrangler secret put ADMIN_TOKEN`.
+   * Absent = those endpoints respond 503 and stay unreachable.
+   */
+  ADMIN_TOKEN?: string;
+  /**
+   * Sentry DSN for worker-side error capture. Same project as the
+   * frontend; events get tagged environment=worker so the two
+   * sources are filterable in the dashboard.
+   */
+  SENTRY_DSN?: string;
 }
 
 const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
@@ -142,11 +155,52 @@ const LLM_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const GENRE_MODEL = '@cf/meta/llama-3.1-8b-instruct';
 
 export default {
-  async fetch(req: Request, env: Env): Promise<Response> {
+  async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (req.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
     }
 
+    try {
+      return await routeRequest(req, env);
+    } catch (err) {
+      // Capture every uncaught handler error in Sentry tagged
+      // environment=worker. Fire-and-forget via waitUntil so the
+      // 500 response goes out without waiting on telemetry.
+      const url = new URL(req.url);
+      ctx.waitUntil(
+        captureWorkerError(env, err, {
+          url: req.url,
+          method: req.method,
+          ip: req.headers.get('CF-Connecting-IP') ?? undefined,
+          tags: { endpoint: url.pathname },
+        }),
+      );
+      console.error('worker_uncaught:', err);
+      return json({ error: 'internal_error' }, 500);
+    }
+  },
+
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    // Two crons fire this handler. Dispatch by the cron expression so
+    // each tick only runs its job:
+    //   "0 * * * *"     → push notifications (hourly)
+    //   "30 19 * * *"   → curated-pack auto-generation (daily 19:30 UTC)
+    try {
+      if (event.cron === '30 19 * * *') {
+        ctx.waitUntil(runDailyCurated(env));
+      } else {
+        ctx.waitUntil(runPushCron(env));
+      }
+    } catch (err) {
+      ctx.waitUntil(
+        captureWorkerError(env, err, { tags: { cron: event.cron } }),
+      );
+      console.error('cron_uncaught:', err);
+    }
+  },
+};
+
+async function routeRequest(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
 
     if (url.pathname === '/' || url.pathname === '/health') {
@@ -222,6 +276,27 @@ export default {
       return handleCurated(env);
     }
 
+    if (url.pathname === '/api/subscribe' && req.method === 'POST') {
+      // Rate-limited per IP so a script can't flood the waitlist KV
+      // with garbage e-mails.
+      const limit = await rateLimit(env, req, 'subscribe', 5);
+      if (limit) return limit;
+      return handleSubscribe(req, env);
+    }
+
+    if (url.pathname === '/api/curated/refresh' && req.method === 'POST') {
+      // Admin-only manual trigger for the daily-curated cron. Used to
+      // verify the YouTube RSS → KV pipeline without waiting for
+      // 19:30 UTC. Gated by an X-Refresh-Token header that must match
+      // the ADMIN_TOKEN wrangler secret. Absent secret = 503.
+      if (!env.ADMIN_TOKEN) return json({ error: 'admin_disabled' }, 503);
+      if (req.headers.get('X-Refresh-Token') !== env.ADMIN_TOKEN) {
+        return json({ error: 'unauthorized' }, 401);
+      }
+      await runDailyCurated(env);
+      return json({ ok: true });
+    }
+
     if (url.pathname === '/api/push/config' && req.method === 'GET') {
       return json({
         available: !!(env.PUSH_SUBS && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY),
@@ -249,20 +324,7 @@ export default {
     }
 
     return json({ error: 'not_found' }, 404);
-  },
-
-  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    // Two crons fire this handler. Dispatch by the cron expression so
-    // each tick only runs its job:
-    //   "0 * * * *"     → push notifications (hourly)
-    //   "30 19 * * *"   → curated-pack auto-generation (daily 19:30 UTC)
-    if (event.cron === '30 19 * * *') {
-      ctx.waitUntil(runDailyCurated(env));
-    } else {
-      ctx.waitUntil(runPushCron(env));
-    }
-  },
-};
+}
 
 /* ─── /api/transcript ───────────────────────────────────────────────────── */
 
@@ -2281,12 +2343,13 @@ interface CuratedFeed {
 
 const CURATED_FEEDS: CuratedFeed[] = [
   // Tagesschau 20:00 Uhr — the German daily news broadcast. Channel id
-  // pulled from the official Tagesschau YouTube. Confirm via "View Page
-  // Source" on the channel page and search for "channelId":"UC...".
+  // resolved via "View Page Source" on https://www.youtube.com/@tagesschau
+  // → "browseId":"UC5NOEUbkLheQcaaRldYW5GA". The previous id was wrong
+  // and the RSS feed returned 404 silently every day.
   {
     id: 'de-news',
     source: 'Tagesschau',
-    channelId: 'UC5lrAvLLk5yC8X7Z4Pq2N_w',
+    channelId: 'UC5NOEUbkLheQcaaRldYW5GA',
     titleMatch: 'tagesschau 20:00 uhr',
     sourceLang: 'de',
     packLangs: ['es', 'en'],
@@ -2480,4 +2543,69 @@ async function rateLimit(
     /* ignore — write failure shouldn't block the user */
   }
   return null;
+}
+
+/* ─── /api/subscribe — Pro-tier waitlist ──────────────────────────── *
+ *
+ * Stores the e-mail under a `waitlist:<sha256>` key in KV with a
+ * timestamp + source + locale payload. Re-submissions of the same
+ * address just refresh the entry. The /pricing Pro-tier CTA writes
+ * here; the alert("waitlist confirm") elsewhere is being replaced
+ * with a real form that posts to this endpoint.
+ *
+ * No marketing list, no double-opt-in flow yet — that's wired up
+ * once the list has a handful of real signups and an actual launch
+ * to mail people about.
+ */
+
+interface EmailSubscribeBody {
+  email?: string;
+  locale?: string;
+  source?: string;
+}
+
+async function handleSubscribe(req: Request, env: Env): Promise<Response> {
+  if (!env.PUSH_SUBS) return json({ error: 'storage_disabled' }, 503);
+
+  let body: EmailSubscribeBody;
+  try {
+    body = (await req.json()) as SubscribeBody;
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+
+  const email = (body.email ?? '').toString().trim().toLowerCase();
+  if (!email || !isValidEmail(email) || email.length > 200) {
+    return json({ error: 'invalid_email' }, 400);
+  }
+
+  const locale = ['es', 'pt', 'de', 'en'].includes((body.locale ?? '').toLowerCase())
+    ? (body.locale as string).toLowerCase()
+    : 'en';
+  const source = (body.source ?? 'unknown').toString().slice(0, 64);
+
+  const hash = await sha256Hex(email);
+  const key = `waitlist:${hash}`;
+  await env.PUSH_SUBS.put(
+    key,
+    JSON.stringify({
+      email,
+      locale,
+      source,
+      createdAt: Date.now(),
+      ip: req.headers.get('CF-Connecting-IP') ?? null,
+    }),
+  );
+  return json({ ok: true });
+}
+
+function isValidEmail(s: string): boolean {
+  // Liberal RFC 5322-ish check — good enough to reject obvious junk
+  // without false-rejecting legitimate addresses with + tags.
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+}
+
+async function sha256Hex(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
 }

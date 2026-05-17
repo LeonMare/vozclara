@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
 import { LandingAskDemo } from './LandingAskDemo';
+import { WaitlistButton } from '../WaitlistButton';
 
 /* ─── 02 · Problem ─────────────────────────────────────────────────────── */
 
@@ -261,18 +262,11 @@ export function PricingPreview() {
                     {ctaCopy}
                   </Link>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => alert(ctaLabels.waitlistConfirm)}
-                    className={[
-                      'mt-6 rounded-card py-2.5 font-sans text-sm font-medium transition',
-                      isFeatured
-                        ? 'bg-navy text-creme hover:bg-navy/90'
-                        : 'border border-navy/20 bg-white text-navy hover:border-gold',
-                    ].join(' ')}
-                  >
-                    {ctaCopy}
-                  </button>
+                  <WaitlistButton
+                    ctaCopy={ctaCopy}
+                    source={`pricing-${tier.name.split(' ')[0].toLowerCase()}`}
+                    variant={isFeatured ? 'featured' : 'default'}
+                  />
                 )}
               </div>
             );
