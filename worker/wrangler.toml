@@ -31,6 +31,12 @@ index_name = "vozclara-knowledge"
 binding = "PUSH_SUBS"
 id = "cfd42230e80345ed9cba587136e8919d"
 
+# KV — magic-link auth (users, sessions, magic tokens, email index).
+# Provisioned 2026-05-18 via `wrangler kv namespace create vc-auth`.
+[[kv_namespaces]]
+binding = "AUTH"
+id = "32113624ca574c16867b434f453b3237"
+
 # Crons:
 #   • Hourly tick → push notifications when (localHour == reminderHour
 #     AND nextDueAt <= now AND lastNotifiedYmd != today)

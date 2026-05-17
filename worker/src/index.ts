@@ -18,6 +18,12 @@
 
 import { sendPush, type PushSubscriptionData } from './webpush';
 import { captureWorkerError } from './sentry';
+import {
+  handleAuthRequest,
+  handleAuthVerify,
+  handleAuthMe,
+  handleAuthLogout,
+} from './auth';
 
 interface Env {
   SUPADATA_API_KEY?: string;
@@ -87,6 +93,20 @@ interface Env {
    * sources are filterable in the dashboard.
    */
   SENTRY_DSN?: string;
+  /**
+   * KV namespace for the magic-link auth layer. Stores user records,
+   * sessions, magic tokens, and the email→id lookup index. Absent
+   * binding → /api/auth/* respond 503 and the app stays in
+   * anonymous-first mode.
+   */
+  AUTH?: KVNamespace;
+  /** Resend HTTP-API key for sending magic-link emails. Absent →
+   *  auth still works in dev (link is logged to console). */
+  RESEND_API_KEY?: string;
+  /** Verified Resend sender for outgoing mails. */
+  AUTH_FROM_ADDRESS?: string;
+  /** Public site origin, used to construct verify-link URLs. */
+  SITE_URL?: string;
 }
 
 const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
@@ -321,6 +341,30 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
       // push to the caller's subscription so they can verify the round
       // trip works before relying on the cron.
       return handlePushTest(req, env);
+    }
+
+    /* ─── /api/auth/* — magic-link sign-in ──────────────────────────── *
+     *
+     * Anonymous-first product, so these routes only activate when the
+     * AUTH KV binding is provisioned. Until then they 503 and the
+     * frontend stays in IndexedDB-only mode. See worker/src/auth.ts.
+     */
+    if (url.pathname === '/api/auth/request' && req.method === 'POST') {
+      const limit = await rateLimit(env, req, 'auth_request', 5);
+      if (limit) return limit;
+      return handleAuthRequest(req, env);
+    }
+
+    if (url.pathname === '/api/auth/verify' && req.method === 'GET') {
+      return handleAuthVerify(req, env);
+    }
+
+    if (url.pathname === '/api/auth/me' && req.method === 'GET') {
+      return handleAuthMe(req, env);
+    }
+
+    if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
+      return handleAuthLogout(req, env);
     }
 
     return json({ error: 'not_found' }, 404);
