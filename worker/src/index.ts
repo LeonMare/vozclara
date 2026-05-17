@@ -245,8 +245,16 @@ export default {
     return json({ error: 'not_found' }, 404);
   },
 
-  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(runPushCron(env));
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    // Two crons fire this handler. Dispatch by the cron expression so
+    // each tick only runs its job:
+    //   "0 * * * *"     → push notifications (hourly)
+    //   "30 19 * * *"   → curated-pack auto-generation (daily 19:30 UTC)
+    if (event.cron === '30 19 * * *') {
+      ctx.waitUntil(runDailyCurated(env));
+    } else {
+      ctx.waitUntil(runPushCron(env));
+    }
   },
 };
 
@@ -2035,7 +2043,7 @@ function notificationPayload(
  */
 
 interface CuratedItem {
-  id: string;              // /pack/:id navigates here
+  id: string;              // identifier; static-fallback IDs map to /pack/:id
   title: string;           // video title
   sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
   packLangs: string[];     // languages the pack is generated in
@@ -2043,6 +2051,14 @@ interface CuratedItem {
   publishedAt: number;     // ms epoch — source video publication date
   source: string;          // channel name, e.g. "Tagesschau"
   excerpt: string;         // one-line teaser shown on the card
+  /**
+   * Present on auto-generated entries — the YouTube video id the daily
+   * cron picked. Cards with a videoId open the Generator pre-filled so
+   * the visitor can produce their own Pack in their own locale + mode.
+   * Static fallback items (sample-* packs) omit this and link directly
+   * to /pack/:id.
+   */
+  videoId?: string;
 }
 
 const FALLBACK_CURATED: CuratedItem[] = [
@@ -2226,4 +2242,180 @@ function buildChatSystemPrompt(pack: ChatPackContext, langName: string): string 
   ]
     .filter(Boolean)
     .join('\n');
+}
+
+/* ─── Curated daily cron ──────────────────────────────────────────── *
+ *
+ * Pulls the latest matching video from each configured YouTube channel
+ * once a day and writes a CuratedItem into KV. The /api/curated
+ * endpoint returns the freshest entries first, falling back to the
+ * static seed when KV is empty.
+ *
+ * v1 stores metadata only — title, video URL, published date, etc.
+ * Click → /new?v=<videoId> opens the Generator pre-filled, the user
+ * generates the actual Pack themselves locally. v2 will move pack
+ * generation server-side so every visitor gets the same shared pack
+ * with one click; for now, lightweight is good enough to ship the
+ * marketing flywheel.
+ *
+ * YouTube RSS is free, no API key, no quotas — the canonical feed
+ * URL is https://www.youtube.com/feeds/videos.xml?channel_id=<id>.
+ */
+
+interface CuratedFeed {
+  id: string;                         // 'de-news', etc.
+  source: string;                     // 'Tagesschau' — shown on the card
+  channelId: string;                  // YouTube channel id
+  titleMatch?: string;                // regex (string form) to filter the feed entries
+  sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
+  packLangs: Array<'es' | 'pt' | 'de' | 'en' | 'fr'>;
+  mode: 'learn' | 'business' | 'creator';
+  excerpt?: string;                   // optional one-line description for cards
+}
+
+const CURATED_FEEDS: CuratedFeed[] = [
+  // Tagesschau 20:00 Uhr — the German daily news broadcast. Channel id
+  // pulled from the official Tagesschau YouTube. Confirm via "View Page
+  // Source" on the channel page and search for "channelId":"UC...".
+  {
+    id: 'de-news',
+    source: 'Tagesschau',
+    channelId: 'UC5lrAvLLk5yC8X7Z4Pq2N_w',
+    titleMatch: 'tagesschau 20:00 uhr',
+    sourceLang: 'de',
+    packLangs: ['es', 'en'],
+    mode: 'business',
+    excerpt: 'Die Nachrichten des Tages aus Deutschland — Originalton, übersetzt.',
+  },
+];
+
+interface VideoRef {
+  id: string;       // 11-char YouTube id
+  title: string;
+  publishedAt: number;
+}
+
+async function runDailyCurated(env: Env): Promise<void> {
+  if (!env.PUSH_SUBS) {
+    console.log('curated_cron_skip: kv_unbound');
+    return;
+  }
+  let added = 0;
+  let skipped = 0;
+  let failed = 0;
+
+  for (const feed of CURATED_FEEDS) {
+    try {
+      const video = await fetchLatestVideo(feed);
+      if (!video) {
+        skipped += 1;
+        continue;
+      }
+      const today = ymdLocal(Date.now());
+      const packId = `curated-${feed.id}-${today}`;
+
+      // Dedupe — if we already stored today's entry, leave it.
+      const existing = await env.PUSH_SUBS.get(`curated:meta:${packId}`);
+      if (existing) {
+        skipped += 1;
+        continue;
+      }
+
+      const item: PersistedCuratedItem = {
+        id: packId,
+        videoId: video.id,
+        title: video.title,
+        sourceLang: feed.sourceLang,
+        packLangs: feed.packLangs,
+        mode: feed.mode,
+        publishedAt: video.publishedAt,
+        source: feed.source,
+        excerpt: feed.excerpt ?? '',
+      };
+      await env.PUSH_SUBS.put(`curated:meta:${packId}`, JSON.stringify(item));
+
+      // Update the index — newest first, capped at 14 days.
+      const indexRaw = await env.PUSH_SUBS.get('curated:index');
+      let index: { items: PersistedCuratedItem[] } = { items: [] };
+      try {
+        if (indexRaw) index = JSON.parse(indexRaw);
+      } catch { /* corrupt, start fresh */ }
+      index.items = index.items.filter((x) => x.id !== packId);
+      index.items.unshift(item);
+      index.items = index.items.slice(0, 14);
+      await env.PUSH_SUBS.put('curated:index', JSON.stringify(index));
+
+      added += 1;
+    } catch (err) {
+      console.log(`curated_failed ${feed.id}: ${String(err).slice(0, 200)}`);
+      failed += 1;
+    }
+  }
+  console.log(`curated_cron: added=${added} skipped=${skipped} failed=${failed}`);
+}
+
+interface PersistedCuratedItem {
+  id: string;
+  videoId: string;
+  title: string;
+  sourceLang: string;
+  packLangs: string[];
+  mode: string;
+  publishedAt: number;
+  source: string;
+  excerpt: string;
+}
+
+/**
+ * Pull the YouTube channel RSS feed and return the most recent entry
+ * whose title matches the optional regex. Regex matching is case-
+ * insensitive. Returns null when the feed is unreachable or no entry
+ * matches.
+ */
+async function fetchLatestVideo(feed: CuratedFeed): Promise<VideoRef | null> {
+  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(feed.channelId)}`;
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: { 'User-Agent': 'VozClara curator/1.0 (+https://vozclara.app)' },
+      cf: { cacheTtl: 600 } as RequestInit['cf'],
+    });
+  } catch (err) {
+    console.log(`rss_fetch_failed ${feed.id}: ${err}`);
+    return null;
+  }
+  if (!res.ok) {
+    console.log(`rss_http ${feed.id}: ${res.status}`);
+    return null;
+  }
+  const xml = await res.text();
+  const matcher = feed.titleMatch ? new RegExp(feed.titleMatch, 'i') : null;
+
+  // Workers don't ship a DOM parser; cheap regex scan over <entry>
+  // blocks is fine for YouTube's well-formed feed.
+  const entries = xml.split(/<entry>/).slice(1);
+  for (const raw of entries) {
+    const id = (raw.match(/<yt:videoId>([^<]+)<\/yt:videoId>/) ?? [])[1];
+    const title = unescapeXml((raw.match(/<title>([^<]*)<\/title>/) ?? [])[1] ?? '');
+    const publishedRaw = (raw.match(/<published>([^<]+)<\/published>/) ?? [])[1];
+    if (!id || !title) continue;
+    if (matcher && !matcher.test(title)) continue;
+    const publishedAt = publishedRaw ? Date.parse(publishedRaw) : Date.now();
+    return { id, title, publishedAt };
+  }
+  return null;
+}
+
+function unescapeXml(s: string): string {
+  return s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+}
+
+function ymdLocal(ms: number): string {
+  const d = new Date(ms);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
 }

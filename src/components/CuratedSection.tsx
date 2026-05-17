@@ -67,9 +67,16 @@ function CuratedCard({ item, locale }: { item: CuratedItem; locale: string }) {
   });
   const modeLabel = t.modes[item.mode];
 
+  // Auto-generated entries (videoId present) route to /new with the
+  // YouTube id pre-filled; static fallback entries route directly to
+  // the existing sample pack.
+  const target = item.videoId
+    ? `/new?v=${encodeURIComponent(item.videoId)}&lang=${item.packLangs[0] ?? 'es'}&mode=${item.mode}`
+    : `/pack/${item.id}`;
+
   return (
     <Link
-      to={`/pack/${item.id}`}
+      to={target}
       className="group flex flex-col gap-2 rounded-card border border-navy/15 bg-white px-4 py-4 transition hover:border-gold"
     >
       <div className="flex items-center justify-between font-sans text-[10px] uppercase tracking-widest text-graphit/55">

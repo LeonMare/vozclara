@@ -24,6 +24,13 @@ export interface CuratedItem {
   publishedAt: number;
   source: string;
   excerpt: string;
+  /**
+   * Optional YouTube video id — present on entries that the daily cron
+   * auto-generated from a feed. When set, the card links to /new with
+   * the URL pre-filled instead of /pack/:id, so the visitor produces
+   * their own copy in their preferred locale + mode.
+   */
+  videoId?: string;
 }
 
 interface CachedResponse {
