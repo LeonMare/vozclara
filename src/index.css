@@ -205,7 +205,15 @@ button,
   mix-blend-mode: multiply;
   z-index: 0;
 }
-.paper > * {
+/*
+ * Stack direct children above the noise pseudo-element. Skip elements
+ * that Tailwind has explicitly positioned — `position: relative` on
+ * those would hijack their intended `absolute`/`fixed` and pull them
+ * back into the document flow (which is what caused the 75vh Hero
+ * gradient to take up real layout space and push the headline below
+ * the mobile fold).
+ */
+.paper > *:not(.absolute):not(.fixed) {
   position: relative;
   z-index: 1;
 }

@@ -232,10 +232,8 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Empieza gratis. Crece cuando lo necesites.',
     pricingSub: 'Sin tarjeta para empezar.',
     tiers: [
-      { name: 'Free', price: '0 €', period: '', blurb: 'Para probar VozClara.', features: ['3 Knowledge Packs al mes', 'Biblioteca local en tu dispositivo', 'Todos los modos', 'Exportar como texto'], cta: 'Empezar' },
-      { name: 'Pro', price: '9 €', period: '/ mes', blurb: 'Para uso personal regular.', features: ['50 Knowledge Packs al mes', 'Sincronización entre dispositivos', 'Etiquetas y colecciones', 'Ask My Knowledge'], cta: 'Elegir Pro' },
-      { name: 'Power Learner', price: '19 €', period: '/ mes', blurb: 'Para quien aprende a fondo.', features: ['Packs ilimitados', 'Generador de planes de aprendizaje', 'Repaso espaciado de vocabulario', 'Exportar a PDF y Notion'], cta: 'Elegir Power' },
-      { name: 'Creator / Business', price: '49 €', period: '/ mes', blurb: 'Para creadores y equipos.', features: ['Todo lo anterior', 'Quote-cards con tu marca', 'Workspace para equipos', 'Prompts personalizables'], cta: 'Elegir Creator' },
+      { name: 'Free · disponible hoy', price: '0 €', period: '', blurb: 'Todo lo que ya funciona — sin tarjeta, sin cuenta.', features: ['Knowledge Packs ilimitados', 'Los tres modos: Learn · Business · Creator', 'Cuatro idiomas: ES · PT · DE · EN', 'Repetición espaciada con racha diaria', 'Shadowing con puntuación de pronunciación', 'Tutor IA por Pack', 'Exportación a Anki (.apkg)', 'Ask My Knowledge — Q&A sobre tu biblioteca', 'Biblioteca local en tu navegador'], cta: 'Empezar' },
+      { name: 'Pro · próximamente', price: '9 €', period: '/ mes', blurb: 'Cuando llegue: lo que el plan gratuito no puede dar.', features: ['Sincronización entre dispositivos', 'Voz premium para texto-a-voz', 'Exportación a PDF y Notion', 'Quote-cards con tu marca', 'Soporte prioritario'], cta: 'Apúntate' },
     ],
 
     finalTitle: 'Empieza a guardar el conocimiento detrás de cada vídeo.',
@@ -398,10 +396,8 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Comece grátis. Cresça quando precisar.',
     pricingSub: 'Sem cartão para começar.',
     tiers: [
-      { name: 'Free', price: '0 €', period: '', blurb: 'Para experimentar.', features: ['3 Knowledge Packs por mês', 'Biblioteca local', 'Todos os modos', 'Exportar como texto'], cta: 'Começar' },
-      { name: 'Pro', price: '9 €', period: '/ mês', blurb: 'Para uso pessoal regular.', features: ['50 packs por mês', 'Sincronização entre dispositivos', 'Etiquetas e coleções', 'Ask My Knowledge'], cta: 'Escolher Pro' },
-      { name: 'Power Learner', price: '19 €', period: '/ mês', blurb: 'Para quem aprende a fundo.', features: ['Packs ilimitados', 'Planos de aprendizagem', 'Revisão espaçada', 'Exportar para PDF e Notion'], cta: 'Escolher Power' },
-      { name: 'Creator / Business', price: '49 €', period: '/ mês', blurb: 'Para criadores e equipas.', features: ['Tudo o anterior', 'Quote-cards com a sua marca', 'Workspace para equipas', 'Prompts personalizáveis'], cta: 'Escolher Creator' },
+      { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — sem cartão, sem conta.', features: ['Knowledge Packs ilimitados', 'Os três modos: Learn · Business · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
+      { name: 'Pro · em breve', price: '9 €', period: '/ mês', blurb: 'Quando chegar: o que o plano gratuito não pode dar.', features: ['Sincronização entre dispositivos', 'Voz premium para texto-a-voz', 'Exportação para PDF e Notion', 'Quote-cards com a tua marca', 'Suporte prioritário'], cta: 'Inscreve-te' },
     ],
 
     finalTitle: 'Comece a guardar o conhecimento por detrás de cada vídeo.',
@@ -553,10 +549,8 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Kostenlos starten. Wachsen wenn nötig.',
     pricingSub: 'Keine Kreditkarte zum Start.',
     tiers: [
-      { name: 'Free', price: '0 €', period: '', blurb: 'Zum Ausprobieren.', features: ['3 Packs / Monat', 'Lokale Bibliothek', 'Alle Modi', 'Text-Export'], cta: 'Starten' },
-      { name: 'Pro', price: '9 €', period: '/ Monat', blurb: 'Für regelmäßigen Gebrauch.', features: ['50 Packs / Monat', 'Geräte-Sync', 'Tags & Sammlungen', 'Ask My Knowledge'], cta: 'Pro wählen' },
-      { name: 'Power Learner', price: '19 €', period: '/ Monat', blurb: 'Für tiefes Lernen.', features: ['Unbegrenzte Packs', 'Lernpläne', 'Spaced Repetition', 'Export nach PDF und Notion'], cta: 'Power wählen' },
-      { name: 'Creator / Business', price: '49 €', period: '/ Monat', blurb: 'Für Creators und Teams.', features: ['Alles vorherige', 'Quote-Cards mit Branding', 'Team-Workspace', 'Eigene Prompts'], cta: 'Creator wählen' },
+      { name: 'Free · heute verfügbar', price: '0 €', period: '', blurb: 'Alles was schon funktioniert — keine Kreditkarte, kein Konto.', features: ['Unbegrenzte Knowledge Packs', 'Alle drei Modi: Learn · Business · Creator', 'Vier Sprachen: ES · PT · DE · EN', 'Spaced Repetition mit Tages-Streak', 'Shadowing mit Aussprache-Bewertung', 'KI-Tutor pro Pack', 'Anki-Export (.apkg)', 'Ask My Knowledge — Q&A über deine Bibliothek', 'Lokale Bibliothek im Browser'], cta: 'Starten' },
+      { name: 'Pro · in Kürze', price: '9 €', period: '/ Monat', blurb: 'Wenn es kommt: was der Free-Plan nicht leisten kann.', features: ['Geräte-Sync', 'Premium-Stimme für Text-to-Speech', 'Export nach PDF und Notion', 'Quote-Cards mit deinem Branding', 'Priority-Support'], cta: 'Auf Warteliste' },
     ],
 
     finalTitle: 'Beginnen Sie das Wissen hinter jedem Video zu speichern.',
@@ -708,10 +702,8 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Start free. Grow when you need it.',
     pricingSub: 'No card required to start.',
     tiers: [
-      { name: 'Free', price: '€0', period: '', blurb: 'To try VozClara.', features: ['3 Knowledge Packs / month', 'Local library on device', 'All modes', 'Export as text'], cta: 'Start' },
-      { name: 'Pro', price: '€9', period: '/ month', blurb: 'For regular personal use.', features: ['50 packs / month', 'Sync across devices', 'Tags and collections', 'Ask My Knowledge'], cta: 'Choose Pro' },
-      { name: 'Power Learner', price: '€19', period: '/ month', blurb: 'For deep learners.', features: ['Unlimited packs', 'Learning-plan generator', 'Spaced repetition for vocabulary', 'PDF and Notion export'], cta: 'Choose Power' },
-      { name: 'Creator / Business', price: '€49', period: '/ month', blurb: 'For creators and teams.', features: ['Everything above', 'Quote-cards with your branding', 'Team workspace', 'Custom prompts'], cta: 'Choose Creator' },
+      { name: 'Free · available today', price: '€0', period: '', blurb: 'Everything that already works — no card, no account.', features: ['Unlimited Knowledge Packs', 'All three modes: Learn · Business · Creator', 'Four languages: ES · PT · DE · EN', 'Spaced repetition with daily streak', 'Voice shadowing with pronunciation score', 'AI tutor per Pack', 'Anki deck export (.apkg)', 'Ask My Knowledge — library Q&A', 'Library local in your browser'], cta: 'Start' },
+      { name: 'Pro · coming soon', price: '€9', period: '/ month', blurb: 'When it ships: what the free plan can\'t offer.', features: ['Sync across devices', 'Premium voice for text-to-speech', 'PDF and Notion export', 'Brand-customised quote-cards', 'Priority support'], cta: 'Join waitlist' },
     ],
 
     finalTitle: 'Start saving the knowledge behind every video.',

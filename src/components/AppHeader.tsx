@@ -33,7 +33,15 @@ export function AppHeader() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3 sm:px-8">
         <Link to="/" className="min-w-0">
-          <BrandMark variant="lockup" size="md" tone="navy" />
+          {/* Mobile: just the seal so the language picker + burger fit
+              without clipping the wordmark. Tablet/desktop get the
+              full horizontal lockup. */}
+          <span className="sm:hidden">
+            <BrandMark variant="monogram" size="md" tone="navy" />
+          </span>
+          <span className="hidden sm:inline-block">
+            <BrandMark variant="lockup" size="md" tone="navy" />
+          </span>
         </Link>
 
         {/* Desktop nav — different on landing vs app routes */}

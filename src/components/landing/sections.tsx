@@ -213,17 +213,14 @@ export function PricingPreview() {
         <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
         <p className="mt-3 font-serif italic text-graphit/70 sm:text-lg">{t.pricingSub}</p>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-2">
           {t.tiers.map((tier, i) => {
             const isFeatured = i === 1; // Pro tier highlighted
             const isFree = i === 0;
-            // Honest CTA copy: Free is "Start free", paid tiers are
-            // "Join waitlist" / "Request access" until payment is wired up.
-            const ctaCopy = isFree
-              ? ctaLabels.startFree
-              : i === 3
-                ? ctaLabels.requestAccess
-                : ctaLabels.waitlist;
+            // Honest CTA copy: Free works today; the Pro tier is on a
+            // waitlist because the cross-device sync + Stripe billing
+            // it requires haven't shipped yet.
+            const ctaCopy = isFree ? ctaLabels.startFree : ctaLabels.waitlist;
             return (
               <div
                 key={tier.name}
@@ -680,6 +677,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacidad', href: '/privacy' },
           { label: 'Términos', href: '/terms' },
+          { label: 'Aviso legal', href: '/impressum' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -711,6 +709,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacidade', href: '/privacy' },
           { label: 'Termos', href: '/terms' },
+          { label: 'Informações legais', href: '/impressum' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -742,6 +741,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Datenschutz', href: '/privacy' },
           { label: 'Nutzungsbedingungen', href: '/terms' },
+          { label: 'Impressum', href: '/impressum' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -773,6 +773,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacy', href: '/privacy' },
           { label: 'Terms', href: '/terms' },
+          { label: 'Imprint', href: '/impressum' },
           { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],

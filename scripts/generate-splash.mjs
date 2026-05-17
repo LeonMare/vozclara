@@ -28,11 +28,11 @@ const PUBLIC = resolve(repoRoot, 'public');
 const OUT_DIR = resolve(PUBLIC, 'splash');
 await mkdir(OUT_DIR, { recursive: true });
 
-// Pull the monogram SVG so the path data stays exactly in sync with
-// the rest of the brand. The original viewBox is "700 670 720 530";
-// we re-frame to a 0-720 box.
-const monogramSvg = await readFile(resolve(PUBLIC, 'brand-monogram.svg'), 'utf8');
-const monogramInner = extractInnerSvg(monogramSvg);
+// Pull the VozClara lighthouse mark SVG so splash & app icon agree
+// visually. viewBox is 0 0 100 100; stroke-based design. The script
+// recolours the strokes to gold at composite time.
+const markSvg = await readFile(resolve(PUBLIC, 'voz-clara-mark.svg'), 'utf8');
+const markInner = extractInnerSvg(markSvg);
 
 const SIZES = [
   // iPhone 15 / 14 Pro Max
@@ -65,11 +65,13 @@ for (const { name, w, h } of SIZES) {
   const ruleY = wordmarkY + wordmarkSize + Math.round(h * 0.018);
   const ruleHalf = Math.round(w * 0.04);
 
+  // Mark is a stroke-based 100×100 SVG; recolour strokes to gold via
+  // the parent <g style="color:…"> (the source uses currentColor).
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <rect width="${w}" height="${h}" fill="${NAVY}"/>
-  <g transform="translate(${monogramX}, ${monogramY}) scale(${monogramSize / 720}, ${monogramSize / 530})" fill="${GOLD}">
-    ${monogramInner}
+  <g transform="translate(${monogramX}, ${monogramY}) scale(${monogramSize / 100})" style="color:${GOLD}">
+    ${markInner}
   </g>
   <text x="${w / 2}" y="${wordmarkY + wordmarkSize}" text-anchor="middle"
         font-family="Cinzel, 'Trajan Pro', Georgia, serif" font-weight="500"
@@ -85,20 +87,15 @@ for (const { name, w, h } of SIZES) {
 }
 
 /**
- * Pull the inner `<g>` and `<path>` content out of the brand-monogram
- * SVG so we can re-embed it with our own transform. The source uses
- * a viewBox starting at "700 670"; we translate to the origin and
- * keep the 720 × 530 design space.
+ * Pull the inner content out of voz-clara-mark.svg so we can re-embed
+ * it inside our composite. Strips the outer <svg>, <title>, <desc>;
+ * keeps the path group intact. The source uses stroke="currentColor"
+ * so colour is set by our parent <g style="color:…">.
  */
 function extractInnerSvg(svg) {
-  // Strip the outer <svg> tags and the fill="currentColor" group wrap.
   const innerMatch = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
-  if (!innerMatch) throw new Error('brand-monogram.svg: malformed');
-  let inner = innerMatch[1];
-  // The original group sets fill="currentColor". We want to inherit the
-  // gold from our parent <g>, so drop the wrapper but keep its kids.
-  inner = inner.replace(/<g\s+fill="currentColor">\s*/g, '').replace(/<\/g>\s*$/m, '');
-  // Re-anchor coordinates: original viewBox is 700 670 720 530, so we
-  // translate by (-700, -670) inside the parent group transform.
-  return `<g transform="translate(-700, -670)">${inner}</g>`;
+  if (!innerMatch) throw new Error('voz-clara-mark.svg: malformed');
+  // Drop <title> and <desc> — accessibility labels make no sense in a
+  // raster splash.
+  return innerMatch[1].replace(/<title[^>]*>[\s\S]*?<\/title>/g, '').replace(/<desc[^>]*>[\s\S]*?<\/desc>/g, '');
 }

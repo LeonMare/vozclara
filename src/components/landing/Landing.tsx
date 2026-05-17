@@ -36,6 +36,9 @@ export function Landing() {
   return (
     <>
       <Hero />
+      {/* Founder note moved up — the human "why" lands within the
+          first scroll, before the abstract Problem framing. */}
+      <FounderNote />
       <Problem />
       <Solution />
       <div id="how"><HowItWorks /></div>
@@ -48,7 +51,6 @@ export function Landing() {
       <PricingPreview />
       <TrustSection />
       <FinalCTA />
-      <FounderNote />
       <LandingFooter />
     </>
   );

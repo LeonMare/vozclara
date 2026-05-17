@@ -65,6 +65,9 @@ const ShadowPage = lazy(() =>
 const ChatPage = lazy(() =>
   import('./routes/ChatPage').then((m) => ({ default: m.ChatPage })),
 );
+const ImpressumPage = lazy(() =>
+  import('./routes/ImpressumPage').then((m) => ({ default: m.ImpressumPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -203,6 +206,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <TermsPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/impressum"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <ImpressumPage />
               </Suspense>
             </AppShell>
           }

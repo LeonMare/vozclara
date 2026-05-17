@@ -55,20 +55,25 @@ export function Hero() {
         aria-hidden
       />
 
-      {/* Tighter vertical rhythm — was py-14 / sm:py-24 / lg:py-28. */}
-      <div className="relative mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-14 lg:py-16">
+      {/* Tighter vertical rhythm on mobile so the headline + CTA land
+          above the first-fold on a 375 × 812 iPhone. The XL monogram
+          is hidden on small screens for the same reason — it pushes
+          the actual value-prop below the fold otherwise. */}
+      <div className="relative mx-auto max-w-6xl px-5 py-4 sm:px-8 sm:py-14 lg:py-16">
         <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* Left — copy */}
           <div>
             <div className="animate-fade-in">
-              <BrandMark variant="monogram" size="xl" tone="navy" decorative />
-              <div className="mt-4 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+              <div className="hidden sm:block">
+                <BrandMark variant="monogram" size="xl" tone="navy" decorative />
+              </div>
+              <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold sm:mt-4">
                 {t.heroEyebrow}
               </div>
             </div>
 
             <h1
-              className="word-stagger mt-5 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl lg:text-6xl"
+              className="word-stagger mt-3 font-serif text-4xl leading-[1.05] text-navy sm:mt-5 sm:text-5xl lg:text-6xl"
             >
               {headlineWords.map((word, i) => (
                 <span key={i} style={{ ['--i' as string]: i }}>
