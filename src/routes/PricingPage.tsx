@@ -36,6 +36,22 @@ export function PricingPage() {
         </Link>
       </div>
 
+      {/* H1 — was missing, the route had only h2s from PricingPreview
+          inside. Screen readers and SEO crawlers expect one h1 per
+          page; this surfaces the page intent before the grid. */}
+      <section className="mx-auto max-w-6xl px-5 pb-2 pt-8 sm:px-8 sm:pt-12">
+        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          § {labels.eyebrow}
+        </p>
+        <h1 className="mt-4 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
+          {labels.heroTitle}
+        </h1>
+        <div className="mt-5 h-px w-16 bg-gold" aria-hidden />
+        <p className="mt-5 max-w-2xl font-serif text-lg italic leading-relaxed text-graphit/75 sm:text-xl">
+          {labels.heroLead}
+        </p>
+      </section>
+
       {/* The plans grid + disclaimer copy */}
       <PricingPreview />
 
@@ -90,6 +106,9 @@ function pricingHeadDescription(locale: string): string {
 function pricingPageLabels(locale: string) {
   if (locale.startsWith('es')) return {
     backHome: 'Volver a la página principal',
+    eyebrow: 'PRECIOS',
+    heroTitle: 'Empieza gratis. Sube de plan cuando lo necesites.',
+    heroLead: 'Todo lo que ya funciona es gratuito. Los planes de pago llegan cuando la app esté madura y haya demanda real — hasta entonces, sin tarjeta.',
     ctaHeading: 'Empieza con el plan gratuito.',
     ctaBody: 'Sin tarjeta de crédito. Crea tu primer Knowledge Pack y decide después si te interesa subir de plan.',
     primaryCta: 'Empezar gratis',
@@ -97,6 +116,9 @@ function pricingPageLabels(locale: string) {
   };
   if (locale.startsWith('pt')) return {
     backHome: 'Voltar à página principal',
+    eyebrow: 'PREÇOS',
+    heroTitle: 'Começa grátis. Sobe de plano quando precisares.',
+    heroLead: 'Tudo o que já funciona é gratuito. Os planos pagos chegam quando a app estiver madura e houver procura real — até lá, sem cartão.',
     ctaHeading: 'Comece com o plano gratuito.',
     ctaBody: 'Sem cartão de crédito. Crie o seu primeiro Knowledge Pack e decida depois se quer mudar de plano.',
     primaryCta: 'Começar grátis',
@@ -104,6 +126,9 @@ function pricingPageLabels(locale: string) {
   };
   if (locale.startsWith('de')) return {
     backHome: 'Zurück zur Startseite',
+    eyebrow: 'PREISE',
+    heroTitle: 'Kostenlos starten. Plan wechseln wenn nötig.',
+    heroLead: 'Alles was schon funktioniert ist gratis. Bezahlpläne kommen wenn die App reif ist und echte Nachfrage besteht — bis dahin keine Karte.',
     ctaHeading: 'Starte mit dem kostenlosen Plan.',
     ctaBody: 'Keine Kreditkarte. Erstelle deinen ersten Knowledge Pack und entscheide dann, ob du auf einen größeren Plan wechseln willst.',
     primaryCta: 'Kostenlos starten',
@@ -111,6 +136,9 @@ function pricingPageLabels(locale: string) {
   };
   return {
     backHome: 'Back to home',
+    eyebrow: 'PRICING',
+    heroTitle: 'Start free. Upgrade when you need it.',
+    heroLead: 'Everything that already works is free. Paid plans arrive once the app is mature and real demand shows up — until then, no card.',
     ctaHeading: 'Start on the free plan.',
     ctaBody: 'No credit card. Create your first Knowledge Pack, then decide later if you want to move up.',
     primaryCta: 'Start free',

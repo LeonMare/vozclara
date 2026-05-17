@@ -408,15 +408,31 @@ interface ShadowSentence {
 }
 
 function extractShadowSentences(pack: KnowledgePack, segs: Segment[] | undefined): ShadowSentence[] {
+  // 1st choice: transcript segments — every line of the actual video.
   if (segs && segs.length > 0) {
     return segs
       .map((s) => ({ text: (s.text ?? '').trim(), translated: (s.translated ?? '').trim(), start: s.start }))
       .filter((s) => s.text.length > 0)
-      .slice(0, 30);  // cap for one session
+      .slice(0, 30);
   }
   const view = activeView(pack);
-  return view.vocabulary
+
+  // 2nd choice: vocabulary context sentences. The Learn-mode sample has
+  // these in spades; Business and Creator modes ship empty lists.
+  const fromVocab = view.vocabulary
     .map((v) => ({ text: (v.context ?? '').trim(), translated: '' }))
+    .filter((s) => s.text.length > 0);
+  if (fromVocab.length > 0) return fromVocab.slice(0, 30);
+
+  // 3rd choice: key quotes. They have the original source-lang line plus
+  // the localised translation — perfect shadowing material when nothing
+  // else exists (covers the sample-business + sample-creator empty-state
+  // case the audit caught).
+  return view.keyQuotes
+    .map((q) => ({
+      text: (q.original ?? q.text ?? '').trim(),
+      translated: q.original ? (q.text ?? '').trim() : '',
+    }))
     .filter((s) => s.text.length > 0)
     .slice(0, 30);
 }
