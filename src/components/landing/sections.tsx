@@ -463,7 +463,7 @@ function trustHeading(locale: string): { title: string; sub: string } {
     sub: 'VozClara no es una red social. No es un feed público. Es tu archivo privado de conocimiento — y se queda así.',
   };
   if (lang.startsWith('pt')) return {
-    title: 'A sua biblioteca, sob o seu controlo.',
+    title: 'A tua biblioteca, sob o teu controlo.',
     sub: 'A VozClara não é uma rede social. Não é um feed público. É o seu arquivo privado de conhecimento — e fica assim.',
   };
   if (lang.startsWith('de')) return {
@@ -487,11 +487,11 @@ function trustPromises(locale: string): { title: string; body: string }[] {
     { title: 'Solo la IA sale del navegador', body: 'El análisis con IA viaja al modelo. Nada más. El transcript y la biblioteca quedan en local.' },
   ];
   if (lang.startsWith('pt')) return [
-    { title: 'Biblioteca privada', body: 'Os seus packs vivem no seu dispositivo. Não os vemos, não os indexamos, não os partilhamos.' },
+    { title: 'Biblioteca privada', body: 'Os teus packs vivem no teu dispositivo. Não os vemos, não os indexamos, não os partilhamos.' },
     { title: 'A fonte fica visível', body: 'Cada pack tem link para o vídeo original. A atribuição nunca se perde.' },
     { title: 'Sem publicidade', body: 'Sem anúncios. Sem trackers de terceiros. Sem perfis comerciais.' },
-    { title: 'Sem feed público', body: 'O que guarda não é publicado em lado nenhum. Você decide o que partilhar.' },
-    { title: 'Você controla os seus packs', body: 'Editar, exportar, eliminar — sempre a um clique.' },
+    { title: 'Sem feed público', body: 'O que guardas não é publicado em lado nenhum. Tu decides o que partilhar.' },
+    { title: 'Tu controlas os teus packs', body: 'Editar, exportar, eliminar — sempre a um clique.' },
     { title: 'Só a IA sai do navegador', body: 'A análise por IA viaja ao modelo. Nada mais. O transcript e a biblioteca ficam locais.' },
   ];
   if (lang.startsWith('de')) return [
@@ -573,7 +573,7 @@ export function LandingFooter() {
 
   const trust: Record<typeof locale, string> = {
     es: 'Tu biblioteca permanece en tu dispositivo. Sin rastreo. Sin anuncios. Solo el análisis con IA sale de tu navegador.',
-    pt: 'A sua biblioteca permanece no seu dispositivo. Sem rastreio. Sem anúncios. Apenas a análise por IA sai do seu navegador.',
+    pt: 'A tua biblioteca permanece no teu dispositivo. Sem rastreio. Sem anúncios. Apenas a análise por IA sai do teu navegador.',
     de: 'Deine Bibliothek bleibt auf deinem Gerät. Kein Tracking. Keine Werbung. Nur die KI-Analyse verlässt deinen Browser.',
     en: 'Your library stays on your device. No tracking. No ads. Only the AI analysis call leaves your browser.',
   };

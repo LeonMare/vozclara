@@ -364,7 +364,7 @@ function generatorTitle(locale: string): string {
 
 function generatorDescription(locale: string): string {
   if (locale.startsWith('es')) return 'Pega un enlace de YouTube y obtén un Knowledge Pack estructurado en tu idioma — resumen, ideas clave, vocabulario, quiz, citas.';
-  if (locale.startsWith('pt')) return 'Cole um link do YouTube e receba um Knowledge Pack estruturado no seu idioma — resumo, ideias-chave, vocabulário, quiz, citações.';
+  if (locale.startsWith('pt')) return 'Cola um link do YouTube e recebe um Knowledge Pack estruturado na tua língua — resumo, ideias-chave, vocabulário, quiz, citações.';
   if (locale.startsWith('de')) return 'YouTube-Link einfügen und einen strukturierten Knowledge Pack in deiner Sprache bekommen — Summary, Kernideen, Vokabeln, Quiz, Zitate.';
   return 'Paste a YouTube link, get a structured Knowledge Pack in your language — summary, key ideas, vocabulary, quiz, quotes.';
 }

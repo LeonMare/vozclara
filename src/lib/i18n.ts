@@ -175,7 +175,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     heroEyebrow: 'NUBE DE CONOCIMIENTO · VÍDEO · IA',
     heroHeadline: 'Tu nube multilingüe de conocimiento para vídeos.',
-    heroSub: 'Guarda cualquier vídeo, extrae las ideas clave, tradúcelas a tu idioma y construye una biblioteca de aprendizaje a partir de todo lo que ves.',
+    heroSub: 'Guarda cualquier vídeo, extrae las ideas clave, construye una biblioteca de aprendizaje — en tu idioma.',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Empieza tu nube de conocimiento',
     seeHowCTA: 'Ver cómo funciona',
@@ -338,28 +338,28 @@ export const STRINGS: Record<Locale, Strings> = {
     cambiarVideo: 'Mudar de vídeo',
 
     heroEyebrow: 'NUVEM DE CONHECIMENTO · VÍDEO · IA',
-    heroHeadline: 'A sua nuvem multilingue de conhecimento para vídeos.',
-    heroSub: 'Guarde qualquer vídeo, extraia as ideias-chave, traduza-as para o seu idioma e construa uma biblioteca de aprendizagem a partir de tudo o que vê.',
+    heroHeadline: 'A tua nuvem multilingue de conhecimento para vídeos.',
+    heroSub: 'Guarda qualquer vídeo, extrai as ideias-chave, constrói uma biblioteca de aprendizagem — na tua língua.',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
-    primaryCTA: 'Comece a sua nuvem de conhecimento',
+    primaryCTA: 'Começa a tua nuvem de conhecimento',
     seeHowCTA: 'Ver como funciona',
     invalidUrl: 'Link do YouTube não reconhecido.',
     trySamplePack: 'Ver um Knowledge Pack de exemplo',
 
-    problemTitle: 'Consome horas de vídeo. Lembra-se de quase nada.',
+    problemTitle: 'Consomes horas de vídeo. Lembras-te de quase nada.',
     problemBody: 'Vemos YouTube, podcasts e cursos todos os dias. As ideias mais valiosas desaparecem numa semana. Pior: não se podem pesquisar. O conhecimento fica preso dentro do vídeo.',
 
     solutionTitle: 'Vídeo entra. Conhecimento estruturado sai.',
-    solutionBody: 'A VozClara transforma qualquer vídeo num Knowledge Pack — um registo estruturado, pesquisável e multilingue do que foi dito e do que importa. Guarde-o, organize-o, pesquise-o, faça-lhe perguntas.',
+    solutionBody: 'A VozClara transforma qualquer vídeo num Knowledge Pack — um registo estruturado, pesquisável e multilingue do que foi dito e do que importa. Guarda-o, organiza-o, pesquisa-o, faz-lhe perguntas.',
 
     howTitle: 'Como funciona',
-    howSteps: ['Cole um link', 'Escolha idioma e modo', 'Gere um Knowledge Pack', 'Guarde na sua biblioteca', 'Pergunte mais tarde'],
+    howSteps: ['Cola um link', 'Escolhe idioma e modo', 'Gera um Knowledge Pack', 'Guarda na tua biblioteca', 'Pergunta mais tarde'],
     howDescriptions: [
       'Qualquer vídeo do YouTube em inglês, espanhol ou alemão.',
-      'Três modos: Learn, Business e Creator. Cada um com a sua voz.',
-      'Resumo, ideias, plano de ação, vocabulário e mais — adaptado ao seu modo.',
-      'Etiquetado, organizado e pesquisável. Fica no seu dispositivo.',
-      'Faça perguntas sobre tudo o que guardou.',
+      'Três modos: Learn, Business e Creator. Cada um com voz própria.',
+      'Resumo, ideias, plano de ação, vocabulário e mais — adaptado ao teu modo.',
+      'Etiquetado, organizado e pesquisável. Fica no teu dispositivo.',
+      'Faz perguntas sobre tudo o que guardaste.',
     ],
 
     kpTitle: 'Anatomia de um Knowledge Pack',
@@ -372,17 +372,17 @@ export const STRINGS: Record<Locale, Strings> = {
       { label: 'Plano de ação', example: 'Passos concretos para aplicar esta semana.' },
       { label: 'Vocabulário', example: 'Termos importantes com contexto e tradução.' },
       { label: 'Citações', example: 'Frases memoráveis com timestamp e orador.' },
-      { label: 'Quiz', example: 'Perguntas para verificar a sua compreensão.' },
+      { label: 'Quiz', example: 'Perguntas para verificar a tua compreensão.' },
       { label: 'Transcrição', example: 'Texto completo com sincronização de vídeo.' },
-      { label: 'Etiquetas', example: 'Categorias para organizar a sua biblioteca.' },
+      { label: 'Etiquetas', example: 'Categorias para organizar a tua biblioteca.' },
     ],
 
-    libraryTitle: 'A sua biblioteca, não a do YouTube',
-    librarySub: 'Tudo o que guarda, organizado. Filtros por idioma, modo, categoria e data.',
+    libraryTitle: 'A tua biblioteca, não a do YouTube',
+    librarySub: 'Tudo o que guardas, organizado. Filtros por idioma, modo, categoria e data.',
 
     askEyebrow: 'PERGUNTAS · BIBLIOTECA · IA',
-    askTitle: 'Pergunte à sua biblioteca.',
-    askSub: 'Fale com o seu próprio arquivo de conhecimento:',
+    askTitle: 'Pergunta à tua biblioteca.',
+    askSub: 'Fala com o teu próprio arquivo de conhecimento:',
     askExamples: [
       'O que disseram os meus vídeos guardados sobre vendas?',
       'Resume tudo o que guardei sobre IA, em português.',
@@ -393,15 +393,15 @@ export const STRINGS: Record<Locale, Strings> = {
     langActive: 'Ativos: Inglês · Espanhol · Alemão',
     langSoon: 'Em breve: Português · Francês',
 
-    pricingTitle: 'Comece grátis. Cresça quando precisar.',
+    pricingTitle: 'Começa grátis. Cresce quando precisares.',
     pricingSub: 'Sem cartão para começar.',
     tiers: [
       { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — sem cartão, sem conta.', features: ['Knowledge Packs ilimitados', 'Os três modos: Learn · Business · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
       { name: 'Pro · em breve', price: '9 €', period: '/ mês', blurb: 'Quando chegar: o que o plano gratuito não pode dar.', features: ['Sincronização entre dispositivos', 'Voz premium para texto-a-voz', 'Exportação para PDF e Notion', 'Quote-cards com a tua marca', 'Suporte prioritário'], cta: 'Inscreve-te' },
     ],
 
-    finalTitle: 'Comece a guardar o conhecimento por detrás de cada vídeo.',
-    finalSub: 'O seu primeiro Knowledge Pack em menos de um minuto.',
+    finalTitle: 'Começa a guardar o conhecimento por detrás de cada vídeo.',
+    finalSub: 'O teu primeiro Knowledge Pack em menos de um minuto.',
     finalCTA: 'Começar agora',
 
     newPageTitle: 'Novo Knowledge Pack',
@@ -409,7 +409,7 @@ export const STRINGS: Record<Locale, Strings> = {
     stepMode: 'Modo',
     stepLanguage: 'Idioma',
     stepGenerate: 'Gerar',
-    chooseModeTitle: 'Escolha como quer ler este vídeo',
+    chooseModeTitle: 'Escolhe como queres ler este vídeo',
     chooseModeSub: 'O modo determina o que é extraído e como é apresentado.',
     modeRecommended: 'Recomendado',
     outputLangLabel: 'Idioma do Knowledge Pack',
@@ -420,7 +420,7 @@ export const STRINGS: Record<Locale, Strings> = {
       learn: {
         name: 'Learn',
         tagline: 'Para estudar a fundo.',
-        description: 'Explicações claras, vocabulário em contexto e um quiz para verificar a sua compreensão.',
+        description: 'Explicações claras, vocabulário em contexto e um quiz para verificar a tua compreensão.',
         bullets: ['Resumo executivo', 'Capítulos temáticos', 'Vocabulário em contexto', 'Quiz de compreensão'],
       },
       business: {
@@ -438,7 +438,7 @@ export const STRINGS: Record<Locale, Strings> = {
     },
 
     packBackToLibrary: '← Biblioteca',
-    packSavedToLibrary: 'Guardado na sua biblioteca',
+    packSavedToLibrary: 'Guardado na tua biblioteca',
     packDelete: 'Eliminar',
     packTabs: {
       summary: 'Resumo', chapters: 'Capítulos', insights: 'Ideias-chave',
@@ -446,8 +446,8 @@ export const STRINGS: Record<Locale, Strings> = {
       quotes: 'Citações', socialAngles: 'Redes', transcript: 'Transcrição',
     },
 
-    libraryEmptyTitle: 'A sua biblioteca está vazia.',
-    libraryEmptyBody: 'Crie o seu primeiro Knowledge Pack a partir de qualquer vídeo do YouTube.',
+    libraryEmptyTitle: 'A tua biblioteca está vazia.',
+    libraryEmptyBody: 'Cria o teu primeiro Knowledge Pack a partir de qualquer vídeo do YouTube.',
     libraryEmptyCTA: 'Novo Knowledge Pack',
     libraryStats: ({ packs, ideas, langs, thisWeek }) =>
       `${packs} ${packs === 1 ? 'pack' : 'packs'} · ${ideas} ideias-chave · ${langs} ${langs === 1 ? 'idioma' : 'idiomas'} · esta semana: ${thisWeek}`,
@@ -460,7 +460,7 @@ export const STRINGS: Record<Locale, Strings> = {
     filterDate30: '30 dias',
     filterDateAll: 'Sempre',
 
-    pulsaReproducir: 'Carregue em reproduzir.',
+    pulsaReproducir: 'Carrega em reproduzir.',
     iniciarVoz: 'Iniciar voz',
     vozActivada: 'Voz ativada',
     mostrarOriginal: 'Mostrar original',
@@ -645,7 +645,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     heroEyebrow: 'KNOWLEDGE CLOUD · VIDEO · AI',
     heroHeadline: 'Your multilingual knowledge cloud for videos.',
-    heroSub: 'Save any video, extract the key ideas, translate them into your language, and build a searchable learning library from everything you watch.',
+    heroSub: 'Save any video, extract the key ideas, build a searchable learning library — in your language.',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Start building your knowledge cloud',
     seeHowCTA: 'See how it works',
