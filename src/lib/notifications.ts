@@ -21,8 +21,8 @@
 
 import { getBrainId } from './pack';
 import type { Locale } from './i18n';
+import { API_BASE } from './apiBase';
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 const PREFS_KEY = 'vozclara:notify-prefs:v1';
 
 export interface PushConfig {

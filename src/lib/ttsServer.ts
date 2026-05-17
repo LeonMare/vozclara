@@ -10,7 +10,7 @@
  * (IndexedDB blob store keyed by sha256 of text+lang+voice).
  */
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
 
 export type ServerVoice = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
 

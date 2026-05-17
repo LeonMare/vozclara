@@ -13,8 +13,7 @@
  */
 
 import { activeView, listPacks, markPackIndexed, type KnowledgePack } from './pack';
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
 
 interface IndexChunk {
   kind: string;

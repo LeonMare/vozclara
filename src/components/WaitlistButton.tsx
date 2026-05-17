@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useLocale } from '../lib/i18n';
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from '../lib/apiBase';
 
 interface Props {
   ctaCopy: string;

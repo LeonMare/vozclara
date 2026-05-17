@@ -12,8 +12,7 @@
  */
 
 import { activeView, type KnowledgePack } from './pack';
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
 
 export interface AskCondensedPack {
   id: string;

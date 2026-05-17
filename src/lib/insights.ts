@@ -30,7 +30,7 @@ export interface InsightsResult {
   tags: string[];
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
 
 export class InsightsError extends Error {
   constructor(public code: 'ai_failed' | 'transcript_too_short' | 'unsupported_lang' | 'network', message: string) {

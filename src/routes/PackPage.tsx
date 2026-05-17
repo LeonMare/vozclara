@@ -17,6 +17,7 @@ import { PackFeedback } from '../components/PackFeedback';
 import { PackExport } from '../components/PackExport';
 import { PackShare } from '../components/PackShare';
 import { AskPanel } from '../components/AskPanel';
+import { API_BASE } from '../lib/apiBase';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -731,7 +732,7 @@ function QuotesTab({
   if (view.keyQuotes.length === 0) return <Empty />;
 
   function quoteCardUrl(q: PackTranslation['keyQuotes'][number]): string {
-    const base = (import.meta.env.VITE_API_BASE ?? '') + '/api/quote-card';
+    const base = API_BASE + '/api/quote-card';
     const params = new URLSearchParams({ text: q.text });
     if (q.speaker) params.set('speaker', q.speaker);
     if (q.timestampSec) params.set('time', formatTime(q.timestampSec));

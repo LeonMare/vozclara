@@ -10,8 +10,8 @@
 
 import { get, set, del } from 'idb-keyval';
 import { activeView, type KnowledgePack } from './pack';
+import { API_BASE } from './apiBase';
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 const SCHEMA = 'chat:v1';
 const chatKey = (packId: string) => `${SCHEMA}:${packId}`;
 const HISTORY_LIMIT = 40;     // cap stored locally

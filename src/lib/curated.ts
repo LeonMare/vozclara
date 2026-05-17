@@ -11,7 +11,8 @@
  *      within the same tab
  */
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
+
 const CACHE_KEY = 'vozclara:curated:v1';
 const CACHE_TTL_MS = 30 * 60 * 1000;  // 30 min
 

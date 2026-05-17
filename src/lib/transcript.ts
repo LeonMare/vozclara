@@ -23,7 +23,7 @@ export interface TranscriptResponse {
   segments: Segment[];
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+import { API_BASE } from './apiBase';
 
 export class TranscriptError extends Error {
   constructor(public code: 'no_captions' | 'fetch_failed' | 'invalid_id' | 'rate_limited' | 'quota_exceeded', message: string) {
