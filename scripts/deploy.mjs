@@ -76,11 +76,32 @@ const customHost = routePattern?.[1];
 const apiBase = customHost ? '' : workerUrl;
 const siteUrl = customHost ? `https://${customHost}` : 'https://vozclara.pages.dev';
 
-console.log('┌─ 2/4  Writing .env.production with Worker URL ─────────────');
-await writeFile(
-  resolve(repoRoot, '.env.production'),
-  `# Auto-written by scripts/deploy.mjs.\nVITE_API_BASE=${apiBase}\nVITE_SITE_URL=${siteUrl}\n`,
-);
+console.log('┌─ 2/4  Updating .env.production (API/site only) ────────────');
+// Preserve any other VITE_* keys (Sentry DSN, CF beacon token, etc.)
+// — we only own VITE_API_BASE and VITE_SITE_URL here. Everything else
+// is committed by the human and must survive the round-trip.
+const envPath = resolve(repoRoot, '.env.production');
+let existing = '';
+try {
+  existing = await readFile(envPath, 'utf8');
+} catch {
+  /* first-deploy: no file yet */
+}
+const stripped = existing
+  .split('\n')
+  .filter((line) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('VITE_API_BASE=')) return false;
+    if (trimmed.startsWith('VITE_SITE_URL=')) return false;
+    return true;
+  })
+  .join('\n')
+  .trimEnd();
+const next =
+  (stripped ? stripped + '\n\n' : '') +
+  `# API + site URL auto-written by scripts/deploy.mjs.\n` +
+  `VITE_API_BASE=${apiBase}\nVITE_SITE_URL=${siteUrl}\n`;
+await writeFile(envPath, next);
 console.log(
   customHost
     ? `└─ wrote .env.production (same-origin on ${customHost})\n`
