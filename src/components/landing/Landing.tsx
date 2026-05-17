@@ -7,6 +7,7 @@ import {
   KnowledgePackPreview,
   LibraryPreview,
   AskMyKnowledge,
+  LanguageLearnerToolkit,
   LanguageSection,
   PricingPreview,
   TrustSection,
@@ -25,6 +26,7 @@ import { FinalCTA } from './FinalCTA';
  *   § 05 Knowledge Pack Preview (showpiece)
  *   § 06 Library Preview
  *   § 07 Ask My Knowledge (live demo)
+ *   § 07·b Language-learner toolkit
  *   § 08 Languages
  *   § 09 Pricing
  *   § 10 Final CTA
@@ -41,6 +43,7 @@ export function Landing() {
       <KnowledgePackPreview />
       <LibraryPreview />
       <AskMyKnowledge />
+      <LanguageLearnerToolkit />
       <LanguageSection />
       <PricingPreview />
       <TrustSection />

@@ -341,6 +341,95 @@ function pricingCtaLabels(locale: string) {
  *  • there is no surveillance angle
  *  • they remain in control
  */
+/* ─── 07·b · Language-learner toolkit (Anki / SRS / Shadow / Chat) ──── */
+
+export function LanguageLearnerToolkit() {
+  const { locale } = useLocale();
+  const heading = toolkitHeading(locale);
+  const features = toolkitFeatures(locale);
+
+  return (
+    <section className="border-t border-navy/10 bg-creme paper py-16 sm:py-20">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <SectionEyebrow number="07·b" />
+        <h2 className="font-serif text-3xl leading-tight text-navy sm:text-4xl">
+          {heading.title}
+        </h2>
+        <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
+        <p className="mt-3 max-w-2xl font-serif italic text-graphit/70 sm:text-lg">
+          {heading.sub}
+        </p>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          {features.map((f, i) => (
+            <div
+              key={i}
+              className="rounded-card border border-navy/15 bg-white px-5 py-5"
+            >
+              <div className="flex items-baseline gap-3">
+                <span className="font-serif text-sm text-gold tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="font-serif text-lg text-navy">{f.title}</div>
+              </div>
+              <p className="mt-2 ml-8 font-sans text-sm leading-relaxed text-graphit/70">
+                {f.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function toolkitHeading(locale: string): { title: string; sub: string } {
+  if (locale.startsWith('es')) return {
+    title: 'Hecho para quienes aprenden idiomas.',
+    sub: 'No solo resúmenes. Cada Pack es material crudo de práctica — Anki, repetición espaciada, shadowing, conversación con un tutor.',
+  };
+  if (locale.startsWith('pt')) return {
+    title: 'Feito para quem aprende idiomas.',
+    sub: 'Não apenas resumos. Cada Pack é matéria-prima para prática — Anki, repetição espaçada, shadowing, conversa com um tutor.',
+  };
+  if (locale.startsWith('de')) return {
+    title: 'Für Sprachen-Lerner gebaut.',
+    sub: 'Nicht nur Zusammenfassungen. Jeder Pack ist Übungsmaterial — Anki, Spaced Repetition, Nachsprechen, Gespräch mit einem Tutor.',
+  };
+  return {
+    title: 'Built for language learners.',
+    sub: 'Not just summaries. Every Pack is practice material — Anki, spaced repetition, shadowing, conversation with a tutor.',
+  };
+}
+
+interface ToolkitFeature { title: string; body: string }
+function toolkitFeatures(locale: string): ToolkitFeature[] {
+  if (locale.startsWith('es')) return [
+    { title: 'Exporta a Anki', body: 'Cada lista de vocabulario se descarga como mazo .apkg con un clic. Tarjetas bilaterales, contexto y fuente incluidos. Ningún otro lector de YouTube exporta directo a Anki.' },
+    { title: 'Repetición espaciada nativa', body: 'Las tarjetas vencen, las repasas, el algoritmo SM-2 calcula el próximo intervalo. Racha visible. Sin salir de la app.' },
+    { title: 'Shadowing con voz', body: 'Escucha la frase, repítela en voz alta, recibe una puntuación de pronunciación. Web Speech API — la grabación nunca sale del dispositivo.' },
+    { title: 'Tutor IA sobre tu Pack', body: 'Habla con un compañero nativo sobre el vídeo que acabas de ver — corrige con suavidad, hace preguntas, usa el vocabulario del Pack.' },
+  ];
+  if (locale.startsWith('pt')) return [
+    { title: 'Exporta para Anki', body: 'Cada lista de vocabulário descarrega como baralho .apkg num clique. Cartões bilaterais, contexto e fonte incluídos. Nenhum outro leitor de YouTube exporta direto para Anki.' },
+    { title: 'Repetição espaçada nativa', body: 'Os cartões vencem, tu revês, o algoritmo SM-2 calcula o próximo intervalo. Sequência visível. Sem sair da app.' },
+    { title: 'Shadowing com voz', body: 'Ouve a frase, repete em voz alta, recebe uma pontuação de pronúncia. Web Speech API — a gravação nunca sai do dispositivo.' },
+    { title: 'Tutor IA sobre o teu Pack', body: 'Conversa com um parceiro nativo sobre o vídeo que acabaste de ver — corrige com suavidade, faz perguntas, usa o vocabulário do Pack.' },
+  ];
+  if (locale.startsWith('de')) return [
+    { title: 'Anki-Export in einem Klick', body: 'Jede Vokabel-Liste lädt sich als .apkg-Deck herunter. Beidseitige Karten, Kontext und Quelle inklusive. Kein anderes YouTube-Tool exportiert direkt nach Anki.' },
+    { title: 'Native Spaced Repetition', body: 'Karten werden fällig, du wiederholst, der SM-2-Algorithmus berechnet das nächste Intervall. Sichtbarer Streak. Ohne die App zu verlassen.' },
+    { title: 'Shadowing mit Stimme', body: 'Hör den Satz, sprich ihn nach, bekomm einen Aussprache-Score. Web Speech API — die Aufnahme verlässt nie dein Gerät.' },
+    { title: 'KI-Tutor zu deinem Pack', body: 'Sprich mit einem Native-Speaker-Tutor über das Video das du gerade gesehen hast — sanfte Korrekturen, Rückfragen, nutzt das Pack-Vokabular.' },
+  ];
+  return [
+    { title: 'Export to Anki in one click', body: 'Every vocabulary list downloads as a real .apkg deck. Two-sided cards, context and source included. No other YouTube tool exports directly to Anki.' },
+    { title: 'Native spaced repetition', body: 'Cards come due, you review, the SM-2 algorithm sets the next interval. Visible streak. Without leaving the app.' },
+    { title: 'Voice shadowing', body: 'Hear the sentence, repeat it out loud, get a pronunciation score. Web Speech API — the recording never leaves your device.' },
+    { title: 'AI tutor on your Pack', body: 'Talk to a native-speaker tutor about the video you just watched — gentle corrections, follow-up questions, uses the Pack vocabulary.' },
+  ];
+}
+
 export function TrustSection() {
   const { locale } = useLocale();
   const promises = trustPromises(locale);

@@ -811,6 +811,12 @@ function initialLocale(): Locale {
 }
 
 let currentLocale: Locale = initialLocale();
+// Keep <html lang> in sync with the auto-detected locale on first
+// load so screen readers + SEO crawlers see the actual rendered
+// language instead of the static "es-ES" baked into index.html.
+if (typeof document !== 'undefined') {
+  document.documentElement.lang = currentLocale;
+}
 const listeners = new Set<() => void>();
 
 export function getLocale(): Locale {
