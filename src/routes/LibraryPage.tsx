@@ -383,6 +383,15 @@ export function LibraryPage() {
                   <span className="absolute left-3 top-3 rounded-full bg-navy/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold backdrop-blur-sm">
                     {t.modes[p.mode].name}
                   </span>
+                  {/* Difficulty badge — only when the pack carries one */}
+                  {p.difficulty && (
+                    <span
+                      className="absolute left-3 bottom-3 rounded-full bg-creme/95 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-gold backdrop-blur-sm"
+                      title={`CEFR ${p.difficulty}`}
+                    >
+                      {p.difficulty}
+                    </span>
+                  )}
                   <span className="absolute right-3 top-3 rounded-full bg-creme/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-graphit/70 backdrop-blur-sm">
                     {p.outputLanguages.length > 1
                       ? `${p.outputLang.toUpperCase()} +${p.outputLanguages.length - 1}`
@@ -413,9 +422,9 @@ export function LibraryPage() {
                   <h3 className="font-serif text-base leading-snug text-navy sm:text-lg">
                     {p.title}
                   </h3>
-                  {view.summary.short && (
+                  {(view.tldr || view.summary.short) && (
                     <p className="mt-2 font-sans text-[13px] leading-snug text-graphit/65 line-clamp-2">
-                      {view.summary.short}
+                      {view.tldr ?? view.summary.short}
                     </p>
                   )}
 

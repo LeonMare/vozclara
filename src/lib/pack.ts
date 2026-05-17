@@ -106,6 +106,9 @@ export interface PackTranslation {
     short: string;
     long: string;
   };
+  /** One-sentence headline answer in the output language. Optional — falls
+   *  back to summary.short in the UI when absent (older packs). */
+  tldr?: string;
   keyIdeas: KeyIdea[];
   chapters: Chapter[];
   actionPlan: string[];
@@ -114,6 +117,11 @@ export interface PackTranslation {
   socialAngles: SocialAngle[];
   quiz: QuizQuestion[];
 }
+
+/** CEFR level required to follow the source-language audio without subtitles.
+ *  Stored on the pack (not per-translation) because it's intrinsic to the
+ *  source video — not to the translation target. */
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 
 export interface KnowledgePack {
   id: string;                       // nanoid(12), used in URLs
@@ -142,6 +150,10 @@ export interface KnowledgePack {
   tags: string[];
   category: string;
   isPublic: boolean;                // future: shareable URL toggle
+
+  /** CEFR level for source-language difficulty. Set on first generation
+   *  from the worker output. Optional — pre-existing packs won't have it. */
+  difficulty?: CefrLevel;
 
   createdAt: number;
   updatedAt: number;

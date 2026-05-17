@@ -20,6 +20,10 @@ export interface InsightsResult {
   genre: Genre;
   mode: Mode;
   summary: { short: string; long: string };
+  /** Single-sentence headline answer (≤22 words). Falls back to summary.short. */
+  tldr?: string;
+  /** CEFR level required to follow the source audio without subtitles. */
+  difficulty?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   insights: KeyIdea[];
   actionPlan: string[];
   vocabulary: VocabularyItem[];
@@ -104,6 +108,8 @@ function normalise(raw: Record<string, unknown>): InsightsResult {
     genre,
     mode,
     summary,
+    tldr: typeof raw.tldr === 'string' && raw.tldr.trim() ? raw.tldr.trim().slice(0, 280) : undefined,
+    difficulty: normaliseDifficulty(raw.difficulty),
     insights: normaliseKeyIdeas(raw.insights),
     actionPlan: stringArray(raw.actionPlan),
     vocabulary: normaliseVocab(raw.vocabulary),
@@ -113,6 +119,15 @@ function normalise(raw: Record<string, unknown>): InsightsResult {
     keyQuotes: normaliseKeyQuotes(raw.keyQuotes),
     tags: normaliseTags(raw.tags),
   };
+}
+
+function normaliseDifficulty(v: unknown): InsightsResult['difficulty'] {
+  if (typeof v !== 'string') return undefined;
+  const upper = v.trim().toUpperCase();
+  if (upper === 'A1' || upper === 'A2' || upper === 'B1' || upper === 'B2' || upper === 'C1' || upper === 'C2') {
+    return upper;
+  }
+  return undefined;
 }
 
 /**

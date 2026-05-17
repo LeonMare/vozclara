@@ -496,6 +496,8 @@ interface KeyQuoteOutput {
 
 interface InsightsOutput {
   summary: { short: string; long: string };
+  tldr?: string;
+  difficulty?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   insights: InsightOutput[];
   actionPlan: string[];
   vocabulary: VocabularyOutput[];
@@ -504,6 +506,21 @@ interface InsightsOutput {
   chapters: ChapterOutput[];
   keyQuotes: KeyQuoteOutput[];
   tags: string[];
+}
+
+/** Tier the pack output by video length (proxy: transcript char count).
+ *  Rough mapping: ~12.5 chars per second of spoken transcript.
+ *    < 2.5k   → < 3 min   → micro
+ *    2.5k–10k → 3–13 min  → standard
+ *    10k–30k  → 13–40 min → deep
+ *    > 30k    → > 40 min  → comprehensive
+ *  The tier name flows into the prompt so the LLM scales item counts. */
+type LengthTier = 'micro' | 'standard' | 'deep' | 'comprehensive';
+function deriveLengthTier(transcriptChars: number): LengthTier {
+  if (transcriptChars < 2500) return 'micro';
+  if (transcriptChars < 10000) return 'standard';
+  if (transcriptChars < 30000) return 'deep';
+  return 'comprehensive';
 }
 
 type Mode = 'learn' | 'business' | 'creator';
@@ -529,12 +546,14 @@ function modePromptVoice(mode: Mode, targetLang: string): string {
   }
 }
 
-function structuredInstruction(targetLang: string, mode: Mode): string {
+function structuredInstruction(targetLang: string, mode: Mode, tier: LengthTier): string {
   const lang = LANG_NAME[targetLang] ?? 'English';
 
   const baseSchema = `{
+  "tldr": "ONE single sentence in ${lang}, max 22 words. The headline answer — what changes for the viewer after watching. Punchy and concrete, no hedging.",
+  "difficulty": "Single CEFR level (A1|A2|B1|B2|C1|C2) reflecting the language level required to follow the SOURCE audio without subtitles. Consider pace, vocabulary range, idiom density.",
   "summary": {
-    "short": "1-2 sentences in ${lang}. The single-line answer to 'what is this video about'. Punchy, not bland.",
+    "short": "1-2 sentences in ${lang}. Slightly longer than tldr — sets context. Punchy, not bland.",
     "long": "5-8 sentences in ${lang}, single paragraph. The reader should be able to brief a colleague after reading this and feel they actually know the video."
   },
   "insights": [
@@ -565,36 +584,63 @@ function structuredInstruction(targetLang: string, mode: Mode): string {
   "tags": ["3-5 single-word or two-word tags in ${lang}, lowercase. Use the topic / domain / proper nouns / industry — not generic words like 'video' or 'idea'.", ...]
 }`;
 
+  /* Tier multipliers: a 90-min talk should produce more chapters and more
+     vocab than a 3-min clip. Counts below are scaled from the standard
+     baseline by the tier factor. Tier comes from transcript length. */
+  const tierFactor: Record<LengthTier, number> = {
+    micro: 0.4,
+    standard: 1.0,
+    deep: 1.5,
+    comprehensive: 2.0,
+  };
+  const f = tierFactor[tier];
+  const range = (lo: number, hi: number) => {
+    const newLo = Math.max(1, Math.round(lo * f));
+    const newHi = Math.max(newLo + 1, Math.round(hi * f));
+    return `${newLo}-${newHi}`;
+  };
+  /* Insights, quotes, and quiz counts cap regardless of tier — past a
+     point more items just dilute quality. */
+  const cap = (lo: number, hi: number, ceiling: number) => {
+    const newLo = Math.max(1, Math.round(lo * f));
+    const newHi = Math.min(ceiling, Math.max(newLo + 1, Math.round(hi * f)));
+    return `${newLo}-${newHi}`;
+  };
+
+  const tierNote = `VIDEO LENGTH TIER: ${tier.toUpperCase()} — scale item counts so the Pack feels right for the source length. A 2-min clip should NOT produce 18 vocabulary items; a 90-min talk SHOULD produce more than 8.`;
+
   const modeRules = {
     learn: `LEARN-MODE — the reader is studying with this video:
-- "insights": 5-8 items. Focus on concepts, frameworks, mental models, and the order of dependencies between ideas.
-- "vocabulary": 10-18 items. Pick terms useful beyond this video — domain vocabulary, idioms, technical or culturally-loaded terms. Skip everyday words.
-- "quiz": 6-10 questions. Mix comprehension, application, and connection-to-other-concepts.
-- "chapters": 5-10 items. Each titled descriptively (not just "Section 1").
+- "insights": ${cap(5, 8, 12)} items. Focus on concepts, frameworks, mental models, and the order of dependencies between ideas.
+- "vocabulary": ${range(10, 18)} items. Pick terms useful beyond this video — domain vocabulary, idioms, technical or culturally-loaded terms. Skip everyday words.
+- "quiz": ${cap(6, 10, 14)} questions. Mix comprehension, application, and connection-to-other-concepts.
+- "chapters": ${range(5, 10)} items. Each titled descriptively (not just "Section 1").
 - "actionPlan": 0-4 items (only if content actually proposes practice or experiments).
-- "keyQuotes": 0-3 items (only memorable lines that crystallise concepts).
+- "keyQuotes": ${cap(0, 3, 6)} items (only memorable lines that crystallise concepts).
 - "socialAngles": [] (not relevant in Learn mode).`,
     business: `BUSINESS-MODE — the reader is a decision-maker scanning for signal:
-- "insights": 5-8 items. Strategic implications, market signals, second-order consequences, structural shifts. Each must add value the bare transcript doesn't.
-- "actionPlan": 4-6 concrete actions a business reader could take this week. Verb-first, specific.
-- "keyQuotes": 4-6 items. Statements of position, fact, commitment, or contradiction. Include speaker.
-- "chapters": 4-8 items.
-- "vocabulary": 0-6 items (only domain-specific terms a non-specialist might miss).
+- "insights": ${cap(5, 8, 12)} items. Strategic implications, market signals, second-order consequences, structural shifts. Each must add value the bare transcript doesn't.
+- "actionPlan": ${cap(4, 6, 10)} concrete actions a business reader could take this week. Verb-first, specific.
+- "keyQuotes": ${cap(4, 6, 12)} items. Statements of position, fact, commitment, or contradiction. Include speaker.
+- "chapters": ${range(4, 8)} items.
+- "vocabulary": ${cap(0, 6, 12)} items (only domain-specific terms a non-specialist might miss).
 - "quiz": [] (not relevant in Business mode).
 - "socialAngles": [] (not relevant in Business mode).`,
     creator: `CREATOR-MODE — the reader is a content creator repurposing this video:
-- "insights": 4-6 items. Focus on hooks, angles, contrarian-but-defendable points, structural moves the speaker uses.
-- "socialAngles": 6-10 items. Each "hook" is a scroll-stopper (question, claim, or surprising stat). Each "caption" is a 3-5 sentence post body that ends with an invitation to reply.
-- "keyQuotes": 6-12 items. Maximise quotable moments — anything punchy, self-contained, screenshot-worthy.
-- "chapters": 3-6 items.
+- "insights": ${cap(4, 6, 10)} items. Focus on hooks, angles, contrarian-but-defendable points, structural moves the speaker uses.
+- "socialAngles": ${cap(6, 10, 16)} items. Each "hook" is a scroll-stopper (question, claim, or surprising stat). Each "caption" is a 3-5 sentence post body that ends with an invitation to reply.
+- "keyQuotes": ${cap(6, 12, 20)} items. Maximise quotable moments — anything punchy, self-contained, screenshot-worthy.
+- "chapters": ${range(3, 6)} items.
 - "vocabulary": [] (not relevant in Creator mode).
-- "actionPlan": 2-4 items focused on content strategy (which platform, which format, which audience).
+- "actionPlan": ${cap(2, 4, 8)} items focused on content strategy (which platform, which format, which audience).
 - "quiz": [] (not relevant in Creator mode).`,
   }[mode];
 
   return `Output ONLY a single JSON object matching this schema. No preamble, no markdown fences, no prose outside the JSON.
 
 ${baseSchema}
+
+${tierNote}
 
 ${modeRules}
 
@@ -620,12 +666,17 @@ async function generateInsights(
   mode: Mode,
   env: Env,
 ): Promise<InsightsOutput> {
+  /* Tier from the FULL transcript length, before truncation — we want
+     the LLM to scale its output for the original video, not for the
+     bounded slice we feed it. */
+  const tier = deriveLengthTier(transcript.length);
+
   const bounded = transcript.length > 12000
     ? transcript.slice(0, 6000) + '\n\n[…truncated…]\n\n' + transcript.slice(-3000)
     : transcript;
 
-  const systemPrompt = modePromptVoice(mode, targetLang) + '\n\n' + structuredInstruction(targetLang, mode);
-  const userPrompt = `Source language: ${LANG_NAME[sourceLang] ?? sourceLang}. Detected genre: ${genre}. Mode: ${mode}.
+  const systemPrompt = modePromptVoice(mode, targetLang) + '\n\n' + structuredInstruction(targetLang, mode, tier);
+  const userPrompt = `Source language: ${LANG_NAME[sourceLang] ?? sourceLang}. Detected genre: ${genre}. Mode: ${mode}. Length tier: ${tier}.
 
 Transcript:
 ${bounded}`;
@@ -696,8 +747,33 @@ function parseInsightsJson(raw: string): InsightsOutput {
   const chapters = normaliseChapterArray(p.chapters);
   const keyQuotes = normaliseKeyQuoteArray(p.keyQuotes);
   const tags = normaliseTags(p.tags);
+  /* TL;DR — accept either the dedicated field or fall back to summary.short
+     trimmed to a single sentence. Models sometimes drop the field; this
+     keeps the UI consistent. */
+  const tldr = normaliseTldr(p.tldr, summary.short);
+  const difficulty = normaliseDifficulty(p.difficulty);
 
-  return { summary, insights, actionPlan, vocabulary, quiz, socialAngles, chapters, keyQuotes, tags };
+  return { summary, tldr, difficulty, insights, actionPlan, vocabulary, quiz, socialAngles, chapters, keyQuotes, tags };
+}
+
+function normaliseTldr(v: unknown, fallback: string): string | undefined {
+  if (typeof v === 'string' && v.trim().length > 0) {
+    return v.trim().slice(0, 280);
+  }
+  if (fallback) {
+    const firstSentence = fallback.match(/^.{10,200}?[.!?](?=\s|$)/)?.[0] ?? fallback.slice(0, 200);
+    return firstSentence;
+  }
+  return undefined;
+}
+
+function normaliseDifficulty(v: unknown): InsightsOutput['difficulty'] {
+  if (typeof v !== 'string') return undefined;
+  const upper = v.trim().toUpperCase();
+  if (upper === 'A1' || upper === 'A2' || upper === 'B1' || upper === 'B2' || upper === 'C1' || upper === 'C2') {
+    return upper;
+  }
+  return undefined;
 }
 
 function emptyInsightsOutput(fallbackSummary = ''): InsightsOutput {

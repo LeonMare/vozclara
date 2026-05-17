@@ -159,6 +159,7 @@ export function GeneratorPage() {
       //    into existing pack" paths — only the wrapping differs.
       const translation: PackTranslation = {
         summary: result.summary,
+        tldr: result.tldr,
         keyIdeas: result.insights,
         chapters: result.chapters,
         actionPlan: result.actionPlan,
@@ -187,6 +188,9 @@ export function GeneratorPage() {
           outputLanguages: Array.from(new Set([...existingPack.outputLanguages, outputLang])),
           translations: { ...existingPack.translations, [outputLang]: translation },
           tags: mergedTags,
+          /* Backfill difficulty on packs generated before this field existed.
+             Only overwrite when missing — otherwise the first reading wins. */
+          difficulty: existingPack.difficulty ?? result.difficulty,
           updatedAt: Date.now(),
         };
         await savePack(merged);
@@ -223,6 +227,7 @@ export function GeneratorPage() {
           tags: result.tags,
           category: result.genre,
           isPublic: false,
+          difficulty: result.difficulty,
           createdAt: Date.now(),
           updatedAt: Date.now(),
           transcriptKey,

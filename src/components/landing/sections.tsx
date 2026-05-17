@@ -775,3 +775,269 @@ function footerColumns(locale: string) {
     ],
   };
 }
+
+/* ─── § 01·c · Audience Tiles ─────────────────────────────────────────────
+   Three doors into the same product. The Hero stays universal
+   ("Stop losing what you watch"); this section is where each visitor
+   self-selects into the value prop that matches them. Keeping it
+   close to the Hero so the framing lands before the abstract pitch.
+─────────────────────────────────────────────────────────────────────────── */
+export function AudienceTiles() {
+  const { locale } = useLocale();
+  const heading = audienceHeading(locale);
+  const tiles = audienceTiles(locale);
+
+  return (
+    <section className="border-t border-navy/10 bg-creme paper py-14 sm:py-20">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <SectionEyebrow number="01·c" />
+        <h2 className="font-serif text-3xl leading-tight text-navy sm:text-4xl">
+          {heading.title}
+        </h2>
+        <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
+        <p className="mt-3 max-w-2xl font-serif italic text-graphit/70 sm:text-lg">
+          {heading.sub}
+        </p>
+
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {tiles.map((t, i) => (
+            <article
+              key={i}
+              className="flex flex-col rounded-card border border-navy/15 bg-white px-5 py-6 sm:px-6 sm:py-7"
+            >
+              <div className="flex items-baseline gap-3">
+                <span className="font-serif text-base text-gold tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="font-serif text-xl leading-tight text-navy">
+                  {t.title}
+                </h3>
+              </div>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-graphit/75">
+                {t.body}
+              </p>
+              <ul className="mt-4 space-y-1.5">
+                {t.bullets.map((b, j) => (
+                  <li
+                    key={j}
+                    className="flex items-start gap-2 font-sans text-sm leading-relaxed text-graphit/65"
+                  >
+                    <span className="mt-[7px] inline-block h-1 w-1 shrink-0 rounded-full bg-gold" aria-hidden />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface AudienceTile { title: string; body: string; bullets: string[] }
+function audienceHeading(locale: string): { title: string; sub: string } {
+  if (locale.startsWith('es')) return {
+    title: 'Tres formas de usar VozClara.',
+    sub: 'Un mismo producto. Tres puertas de entrada según para qué lo necesites.',
+  };
+  if (locale.startsWith('pt')) return {
+    title: 'Três formas de usar VozClara.',
+    sub: 'O mesmo produto. Três portas de entrada consoante para o que precisas.',
+  };
+  if (locale.startsWith('de')) return {
+    title: 'Drei Wege, VozClara zu nutzen.',
+    sub: 'Ein Produkt. Drei Eingangstüren — je nachdem wofür du es brauchst.',
+  };
+  return {
+    title: 'Three ways to use VozClara.',
+    sub: 'One product. Three doors in — depending on what you need it for.',
+  };
+}
+function audienceTiles(locale: string): AudienceTile[] {
+  if (locale.startsWith('es')) return [
+    {
+      title: 'Aprende un idioma con vídeo real.',
+      body: 'Guarda noticias en alemán, podcasts en inglés, vlogs en portugués. Recibe vocabulario adaptado a tu nivel, citas clave y material de práctica.',
+      bullets: ['Vocabulario por nivel MCER (A1–C1)', 'Shadowing y pronunciación', 'Exportación a Anki en un clic'],
+    },
+    {
+      title: 'No vuelvas a perder una idea.',
+      body: 'Guarda charlas, podcasts, grabaciones de conferencias. Busca a través de toda tu biblioteca. Cita con timestamps que vuelven al segundo exacto.',
+      bullets: ['Búsqueda en toda tu biblioteca', 'Citas con marca de tiempo', 'Exportación a Notion/Markdown (pronto)'],
+    },
+    {
+      title: 'Estudia desde las clases que ya ves.',
+      body: 'Convierte una clase de dos horas en notas estructuradas. Repásalo con repetición espaciada. Cita cualquier afirmación en segundos.',
+      bullets: ['Resumen por capítulos', 'Modo quiz (pronto)', 'Citas en formato APA/MLA'],
+    },
+  ];
+  if (locale.startsWith('pt')) return [
+    {
+      title: 'Aprende um idioma com vídeo real.',
+      body: 'Guarda notícias em alemão, podcasts em inglês, vlogs em espanhol. Recebe vocabulário adaptado ao teu nível, citações-chave e material de prática.',
+      bullets: ['Vocabulário por nível QECR (A1–C1)', 'Shadowing e pronúncia', 'Exportação para Anki num clique'],
+    },
+    {
+      title: 'Nunca mais percas uma ideia.',
+      body: 'Guarda palestras, podcasts, gravações de conferências. Pesquisa em toda a tua biblioteca. Cita com timestamps que voltam ao segundo exato.',
+      bullets: ['Pesquisa em toda a biblioteca', 'Citações com marca temporal', 'Exportação para Notion/Markdown (em breve)'],
+    },
+    {
+      title: 'Estuda a partir das aulas que já vês.',
+      body: 'Transforma uma aula de duas horas em notas estruturadas. Revê com repetição espaçada. Cita qualquer afirmação em segundos.',
+      bullets: ['Resumo por capítulos', 'Modo quiz (em breve)', 'Citações em formato APA/MLA'],
+    },
+  ];
+  if (locale.startsWith('de')) return [
+    {
+      title: 'Lern eine Sprache mit echtem Video.',
+      body: 'Speichere Tagesschau, spanische Podcasts, englische YouTuber. Bekomm Vokabular auf deinem Niveau, Schlüssel-Zitate und Übungs-Material.',
+      bullets: ['Vokabular nach GER-Niveau (A1–C1)', 'Shadowing & Aussprache', 'Anki-Export in einem Klick'],
+    },
+    {
+      title: 'Verlier nie wieder einen Gedanken.',
+      body: 'Speichere Vorträge, Podcasts, Konferenz-Aufnahmen. Suche durch deine ganze Bibliothek. Zitiere mit Timestamps die zum genauen Moment springen.',
+      bullets: ['Suche über deine ganze Bibliothek', 'Zitate mit Timestamp', 'Export nach Notion/Markdown (bald)'],
+    },
+    {
+      title: 'Studier aus den Vorlesungen die du eh schaust.',
+      body: 'Verwandle 2-Stunden-Vorlesungen in strukturierte Notizen. Wiederhol sie mit Spaced Repetition. Zitiere jede Aussage in Sekunden.',
+      bullets: ['Kapitelweise Zusammenfassungen', 'Quiz-Modus (bald)', 'Zitate im APA-/MLA-Format'],
+    },
+  ];
+  return [
+    {
+      title: 'Learn a language from real video.',
+      body: 'Save German news, Spanish podcasts, French YouTubers. Get vocabulary tuned to your level, key quotes, and practice material.',
+      bullets: ['Vocabulary by CEFR level (A1–C1)', 'Shadowing & pronunciation', 'Anki export in one click'],
+    },
+    {
+      title: 'Never lose an idea again.',
+      body: 'Save talks, podcasts, conference recordings. Search across your entire library. Quote with timestamps that jump back to the exact second.',
+      bullets: ['Searchable across your library', 'Citations with timestamps', 'Export to Notion / Markdown (soon)'],
+    },
+    {
+      title: 'Study from the lectures you already watch.',
+      body: 'Turn a 2-hour lecture into structured notes. Review with spaced repetition. Cite anything in seconds.',
+      bullets: ['Chapter-by-chapter summaries', 'Quiz mode (soon)', 'APA / MLA citation format'],
+    },
+  ];
+}
+
+/* ─── § 08·b · Why not just ChatGPT? ──────────────────────────────────────
+   The objection lives in every visitor's head. Better to name it
+   explicitly than let them close the tab. Surfaces VozClara's actual
+   moats: persistence, search, multilingual tuning, practice modes.
+─────────────────────────────────────────────────────────────────────────── */
+export function WhyNotChatGPT() {
+  const { locale } = useLocale();
+  const heading = whyNotHeading(locale);
+  const rows = whyNotRows(locale);
+
+  return (
+    <section className="border-t border-navy/10 bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        <SectionEyebrow number="08·b" />
+        <h2 className="font-serif text-3xl leading-tight text-navy sm:text-4xl">
+          {heading.title}
+        </h2>
+        <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
+        <p className="mt-3 max-w-2xl font-serif italic text-graphit/70 sm:text-lg">
+          {heading.sub}
+        </p>
+
+        <div className="mt-10 overflow-hidden rounded-card border border-navy/15">
+          <div className="grid grid-cols-[1fr_1fr] border-b border-navy/10 bg-creme/60">
+            <div className="px-4 py-3 font-sans text-[11px] uppercase tracking-[0.25em] text-graphit/60 sm:px-6">
+              {heading.colChatGPT}
+            </div>
+            <div className="border-l border-navy/10 px-4 py-3 font-sans text-[11px] uppercase tracking-[0.25em] text-gold sm:px-6">
+              {heading.colVozClara}
+            </div>
+          </div>
+          {rows.map((row, i) => (
+            <div
+              key={i}
+              className={[
+                'grid grid-cols-[1fr_1fr]',
+                i < rows.length - 1 ? 'border-b border-navy/10' : '',
+              ].join(' ')}
+            >
+              <div className="px-4 py-4 font-sans text-sm leading-relaxed text-graphit/65 sm:px-6 sm:py-5">
+                {row.chatgpt}
+              </div>
+              <div className="border-l border-navy/10 px-4 py-4 font-serif text-sm leading-relaxed text-navy sm:px-6 sm:py-5">
+                {row.vozclara}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-6 max-w-2xl font-sans text-sm leading-relaxed text-graphit/60">
+          {heading.footnote}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+interface WhyNotRow { chatgpt: string; vozclara: string }
+function whyNotHeading(locale: string): {
+  title: string; sub: string; colChatGPT: string; colVozClara: string; footnote: string;
+} {
+  if (locale.startsWith('es')) return {
+    title: 'ChatGPT olvida. VozClara recuerda.',
+    sub: 'Sí, puedes pegar un enlace de YouTube en ChatGPT. Pero hay tres cosas que ChatGPT no hace — y que aquí son el núcleo del producto.',
+    colChatGPT: 'ChatGPT',
+    colVozClara: 'VozClara',
+    footnote: 'No es una crítica a ChatGPT — es una herramienta general. VozClara es la capa de conocimiento sobre todo lo que ves: persistente, buscable, multilingüe, tuya.',
+  };
+  if (locale.startsWith('pt')) return {
+    title: 'O ChatGPT esquece. VozClara lembra.',
+    sub: 'Sim, podes colar um link do YouTube no ChatGPT. Mas há três coisas que o ChatGPT não faz — e que aqui são o núcleo do produto.',
+    colChatGPT: 'ChatGPT',
+    colVozClara: 'VozClara',
+    footnote: 'Não é uma crítica ao ChatGPT — é uma ferramenta geral. VozClara é a camada de conhecimento sobre tudo o que vês: persistente, pesquisável, multilingue, tua.',
+  };
+  if (locale.startsWith('de')) return {
+    title: 'ChatGPT vergisst. VozClara erinnert sich.',
+    sub: 'Klar, du kannst einen YouTube-Link in ChatGPT einfügen. Aber drei Dinge macht ChatGPT nicht — und genau das ist hier der Kern.',
+    colChatGPT: 'ChatGPT',
+    colVozClara: 'VozClara',
+    footnote: 'Keine Kritik an ChatGPT — es ist ein Allzweck-Werkzeug. VozClara ist die Wissens-Schicht über allem was du schaust: persistent, durchsuchbar, mehrsprachig, deins.',
+  };
+  return {
+    title: 'ChatGPT forgets. VozClara remembers.',
+    sub: 'Sure, you can paste a YouTube link into ChatGPT. But there are three things ChatGPT doesn’t do — and that’s exactly what VozClara is built for.',
+    colChatGPT: 'ChatGPT',
+    colVozClara: 'VozClara',
+    footnote: 'Not a knock on ChatGPT — it’s a general tool. VozClara is the knowledge layer over everything you watch: persistent, searchable, multilingual, yours.',
+  };
+}
+function whyNotRows(locale: string): WhyNotRow[] {
+  if (locale.startsWith('es')) return [
+    { chatgpt: 'Una conversación, después desaparece.', vozclara: 'Biblioteca persistente, buscable durante años.' },
+    { chatgpt: 'Pegas el mismo enlace una y otra vez.', vozclara: 'Un enlace = un Pack, guardado para siempre.' },
+    { chatgpt: 'Resúmenes genéricos.', vozclara: 'Ajustado a tu idioma, tu nivel, tu objetivo.' },
+    { chatgpt: 'Sin práctica, sin SRS, sin shadowing.', vozclara: 'Anki, repetición espaciada, voz, conversación con tutor — todo dentro.' },
+  ];
+  if (locale.startsWith('pt')) return [
+    { chatgpt: 'Uma conversa, depois desaparece.', vozclara: 'Biblioteca persistente, pesquisável durante anos.' },
+    { chatgpt: 'Colas o mesmo link vezes sem conta.', vozclara: 'Um link = um Pack, guardado para sempre.' },
+    { chatgpt: 'Resumos genéricos.', vozclara: 'Ajustado à tua língua, ao teu nível, ao teu objetivo.' },
+    { chatgpt: 'Sem prática, sem SRS, sem shadowing.', vozclara: 'Anki, repetição espaçada, voz, conversa com tutor — tudo dentro.' },
+  ];
+  if (locale.startsWith('de')) return [
+    { chatgpt: 'Ein Gespräch, dann ist es weg.', vozclara: 'Persistente Bibliothek, jahrelang durchsuchbar.' },
+    { chatgpt: 'Du fügst denselben Link immer wieder ein.', vozclara: 'Ein Link = ein Pack, für immer gespeichert.' },
+    { chatgpt: 'Generische Zusammenfassungen.', vozclara: 'Zugeschnitten auf deine Sprache, dein Niveau, dein Ziel.' },
+    { chatgpt: 'Keine Praxis, kein SRS, kein Shadowing.', vozclara: 'Anki, Spaced Repetition, Stimme, Tutor-Gespräch — alles drin.' },
+  ];
+  return [
+    { chatgpt: 'One conversation, then it’s gone.', vozclara: 'Persistent library, searchable for years.' },
+    { chatgpt: 'You paste the same link over and over.', vozclara: 'One link = one Pack, saved forever.' },
+    { chatgpt: 'Generic summaries.', vozclara: 'Tuned to your language, your level, your goal.' },
+    { chatgpt: 'No practice, no SRS, no shadowing.', vozclara: 'Anki, spaced repetition, voice, tutor chat — all in.' },
+  ];
+}

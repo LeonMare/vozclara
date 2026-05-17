@@ -229,6 +229,16 @@ export function PackPage() {
           <span className="rounded-full bg-navy/8 px-2.5 py-1 text-graphit/70">
             {t.genreNames[pack.genre] ?? pack.genre}
           </span>
+          {/* CEFR difficulty — only shown when the worker emitted one.
+              Helps language learners filter packs to their level. */}
+          {pack.difficulty && (
+            <span
+              className="rounded-full border border-gold/50 bg-creme px-2.5 py-1 text-gold"
+              title={`CEFR ${pack.difficulty} — required to follow source audio`}
+            >
+              {pack.difficulty}
+            </span>
+          )}
           <span className="tabular-nums text-graphit/55">
             {new Date(pack.createdAt).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' })}
           </span>
@@ -597,9 +607,23 @@ function renderTabContent(
 /* ─── Tabs ────────────────────────────────────────────────────────────── */
 
 function SummaryTab({ view }: { view: PackTranslation }) {
+  /* TL;DR shows above the summary blocks when present. It's the single
+     line a knowledge-worker or student reads first to decide whether to
+     keep going. Older packs won't have it — they degrade to short+long. */
+  const tldr = view.tldr ?? view.summary.short;
   return (
     <div>
-      {view.summary.short && (
+      {tldr && (
+        <div className="mb-6 rounded-card border-l-2 border-gold bg-creme/40 px-5 py-4">
+          <div className="font-sans text-[10px] uppercase tracking-[0.3em] text-gold">
+            TL;DR
+          </div>
+          <p className="mt-2 font-serif text-lg leading-snug text-navy sm:text-xl">
+            {tldr}
+          </p>
+        </div>
+      )}
+      {view.summary.short && view.summary.short !== tldr && (
         <p className="font-serif text-xl leading-snug text-navy sm:text-2xl">
           {view.summary.short}
         </p>
