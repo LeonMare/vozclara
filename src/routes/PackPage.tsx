@@ -20,6 +20,7 @@ import { PackExport } from '../components/PackExport';
 import { PackShare } from '../components/PackShare';
 import { AskPanel } from '../components/AskPanel';
 import { API_BASE } from '../lib/apiBase';
+import { SITE_URL } from '../lib/site';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
 
@@ -341,7 +342,7 @@ export function PackPage() {
           </nav>
 
           <section className="mt-8 pb-16">
-            {renderTabContent(tab, view, segments, t, seekPlayer, pack.title)}
+            {renderTabContent(tab, view, segments, t, seekPlayer, pack.title, pack.id)}
           </section>
         </div>
 
@@ -385,7 +386,7 @@ export function PackPage() {
                 </button>
                 {isOpen && (
                   <div id={`panel-${k}`} className="pb-6 pt-2">
-                    {renderTabContent(k, view, segments, t, seekPlayer, pack.title)}
+                    {renderTabContent(k, view, segments, t, seekPlayer, pack.title, pack.id)}
                   </div>
                 )}
               </div>
@@ -615,6 +616,7 @@ function renderTabContent(
   t: ReturnType<typeof useLocale>['t'],
   onSeek: (sec: number) => void,
   packTitle: string,
+  packId: string,
 ): React.ReactNode {
   switch (key) {
     case 'summary':
@@ -630,7 +632,7 @@ function renderTabContent(
     case 'quiz':
       return <QuizTab view={view} />;
     case 'quotes':
-      return <QuotesTab view={view} onSeek={onSeek} packTitle={packTitle} />;
+      return <QuotesTab view={view} onSeek={onSeek} packTitle={packTitle} packId={packId} />;
     case 'socialAngles':
       return <SocialAnglesTab view={view} />;
     case 'transcript':
@@ -784,10 +786,12 @@ function QuotesTab({
   view,
   onSeek,
   packTitle,
+  packId,
 }: {
   view: PackTranslation;
   onSeek: (sec: number) => void;
   packTitle: string;
+  packId: string;
 }) {
   const { locale } = useLocale();
   if (view.keyQuotes.length === 0) return <Empty />;
@@ -800,6 +804,23 @@ function QuotesTab({
     if (q.original && q.original !== q.text) params.set('original', q.original);
     if (packTitle) params.set('packTitle', packTitle);
     return `${base}?${params.toString()}`;
+  }
+
+  /**
+   * One-line citation string for clipboard. Fits Twitter / LinkedIn /
+   * Notion comfortably and stays readable in plain-text contexts.
+   * Format:  "<quote>" — <speaker> · <timestamp> · <packTitle> · <url>
+   * Empty fields are dropped cleanly so packs without a speaker or
+   * timestamp don't trail a hanging dash.
+   */
+  function formatCitation(q: PackTranslation['keyQuotes'][number]): string {
+    const url = `${SITE_URL}/pack/${packId}`;
+    const tail: string[] = [];
+    if (q.speaker) tail.push(q.speaker);
+    if (q.timestampSec) tail.push(formatTime(q.timestampSec));
+    if (packTitle) tail.push(packTitle);
+    tail.push(url);
+    return `"${q.text}" — ${tail.join(' · ')}`;
   }
 
   return (
@@ -830,29 +851,94 @@ function QuotesTab({
             <p className="mt-2 font-sans text-sm italic text-graphit/55">{q.original}</p>
           )}
 
-          {/* Share-as-image affordance — opens the brand-styled 1080×1080
-              quote card in a new tab where the user can right-click /
-              long-press to save or share. Visible on hover (desktop)
-              and always on touch (since :hover is unreliable there). */}
-          <a
-            href={quoteCardUrl(q)}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={quoteCardLabel(locale)}
-            title={quoteCardLabel(locale)}
-            className="absolute right-0 top-0 inline-flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-graphit/65 opacity-100 transition hover:border-gold hover:text-navy sm:opacity-0 sm:group-hover:opacity-100"
-          >
-            <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
-              {/* Square frame with a small mountain motif — "image" glyph */}
-              <rect x="1.5" y="2.5" width="11" height="9" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" />
-              <circle cx="5" cy="6" r="0.9" fill="currentColor" />
-              <path d="M3 10 L6 7 L8.5 9 L11 6.5 L11 11 L3 11 Z" fill="currentColor" opacity="0.5" />
-            </svg>
-          </a>
+          {/* Two affordances stack top-right: copy-citation + share-image.
+              Both visible on hover (desktop) and always on touch. */}
+          <div className="absolute right-0 top-0 flex items-center gap-1.5 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
+            <CopyCitationButton text={formatCitation(q)} locale={locale} />
+            <a
+              href={quoteCardUrl(q)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={quoteCardLabel(locale)}
+              title={quoteCardLabel(locale)}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-graphit/65 transition hover:border-gold hover:text-navy"
+            >
+              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+                <rect x="1.5" y="2.5" width="11" height="9" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" />
+                <circle cx="5" cy="6" r="0.9" fill="currentColor" />
+                <path d="M3 10 L6 7 L8.5 9 L11 6.5 L11 11 L3 11 Z" fill="currentColor" opacity="0.5" />
+              </svg>
+            </a>
+          </div>
         </blockquote>
       ))}
     </div>
   );
+}
+
+/**
+ * Two-state clipboard button — idle (clipboard glyph) → done (✓ check).
+ * The done state lingers 1.6 s, long enough to register but quick enough
+ * that the row settles back to its calm baseline before the user moves
+ * on. Falls back silently if clipboard access is denied (Safari private
+ * mode, locked-down enterprise browsers) — no error toast, the button
+ * just doesn't flip.
+ */
+function CopyCitationButton({ text, locale }: { text: string; locale: string }) {
+  const [done, setDone] = useState(false);
+
+  async function onClick() {
+    try {
+      await navigator.clipboard.writeText(text);
+      setDone(true);
+      window.setTimeout(() => setDone(false), 1600);
+    } catch {
+      /* clipboard blocked — silently ignore */
+    }
+  }
+
+  const label = copyCitationLabel(locale, done);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className={[
+        'inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white transition',
+        done
+          ? 'border-gold text-gold'
+          : 'border-navy/15 text-graphit/65 hover:border-gold hover:text-navy',
+      ].join(' ')}
+    >
+      {done ? (
+        <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+          <path d="M3 7.5 L6 10 L11 4" stroke="currentColor" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+          {/* Clipboard glyph — back sheet + front sheet + tab on top */}
+          <rect x="3" y="3" width="8" height="9.5" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none" />
+          <rect x="1.5" y="1.5" width="8" height="9.5" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.5" />
+          <path d="M4 1.5 L7 1.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+function copyCitationLabel(locale: string, done: boolean): string {
+  if (done) {
+    if (locale.startsWith('es')) return 'Copiado';
+    if (locale.startsWith('pt')) return 'Copiado';
+    if (locale.startsWith('de')) return 'Kopiert';
+    return 'Copied';
+  }
+  if (locale.startsWith('es')) return 'Copiar cita';
+  if (locale.startsWith('pt')) return 'Copiar citação';
+  if (locale.startsWith('de')) return 'Zitat kopieren';
+  return 'Copy citation';
 }
 
 function quoteCardLabel(locale: string): string {

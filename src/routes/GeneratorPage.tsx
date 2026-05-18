@@ -12,6 +12,7 @@ import { fetchInsights, joinForLLM } from '../lib/insights';
 import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
 import { nanoid } from '../lib/nanoid';
 import { indexPack } from '../lib/packIndex';
+import { audienceDefaultMode } from '../lib/audience';
 
 /**
  * /new — the generator flow.
@@ -49,13 +50,24 @@ export function GeneratorPage() {
   const [outputLang, setOutputLang] = useState<Language>(
     initialLang && ['es', 'en', 'de', 'pt'].includes(initialLang) ? initialLang : (locale as Language),
   );
-  const [mode, setMode] = useState<Mode>(
-    initialMode === 'learn' || initialMode === 'brief' ||
-    initialMode === 'study' || initialMode === 'creator'
-      ? initialMode
-      // Legacy ?mode=business URLs map silently to the renamed key.
-      : 'brief',
-  );
+  const [mode, setMode] = useState<Mode>(() => {
+    // 1. URL param wins — somebody linked here with intent.
+    if (
+      initialMode === 'learn' ||
+      initialMode === 'brief' ||
+      initialMode === 'study' ||
+      initialMode === 'creator'
+    ) {
+      return initialMode;
+    }
+    // 2. AudienceTiles choice from the landing — sets the default
+    //    that matches the user's onboarding picked persona.
+    const aud = audienceDefaultMode();
+    if (aud) return aud;
+    // 3. Cold start — `brief` is the safest neutral default.
+    //    Legacy ?mode=business URLs also fall through here.
+    return 'brief';
+  });
   const [recommended, setRecommended] = useState<Mode | undefined>();
 
   const [generating, setGenerating] = useState(false);

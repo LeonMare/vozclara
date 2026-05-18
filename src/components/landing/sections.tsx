@@ -8,11 +8,13 @@
  * decorative noise.
  */
 
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
 import { LandingAskDemo } from './LandingAskDemo';
 import { WaitlistButton } from '../WaitlistButton';
+import { type Audience, getAudience, setAudience } from '../../lib/audience';
 
 /* ─── 02 · Problem ─────────────────────────────────────────────────────── */
 
@@ -790,6 +792,23 @@ export function AudienceTiles() {
   const { locale } = useLocale();
   const heading = audienceHeading(locale);
   const tiles = audienceTiles(locale);
+  const labels = audienceCtaLabels(locale);
+
+  // The picker lives in client-only state. On first render after
+  // hydration it reads localStorage so the visitor's previous choice
+  // re-highlights when they come back. `mounted` gates the read so
+  // SSR / pre-hydration paint stays consistent across runs.
+  const [mounted, setMounted] = useState(false);
+  const [selected, setSelected] = useState<Audience | null>(null);
+  useEffect(() => {
+    setMounted(true);
+    setSelected(getAudience());
+  }, []);
+
+  function pick(a: Audience) {
+    setAudience(a);
+    setSelected(a);
+  }
 
   return (
     <section className="border-t border-navy/10 bg-creme paper py-14 sm:py-20">
@@ -804,42 +823,75 @@ export function AudienceTiles() {
         </p>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {tiles.map((t, i) => (
-            <article
-              key={i}
-              className="flex flex-col rounded-card border border-navy/15 bg-white px-5 py-6 sm:px-6 sm:py-7"
-            >
-              <div className="flex items-baseline gap-3">
-                <span className="font-serif text-base text-gold tabular-nums">
-                  {String(i + 1).padStart(2, '0')}
+          {tiles.map((t, i) => {
+            const isSelected = mounted && selected === t.audience;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => pick(t.audience)}
+                aria-pressed={isSelected}
+                className={[
+                  'group flex flex-col rounded-card border bg-white px-5 py-6 text-left transition sm:px-6 sm:py-7',
+                  isSelected
+                    ? 'border-gold ring-2 ring-gold/30 shadow-card -translate-y-0.5'
+                    : 'border-navy/15 hover:border-gold/60 hover:-translate-y-0.5',
+                ].join(' ')}
+              >
+                <div className="flex items-baseline gap-3">
+                  <span className="font-serif text-base text-gold tabular-nums">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="font-serif text-xl leading-tight text-navy">
+                    {t.title}
+                  </h3>
+                  {isSelected && (
+                    <span className="ml-auto rounded-full bg-gold/15 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold">
+                      {labels.selectedBadge}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-3 font-sans text-sm leading-relaxed text-graphit/75">
+                  {t.body}
+                </p>
+                <ul className="mt-4 space-y-1.5">
+                  {t.bullets.map((b, j) => (
+                    <li
+                      key={j}
+                      className="flex items-start gap-2 font-sans text-sm leading-relaxed text-graphit/65"
+                    >
+                      <span className="mt-[7px] inline-block h-1 w-1 shrink-0 rounded-full bg-gold" aria-hidden />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+                <span
+                  className={[
+                    'mt-5 font-sans text-xs underline-offset-4 transition',
+                    isSelected ? 'text-gold' : 'text-graphit/55 group-hover:text-navy group-hover:underline',
+                  ].join(' ')}
+                >
+                  {isSelected ? labels.confirmed : labels.pickCta}
                 </span>
-                <h3 className="font-serif text-xl leading-tight text-navy">
-                  {t.title}
-                </h3>
-              </div>
-              <p className="mt-3 font-sans text-sm leading-relaxed text-graphit/75">
-                {t.body}
-              </p>
-              <ul className="mt-4 space-y-1.5">
-                {t.bullets.map((b, j) => (
-                  <li
-                    key={j}
-                    className="flex items-start gap-2 font-sans text-sm leading-relaxed text-graphit/65"
-                  >
-                    <span className="mt-[7px] inline-block h-1 w-1 shrink-0 rounded-full bg-gold" aria-hidden />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Once an audience is picked, surface a quiet line that
+            explains what just happened — sets expectation that the
+            Generator will now default to a matching mode. */}
+        {mounted && selected && (
+          <p className="mt-6 font-sans text-sm italic text-graphit/65">
+            {labels.confirmedTail}
+          </p>
+        )}
       </div>
     </section>
   );
 }
 
-interface AudienceTile { title: string; body: string; bullets: string[] }
+interface AudienceTile { audience: Audience; title: string; body: string; bullets: string[] }
 function audienceHeading(locale: string): { title: string; sub: string } {
   if (locale.startsWith('es')) return {
     title: 'Tres formas de usar VozClara.',
@@ -861,16 +913,19 @@ function audienceHeading(locale: string): { title: string; sub: string } {
 function audienceTiles(locale: string): AudienceTile[] {
   if (locale.startsWith('es')) return [
     {
+      audience: 'language',
       title: 'Aprende un idioma con vídeo real.',
       body: 'Guarda noticias en alemán, podcasts en inglés, vlogs en portugués. Recibe vocabulario adaptado a tu nivel, citas clave y material de práctica.',
       bullets: ['Vocabulario por nivel MCER (A1–C1)', 'Shadowing y pronunciación', 'Exportación a Anki en un clic'],
     },
     {
+      audience: 'news',
       title: 'No vuelvas a perder una idea.',
       body: 'Guarda charlas, podcasts, grabaciones de conferencias. Busca a través de toda tu biblioteca. Cita con timestamps que vuelven al segundo exacto.',
       bullets: ['Búsqueda en toda tu biblioteca', 'Citas con marca de tiempo', 'Exportación a Notion/Markdown (pronto)'],
     },
     {
+      audience: 'study',
       title: 'Estudia desde las clases que ya ves.',
       body: 'Convierte una clase de dos horas en notas estructuradas. Repásalo con repetición espaciada. Cita cualquier afirmación en segundos.',
       bullets: ['Resumen por capítulos', 'Modo quiz (pronto)', 'Citas en formato APA/MLA'],
@@ -878,16 +933,19 @@ function audienceTiles(locale: string): AudienceTile[] {
   ];
   if (locale.startsWith('pt')) return [
     {
+      audience: 'language',
       title: 'Aprende um idioma com vídeo real.',
       body: 'Guarda notícias em alemão, podcasts em inglês, vlogs em espanhol. Recebe vocabulário adaptado ao teu nível, citações-chave e material de prática.',
       bullets: ['Vocabulário por nível QECR (A1–C1)', 'Shadowing e pronúncia', 'Exportação para Anki num clique'],
     },
     {
+      audience: 'news',
       title: 'Nunca mais percas uma ideia.',
       body: 'Guarda palestras, podcasts, gravações de conferências. Pesquisa em toda a tua biblioteca. Cita com timestamps que voltam ao segundo exato.',
       bullets: ['Pesquisa em toda a biblioteca', 'Citações com marca temporal', 'Exportação para Notion/Markdown (em breve)'],
     },
     {
+      audience: 'study',
       title: 'Estuda a partir das aulas que já vês.',
       body: 'Transforma uma aula de duas horas em notas estruturadas. Revê com repetição espaçada. Cita qualquer afirmação em segundos.',
       bullets: ['Resumo por capítulos', 'Modo quiz (em breve)', 'Citações em formato APA/MLA'],
@@ -895,16 +953,19 @@ function audienceTiles(locale: string): AudienceTile[] {
   ];
   if (locale.startsWith('de')) return [
     {
+      audience: 'language',
       title: 'Lern eine Sprache mit echtem Video.',
       body: 'Speichere Tagesschau, spanische Podcasts, englische YouTuber. Bekomm Vokabular auf deinem Niveau, Schlüssel-Zitate und Übungs-Material.',
       bullets: ['Vokabular nach GER-Niveau (A1–C1)', 'Shadowing & Aussprache', 'Anki-Export in einem Klick'],
     },
     {
+      audience: 'news',
       title: 'Verlier nie wieder einen Gedanken.',
       body: 'Speichere Vorträge, Podcasts, Konferenz-Aufnahmen. Suche durch deine ganze Bibliothek. Zitiere mit Timestamps die zum genauen Moment springen.',
       bullets: ['Suche über deine ganze Bibliothek', 'Zitate mit Timestamp', 'Export nach Notion/Markdown (bald)'],
     },
     {
+      audience: 'study',
       title: 'Studier aus den Vorlesungen die du eh schaust.',
       body: 'Verwandle 2-Stunden-Vorlesungen in strukturierte Notizen. Wiederhol sie mit Spaced Repetition. Zitiere jede Aussage in Sekunden.',
       bullets: ['Kapitelweise Zusammenfassungen', 'Quiz-Modus (bald)', 'Zitate im APA-/MLA-Format'],
@@ -912,16 +973,19 @@ function audienceTiles(locale: string): AudienceTile[] {
   ];
   return [
     {
+      audience: 'language',
       title: 'Learn a language from real video.',
       body: 'Save German news, Spanish podcasts, French YouTubers. Get vocabulary tuned to your level, key quotes, and practice material.',
       bullets: ['Vocabulary by CEFR level (A1–C1)', 'Shadowing & pronunciation', 'Anki export in one click'],
     },
     {
+      audience: 'news',
       title: 'Never lose an idea again.',
       body: 'Save talks, podcasts, conference recordings. Search across your entire library. Quote with timestamps that jump back to the exact second.',
       bullets: ['Searchable across your library', 'Citations with timestamps', 'Export to Notion / Markdown (soon)'],
     },
     {
+      audience: 'study',
       title: 'Study from the lectures you already watch.',
       body: 'Turn a 2-hour lecture into structured notes. Review with spaced repetition. Cite anything in seconds.',
       bullets: ['Chapter-by-chapter summaries', 'Quiz mode (soon)', 'APA / MLA citation format'],
@@ -934,6 +998,38 @@ function audienceTiles(locale: string): AudienceTile[] {
    explicitly than let them close the tab. Surfaces VozClara's actual
    moats: persistence, search, multilingual tuning, practice modes.
 ─────────────────────────────────────────────────────────────────────────── */
+/**
+ * Pick / Selected / Selected-badge copy for the AudienceTiles
+ * interactive state. Separate function from audienceTiles() so the
+ * static content stays small and grep-able.
+ */
+function audienceCtaLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    pickCta: 'Esto es lo mío →',
+    confirmed: 'Tu elección activa',
+    selectedBadge: 'Activo',
+    confirmedTail: 'Listo. El generador se abrirá con el modo recomendado preseleccionado.',
+  };
+  if (locale.startsWith('pt')) return {
+    pickCta: 'Isto é para mim →',
+    confirmed: 'A tua escolha activa',
+    selectedBadge: 'Ativo',
+    confirmedTail: 'Pronto. O gerador vai abrir com o modo recomendado pré-selecionado.',
+  };
+  if (locale.startsWith('de')) return {
+    pickCta: 'Das ist meins →',
+    confirmed: 'Deine aktive Wahl',
+    selectedBadge: 'Aktiv',
+    confirmedTail: 'Erledigt. Der Generator öffnet sich mit dem passenden Modus vorausgewählt.',
+  };
+  return {
+    pickCta: 'This is me →',
+    confirmed: 'Your active choice',
+    selectedBadge: 'Active',
+    confirmedTail: "Done. The Generator opens with the matching mode preselected.",
+  };
+}
+
 export function WhyNotChatGPT() {
   const { locale } = useLocale();
   const heading = whyNotHeading(locale);
