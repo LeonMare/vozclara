@@ -25,7 +25,15 @@ interface ResendEnv {
 }
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'VozClara <noreply@vozclara.app>';
+/* Send from leonmare.de — the LEON MARÉ studio domain is already DNS-
+   verified at Resend's free tier, so we don't burn the $20/mo Pro plan
+   just to add a second verified domain. The user-visible "from name"
+   stays "VozClara" so the inbox preview reads as expected; the trailing
+   leonmare.de actually reinforces the "A LEON MARÉ product" footer.
+   The replyTo points back to support@vozclara.app so any reply lands
+   in the product mailbox, not the studio one. */
+const DEFAULT_FROM = 'VozClara <noreply@leonmare.de>';
+const DEFAULT_REPLY_TO = 'support@vozclara.app';
 
 /**
  * Low-level send. Returns ok=false on transport errors but never
@@ -306,6 +314,7 @@ export async function sendMagicLink(
     subject: labels.subject,
     html,
     text,
+    replyTo: DEFAULT_REPLY_TO,
   });
 }
 
