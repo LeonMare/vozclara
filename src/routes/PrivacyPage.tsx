@@ -116,21 +116,21 @@ function privacyLabels(locale: string) {
         : 'May 2026';
 
   if (locale.startsWith('es')) return {
-    headTitle: 'Privacidad — Voz Clara',
+    headTitle: 'Privacidad — VozClara',
     headDescription:
       'Tu biblioteca permanece en tu dispositivo. Sin cuentas, sin tracking, sin anuncios. Solo el análisis con IA sale de tu navegador.',
     backHome: 'Volver a la página principal',
     sectionLabel: 'Privacidad',
     heroTitle: 'Lo que protegemos. Cómo lo protegemos.',
     heroLead:
-      'Voz Clara no recopila tus datos personales porque no necesita tu identidad para funcionar. Esta página explica qué información se procesa, dónde vive y por qué.',
+      'VozClara no recopila tus datos personales porque no necesita tu identidad para funcionar. Esta página explica qué información se procesa, dónde vive y por qué.',
     lastUpdatedLabel: 'Actualizado',
     lastUpdated,
     sections: [
       {
         heading: 'Sin cuentas, sin login',
         body: [
-          'Voz Clara no requiere registro. No pedimos correo electrónico, teléfono, nombre real ni ninguna otra forma de identificación. No puedes "iniciar sesión" porque no hay sesión que iniciar.',
+          'VozClara no requiere registro. No pedimos correo electrónico, teléfono, nombre real ni ninguna otra forma de identificación. No puedes "iniciar sesión" porque no hay sesión que iniciar.',
           'En lugar de un ID de usuario, tu navegador genera un brainId aleatorio anónimo (similar a un UUID) que se guarda localmente. Sirve únicamente para vincular tus consultas de búsqueda semántica a tus propios Packs cuando esa función esté activada.',
         ],
       },
@@ -164,7 +164,7 @@ function privacyLabels(locale: string) {
       {
         heading: 'Cookies y almacenamiento local',
         body: [
-          'Voz Clara no usa cookies. Usa localStorage e IndexedDB del navegador para guardar tus preferencias (idioma, tema) y tu biblioteca de Packs. Estos datos no salen de tu dispositivo.',
+          'VozClara no usa cookies. Usa localStorage e IndexedDB del navegador para guardar tus preferencias (idioma, tema) y tu biblioteca de Packs. Estos datos no salen de tu dispositivo.',
         ],
       },
       {
@@ -176,25 +176,25 @@ function privacyLabels(locale: string) {
       },
     ],
     contactBody:
-      'Si tienes dudas sobre privacidad o una pregunta concreta sobre cómo se procesan los datos, escríbeme. Voz Clara es un proyecto pequeño operado por una sola persona; las respuestas no son automáticas.',
+      'Si tienes dudas sobre privacidad o una pregunta concreta sobre cómo se procesan los datos, escríbeme. VozClara es un proyecto pequeño operado por una sola persona; las respuestas no son automáticas.',
   };
 
   if (locale.startsWith('pt')) return {
-    headTitle: 'Privacidade — Voz Clara',
+    headTitle: 'Privacidade — VozClara',
     headDescription:
       'A tua biblioteca permanece no teu dispositivo. Sem contas, sem tracking, sem anúncios. Apenas a análise por IA sai do teu navegador.',
     backHome: 'Voltar à página principal',
     sectionLabel: 'Privacidade',
     heroTitle: 'O que protegemos. Como o protegemos.',
     heroLead:
-      'A Voz Clara não recolhe os teus dados pessoais porque não precisa da tua identidade para funcionar. Esta página explica que informação é processada, onde vive e porquê.',
+      'A VozClara não recolhe os teus dados pessoais porque não precisa da tua identidade para funcionar. Esta página explica que informação é processada, onde vive e porquê.',
     lastUpdatedLabel: 'Atualizado',
     lastUpdated,
     sections: [
       {
         heading: 'Sem contas, sem login',
         body: [
-          'A Voz Clara não exige registo. Não pedimos email, telemóvel, nome real nem qualquer outra forma de identificação. Não podes "iniciar sessão" porque não há sessão para iniciar.',
+          'A VozClara não exige registo. Não pedimos email, telemóvel, nome real nem qualquer outra forma de identificação. Não podes "iniciar sessão" porque não há sessão para iniciar.',
           'Em vez de um ID de utilizador, o teu navegador gera um brainId aleatório anónimo (similar a um UUID) guardado localmente. Serve apenas para ligar as tuas consultas de pesquisa semântica aos teus próprios Packs quando essa funcionalidade estiver ativada.',
         ],
       },
@@ -228,7 +228,7 @@ function privacyLabels(locale: string) {
       {
         heading: 'Cookies e armazenamento local',
         body: [
-          'A Voz Clara não usa cookies. Usa localStorage e IndexedDB do navegador para guardar as tuas preferências (idioma, tema) e a tua biblioteca de Packs. Estes dados não saem do teu dispositivo.',
+          'A VozClara não usa cookies. Usa localStorage e IndexedDB do navegador para guardar as tuas preferências (idioma, tema) e a tua biblioteca de Packs. Estes dados não saem do teu dispositivo.',
         ],
       },
       {
@@ -240,25 +240,25 @@ function privacyLabels(locale: string) {
       },
     ],
     contactBody:
-      'Se tens dúvidas sobre privacidade ou uma pergunta concreta sobre como os dados são processados, escreve-me. A Voz Clara é um projeto pequeno operado por uma só pessoa; as respostas não são automáticas.',
+      'Se tens dúvidas sobre privacidade ou uma pergunta concreta sobre como os dados são processados, escreve-me. A VozClara é um projeto pequeno operado por uma só pessoa; as respostas não são automáticas.',
   };
 
   if (locale.startsWith('de')) return {
-    headTitle: 'Datenschutz — Voz Clara',
+    headTitle: 'Datenschutz — VozClara',
     headDescription:
       'Deine Bibliothek bleibt auf deinem Gerät. Keine Konten, kein Tracking, keine Werbung. Nur die KI-Analyse verlässt deinen Browser.',
     backHome: 'Zurück zur Startseite',
     sectionLabel: 'Datenschutz',
     heroTitle: 'Was wir schützen. Wie wir es schützen.',
     heroLead:
-      'Voz Clara erhebt keine personenbezogenen Daten, weil es deine Identität nicht braucht um zu funktionieren. Diese Seite erklärt, welche Information verarbeitet wird, wo sie lebt und warum.',
+      'VozClara erhebt keine personenbezogenen Daten, weil es deine Identität nicht braucht um zu funktionieren. Diese Seite erklärt, welche Information verarbeitet wird, wo sie lebt und warum.',
     lastUpdatedLabel: 'Aktualisiert',
     lastUpdated,
     sections: [
       {
         heading: 'Keine Konten, kein Login',
         body: [
-          'Voz Clara verlangt keine Registrierung. Wir fragen weder E-Mail, Telefon, Klarname noch irgendeine andere Identifikation ab. Du kannst dich nicht „anmelden", weil es keine Sitzung gibt.',
+          'VozClara verlangt keine Registrierung. Wir fragen weder E-Mail, Telefon, Klarname noch irgendeine andere Identifikation ab. Du kannst dich nicht „anmelden", weil es keine Sitzung gibt.',
           'Statt einer Benutzer-ID erzeugt dein Browser eine zufällige anonyme brainId (UUID-ähnlich), lokal gespeichert. Sie dient ausschließlich dazu, semantische Suchanfragen an deine eigenen Packs zu binden, sobald diese Funktion aktiviert ist.',
         ],
       },
@@ -292,7 +292,7 @@ function privacyLabels(locale: string) {
       {
         heading: 'Cookies und lokaler Speicher',
         body: [
-          'Voz Clara verwendet keine Cookies. Es nutzt localStorage und IndexedDB des Browsers um deine Präferenzen (Sprache, Theme) und deine Pack-Bibliothek zu speichern. Diese Daten verlassen dein Gerät nicht.',
+          'VozClara verwendet keine Cookies. Es nutzt localStorage und IndexedDB des Browsers um deine Präferenzen (Sprache, Theme) und deine Pack-Bibliothek zu speichern. Diese Daten verlassen dein Gerät nicht.',
         ],
       },
       {
@@ -304,25 +304,25 @@ function privacyLabels(locale: string) {
       },
     ],
     contactBody:
-      'Wenn du Datenschutz-Fragen hast oder eine konkrete Frage zur Datenverarbeitung — schreib mich an. Voz Clara ist ein kleines Projekt, von einer Person betrieben; Antworten sind nicht automatisiert.',
+      'Wenn du Datenschutz-Fragen hast oder eine konkrete Frage zur Datenverarbeitung — schreib mich an. VozClara ist ein kleines Projekt, von einer Person betrieben; Antworten sind nicht automatisiert.',
   };
 
   return {
-    headTitle: 'Privacy — Voz Clara',
+    headTitle: 'Privacy — VozClara',
     headDescription:
       'Your library stays on your device. No accounts, no tracking, no ads. Only the AI analysis call leaves your browser.',
     backHome: 'Back to home',
     sectionLabel: 'Privacy',
     heroTitle: 'What we protect. How we protect it.',
     heroLead:
-      "Voz Clara doesn't collect your personal data because it doesn't need your identity to work. This page explains what information is processed, where it lives, and why.",
+      "VozClara doesn't collect your personal data because it doesn't need your identity to work. This page explains what information is processed, where it lives, and why.",
     lastUpdatedLabel: 'Updated',
     lastUpdated,
     sections: [
       {
         heading: 'No accounts, no login',
         body: [
-          "Voz Clara requires no signup. We don't ask for email, phone, real name, or any other form of identification. You can't 'log in' because there's no session to start.",
+          "VozClara requires no signup. We don't ask for email, phone, real name, or any other form of identification. You can't 'log in' because there's no session to start.",
           'Instead of a user ID, your browser generates a random anonymous brainId (UUID-shaped), stored locally. It exists solely to scope semantic search queries to your own Packs when that feature is activated.',
         ],
       },
@@ -356,7 +356,7 @@ function privacyLabels(locale: string) {
       {
         heading: 'Cookies and local storage',
         body: [
-          "Voz Clara doesn't use cookies. It uses the browser's localStorage and IndexedDB to store your preferences (language, theme) and your Pack library. None of this leaves your device.",
+          "VozClara doesn't use cookies. It uses the browser's localStorage and IndexedDB to store your preferences (language, theme) and your Pack library. None of this leaves your device.",
         ],
       },
       {
@@ -368,6 +368,6 @@ function privacyLabels(locale: string) {
       },
     ],
     contactBody:
-      "If you have privacy questions or a specific concern about data handling, write to me. Voz Clara is a small project run by one person; responses aren't automated.",
+      "If you have privacy questions or a specific concern about data handling, write to me. VozClara is a small project run by one person; responses aren't automated.",
   };
 }

@@ -61,8 +61,9 @@ Two technical bets I'd love HN's take on:
    cross-device migration and the Michelin-style rating system.
 
 It runs on Cloudflare Workers + Workers AI (Llama 3.3 70B) for the
-free tier; the paid path uses Claude Sonnet / GPT-5. Frontend is React +
-Vite + TS. Repo is open: https://github.com/LeonMare/vozclara
+free tier; the paid path uses Claude Sonnet / GPT-5. Frontend is
+React + Vite + TS. Built in public — happy to dig into any layer
+in the comments.
 
 Honest limitations: it only ingests YouTube transcripts that exist
 (no Whisper pipeline yet for audio-only videos); the rating system
@@ -379,9 +380,9 @@ Stack:
 — Claude Sonnet / GPT-5 for Pro
 — React + Vite + TS frontend
 — IndexedDB library (local-first)
-— No tracking, no analytics, no third-party cookies
+— Privacy-friendly CF Analytics + Sentry, both EU-hosted, no PII
 
-Open source: https://github.com/LeonMare/vozclara
+Built in public — DMs open for layer-by-layer questions.
 ```
 
 **Tweet 5 — the founder deal:**

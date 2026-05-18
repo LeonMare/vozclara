@@ -220,7 +220,7 @@ interface SignInLabels {
 
 function signInLabels(locale: string): SignInLabels {
   if (locale.startsWith('es')) return {
-    headTitle: 'Entrar — Voz Clara',
+    headTitle: 'Entrar — VozClara',
     headDescription: 'Un enlace de un solo uso, válido quince minutos. Sin contraseña.',
     backHome: 'Volver',
     eyebrow: 'Acceso',
@@ -243,7 +243,7 @@ function signInLabels(locale: string): SignInLabels {
     errMissingToken: 'Enlace incompleto. Pide uno nuevo aquí abajo.',
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Entrar — Voz Clara',
+    headTitle: 'Entrar — VozClara',
     headDescription: 'Um link de uso único, válido quinze minutos. Sem palavra-passe.',
     backHome: 'Voltar',
     eyebrow: 'Acesso',
@@ -266,7 +266,7 @@ function signInLabels(locale: string): SignInLabels {
     errMissingToken: 'Link incompleto. Pede um novo aqui em baixo.',
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Anmelden — Voz Clara',
+    headTitle: 'Anmelden — VozClara',
     headDescription: 'Ein Einmal-Link, fünfzehn Minuten gültig. Kein Passwort.',
     backHome: 'Zurück',
     eyebrow: 'Anmeldung',
@@ -289,7 +289,7 @@ function signInLabels(locale: string): SignInLabels {
     errMissingToken: 'Link unvollständig. Fordere unten einen neuen an.',
   };
   return {
-    headTitle: 'Sign in — Voz Clara',
+    headTitle: 'Sign in — VozClara',
     headDescription: 'One single-use link, valid for fifteen minutes. No password.',
     backHome: 'Back',
     eyebrow: 'Sign in',

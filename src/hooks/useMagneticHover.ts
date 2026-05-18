@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
  * frame (no React state) so the follow is smooth even at 120Hz cursors.
  * CSS transition on the element handles the easing in and out — set
  * `transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1)` on the
- * element for the canonical Voz Clara feel.
+ * element for the canonical VozClara feel.
  *
  * Honoured constraints:
  *   • prefers-reduced-motion → effect disabled, returns inert ref

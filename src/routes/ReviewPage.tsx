@@ -289,7 +289,7 @@ function RatingButton({
 
 function reviewLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: 'Repaso — Voz Clara',
+    headTitle: 'Repaso — VozClara',
     headDescription: 'Repaso espaciado del vocabulario de tu biblioteca.',
     eyebrow: 'REPASO',
     loading: 'Cargando…',
@@ -311,7 +311,7 @@ function reviewLabels(locale: string) {
     easy: 'Fácil',
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Revisão — Voz Clara',
+    headTitle: 'Revisão — VozClara',
     headDescription: 'Revisão espaçada do vocabulário da tua biblioteca.',
     eyebrow: 'REVISÃO',
     loading: 'A carregar…',
@@ -333,7 +333,7 @@ function reviewLabels(locale: string) {
     easy: 'Fácil',
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Wiederholung — Voz Clara',
+    headTitle: 'Wiederholung — VozClara',
     headDescription: 'Spaced Repetition für das Vokabular deiner Bibliothek.',
     eyebrow: 'WIEDERHOLUNG',
     loading: 'Lädt…',
@@ -355,7 +355,7 @@ function reviewLabels(locale: string) {
     easy: 'Leicht',
   };
   return {
-    headTitle: 'Review — Voz Clara',
+    headTitle: 'Review — VozClara',
     headDescription: 'Spaced repetition for your library vocabulary.',
     eyebrow: 'REVIEW',
     loading: 'Loading…',

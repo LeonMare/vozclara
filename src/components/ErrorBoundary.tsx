@@ -136,7 +136,7 @@ function fallbackLabels(locale: string) {
   if (locale.startsWith('es')) return {
     eyebrow: 'ERROR',
     title: 'Algo salió mal aquí.',
-    body: 'Voz Clara encontró un problema inesperado en esta página. Vuelve al inicio — tu biblioteca local está intacta, no se perdió nada.',
+    body: 'VozClara encontró un problema inesperado en esta página. Vuelve al inicio — tu biblioteca local está intacta, no se perdió nada.',
     detailsLabel: 'Detalles técnicos',
     reloadCta: 'Volver al inicio',
     dismissCta: 'Cerrar',
@@ -144,7 +144,7 @@ function fallbackLabels(locale: string) {
   if (locale.startsWith('pt')) return {
     eyebrow: 'ERRO',
     title: 'Algo correu mal aqui.',
-    body: 'A Voz Clara encontrou um problema inesperado nesta página. Volta ao início — a tua biblioteca local está intacta, nada se perdeu.',
+    body: 'A VozClara encontrou um problema inesperado nesta página. Volta ao início — a tua biblioteca local está intacta, nada se perdeu.',
     detailsLabel: 'Detalhes técnicos',
     reloadCta: 'Voltar ao início',
     dismissCta: 'Fechar',
@@ -152,7 +152,7 @@ function fallbackLabels(locale: string) {
   if (locale.startsWith('de')) return {
     eyebrow: 'FEHLER',
     title: 'Hier ist etwas schiefgegangen.',
-    body: 'Voz Clara hat auf dieser Seite ein unerwartetes Problem gefunden. Geh zurück zur Startseite — deine lokale Bibliothek ist unberührt, es ist nichts verloren gegangen.',
+    body: 'VozClara hat auf dieser Seite ein unerwartetes Problem gefunden. Geh zurück zur Startseite — deine lokale Bibliothek ist unberührt, es ist nichts verloren gegangen.',
     detailsLabel: 'Technische Details',
     reloadCta: 'Zur Startseite',
     dismissCta: 'Schließen',
@@ -160,7 +160,7 @@ function fallbackLabels(locale: string) {
   return {
     eyebrow: 'ERROR',
     title: 'Something broke here.',
-    body: 'Voz Clara hit an unexpected problem on this page. Head back home — your local library is untouched, nothing was lost.',
+    body: 'VozClara hit an unexpected problem on this page. Head back home — your local library is untouched, nothing was lost.',
     detailsLabel: 'Technical details',
     reloadCta: 'Back to home',
     dismissCta: 'Dismiss',

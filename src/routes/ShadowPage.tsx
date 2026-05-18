@@ -455,7 +455,7 @@ function SummaryStat({ value, label, tone }: { value: number; label: string; ton
 
 function shadowLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: 'Shadowing — Voz Clara',
+    headTitle: 'Shadowing — VozClara',
     headDescription: 'Repite frases del Pack en voz alta y recibe una puntuación de pronunciación.',
     eyebrow: 'SHADOWING',
     loading: 'Cargando…',
@@ -490,7 +490,7 @@ function shadowLabels(locale: string) {
     recognizeHint: 'Tu navegador no soporta reconocimiento de voz. Puedes escuchar pero no recibir puntuación.',
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Shadowing — Voz Clara',
+    headTitle: 'Shadowing — VozClara',
     headDescription: 'Repete frases do Pack em voz alta e recebe uma pontuação de pronúncia.',
     eyebrow: 'SHADOWING',
     loading: 'A carregar…',
@@ -525,7 +525,7 @@ function shadowLabels(locale: string) {
     recognizeHint: 'O teu navegador não suporta reconhecimento de voz. Podes ouvir mas não receber pontuação.',
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Shadowing — Voz Clara',
+    headTitle: 'Shadowing — VozClara',
     headDescription: 'Sprich Sätze aus dem Pack nach und erhalte eine Aussprache-Bewertung.',
     eyebrow: 'SHADOWING',
     loading: 'Lädt…',
@@ -560,7 +560,7 @@ function shadowLabels(locale: string) {
     recognizeHint: 'Dein Browser unterstützt keine Spracherkennung. Du kannst zuhören, aber keine Bewertung bekommen.',
   };
   return {
-    headTitle: 'Shadowing — Voz Clara',
+    headTitle: 'Shadowing — VozClara',
     headDescription: 'Repeat sentences from the Pack out loud and get a pronunciation score.',
     eyebrow: 'SHADOWING',
     loading: 'Loading…',

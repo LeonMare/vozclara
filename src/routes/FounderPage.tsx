@@ -234,12 +234,12 @@ function FounderCounter({
 
 function founderLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: 'Founders · Voz Clara',
-    headDescription: 'Cien fundadores. €99 una vez. Voz Clara Pro para siempre.',
+    headTitle: 'Founders · VozClara',
+    headDescription: 'Cien fundadores. €99 una vez. VozClara Pro para siempre.',
     backHome: 'Volver',
     eyebrow: 'Founder Deal',
     heroTitle: 'Cien fundadores. Para siempre.',
-    heroLead: 'Voz Clara está en lanzamiento. Las primeras cien personas que entren aseguran Pro de por vida por €99 — y ayudan a que esto exista sin VC.',
+    heroLead: 'VozClara está en lanzamiento. Las primeras cien personas que entren aseguran Pro de por vida por €99 — y ayudan a que esto exista sin VC.',
     counterLabel: 'Plazas reclamadas',
     remainingSingular: 'Última plaza disponible.',
     remainingPlural: (n: number) => `${n} plazas disponibles.`,
@@ -262,21 +262,21 @@ function founderLabels(locale: string) {
     caseSection: 'Por qué este precio',
     caseHeading: 'Es un trato honesto, no un truco de urgencia.',
     caseBody: [
-      'Voz Clara existe porque mi compañera no podía acceder al conocimiento alemán en su idioma. Lo construí en una semana, lo abro al público porque hay miles de personas con la misma frustración.',
+      'VozClara existe porque mi compañera no podía acceder al conocimiento alemán en su idioma. Lo construí en una semana, lo abro al público porque hay miles de personas con la misma frustración.',
       '€99 una vez es la mitad del precio anual de Pro a futuro. Necesito €5.000-10.000 de cashflow inicial para no depender de inversores externos durante los primeros meses — y a cambio, los primeros cien tienen un trato que nadie más tendrá.',
-      'Si en tres meses Voz Clara desaparece, te devuelvo el dinero sin preguntas. Si en tres años Voz Clara es lo que esperamos que sea, tú tendrás Pro por una décima parte de lo que pagarían los demás. Sencillo.',
+      'Si en tres meses VozClara desaparece, te devuelvo el dinero sin preguntas. Si en tres años VozClara es lo que esperamos que sea, tú tendrás Pro por una décima parte de lo que pagarían los demás. Sencillo.',
     ],
 
-    closingBody: 'Si te resuena, asegura tu plaza. Si no, no pasa nada — Voz Clara Free seguirá funcionando para ti como hasta ahora. Solo que esto se hace una vez.',
+    closingBody: 'Si te resuena, asegura tu plaza. Si no, no pasa nada — VozClara Free seguirá funcionando para ti como hasta ahora. Solo que esto se hace una vez.',
   };
 
   if (locale.startsWith('pt')) return {
-    headTitle: 'Founders · Voz Clara',
-    headDescription: 'Cem fundadores. €99 uma vez. Voz Clara Pro para sempre.',
+    headTitle: 'Founders · VozClara',
+    headDescription: 'Cem fundadores. €99 uma vez. VozClara Pro para sempre.',
     backHome: 'Voltar',
     eyebrow: 'Founder Deal',
     heroTitle: 'Cem fundadores. Para sempre.',
-    heroLead: 'A Voz Clara está em lançamento. As primeiras cem pessoas garantem o Pro vitalício por €99 — e ajudam a que isto exista sem VC.',
+    heroLead: 'A VozClara está em lançamento. As primeiras cem pessoas garantem o Pro vitalício por €99 — e ajudam a que isto exista sem VC.',
     counterLabel: 'Lugares reclamados',
     remainingSingular: 'Último lugar disponível.',
     remainingPlural: (n: number) => `${n} lugares disponíveis.`,
@@ -299,21 +299,21 @@ function founderLabels(locale: string) {
     caseSection: 'Porquê este preço',
     caseHeading: 'É uma proposta honesta, não um truque de urgência.',
     caseBody: [
-      'A Voz Clara existe porque a minha companheira não conseguia aceder ao conhecimento alemão na língua dela. Construí-a numa semana e abro-a porque há milhares de pessoas com a mesma frustração.',
+      'A VozClara existe porque a minha companheira não conseguia aceder ao conhecimento alemão na língua dela. Construí-a numa semana e abro-a porque há milhares de pessoas com a mesma frustração.',
       '€99 uma vez é metade do preço anual do Pro futuro. Preciso de €5.000-10.000 de cashflow inicial para não depender de investidores externos durante os primeiros meses — em troca, os primeiros cem têm um acordo que mais ninguém terá.',
-      'Se em três meses a Voz Clara desaparecer, devolvo o dinheiro sem perguntas. Se em três anos a Voz Clara for o que esperamos que seja, terás Pro por uma décima parte do que pagariam os outros. Simples.',
+      'Se em três meses a VozClara desaparecer, devolvo o dinheiro sem perguntas. Se em três anos a VozClara for o que esperamos que seja, terás Pro por uma décima parte do que pagariam os outros. Simples.',
     ],
 
-    closingBody: 'Se te ressoa, garante o teu lugar. Se não, sem problema — a Voz Clara Free continuará a funcionar como até agora. Mas isto faz-se uma só vez.',
+    closingBody: 'Se te ressoa, garante o teu lugar. Se não, sem problema — a VozClara Free continuará a funcionar como até agora. Mas isto faz-se uma só vez.',
   };
 
   if (locale.startsWith('de')) return {
-    headTitle: 'Founders · Voz Clara',
-    headDescription: 'Hundert Gründungsmitglieder. €99 einmalig. Voz Clara Pro für immer.',
+    headTitle: 'Founders · VozClara',
+    headDescription: 'Hundert Gründungsmitglieder. €99 einmalig. VozClara Pro für immer.',
     backHome: 'Zurück',
     eyebrow: 'Founder Deal',
     heroTitle: 'Hundert Gründungsmitglieder. Für immer.',
-    heroLead: 'Voz Clara geht live. Die ersten hundert Personen sichern sich Pro lebenslang für €99 — und helfen, dass das hier ohne VC entstehen kann.',
+    heroLead: 'VozClara geht live. Die ersten hundert Personen sichern sich Pro lebenslang für €99 — und helfen, dass das hier ohne VC entstehen kann.',
     counterLabel: 'Plätze vergeben',
     remainingSingular: 'Letzter Platz verfügbar.',
     remainingPlural: (n: number) => `${n} Plätze verfügbar.`,
@@ -336,21 +336,21 @@ function founderLabels(locale: string) {
     caseSection: 'Warum dieser Preis',
     caseHeading: 'Ein ehrlicher Deal, kein Urgency-Trick.',
     caseBody: [
-      'Voz Clara existiert weil meine Partnerin nicht auf deutsches Wissen in ihrer Sprache zugreifen konnte. Ich habe es in einer Woche gebaut und öffne es jetzt, weil tausende Menschen die gleiche Frustration haben.',
+      'VozClara existiert weil meine Partnerin nicht auf deutsches Wissen in ihrer Sprache zugreifen konnte. Ich habe es in einer Woche gebaut und öffne es jetzt, weil tausende Menschen die gleiche Frustration haben.',
       '€99 einmalig sind die Hälfte des künftigen jährlichen Pro-Preises. Ich brauche €5.000-10.000 Anfangs-Cashflow um die ersten Monate unabhängig von externen Investoren bauen zu können — im Tausch bekommen die ersten Hundert einen Deal den danach niemand mehr bekommt.',
-      'Wenn Voz Clara in drei Monaten verschwindet, kriegst du dein Geld zurück ohne Diskussion. Wenn Voz Clara in drei Jahren das wird was wir hoffen, hast du Pro für ein Zehntel von dem was andere zahlen werden. Einfach.',
+      'Wenn VozClara in drei Monaten verschwindet, kriegst du dein Geld zurück ohne Diskussion. Wenn VozClara in drei Jahren das wird was wir hoffen, hast du Pro für ein Zehntel von dem was andere zahlen werden. Einfach.',
     ],
 
-    closingBody: 'Wenn es bei dir ankommt — sichere dir deinen Platz. Wenn nicht, kein Problem: Voz Clara Free läuft für dich weiter wie bisher. Aber das hier gibt es nur einmal.',
+    closingBody: 'Wenn es bei dir ankommt — sichere dir deinen Platz. Wenn nicht, kein Problem: VozClara Free läuft für dich weiter wie bisher. Aber das hier gibt es nur einmal.',
   };
 
   return {
-    headTitle: 'Founders · Voz Clara',
-    headDescription: 'A hundred founding members. €99 once. Voz Clara Pro forever.',
+    headTitle: 'Founders · VozClara',
+    headDescription: 'A hundred founding members. €99 once. VozClara Pro forever.',
     backHome: 'Back',
     eyebrow: 'Founder Deal',
     heroTitle: 'A hundred founding members. Forever.',
-    heroLead: 'Voz Clara is launching. The first hundred people to step in lock Pro for life at €99 — and help this exist without VC.',
+    heroLead: 'VozClara is launching. The first hundred people to step in lock Pro for life at €99 — and help this exist without VC.',
     counterLabel: 'Seats claimed',
     remainingSingular: 'Last seat available.',
     remainingPlural: (n: number) => `${n} seats available.`,
@@ -373,11 +373,11 @@ function founderLabels(locale: string) {
     caseSection: 'Why this price',
     caseHeading: "An honest deal, not an urgency trick.",
     caseBody: [
-      "Voz Clara exists because my partner couldn't access German knowledge in her own language. I built the first version in a week, and I'm opening it now because thousands of people share that frustration.",
+      "VozClara exists because my partner couldn't access German knowledge in her own language. I built the first version in a week, and I'm opening it now because thousands of people share that frustration.",
       "€99 once is half of next year's Pro annual price. I need €5,000-10,000 of starting cashflow to build the first months independent of outside investors — in return, the first hundred get a deal nobody else will.",
-      "If Voz Clara is gone in three months, you get your money back, no questions. If Voz Clara becomes what we hope in three years, you'll have Pro at a tenth of what others pay. Simple.",
+      "If VozClara is gone in three months, you get your money back, no questions. If VozClara becomes what we hope in three years, you'll have Pro at a tenth of what others pay. Simple.",
     ],
 
-    closingBody: "If this resonates, claim your seat. If not, no pressure — Voz Clara Free keeps working for you the same way. This only happens once though.",
+    closingBody: "If this resonates, claim your seat. If not, no pressure — VozClara Free keeps working for you the same way. This only happens once though.",
   };
 }

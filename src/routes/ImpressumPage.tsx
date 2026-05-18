@@ -124,7 +124,7 @@ export function ImpressumPage() {
 
 function impressumLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: 'Aviso legal — Voz Clara',
+    headTitle: 'Aviso legal — VozClara',
     headDescription: 'Aviso legal según § 5 TMG.',
     backHome: 'Volver a la página principal',
     sectionLabel: 'Aviso legal',
@@ -141,7 +141,7 @@ function impressumLabels(locale: string) {
     disputeBody: 'La Comisión Europea ofrece una plataforma de resolución de disputas en línea (ODR). No estamos obligados ni dispuestos a participar en procedimientos de resolución de disputas ante una junta arbitral de consumidores.',
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Informações legais — Voz Clara',
+    headTitle: 'Informações legais — VozClara',
     headDescription: 'Informações legais segundo § 5 TMG.',
     backHome: 'Voltar à página principal',
     sectionLabel: 'Informações legais',
@@ -158,7 +158,7 @@ function impressumLabels(locale: string) {
     disputeBody: 'A Comissão Europeia disponibiliza uma plataforma de resolução de litígios em linha (ODR). Não somos obrigados nem estamos dispostos a participar em procedimentos de resolução de litígios perante uma comissão arbitral de consumidores.',
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Impressum — Voz Clara',
+    headTitle: 'Impressum — VozClara',
     headDescription: 'Anbieterkennung gemäß § 5 TMG.',
     backHome: 'Zur Startseite',
     sectionLabel: 'Impressum',
@@ -175,7 +175,7 @@ function impressumLabels(locale: string) {
     disputeBody: 'Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit. Wir sind weder verpflichtet noch bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.',
   };
   return {
-    headTitle: 'Legal notice — Voz Clara',
+    headTitle: 'Legal notice — VozClara',
     headDescription: 'Legal notice (Impressum) per § 5 of the German Telemedia Act.',
     backHome: 'Back to home',
     sectionLabel: 'Legal notice',

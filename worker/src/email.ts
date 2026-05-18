@@ -25,7 +25,7 @@ interface ResendEnv {
 }
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'Voz Clara <noreply@vozclara.app>';
+const DEFAULT_FROM = 'VozClara <noreply@vozclara.app>';
 
 /**
  * Low-level send. Returns ok=false on transport errors but never
@@ -105,41 +105,41 @@ interface MagicLinkLabels {
  */
 function magicLinkLabels(locale: string): MagicLinkLabels {
   if (locale.startsWith('es')) return {
-    subject: 'Tu enlace a Voz Clara',
-    preheader: 'Un clic abre tu nube de conocimiento. Válido quince minutos.',
+    subject: 'Tu enlace a VozClara',
+    preheader: 'Un clic abre tu biblioteca. Válido quince minutos.',
     greeting: 'Bienvenido.',
-    body: 'Un clic abre tu Voz Clara — quince minutos de validez, después el enlace caduca en silencio.',
-    cta: 'Abrir Voz Clara',
+    body: 'Un clic abre tu VozClara — quince minutos de validez, después el enlace caduca en silencio.',
+    cta: 'Abrir VozClara',
     fallback: 'Si el botón no responde, copia esta dirección en tu navegador:',
     expiry: 'Por seguridad, el enlace caduca en quince minutos.',
     ignore: '¿No lo has pedido? Ignora este correo. Sin el clic no se abre nada.',
   };
   if (locale.startsWith('pt')) return {
-    subject: 'O teu link para a Voz Clara',
-    preheader: 'Um clique abre a tua nuvem de conhecimento. Válido quinze minutos.',
+    subject: 'O teu link para a VozClara',
+    preheader: 'Um clique abre a tua biblioteca. Válido quinze minutos.',
     greeting: 'Bem-vindo.',
-    body: 'Um clique abre a tua Voz Clara — quinze minutos de validade, depois o link expira em silêncio.',
-    cta: 'Abrir Voz Clara',
+    body: 'Um clique abre a tua VozClara — quinze minutos de validade, depois o link expira em silêncio.',
+    cta: 'Abrir VozClara',
     fallback: 'Se o botão não responder, copia este endereço para o navegador:',
     expiry: 'Por segurança, o link expira em quinze minutos.',
     ignore: 'Não pediste isto? Ignora o email. Sem o clique, nada se abre.',
   };
   if (locale.startsWith('de')) return {
-    subject: 'Dein Link zur Voz Clara',
-    preheader: 'Ein Klick öffnet deine Wissens-Cloud. Fünfzehn Minuten gültig.',
+    subject: 'Dein Link zur VozClara',
+    preheader: 'Ein Klick öffnet deine Bibliothek. Fünfzehn Minuten gültig.',
     greeting: 'Willkommen.',
-    body: 'Ein Klick öffnet deine Voz Clara — fünfzehn Minuten lang gültig, danach erlischt der Link still.',
-    cta: 'Voz Clara öffnen',
+    body: 'Ein Klick öffnet deine VozClara — fünfzehn Minuten lang gültig, danach erlischt der Link still.',
+    cta: 'VozClara öffnen',
     fallback: 'Falls der Button still bleibt, kopiere diese Adresse in deinen Browser:',
     expiry: 'Aus Sicherheitsgründen läuft der Link in fünfzehn Minuten ab.',
     ignore: 'Nicht angefordert? Ignorier diese Mail. Ohne Klick öffnet sich nichts.',
   };
   return {
-    subject: 'Your Voz Clara link',
-    preheader: 'One click opens your knowledge cloud. Valid for fifteen minutes.',
+    subject: 'Your VozClara link',
+    preheader: 'One click opens your library. Valid for fifteen minutes.',
     greeting: 'Welcome.',
-    body: 'One click opens your Voz Clara — valid for fifteen minutes, then the link quietly expires.',
-    cta: 'Open Voz Clara',
+    body: 'One click opens your VozClara — valid for fifteen minutes, then the link quietly expires.',
+    cta: 'Open VozClara',
     fallback: 'If the button stays silent, paste this address into your browser:',
     expiry: 'For security, the link expires in fifteen minutes.',
     ignore: "Didn't ask for this? Ignore the email. Without the click, nothing opens.",
@@ -198,7 +198,7 @@ function renderMagicLinkHTML(labels: MagicLinkLabels, link: string): string {
                  mirroring the BrandMark component on vozclara.app -->
             <tr>
               <td style="padding:48px 36px 0;text-align:center;">
-                <img src="${escapeAttr(LOGO_URL)}" width="88" height="88" alt="Voz Clara"
+                <img src="${escapeAttr(LOGO_URL)}" width="88" height="88" alt="VozClara"
                      style="display:inline-block;width:88px;height:88px;border:0;outline:none;text-decoration:none;" />
                 <div style="margin-top:20px;font-family:Georgia,serif;letter-spacing:0.22em;color:${PALETTE.navy};font-size:13px;">VOZ&nbsp;·&nbsp;CLARA</div>
                 <div style="height:1px;width:36px;background:${PALETTE.gold};margin:14px auto 0;line-height:1px;font-size:1px;">&nbsp;</div>
@@ -246,11 +246,11 @@ function renderMagicLinkHTML(labels: MagicLinkLabels, link: string): string {
               </td>
             </tr>
 
-            <!-- Signature — "Voz Clara by LEON MARÉ" -->
+            <!-- Signature — "VozClara by LEON MARÉ" -->
             <tr>
               <td style="padding:32px 44px 40px;text-align:center;">
                 <div style="height:1px;width:24px;background:${PALETTE.gold};margin:0 auto 18px;line-height:1px;font-size:1px;">&nbsp;</div>
-                <p style="margin:0 0 4px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.3;color:${PALETTE.navy};letter-spacing:0.04em;">Voz Clara</p>
+                <p style="margin:0 0 4px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.3;color:${PALETTE.navy};letter-spacing:0.04em;">VozClara</p>
                 <p style="margin:0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(10,26,58,0.5);">by LEON MARÉ</p>
               </td>
             </tr>
@@ -283,7 +283,7 @@ function renderMagicLinkText(labels: MagicLinkLabels, link: string): string {
     labels.ignore,
     '',
     '—',
-    'Voz Clara',
+    'VozClara',
     'by LEON MARÉ',
     'vozclara.app',
   ].join('\n');

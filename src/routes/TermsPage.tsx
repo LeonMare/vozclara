@@ -5,7 +5,7 @@ import { usePageHead } from '../hooks/usePageHead';
 /**
  * /terms — Terms of use.
  *
- * The realistic legal posture for Voz Clara today:
+ * The realistic legal posture for VozClara today:
  *   • Free product, no monetary contract.
  *   • Users are responsible for the YouTube URLs they paste — we won't
  *     police copyright but we ask them to respect it.
@@ -108,21 +108,21 @@ function termsLabels(locale: string) {
         : 'May 2026';
 
   if (locale.startsWith('es')) return {
-    headTitle: 'Términos de uso — Voz Clara',
+    headTitle: 'Términos de uso — VozClara',
     headDescription:
-      'Reglas básicas para usar Voz Clara — un proyecto pequeño, gratuito, sin garantías.',
+      'Reglas básicas para usar VozClara — un proyecto pequeño, gratuito, sin garantías.',
     backHome: 'Volver a la página principal',
     sectionLabel: 'Términos',
     heroTitle: 'Reglas básicas. Sin letra pequeña.',
     heroLead:
-      'Voz Clara es gratuito y se ofrece tal cual. Estas son las condiciones honestas de uso, no un contrato corporativo de 40 páginas.',
+      'VozClara es gratuito y se ofrece tal cual. Estas son las condiciones honestas de uso, no un contrato corporativo de 40 páginas.',
     lastUpdatedLabel: 'Actualizado',
     lastUpdated,
     sections: [
       {
         heading: 'Servicio gratuito, sin garantías',
         body: [
-          'Voz Clara se ofrece sin coste y sin SLA. Operamos sobre la capa gratuita de Cloudflare Workers; si los límites mensuales se agotan o un servicio cae, no hay compensación. Te avisaríamos en la página principal si pasa.',
+          'VozClara se ofrece sin coste y sin SLA. Operamos sobre la capa gratuita de Cloudflare Workers; si los límites mensuales se agotan o un servicio cae, no hay compensación. Te avisaríamos en la página principal si pasa.',
           'No prometemos disponibilidad, exactitud absoluta de las transcripciones, ni continuidad indefinida del proyecto.',
         ],
       },
@@ -143,7 +143,7 @@ function termsLabels(locale: string) {
       {
         heading: 'Uso aceptable',
         body: [
-          'No uses Voz Clara para procesar contenido ilegal en tu jurisdicción (discurso de odio, material de abuso, etc.). No intentes inyectar prompts adversarios para extraer comportamientos no deseados del modelo. No automatices llamadas masivas a la API más allá del uso humano razonable; si necesitas volumen, contáctanos.',
+          'No uses VozClara para procesar contenido ilegal en tu jurisdicción (discurso de odio, material de abuso, etc.). No intentes inyectar prompts adversarios para extraer comportamientos no deseados del modelo. No automatices llamadas masivas a la API más allá del uso humano razonable; si necesitas volumen, contáctanos.',
           'Nos reservamos el derecho de bloquear IPs que abusen del servicio.',
         ],
       },
@@ -156,32 +156,32 @@ function termsLabels(locale: string) {
       {
         heading: 'Jurisdicción',
         body: [
-          'Voz Clara está operado desde Frankfurt am Main, Alemania. Para consumidores en la UE se aplica la legislación de consumo correspondiente. Para todo lo demás aplica la ley alemana.',
+          'VozClara está operado desde Frankfurt am Main, Alemania. Para consumidores en la UE se aplica la legislación de consumo correspondiente. Para todo lo demás aplica la ley alemana.',
         ],
       },
     ],
     operatorLabel: 'Operador',
     operatorHeading: 'Quién está detrás.',
     operatorNote:
-      'Voz Clara es un proyecto digital independiente bajo la marca LEON MARÉ. No tenemos sociedad mercantil registrada para este producto; opera como actividad profesional individual.',
+      'VozClara es un proyecto digital independiente bajo la marca LEON MARÉ. No tenemos sociedad mercantil registrada para este producto; opera como actividad profesional individual.',
   };
 
   if (locale.startsWith('pt')) return {
-    headTitle: 'Termos de uso — Voz Clara',
+    headTitle: 'Termos de uso — VozClara',
     headDescription:
-      'Regras básicas para usar a Voz Clara — um projeto pequeno, gratuito, sem garantias.',
+      'Regras básicas para usar a VozClara — um projeto pequeno, gratuito, sem garantias.',
     backHome: 'Voltar à página principal',
     sectionLabel: 'Termos',
     heroTitle: 'Regras básicas. Sem letra pequena.',
     heroLead:
-      'A Voz Clara é gratuita e oferecida tal-qual. Estas são as condições honestas de uso, não um contrato corporativo de 40 páginas.',
+      'A VozClara é gratuita e oferecida tal-qual. Estas são as condições honestas de uso, não um contrato corporativo de 40 páginas.',
     lastUpdatedLabel: 'Atualizado',
     lastUpdated,
     sections: [
       {
         heading: 'Serviço gratuito, sem garantias',
         body: [
-          'A Voz Clara é oferecida sem custo e sem SLA. Operamos sobre o plano gratuito da Cloudflare Workers; se os limites mensais se esgotarem ou um serviço cair, não há compensação. Avisaríamos na página principal se acontecesse.',
+          'A VozClara é oferecida sem custo e sem SLA. Operamos sobre o plano gratuito da Cloudflare Workers; se os limites mensais se esgotarem ou um serviço cair, não há compensação. Avisaríamos na página principal se acontecesse.',
           'Não prometemos disponibilidade, exatidão absoluta das transcrições, nem continuidade indefinida do projeto.',
         ],
       },
@@ -202,7 +202,7 @@ function termsLabels(locale: string) {
       {
         heading: 'Uso aceitável',
         body: [
-          'Não uses a Voz Clara para processar conteúdo ilegal na tua jurisdição (discurso de ódio, material de abuso, etc.). Não tentes injetar prompts adversários para extrair comportamentos indesejados do modelo. Não automatizes chamadas em massa à API além do uso humano razoável; se precisas de volume, contacta-nos.',
+          'Não uses a VozClara para processar conteúdo ilegal na tua jurisdição (discurso de ódio, material de abuso, etc.). Não tentes injetar prompts adversários para extrair comportamentos indesejados do modelo. Não automatizes chamadas em massa à API além do uso humano razoável; se precisas de volume, contacta-nos.',
           'Reservamos o direito de bloquear IPs que abusem do serviço.',
         ],
       },
@@ -215,32 +215,32 @@ function termsLabels(locale: string) {
       {
         heading: 'Jurisdição',
         body: [
-          'A Voz Clara é operada a partir de Frankfurt am Main, Alemanha. Para consumidores na UE aplica-se a legislação de consumo correspondente. Para tudo o resto aplica-se a lei alemã.',
+          'A VozClara é operada a partir de Frankfurt am Main, Alemanha. Para consumidores na UE aplica-se a legislação de consumo correspondente. Para tudo o resto aplica-se a lei alemã.',
         ],
       },
     ],
     operatorLabel: 'Operador',
     operatorHeading: 'Quem está por trás.',
     operatorNote:
-      'A Voz Clara é um projeto digital independente sob a marca LEON MARÉ. Não temos sociedade comercial registada para este produto; opera como atividade profissional individual.',
+      'A VozClara é um projeto digital independente sob a marca LEON MARÉ. Não temos sociedade comercial registada para este produto; opera como atividade profissional individual.',
   };
 
   if (locale.startsWith('de')) return {
-    headTitle: 'Nutzungsbedingungen — Voz Clara',
+    headTitle: 'Nutzungsbedingungen — VozClara',
     headDescription:
-      'Grundregeln für die Nutzung von Voz Clara — ein kleines, kostenloses Projekt, ohne Garantien.',
+      'Grundregeln für die Nutzung von VozClara — ein kleines, kostenloses Projekt, ohne Garantien.',
     backHome: 'Zurück zur Startseite',
     sectionLabel: 'Bedingungen',
     heroTitle: 'Grundregeln. Kein Kleingedrucktes.',
     heroLead:
-      'Voz Clara ist kostenlos und wird so wie es ist angeboten. Hier sind die ehrlichen Nutzungsbedingungen, kein 40-seitiger Konzernvertrag.',
+      'VozClara ist kostenlos und wird so wie es ist angeboten. Hier sind die ehrlichen Nutzungsbedingungen, kein 40-seitiger Konzernvertrag.',
     lastUpdatedLabel: 'Aktualisiert',
     lastUpdated,
     sections: [
       {
         heading: 'Kostenloser Dienst, keine Garantien',
         body: [
-          'Voz Clara wird kostenlos und ohne SLA bereitgestellt. Wir betreiben den Dienst auf der kostenlosen Stufe von Cloudflare Workers; wenn die Monatslimits erschöpft sind oder ein Service ausfällt, gibt es keine Entschädigung. Wir würden es auf der Startseite ankündigen.',
+          'VozClara wird kostenlos und ohne SLA bereitgestellt. Wir betreiben den Dienst auf der kostenlosen Stufe von Cloudflare Workers; wenn die Monatslimits erschöpft sind oder ein Service ausfällt, gibt es keine Entschädigung. Wir würden es auf der Startseite ankündigen.',
           'Wir versprechen weder Verfügbarkeit, noch absolute Genauigkeit der Transkripte, noch unbegrenzte Fortführung des Projekts.',
         ],
       },
@@ -261,7 +261,7 @@ function termsLabels(locale: string) {
       {
         heading: 'Akzeptable Nutzung',
         body: [
-          'Verwende Voz Clara nicht zur Verarbeitung von in deiner Rechtsordnung illegalen Inhalten (Hassrede, Missbrauchsmaterial usw.). Versuche nicht, adversariale Prompts zu injizieren, um unerwünschtes Modellverhalten zu provozieren. Automatisiere keine Massen-Aufrufe der API über vernünftigen menschlichen Gebrauch hinaus; bei Volumen-Bedarf melde dich.',
+          'Verwende VozClara nicht zur Verarbeitung von in deiner Rechtsordnung illegalen Inhalten (Hassrede, Missbrauchsmaterial usw.). Versuche nicht, adversariale Prompts zu injizieren, um unerwünschtes Modellverhalten zu provozieren. Automatisiere keine Massen-Aufrufe der API über vernünftigen menschlichen Gebrauch hinaus; bei Volumen-Bedarf melde dich.',
           'Wir behalten uns vor, IP-Adressen zu blockieren, die den Dienst missbrauchen.',
         ],
       },
@@ -274,32 +274,32 @@ function termsLabels(locale: string) {
       {
         heading: 'Gerichtsstand',
         body: [
-          'Voz Clara wird aus Frankfurt am Main, Deutschland, betrieben. Für Verbraucher in der EU gilt das jeweilige Verbraucherrecht. Im Übrigen gilt deutsches Recht.',
+          'VozClara wird aus Frankfurt am Main, Deutschland, betrieben. Für Verbraucher in der EU gilt das jeweilige Verbraucherrecht. Im Übrigen gilt deutsches Recht.',
         ],
       },
     ],
     operatorLabel: 'Betreiber',
     operatorHeading: 'Wer dahintersteht.',
     operatorNote:
-      'Voz Clara ist ein unabhängiges digitales Projekt unter der Marke LEON MARÉ. Es gibt für dieses Produkt keine eigene Handelsgesellschaft; es wird als selbstständige Tätigkeit betrieben.',
+      'VozClara ist ein unabhängiges digitales Projekt unter der Marke LEON MARÉ. Es gibt für dieses Produkt keine eigene Handelsgesellschaft; es wird als selbstständige Tätigkeit betrieben.',
   };
 
   return {
-    headTitle: 'Terms of use — Voz Clara',
+    headTitle: 'Terms of use — VozClara',
     headDescription:
-      'Basic rules for using Voz Clara — a small, free project, no warranties.',
+      'Basic rules for using VozClara — a small, free project, no warranties.',
     backHome: 'Back to home',
     sectionLabel: 'Terms',
     heroTitle: 'Basic rules. No fine print.',
     heroLead:
-      "Voz Clara is free and offered as-is. These are honest terms of use, not a 40-page corporate contract.",
+      "VozClara is free and offered as-is. These are honest terms of use, not a 40-page corporate contract.",
     lastUpdatedLabel: 'Updated',
     lastUpdated,
     sections: [
       {
         heading: 'Free service, no warranties',
         body: [
-          'Voz Clara is offered at no cost and without an SLA. We run on the free tier of Cloudflare Workers; if monthly limits are exhausted or a service goes down, there is no compensation. We would notice on the homepage if that happens.',
+          'VozClara is offered at no cost and without an SLA. We run on the free tier of Cloudflare Workers; if monthly limits are exhausted or a service goes down, there is no compensation. We would notice on the homepage if that happens.',
           'We do not promise uptime, transcript accuracy, or indefinite project continuity.',
         ],
       },
@@ -320,7 +320,7 @@ function termsLabels(locale: string) {
       {
         heading: 'Acceptable use',
         body: [
-          'Do not use Voz Clara to process content that is illegal in your jurisdiction (hate speech, abuse material, etc.). Do not inject adversarial prompts to extract unintended model behaviour. Do not automate mass API calls beyond reasonable human use; if you need volume, contact us.',
+          'Do not use VozClara to process content that is illegal in your jurisdiction (hate speech, abuse material, etc.). Do not inject adversarial prompts to extract unintended model behaviour. Do not automate mass API calls beyond reasonable human use; if you need volume, contact us.',
           'We reserve the right to block IPs that abuse the service.',
         ],
       },
@@ -333,13 +333,13 @@ function termsLabels(locale: string) {
       {
         heading: 'Jurisdiction',
         body: [
-          'Voz Clara is operated from Frankfurt am Main, Germany. EU consumer law applies for consumers in the EU. Otherwise, German law applies.',
+          'VozClara is operated from Frankfurt am Main, Germany. EU consumer law applies for consumers in the EU. Otherwise, German law applies.',
         ],
       },
     ],
     operatorLabel: 'Operator',
     operatorHeading: 'Who is behind this.',
     operatorNote:
-      'Voz Clara is an independent digital project under the LEON MARÉ brand. There is no separate corporate entity for this product; it is operated as an independent professional activity.',
+      'VozClara is an independent digital project under the LEON MARÉ brand. There is no separate corporate entity for this product; it is operated as an independent professional activity.',
   };
 }

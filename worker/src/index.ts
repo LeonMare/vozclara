@@ -1830,7 +1830,7 @@ function renderOGSVG({ title, mode, lang, genre, author }: OGParams): string {
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#aura)"/>
 
-  <!-- Voz Clara lighthouse mark, top-left, scaled to fit -->
+  <!-- VozClara lighthouse mark, top-left, scaled to fit -->
   <g transform="translate(80 75) scale(1.0)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="50" cy="50" r="44" stroke-width="2.6"/>
     <circle cx="50" cy="50" r="40.7" stroke-width="2.0"/>
@@ -1913,7 +1913,7 @@ function wrapTitle(title: string, maxChars: number, maxLines: number): string[] 
  * language as /api/og but laid out for Instagram / square share
  * surfaces: a large pull-quote in editorial serif, speaker + timestamp
  * underneath, optional original-language line beneath the translated
- * one, Voz Clara seal + brand strip in the corner.
+ * one, VozClara seal + brand strip in the corner.
  *
  * The QuotesTab in the Pack view links each quote's "share" button at
  * this URL with the quote's params encoded in the querystring, so a
@@ -2290,10 +2290,10 @@ function notificationPayload(
   test: boolean,
 ): object {
   const title: Record<PushSub['locale'], string> = {
-    es: 'Voz Clara · Toca para repasar',
-    pt: 'Voz Clara · Toca para rever',
-    de: 'Voz Clara · Zeit zum Wiederholen',
-    en: 'Voz Clara · Time to review',
+    es: 'VozClara · Toca para repasar',
+    pt: 'VozClara · Toca para rever',
+    de: 'VozClara · Zeit zum Wiederholen',
+    en: 'VozClara · Time to review',
   };
   const body: Record<PushSub['locale'], string> = {
     es: 'Tienes tarjetas esperando en tu biblioteca.',

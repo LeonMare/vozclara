@@ -1,5 +1,5 @@
 /**
- * BrandMark — official Voz Clara identity (v2, refined lighthouse).
+ * BrandMark — official VozClara identity (v2, refined lighthouse).
  *
  * Three variants:
  *   monogram  — just the seal/lighthouse mark
@@ -133,7 +133,7 @@ function LighthouseMark({ size, decorative }: { size: number; decorative: boolea
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       role={decorative ? 'presentation' : 'img'}
-      aria-label={decorative ? undefined : 'Voz Clara'}
+      aria-label={decorative ? undefined : 'VozClara'}
       aria-hidden={decorative ? true : undefined}
       style={{ flexShrink: 0, display: 'block' }}
     >

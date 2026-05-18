@@ -101,25 +101,25 @@ export function PackShare({ pack }: Props) {
 function shareLabels(locale: string) {
   if (locale.startsWith('es')) return {
     button: 'Compartir',
-    viaLine: 'guardado con Voz Clara',
+    viaLine: 'guardado con VozClara',
     copied: 'Copiado al portapapeles',
     copyFailed: 'No se pudo copiar',
   };
   if (locale.startsWith('pt')) return {
     button: 'Partilhar',
-    viaLine: 'guardado com Voz Clara',
+    viaLine: 'guardado com VozClara',
     copied: 'Copiado',
     copyFailed: 'Não foi possível copiar',
   };
   if (locale.startsWith('de')) return {
     button: 'Teilen',
-    viaLine: 'gespeichert mit Voz Clara',
+    viaLine: 'gespeichert mit VozClara',
     copied: 'In Zwischenablage kopiert',
     copyFailed: 'Kopieren fehlgeschlagen',
   };
   return {
     button: 'Share',
-    viaLine: 'saved with Voz Clara',
+    viaLine: 'saved with VozClara',
     copied: 'Copied to clipboard',
     copyFailed: 'Copy failed',
   };

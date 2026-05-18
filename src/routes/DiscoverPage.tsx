@@ -283,7 +283,7 @@ function discoverLabels(locale: string) {
   };
 
   if (locale.startsWith('es')) return {
-    headTitle: 'Descubrir · Voz Clara',
+    headTitle: 'Descubrir · VozClara',
     headDescription: 'Los vídeos mejor valorados por nuestra comunidad. Calidad antes que viralidad.',
     backHome: 'Volver',
     eyebrow: 'Descubrir',
@@ -302,7 +302,7 @@ function discoverLabels(locale: string) {
     signalLabel,
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Descobrir · Voz Clara',
+    headTitle: 'Descobrir · VozClara',
     headDescription: 'Os vídeos mais bem avaliados pela nossa comunidade. Qualidade antes de viralidade.',
     backHome: 'Voltar',
     eyebrow: 'Descobrir',
@@ -321,7 +321,7 @@ function discoverLabels(locale: string) {
     signalLabel,
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Entdecken · Voz Clara',
+    headTitle: 'Entdecken · VozClara',
     headDescription: 'Die am besten bewerteten Videos der Voz-Clara-Community. Qualität vor Viralität.',
     backHome: 'Zurück',
     eyebrow: 'Entdecken',
@@ -340,8 +340,8 @@ function discoverLabels(locale: string) {
     signalLabel,
   };
   return {
-    headTitle: 'Discover · Voz Clara',
-    headDescription: "The highest-rated videos in the Voz Clara community. Quality before virality.",
+    headTitle: 'Discover · VozClara',
+    headDescription: "The highest-rated videos in the VozClara community. Quality before virality.",
     backHome: 'Back',
     eyebrow: 'Discover',
     heroTitle: 'Videos worth your time.',

@@ -278,7 +278,7 @@ function chatLabels(locale: string) {
   if (locale.startsWith('es')) return {
     ...generic,
     eyebrow: 'CONVERSACIÓN',
-    headTitle: 'Conversar — Voz Clara',
+    headTitle: 'Conversar — VozClara',
     headDescription: 'Practica conversación sobre el contenido del Pack con un compañero de idioma.',
     backToPack: 'Volver al Pack',
     backToLibrary: 'Volver a la biblioteca',
@@ -299,7 +299,7 @@ function chatLabels(locale: string) {
   if (locale.startsWith('pt')) return {
     ...generic,
     eyebrow: 'CONVERSA',
-    headTitle: 'Conversar — Voz Clara',
+    headTitle: 'Conversar — VozClara',
     headDescription: 'Pratica conversa sobre o conteúdo do Pack com um parceiro de idioma.',
     backToPack: 'Voltar ao Pack',
     backToLibrary: 'Voltar à biblioteca',
@@ -320,7 +320,7 @@ function chatLabels(locale: string) {
   if (locale.startsWith('de')) return {
     ...generic,
     eyebrow: 'GESPRÄCH',
-    headTitle: 'Gespräch — Voz Clara',
+    headTitle: 'Gespräch — VozClara',
     headDescription: 'Übe Konversation über den Pack-Inhalt mit einem Sprachpartner.',
     backToPack: 'Zurück zum Pack',
     backToLibrary: 'Zurück zur Bibliothek',
@@ -341,7 +341,7 @@ function chatLabels(locale: string) {
   return {
     ...generic,
     eyebrow: 'CONVERSATION',
-    headTitle: 'Chat — Voz Clara',
+    headTitle: 'Chat — VozClara',
     headDescription: 'Practice conversation about the Pack content with a language partner.',
     backToPack: 'Back to Pack',
     backToLibrary: 'Back to library',

@@ -649,7 +649,7 @@ export function LandingFooter() {
 
 function footerColumns(locale: string) {
   if (locale.startsWith('es')) return {
-    tagline: 'Nube multilingüe de conocimiento para vídeos. Guarda el conocimiento, no solo el vídeo.',
+    tagline: 'Guarda las ideas de cada vídeo — buscable, multilingüe, tuyo.',
     groups: [
       {
         heading: 'Producto',
@@ -663,7 +663,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Sobre',
         items: [
-          { label: 'Sobre Voz Clara', href: '/about' },
+          { label: 'Sobre VozClara', href: '/about' },
           { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Planes y precios', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
@@ -675,14 +675,13 @@ function footerColumns(locale: string) {
           { label: 'Privacidad', href: '/privacy' },
           { label: 'Términos', href: '/terms' },
           { label: 'Aviso legal', href: '/impressum' },
-          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
       },
     ],
   };
   if (locale.startsWith('pt')) return {
-    tagline: 'Nuvem multilingue de conhecimento para vídeos. Guarda o conhecimento, não apenas o vídeo.',
+    tagline: 'Guarda as ideias de cada vídeo — pesquisável, multilingue, teu.',
     groups: [
       {
         heading: 'Produto',
@@ -696,7 +695,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Sobre',
         items: [
-          { label: 'Sobre a Voz Clara', href: '/about' },
+          { label: 'Sobre a VozClara', href: '/about' },
           { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Planos e preços', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
@@ -708,14 +707,13 @@ function footerColumns(locale: string) {
           { label: 'Privacidade', href: '/privacy' },
           { label: 'Termos', href: '/terms' },
           { label: 'Informações legais', href: '/impressum' },
-          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
       },
     ],
   };
   if (locale.startsWith('de')) return {
-    tagline: 'Mehrsprachige Wissens-Cloud für Videos. Speichere das Wissen, nicht nur das Video.',
+    tagline: 'Speicher die Ideen aus jedem Video — durchsuchbar, mehrsprachig, deins.',
     groups: [
       {
         heading: 'Produkt',
@@ -729,7 +727,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Über',
         items: [
-          { label: 'Über Voz Clara', href: '/about' },
+          { label: 'Über VozClara', href: '/about' },
           { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Preise', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
@@ -741,14 +739,13 @@ function footerColumns(locale: string) {
           { label: 'Datenschutz', href: '/privacy' },
           { label: 'Nutzungsbedingungen', href: '/terms' },
           { label: 'Impressum', href: '/impressum' },
-          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
       },
     ],
   };
   return {
-    tagline: 'Multilingual knowledge cloud for videos. Save the knowledge, not just the video.',
+    tagline: 'Save the ideas from every video — searchable, multilingual, yours.',
     groups: [
       {
         heading: 'Product',
@@ -762,7 +759,7 @@ function footerColumns(locale: string) {
       {
         heading: 'About',
         items: [
-          { label: 'About Voz Clara', href: '/about' },
+          { label: 'About VozClara', href: '/about' },
           { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Pricing', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
@@ -774,7 +771,6 @@ function footerColumns(locale: string) {
           { label: 'Privacy', href: '/privacy' },
           { label: 'Terms', href: '/terms' },
           { label: 'Imprint', href: '/impressum' },
-          { label: 'GitHub', href: 'https://github.com/LeonMare/vozclara' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
       },

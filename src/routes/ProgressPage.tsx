@@ -193,11 +193,11 @@ function LanguageRow({ row, locale }: { row: LanguageProgress; locale: string })
 
 function progressLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: 'Progreso — Voz Clara',
+    headTitle: 'Progreso — VozClara',
     headDescription: 'Tu progreso en cada idioma — vocabulario dominado, racha y estimación CEFR.',
     eyebrow: 'PROGRESO',
     title: 'Tu progreso, semana a semana.',
-    subtitle: 'Voz Clara lleva un registro local de cada tarjeta que has visto y dominado. Aquí está el resumen — sin enviar nada a ningún servidor.',
+    subtitle: 'VozClara lleva un registro local de cada tarjeta que has visto y dominado. Aquí está el resumen — sin enviar nada a ningún servidor.',
     loading: 'Cargando…',
     emptyTitle: 'Aún no hay progreso.',
     emptyBody: 'Guarda tu primer Knowledge Pack con vocabulario para empezar a construir tu racha.',
@@ -220,11 +220,11 @@ function progressLabels(locale: string) {
     langName: (code: string) => esLangName(code),
   };
   if (locale.startsWith('pt')) return {
-    headTitle: 'Progresso — Voz Clara',
+    headTitle: 'Progresso — VozClara',
     headDescription: 'O teu progresso em cada idioma — vocabulário dominado, sequência e estimativa CEFR.',
     eyebrow: 'PROGRESSO',
     title: 'O teu progresso, semana a semana.',
-    subtitle: 'A Voz Clara guarda localmente um registo de cada cartão que viste e dominaste. Eis o resumo — sem enviar nada para servidor algum.',
+    subtitle: 'A VozClara guarda localmente um registo de cada cartão que viste e dominaste. Eis o resumo — sem enviar nada para servidor algum.',
     loading: 'A carregar…',
     emptyTitle: 'Ainda sem progresso.',
     emptyBody: 'Guarda o teu primeiro Knowledge Pack com vocabulário para começar a construir a tua sequência.',
@@ -247,11 +247,11 @@ function progressLabels(locale: string) {
     langName: (code: string) => ptLangName(code),
   };
   if (locale.startsWith('de')) return {
-    headTitle: 'Fortschritt — Voz Clara',
+    headTitle: 'Fortschritt — VozClara',
     headDescription: 'Dein Fortschritt pro Sprache — gemeisterter Wortschatz, Streak und CEFR-Schätzung.',
     eyebrow: 'FORTSCHRITT',
     title: 'Dein Fortschritt, Woche für Woche.',
-    subtitle: 'Voz Clara führt lokal Buch über jede Karte, die du gesehen und gemeistert hast. Hier ist die Zusammenfassung — ohne dass irgendetwas an einen Server geht.',
+    subtitle: 'VozClara führt lokal Buch über jede Karte, die du gesehen und gemeistert hast. Hier ist die Zusammenfassung — ohne dass irgendetwas an einen Server geht.',
     loading: 'Lädt…',
     emptyTitle: 'Noch kein Fortschritt.',
     emptyBody: 'Speichere deinen ersten Knowledge Pack mit Vokabular um deinen Streak aufzubauen.',
@@ -274,11 +274,11 @@ function progressLabels(locale: string) {
     langName: (code: string) => deLangName(code),
   };
   return {
-    headTitle: 'Progress — Voz Clara',
+    headTitle: 'Progress — VozClara',
     headDescription: 'Your progress per language — vocabulary mastered, streak, and CEFR estimate.',
     eyebrow: 'PROGRESS',
     title: 'Your progress, week by week.',
-    subtitle: 'Voz Clara keeps a local record of every card you have seen and mastered. Here is the summary — nothing leaves your device.',
+    subtitle: 'VozClara keeps a local record of every card you have seen and mastered. Here is the summary — nothing leaves your device.',
     loading: 'Loading…',
     emptyTitle: 'No progress yet.',
     emptyBody: 'Save your first Knowledge Pack with vocabulary to start building your streak.',

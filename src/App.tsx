@@ -7,7 +7,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { AuthProvider } from './hooks/useAuth';
 
 /**
- * VozClara — multilingual knowledge cloud for videos.
+ * VozClara — knowledge layer over every video you watch.
  *
  * Routing:
  *   /            Landing (the brand expression and onboarding)

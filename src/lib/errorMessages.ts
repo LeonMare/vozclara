@@ -138,44 +138,44 @@ const DICT: Record<string, Record<string, FriendlyError>> = {
   transcript_too_short: {
     es: {
       title: 'La transcripción es demasiado corta.',
-      description: 'Voz Clara necesita al menos unos párrafos para extraer ideas. Prueba con un vídeo más largo.',
+      description: 'VozClara necesita al menos unos párrafos para extraer ideas. Prueba con un vídeo más largo.',
       severity: 'warn',
     },
     pt: {
       title: 'A transcrição é demasiado curta.',
-      description: 'A Voz Clara precisa de pelo menos alguns parágrafos para extrair ideias. Tenta com um vídeo mais longo.',
+      description: 'A VozClara precisa de pelo menos alguns parágrafos para extrair ideias. Tenta com um vídeo mais longo.',
       severity: 'warn',
     },
     de: {
       title: 'Das Transkript ist zu kurz.',
-      description: 'Voz Clara braucht mindestens ein paar Absätze um Ideen zu extrahieren. Versuche ein längeres Video.',
+      description: 'VozClara braucht mindestens ein paar Absätze um Ideen zu extrahieren. Versuche ein längeres Video.',
       severity: 'warn',
     },
     en: {
       title: 'The transcript is too short.',
-      description: 'Voz Clara needs at least a few paragraphs to extract ideas. Try a longer video.',
+      description: 'VozClara needs at least a few paragraphs to extract ideas. Try a longer video.',
       severity: 'warn',
     },
   },
   unsupported_lang: {
     es: {
       title: 'Idioma de salida no soportado.',
-      description: 'Por ahora Voz Clara soporta español, inglés, alemán y portugués.',
+      description: 'Por ahora VozClara soporta español, inglés, alemán y portugués.',
       severity: 'warn',
     },
     pt: {
       title: 'Idioma de saída não suportado.',
-      description: 'Por agora a Voz Clara suporta espanhol, inglês, alemão e português.',
+      description: 'Por agora a VozClara suporta espanhol, inglês, alemão e português.',
       severity: 'warn',
     },
     de: {
       title: 'Ausgabesprache nicht unterstützt.',
-      description: 'Voz Clara unterstützt aktuell Spanisch, Englisch, Deutsch und Portugiesisch.',
+      description: 'VozClara unterstützt aktuell Spanisch, Englisch, Deutsch und Portugiesisch.',
       severity: 'warn',
     },
     en: {
       title: 'Output language not supported.',
-      description: 'Voz Clara currently supports Spanish, English, German, and Portuguese.',
+      description: 'VozClara currently supports Spanish, English, German, and Portuguese.',
       severity: 'warn',
     },
   },

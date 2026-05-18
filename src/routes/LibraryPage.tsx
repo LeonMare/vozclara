@@ -597,8 +597,8 @@ function libraryTitle(locale: string): string {
 function libraryDescription(locale: string): string {
   if (locale.startsWith('es')) return 'Tu nube privada de conocimiento. Pregunta, filtra y exporta los Knowledge Packs que has guardado.';
   if (locale.startsWith('pt')) return 'A tua nuvem privada de conhecimento. Pergunta, filtra e exporta os Knowledge Packs que guardaste.';
-  if (locale.startsWith('de')) return 'Deine private Wissens-Cloud. Frage, filtere und exportiere die Knowledge Packs die du gespeichert hast.';
-  return 'Your private knowledge cloud. Ask, filter, and export the Knowledge Packs you have saved.';
+  if (locale.startsWith('de')) return 'Deine private Knowledge-Library. Frage, filtere und exportiere die Packs die du gespeichert hast.';
+  return 'Your private knowledge library. Ask, filter, and export the Packs you have saved.';
 }
 
 function selectModeLabel(locale: string): string {

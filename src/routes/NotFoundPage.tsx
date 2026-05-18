@@ -79,7 +79,7 @@ export function NotFoundPage() {
 
 function notFoundLabels(locale: string) {
   if (locale.startsWith('es')) return {
-    headTitle: '404 — Voz Clara',
+    headTitle: '404 — VozClara',
     headDescription: 'La página que buscas no existe.',
     eyebrow: 'Cuatro · Cero · Cuatro',
     heroTitle: 'No encontramos esa página.',
@@ -89,7 +89,7 @@ function notFoundLabels(locale: string) {
     discoverCta: 'Ver lo mejor valorado',
   };
   if (locale.startsWith('pt')) return {
-    headTitle: '404 — Voz Clara',
+    headTitle: '404 — VozClara',
     headDescription: 'A página que procuras não existe.',
     eyebrow: 'Quatro · Zero · Quatro',
     heroTitle: 'Não encontramos essa página.',
@@ -99,7 +99,7 @@ function notFoundLabels(locale: string) {
     discoverCta: 'Ver os melhor avaliados',
   };
   if (locale.startsWith('de')) return {
-    headTitle: '404 — Voz Clara',
+    headTitle: '404 — VozClara',
     headDescription: 'Die gesuchte Seite existiert nicht.',
     eyebrow: 'Vier · Null · Vier',
     heroTitle: 'Diese Seite gibt es nicht.',
@@ -109,7 +109,7 @@ function notFoundLabels(locale: string) {
     discoverCta: 'Top bewertete sehen',
   };
   return {
-    headTitle: '404 — Voz Clara',
+    headTitle: '404 — VozClara',
     headDescription: "The page you're looking for doesn't exist.",
     eyebrow: 'Four · Zero · Four',
     heroTitle: "We couldn't find that page.",

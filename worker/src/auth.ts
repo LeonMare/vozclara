@@ -39,7 +39,7 @@ export interface AuthEnv {
   /** Resend API key — when absent we still create magic tokens but
    *  only log them to the worker console (dev mode). */
   RESEND_API_KEY?: string;
-  /** Verified Resend sender, e.g. "Voz Clara <noreply@vozclara.app>". */
+  /** Verified Resend sender, e.g. "VozClara <noreply@vozclara.app>". */
   AUTH_FROM_ADDRESS?: string;
   /** Public origin of the frontend, used to build the verify URL. */
   SITE_URL?: string;

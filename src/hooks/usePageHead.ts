@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
 interface PageHeadOptions {
-  /** Title text — will be suffixed " · Voz Clara" automatically. */
+  /** Title text — will be suffixed " · VozClara" automatically. */
   title: string;
   /** Optional override of the <meta name="description"> tag. */
   description?: string;
 }
 
-const TITLE_SUFFIX = '· Voz Clara';
+const TITLE_SUFFIX = '· VozClara';
 
 /**
  * Update the document title (and optionally the meta description) for
