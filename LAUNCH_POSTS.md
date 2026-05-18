@@ -1,10 +1,9 @@
 # Launch Posts — Draft Pack
 
-> Drafts for the launch-week distribution push. LAUNCH_PLAN §10 calls
-> for 2 Reddit posts + 1 HN submission as the cut-down version of the
-> originally-planned 10 blog posts. Each draft is honest, hand-edited,
-> and avoids marketing-bro phrasing. Pick one subreddit per session
-> over launch week; HN ships on Day 1 alone.
+> Drafts for the launch-week distribution push: HN + 3 subreddits + an
+> X/Twitter thread, spread across seven days. Each draft is honest,
+> hand-edited, and avoids marketing-bro phrasing. Pick one venue per
+> session over launch week; HN ships on Day 1 alone.
 >
 > **Posting rules — read first**
 > - Never schedule two on the same day. Reddit-mods catch
@@ -14,6 +13,13 @@
 > - The 100/100 Founder counter is implicit; surface it only in the
 >   comment thread if someone asks "do you have a business model".
 > - When you push these, swap the `<placeholders>` for the live URLs.
+>
+> **Schedule at a glance:**
+> - **Day 1 (Tuesday)** — Hacker News, ~14:00 UTC + X thread 2 h later
+> - **Day 2 (Wednesday)** — r/languagelearning, ~17:00 UTC
+> - **Day 4 (Friday)** — r/productivity, ~18:00 UTC
+> - **Day 6 (Sunday)** — r/getstudying, ~19:00 UTC
+> - **Day 7+** — taper, reply to lingering threads, watch the metrics
 
 ---
 
@@ -64,6 +70,14 @@ is brand new and the discovery page won't have much in it for a few
 days; cross-device library sync is a Pro-tier feature that isn't
 shipped yet.
 
+If you want to poke without signing up: the study-mode pack on
+Veritasium's "Most Misunderstood Concept in Physics" lives at
+https://vozclara.app/pack/sample-study (24-min lecture → 7 chapters
++ 8 comprehension questions + entropy vocabulary). The brief-mode
+pack on the Lex Fridman × Yann LeCun interview is at
+https://vozclara.app/pack/sample-news (3-hour podcast → 8 chapters,
+6 quotable lines, in 5 minutes of reading).
+
 I'd love feedback on the editorial-mode prompts — that's the layer
 that took the longest and where I think the differentiation lives.
 
@@ -87,8 +101,10 @@ Quick FAQ from threads on r/languagelearning earlier this week:
 
 — Privacy? Your library is in IndexedDB on your device. Only the
   transcript + prompts hit my Cloudflare Worker which forwards to
-  Workers AI (no training on inputs per their AUP). No analytics
-  tracker, no third-party cookies. /privacy spells it out.
+  Workers AI (no training on inputs per their AUP). No third-party
+  trackers, no marketing cookies. Privacy-friendly Cloudflare Web
+  Analytics + Sentry for crash reports, both EU-hosted, no PII.
+  /privacy spells it out.
 ```
 
 ---
@@ -219,13 +235,103 @@ Modes:
 Free. There's a Pro plan with premium AI models + cross-device sync,
 but the rating + discovery layer is and will remain free.
 
+If you want to poke without signing up: the live brief-mode sample
+on the Lex Fridman × Yann LeCun interview is at
+https://vozclara.app/pack/sample-news — a 3-hour podcast condensed
+into 8 chapters and 6 quotable lines, in five minutes of reading.
+That's the value of brief mode in one click.
+
 I'd be curious how the productivity crowd here uses this kind of
 thing. The first pattern I see emerging in my own workflow:
-ferramentas → save → rate → re-find weeks later when I need the
-specific quote. That last part is what generic note-taking apps
-can't do because they don't know the source video's structure.
+watch → save → rate → re-find weeks later when I need the specific
+quote. That last part is what generic note-taking apps can't do
+because they don't know the source video's structure.
 
 — Christian (Frankfurt)
+```
+
+---
+
+## Post 4 — r/getstudying (Day 6, ~19:00 UTC, Sunday)
+
+**Subreddit:** r/getstudying (700k)
+**Flair:** "Resources / Apps"
+
+**Title:**
+```
+I built a tool that turns lectures into chapter summaries + a
+comprehension quiz you can run before the exam. Looking for feedback
+from students who actually use it.
+```
+
+**Body:**
+```
+Hi r/getstudying,
+
+Quick background: I'm building a tool called VozClara
+(https://vozclara.app) and the part most relevant to this sub is
+the Study mode — it takes a lecture-style YouTube video and produces
+a structured study pack.
+
+Specifically, you get:
+
+— **TL;DR** in one sentence (so you can decide whether to keep going)
+— **Chapter summaries** with the timestamp where each starts, so you
+  can rewind to the exact 90 seconds you didn't catch the first time
+— **Key ideas** (5–7 of them) — the concepts the lecture is *actually*
+  trying to teach, separated from filler
+— **Comprehension quiz** (6–10 questions) with full answers and
+  explanations — runnable as a self-test before the exam
+— **Vocabulary** of the domain terms — useful if the lecture is in
+  a second language or full of jargon you're still meeting
+— **Action plan** — concrete next steps for retaining the material
+
+You can poke a real example without signing up:
+https://vozclara.app/pack/sample-study
+
+It's a 24-minute Veritasium lecture on entropy. The pack has 7
+chapters (intuition → Boltzmann's formula → Maxwell's demon → Shannon
+information → arrow of time), 8 quiz questions (with worked answers),
+15 vocabulary terms, and a 5-step action plan that ends in spaced
+repetition. The quiz alone is what would have saved me 30 minutes
+of re-reading when I was studying for thermodynamics finals.
+
+Why I think it's worth your time:
+
+1. The quiz is real comprehension testing, not regurgitation. Questions
+   like "why is the second law statistical, not absolute?" with full
+   explanations. The kind of question a TA would write.
+
+2. It works on the videos you're already watching. 3Blue1Brown, MIT
+   OCW, your professor's recorded lecture, Veritasium, Crash Course.
+   If it has captions on YouTube, VozClara reads them.
+
+3. Spaced repetition is built in. Cards from vocabulary auto-sync to
+   the SRS layer — review what's due today, the algorithm handles the
+   interval scheduling. One-tap Anki export if you'd rather use your
+   own deck.
+
+4. It's free. There's a Pro tier (€9/mo) for premium AI and unlimited
+   packs, but the core study loop — packs, quiz, SRS, Anki export —
+   stays free.
+
+What I'd love feedback on:
+
+— Are the comprehension questions at the right depth for *your*
+  domain? Try it on a lecture you know well and tell me if the
+  questions feel like a TA wrote them or like a parrot wrote them.
+
+— Anki users: does the deck export format play with your existing
+  cards or fight them?
+
+— Anyone studying in a language that isn't your native one: how does
+  the vocabulary calibration feel?
+
+Free, no account needed to try. Reply or DM if you want me to walk
+through a specific lecture from your syllabus — I'm curious where
+it breaks.
+
+— Christian, Frankfurt
 ```
 
 ---

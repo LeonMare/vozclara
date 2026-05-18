@@ -635,3 +635,105 @@ Danach: Sample-Pack-Entscheidung, dann je nach Energie weitere
 Launch-Vorbereitung oder eine letzte Polish-Iteration.
 
 — Übergabe Mo 18.5.2026 abends. Sprint 3 Tage voraus. Gute Pause.
+
+---
+
+## 26 · Sprint-Status — Update Di 19.5. (Laptop-Session, alles fertig)
+
+> §25 ist die Übergabe vom PC am Sonntag. Heute Di 19.5. am Laptop
+> wurde der Rest auf einen Aufwasch durchgezogen. **Launch-fertig.**
+
+### Stand: Di 19.5.2026 abends — **T-7 Tage zum Launch, alle Blocker zu**
+
+Vom §25-Backlog wurde alles abgehakt + drei neue Sachen draufgepackt.
+
+### ✅ Heute geshippt (Commits siehe `git log`)
+
+| Block | Status | Highlights |
+|---|---|---|
+| **Resend-Key-Rotation** | ✅ | Neuer Key in Worker-Secrets, Smoke-Test grün, alter Key revoked |
+| **Stripe Founder Deal live** | ✅ | Product „VozClara Founder · Lifetime Pro" + Payment-Link mit 100-Käufer-Cap. `VITE_FOUNDER_CHECKOUT_URL` verdrahtet, Commit `e0a1c89` |
+| **/me Account-Dashboard** | ✅ NEU | Hero mit Avatar + Plan-Badge, 3 Stat-Cards (Packs · Sprachen · zu wiederholen), Streak-Karte mit 7-Tage-Strip, Recent-Activity (3 letzte Packs mit Thumbnails), Plan & Founder-CTA, Account-Felder, Devices, DSGVO-Privacy-Sektion, Logout. Header-Dropdown von „nur Logout" zu Mein Konto / Bibliothek / Heute wiederholen / Founder Deal / Logout aufgewertet. Commit `c6797f6` |
+| **/me Polish-Pass** | ✅ | Brand-conformer Avatar (navy disc, gold initial, kein Gravatar-Default), Streak-State erweitert um `activeDays[]` für die Kalender-Viz, alle Stat-Cards mit Empty-State-Copy. Commit `acf524c` |
+| **Live-Test Desktop** | ✅ | Auth · Modi · Rating · Discover · Founder Stripe · Citations · 404 — alle Block 1–5 grün |
+| **Live-Test Mobile (375×812)** | ✅ | Landing, /founder, /discover, /signin, /pack-Accordion alle sauber. Eine Polish-Notiz: /discover-Tab-Pills wrappen 2+1 statt 3 in Reihe — nicht-blocker. PackPage-Tabs auf Mobile sind clever als Collapsible-Accordion implementiert, kein Overflow |
+| **sample-study** | ✅ NEU | Veritasium „Most Misunderstood Concept in Physics", 24 min, CEFR B2, ES + EN, 7 Kapitel + 8 Quiz-Fragen + 15 Vokabeln + 5 Quotes. `/pack/sample-study`. Commit `af3b1bb` |
+| **sample-news** | ✅ NEU | Lex Fridman × Yann LeCun #416, 3 h, CEFR C1, ES + EN, 8 Kapitel + 7 Key Ideas + 6 Quotes (inkl. „LLMs are an off-ramp"). `/pack/sample-news`. Commit `af3b1bb` |
+| **LAUNCH_POSTS.md Polish** | ✅ | 3 Pflicht-Fixes (Privacy-Honesty in HN-FAQ, „ferramentas" → „tools" Typo, Sample-Links in Post 1+3) + Post 4 r/getstudying neu (700 k Sub, Study-Mode + sample-study als Hook) |
+
+### 🟢 Übrig vor Launch (Tage übrig: 7)
+
+#### 1. Stripe Public-Name umbenennen (du, 2 Min)
+Aktuell zeigt Stripe-Checkout „Zahlung an Leon Maré". Sollte „VozClara"
+sein damit Käufer nicht verwirrt sind:
+
+- Stripe Dashboard → **Einstellungen → Geschäftliches → Öffentliche Details**
+- **Öffentlicher Unternehmensname:** `Leon Maré` → `VozClara`
+- Speichern
+
+#### 2. LAUNCH_POSTS.md persönlicher Pass (du, 30 Min)
+Drafts sind editorial-sauber, brauchen aber deinen Ton. Geh durch:
+- HN-Body — gibt's einen Satz wo du anders klingst?
+- r/languagelearning — die Partner-Anekdote stimmt wörtlich?
+- X-Tweet 1 — schärfer machen falls du willst (siehe Vorschlag im Chat)
+- r/getstudying — neuer Post, wenn er für dich noch zu „Claude-glatt"
+  klingt, ein paar persönlichere Sätze rein
+
+#### 3. Final-QA-Checkliste (Mi, ~1 h)
+Generieren wir am Mittwoch zusammen. Konkrete Klick-Path-Liste mit
+Erwartungen, plus Cross-Browser-Spot-Check.
+
+#### 4. Reddit-Account warm halten
+Mi/Do/Fr: in r/languagelearning + r/productivity + r/getstudying ein paar
+ehrliche Kommentare auf andere Threads. Reddit hasst Drive-by-Promo.
+Account braucht Karma + Aktivität von **vor** dem Launch-Post.
+
+#### 5. Discord-Server vorbereiten (Sa/So)
+Founder-Lifetime-Deal verspricht „Direct Discord access".
+Vor Mo Server anlegen, 3 Channels: #general, #feature-requests,
+#founders-only. Einladungs-Link an die ersten 100 Founder-Käufer
+manuell rausschicken nach jedem Stripe-Event.
+
+### 🔵 Was bewusst auf Post-Launch verschoben bleibt
+
+(Aus §25 unverändert):
+- Google OAuth (Magic-Link reicht — Woche 2)
+- Email-to-Pack (Pro, Woche 3)
+- MP3/MP4-Uploads (Pro, Woche 2)
+- Folders + Public Pack URLs (Woche 3)
+- 4-Stufen Email-Sequenz (1 Welcome-Mail in LAUNCH_POSTS)
+- 10 Blog-Posts (4 Posts in LAUNCH_POSTS.md statt 10)
+- Status-Page (Sentry deckt's ab)
+- PostHog (CF-Analytics + Sentry reichen)
+- Onboarding-4-Schritt-Wizard (1-Click AudienceTiles statt)
+- /me-Polish: editierbarer Display-Name + Avatar-Upload + Session-Liste
+
+### 📋 Datei-Spickzettel — Stand Di 19.5.
+
+Neu hinzugekommen zu §25-Liste:
+
+**Frontend (src/)**
+- `routes/AccountPage.tsx` — /me Dashboard mit 7 Sektionen
+- `components/Avatar.tsx` — brand-conformer Monogram (3 Größen)
+- `lib/samplePack.ts` — jetzt mit `samplePackStudy` + `samplePackNews`
+
+**Worker (worker/src/)** — keine Änderungen heute
+
+**Docs**
+- `LAUNCH_POSTS.md` — Post 4 für r/getstudying ergänzt, Sample-Links
+  in Post 1 + 3, Schedule-Tabelle im Header
+
+### 🎯 Verbleibende Touch-Points pro Tag bis Launch
+
+- **Mi 20.5.**: Stripe-Public-Name + LAUNCH_POSTS persönlich + Final-QA
+- **Do 21.5.**: Reddit-Karma sammeln in den 3 Zielsubs + Discord-Server
+- **Fr 22.5.**: Buffer-Tag, Sample-Pack-Spot-Check, mentale Vorbereitung
+- **Sa 23.5.**: alles ruhen lassen, optional Discord-Test
+- **So 24.5.**: 1 h Mock-QA — Stripe-Test-Käufe (mit echtem Konto?), Auth-
+  Flow, Mobile in echter Hand
+- **Mo 25.5.**: nichts neues bauen — nur lesen, ggf. Texte feilen
+- **Di 26.5.** ⭐ **LAUNCH-Tag**: 14:00 UTC HN, 16:00 X-Thread,
+  17:00 r/languagelearning + erste Comment-Response-Runde
+
+— Update Di 19.5.2026 abends. Alles für den Launch bereit.
+
