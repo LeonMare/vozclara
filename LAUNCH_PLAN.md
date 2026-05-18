@@ -731,9 +731,137 @@ Neu hinzugekommen zu §25-Liste:
 - **Sa 23.5.**: alles ruhen lassen, optional Discord-Test
 - **So 24.5.**: 1 h Mock-QA — Stripe-Test-Käufe (mit echtem Konto?), Auth-
   Flow, Mobile in echter Hand
-- **Mo 25.5.**: nichts neues bauen — nur lesen, ggf. Texte feilen
+- **Mo 18.5.**: nichts neues bauen — nur lesen, ggf. Texte feilen
 - **Di 26.5.** ⭐ **LAUNCH-Tag**: 14:00 UTC HN, 16:00 X-Thread,
   17:00 r/languagelearning + erste Comment-Response-Runde
 
 — Update Di 19.5.2026 abends. Alles für den Launch bereit.
+
+---
+
+## 27 · Sprint-Status — Übergabe Mo 18.5. abends (Laptop → PC)
+
+> **Wenn du am PC `git pull` machst, lies zuerst diesen Abschnitt.**
+> §25 und §26 sind die historischen Übergaben. Dieses §27 ist der
+> aktuelle Stand — alles davor ist erledigt, alles danach ist Backlog.
+
+### Stand: Mo 18.5.2026 abends — **T-7/8 Tage zum Launch**
+
+In einer 6-Stunden-Session am Laptop heute Abend wurde gerissen:
+- Resend-Launch-Blocker eliminiert (Domain-Mismatch → leonmare.de Sender)
+- voz-clara.com Konkurrenz analysiert (keine Trademark eingetragen)
+- 3 Bugs vom Functional-Sweep gekillt
+- /me Dashboard von „Logout-only" zu vollständigem Profile-Hub
+- Welcome-Email auf erstem Sign-In
+- Pack-Reviews-Display unter RatingPanel
+
+### ✅ Heute geshippt (Commits chronologisch)
+
+| Commit | Block | Detail |
+|---|---|---|
+| `2d6e351` | Resend-Fix | Sender-Domain `vozclara.app` → `leonmare.de` (verifiziert in deren Free-Tier), spart $20/Mo Pro-Plan. Magic-Link geht jetzt an *alle* Emails statt nur an deine eigene |
+| `af8d9b3` | Bugs #1+#2 | Impressum hatte noch `[TODO: Straße]` in der V.i.S.d.P-Sektion (Frauenhofstraße 7 jetzt überall) · HeroPackPreview zeigte nur 3 Mode-Tabs, Studieren fehlte (alle 4 jetzt da, Klick auf Studieren lädt Veritasium) |
+| `8f0cd64` | Bug #3 | Worker Curated-Endpoint: legacy KV-Einträge mit `mode: 'business'` werden on-read zu `brief` migriert |
+| `94519be` | /me UX | Inline-Edit Display-Name + 2-Step Account-Delete-Flow (DSGVO-konform mit echter Server-Erasure). Worker-Endpoints: PATCH /api/auth/profile, DELETE /api/auth/account |
+| `82a3822` | B + C | **C:** Welcome-Email auf erstem Sign-In, persönliche Christian-Stimme, ES/PT/DE/EN, CTA zum sample-study Pack. **B:** Reviews-Display unter RatingPanel mit neuem `/api/rating/reviews?videoId=X`-Endpoint und ReviewsList-Komponente |
+
+### 🟡 Verbleibende Pre-Launch-Tasks (zu Hand erledigen)
+
+#### 1. Stripe Public-Name umbenennen (2 Min)
+1. https://dashboard.stripe.com → **Einstellungen → Geschäftliches → Öffentliche Details**
+2. „Öffentlicher Unternehmensname": `Leon Maré` → `VozClara`
+3. Speichern
+→ Käufer sehen am Checkout „Zahlung an **VozClara**" statt „Leon Maré"
+
+#### 2. DPMA-Trademark anmelden (30 Min, €290)
+- https://anmeldung.dpma.de
+- Marke: `VozClara`
+- Klassen: **9** (Computer Software) + **41** (Bildungsdienstleistungen)
+- Kosten: €290 (Grundgebühr für bis zu 3 Klassen)
+- Schutz: 10 Jahre in DE, verteidigt gegen voz-clara.com-Expansion
+- **Priorität:** Mi morgen — vor Reddit-Posts, da öffentliche Sichtbarkeit dann erst echte Bedrohung wird
+
+#### 3. Defensive-Domains kaufen (10 Min, ~€20-25)
+- Wo: **INWX** (https://www.inwx.de) oder **Netcup** (https://www.netcup.de)
+  - **NICHT Cloudflare** — die verkaufen `.de`/`.eu` neue Registrierungen nicht
+  - **NICHT Ionos** — teurer + Upsell-Müll
+- Domains:
+  - `vozclara.de` — €5/Jahr — Heimmarkt
+  - `vozclara.eu` — €5-7/Jahr — EU-weit
+  - `voz-clara.app` — ~€12/Jahr — verhindert Squatting durch die Konkurrenz
+- **DNS-Setup**: Bei INWX/Netcup die Nameserver auf Cloudflare zeigen (`aron.ns.cloudflare.com`, `joy.ns.cloudflare.com` o.ä. — Cloudflare → Add Site → vozclara.de → erhält Nameserver)
+- Später Pages-Setup → alle 3 → 301-Redirect auf `vozclara.app`
+- **Skip `vozclara.io`** ($50/Jahr für kein strategisches Plus)
+
+#### 4. Reddit-Karma sammeln (Do/Fr/Sa, je 30 Min)
+- r/languagelearning + r/Spanish + r/learnGerman
+- r/productivity + r/Notion
+- r/getstudying
+- **Echte** Comments auf andere Threads — kein Drive-by-Promo
+- Reddit's Spam-Filter blockiert Accounts ohne Karma-Historie beim ersten Post
+
+#### 5. Discord-Server vorbereiten (45 Min am PC)
+- https://discord.com/new
+- 3 Channels:
+  - `#general` — allgemein
+  - `#feature-requests` — Roadmap-Input
+  - `#founders-only` — Channel für die ersten 100 Founder
+- Welcome-Message mit Einführung + Founder-Roles-Verteilung
+- Bot/Webhook für Stripe → Discord falls automatisiertes Founder-Onboarding gewünscht *(post-launch)*
+
+#### 6. Mock-QA auf echtem iPhone (1 h, So)
+- vozclara.app im Safari mobil öffnen
+- FINAL_QA.md durchgehen (`/Users/christiang/Projects/vozclara/FINAL_QA.md`)
+- /signin Magic-Link mit echter Email testen → check ob Mail kommt
+- /me Inline-Name-Edit auf Touch testen
+- /founder Stripe-Tap → Apple-Pay-Flow
+
+#### 7. Final-Pre-Launch-Check (Mo Vormittag)
+- Sentry-Dashboard kurz checken: keine neuen Error-Trends letzte 24h
+- Cloudflare Analytics: RPS-Werte normal
+- Stripe-Mode: **Live** (nicht mehr Test)
+
+### 🔵 Was bewusst NICHT vor Launch gemacht wird
+
+- Comments-Feed auf Pack-Listen (Reviews allein reichen)
+- Avatar-Upload (Monogramm-Fallback ist on-brand)
+- Notification-Preferences-Page (existierende NotificationToggle reicht)
+- Public-Profile `/u/cmare` (Woche 3)
+- Cross-Pack-Synthese (Woche 3 Re-Launch-Story)
+- Watch-Mode mit synchronisiertem Transcript (Woche 2 Re-Launch-Story)
+
+### 📋 Datei-Spickzettel — Stand heute
+
+**Neu seit §26:**
+- `src/components/ReviewsList.tsx` — Pack-Reviews-Display
+- `worker/src/email.ts` — `sendWelcomeEmail()` + DEFAULT_FROM=`leonmare.de`
+- `worker/src/auth.ts` — `handleAuthProfile`, `handleAuthDelete`, isFirstSignIn-Branch
+- `worker/src/rating.ts` — `handleRatingReviews`
+- `src/hooks/useAuth.tsx` — `updateProfile()` + `deleteAccount()` context methods
+- `src/routes/AccountPage.tsx` — EditableNameRow + DeleteAccountCard
+
+### 🎯 PC-Switch-Quickstart (5 Min)
+
+```bash
+git pull
+npm install
+npm run dev           # Frontend → localhost:5173
+cd worker && npm run dev  # Worker → localhost:8787
+```
+
+Liest LAUNCH_PLAN.md §27 (dieses Kapitel) und FINAL_QA.md für die Walkthrough-Liste.
+
+### Zeitleiste bis Launch
+
+- **Mo 18.5.** *(heute)*: alles gebaut + Launch-Blocker (Resend) eliminiert ✅
+- **Di 19.5.**: Stripe-Name + DPMA-Anmeldung + 3 Domains (am PC)
+- **Mi 20.5.**: Reddit-Karma-Tag 1 (r/languagelearning + r/Spanish)
+- **Do 21.5.**: Reddit-Karma-Tag 2 (r/productivity) + Discord-Setup
+- **Fr 22.5.**: Buffer · Sample-Pack-Spot-Check · LAUNCH_POSTS persönlicher Pass
+- **Sa 23.5.**: Discord-Server live, optional Mock-QA Vorab
+- **So 24.5.**: 1 h Mock-QA auf echtem iPhone, Reddit-Karma-Tag 3 (r/getstudying)
+- **Mo 25.5.** oder **Di 26.5.** ⭐ **LAUNCH**
+
+— Übergabe Mo 18.5.2026 abends. Switching to PC. Gute Pause.
+
 
