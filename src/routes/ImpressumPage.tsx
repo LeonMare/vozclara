@@ -92,7 +92,7 @@ export function ImpressumPage() {
             {labels.responsibilityBody}
           </p>
           <p className="mt-4 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
-            Christian Leon · [TODO: Straße] · 60528 Frankfurt am Main
+            Christian Leon · Frauenhofstraße 7 · 60528 Frankfurt am Main
           </p>
         </div>
       </section>

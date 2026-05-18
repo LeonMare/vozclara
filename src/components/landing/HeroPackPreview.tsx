@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '../../lib/i18n';
 import { BrandMark } from '../BrandMark';
-import { samplePackBusiness, samplePackLearn, samplePackCreator } from '../../lib/samplePack';
+import { samplePackBusiness, samplePackLearn, samplePackCreator, samplePackStudy } from '../../lib/samplePack';
 import { activeView, type KnowledgePack, type Language, type Mode } from '../../lib/pack';
 
 type TabKey = 'summary' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles';
@@ -47,11 +47,14 @@ export function HeroPackPreview() {
   return (
     <div className="relative">
       {/* Mode switcher above the plate — looks like a print edition selector.
-          Three of the four production modes are surfaced here; `study` is
-          intentionally omitted because the hero preview pack doesn't have
-          a study-mode rendering and would just be a duplicate of brief. */}
+          All four production modes surface here. Selecting `study` swaps the
+          preview to the Veritasium entropy pack (different source video by
+          design — that's the only sample that has the full study-mode
+          treatment with quiz + comprehension questions). The shift in
+          source actually demonstrates the value: same pipeline, different
+          content type, different output. */}
       <div className="mb-4 flex items-center justify-center gap-1.5 sm:justify-end">
-        {(['learn', 'brief', 'creator'] as Mode[]).map((m) => (
+        {(['learn', 'brief', 'study', 'creator'] as Mode[]).map((m) => (
           <button
             key={m}
             type="button"
@@ -187,6 +190,7 @@ export function HeroPackPreview() {
 function packForMode(m: Mode): KnowledgePack {
   if (m === 'learn') return samplePackLearn;
   if (m === 'creator') return samplePackCreator;
+  if (m === 'study') return samplePackStudy;
   return samplePackBusiness;
 }
 
