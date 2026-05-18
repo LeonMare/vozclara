@@ -82,6 +82,9 @@ const FounderPage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('./routes/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 );
+const AccountPage = lazy(() =>
+  import('./routes/AccountPage').then((m) => ({ default: m.AccountPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -262,6 +265,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <FounderPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/me"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <AccountPage />
               </Suspense>
             </AppShell>
           }

@@ -323,6 +323,43 @@ function UserDropdown({
             <div className="mt-1 break-all font-serif text-sm text-graphit/80">{user.email}</div>
           </div>
           <div className="my-1 h-px bg-navy/8" aria-hidden />
+          {/* Real menu — not just a logout. Each item closes the dropdown
+              on click so the focus state resets cleanly. The Konto entry
+              is the primary destination — gives the user a place to land
+              with stats, plan, settings, GDPR actions. */}
+          <Link
+            to="/me"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-graphit/80 transition hover:bg-creme hover:text-navy"
+          >
+            {labels.dashboard}
+          </Link>
+          <Link
+            to="/library"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-graphit/80 transition hover:bg-creme hover:text-navy"
+          >
+            {labels.library}
+          </Link>
+          <Link
+            to="/review"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-graphit/80 transition hover:bg-creme hover:text-navy"
+          >
+            {labels.review}
+          </Link>
+          <Link
+            to="/founder"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-gold transition hover:bg-creme"
+          >
+            {labels.founder}
+          </Link>
+          <div className="my-1 h-px bg-navy/8" aria-hidden />
           <button
             type="button"
             role="menuitem"
@@ -331,7 +368,7 @@ function UserDropdown({
               await signOut();
               navigate('/');
             }}
-            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-graphit/80 transition hover:bg-creme hover:text-navy"
+            className="block w-full rounded px-3 py-2 text-left font-sans text-sm text-graphit/65 transition hover:bg-creme hover:text-navy"
           >
             {labels.signOut}
           </button>
@@ -370,17 +407,31 @@ function MobileAuthBlock({ locale }: { locale: string }) {
         {labels.account}
       </div>
       <div className="mt-1 break-all font-serif text-sm text-graphit/80">{user.email}</div>
-      <button
-        type="button"
-        onClick={async (e) => {
-          e.stopPropagation();
-          await signOut();
-          navigate('/');
-        }}
-        className="mt-2 font-sans text-sm text-graphit/65 underline-offset-4 hover:text-navy hover:underline"
-      >
-        {labels.signOut}
-      </button>
+      <div className="mt-3 flex flex-col gap-1">
+        <Link
+          to="/me"
+          className="font-sans text-sm text-graphit/80 underline-offset-4 hover:text-navy hover:underline"
+        >
+          {labels.dashboard}
+        </Link>
+        <Link
+          to="/founder"
+          className="font-sans text-sm text-gold underline-offset-4 hover:underline"
+        >
+          {labels.founder}
+        </Link>
+        <button
+          type="button"
+          onClick={async (e) => {
+            e.stopPropagation();
+            await signOut();
+            navigate('/');
+          }}
+          className="self-start font-sans text-sm text-graphit/65 underline-offset-4 hover:text-navy hover:underline"
+        >
+          {labels.signOut}
+        </button>
+      </div>
     </div>
   );
 }
@@ -390,20 +441,36 @@ function authLabels(locale: string) {
     signIn: 'Entrar',
     signOut: 'Cerrar sesión',
     account: 'Cuenta',
+    dashboard: 'Mi cuenta',
+    library: 'Biblioteca',
+    review: 'Repaso de hoy',
+    founder: 'Founder Deal · 99 €',
   };
   if (locale.startsWith('pt')) return {
     signIn: 'Entrar',
     signOut: 'Terminar sessão',
     account: 'Conta',
+    dashboard: 'A minha conta',
+    library: 'Biblioteca',
+    review: 'Revisão de hoje',
+    founder: 'Founder Deal · 99 €',
   };
   if (locale.startsWith('de')) return {
     signIn: 'Anmelden',
     signOut: 'Abmelden',
     account: 'Konto',
+    dashboard: 'Mein Konto',
+    library: 'Bibliothek',
+    review: 'Heute wiederholen',
+    founder: 'Founder Deal · 99 €',
   };
   return {
     signIn: 'Sign in',
     signOut: 'Sign out',
     account: 'Account',
+    dashboard: 'My account',
+    library: 'Library',
+    review: 'Review today',
+    founder: 'Founder Deal · 99 €',
   };
 }
