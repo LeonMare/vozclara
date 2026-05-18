@@ -33,7 +33,33 @@
 import { get, set, del, keys } from 'idb-keyval';
 import { nanoid } from './nanoid';
 
-export type Mode = 'learn' | 'business' | 'creator';
+/**
+ * Four production modes shape how the same transcript becomes a Pack:
+ *
+ *   learn    — language-learner pacing: vocab, quiz, chapters
+ *   brief    — decision-maker briefing: actionPlan, keyQuotes
+ *              (previously named "business"; migrated on read)
+ *   study    — student-grade study material: chapter-deep summaries,
+ *              comprehension quiz, citation timestamps
+ *   creator  — repurposing: socialAngles, captionIdeas
+ *
+ * Auto-Pick rule (GeneratorPage):
+ *   news/business/interview/coaching/general → brief
+ *   education → study
+ *   creator → creator
+ *   learn is only chosen when the user opts in (onboarding picked
+ *   "language learner").
+ */
+export type Mode = 'learn' | 'brief' | 'study' | 'creator';
+
+/**
+ * Older Packs persisted with `mode: 'business'` migrate to `brief`
+ * on read. Exposed here so worker-payload normalisers and tests can
+ * stay in sync without redefining the constant.
+ */
+export const LEGACY_MODE_MAP: Record<string, Mode> = {
+  business: 'brief',
+};
 export type Language = 'en' | 'es' | 'de' | 'pt' | 'fr';
 export type PackStatus = 'generating' | 'ready' | 'failed';
 export type Genre =
@@ -286,6 +312,20 @@ export async function listPacks(brainId: string): Promise<KnowledgePack[]> {
  * Returns null if the data is genuinely unparseable. v2-shaped packs pass
  * through unchanged (idempotent — re-migrating costs nothing).
  */
+/**
+ * Coerce any persisted mode value into the current 4-mode contract.
+ * Unknown strings fall back to `brief` (the safe default — every
+ * Pack always renders summary + insights + actionPlan, which is what
+ * the brief mode highlights).
+ */
+function normaliseStoredMode(raw: unknown): Mode {
+  if (typeof raw !== 'string') return 'brief';
+  if (raw === 'learn' || raw === 'brief' || raw === 'study' || raw === 'creator') {
+    return raw;
+  }
+  return LEGACY_MODE_MAP[raw] ?? 'brief';
+}
+
 function migrateStoredPack(raw: Record<string, unknown>): KnowledgePack | null {
   if (!raw.id || !raw.brainId) return null;
 
@@ -298,8 +338,11 @@ function migrateStoredPack(raw: Record<string, unknown>): KnowledgePack | null {
     const pack = raw as unknown as KnowledgePack;
     // Defensive: re-derive outputLanguages from translations keys so
     // the list stays in sync even if older code wrote stale state.
+    // Also coerce a legacy `business` mode to `brief` so packs saved
+    // before the §4 rename render with the new label.
     return {
       ...pack,
+      mode: normaliseStoredMode(pack.mode),
       outputLanguages: Object.keys(pack.translations).filter((k) =>
         ['en', 'es', 'de', 'pt', 'fr'].includes(k),
       ) as Language[],
@@ -328,7 +371,7 @@ function migrateStoredPack(raw: Record<string, unknown>): KnowledgePack | null {
     outputLang,
     outputLanguages: [outputLang],
     translations: { [outputLang]: translation },
-    mode: (raw.mode as Mode) ?? 'business',
+    mode: normaliseStoredMode(raw.mode),
     genre: (raw.genre as Genre) ?? 'general',
     status: (raw.status as PackStatus) ?? 'ready',
     tags: (raw.tags as string[]) ?? [],

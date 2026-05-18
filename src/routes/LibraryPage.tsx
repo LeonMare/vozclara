@@ -301,7 +301,7 @@ export function LibraryPage() {
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1 rounded-card border border-navy/15 bg-white px-4 py-2.5 font-sans text-sm text-graphit placeholder-graphit/40 outline-none focus:border-gold focus:ring-2 focus:ring-gold/30"
           />
-          <FilterPill label={t.filterMode} options={[['all', t.filterAll], ['learn', 'Learn'], ['business', 'Business'], ['creator', 'Creator']]} value={mode} onChange={(v) => setMode(v as Mode | 'all')} />
+          <FilterPill label={t.filterMode} options={[['all', t.filterAll], ['learn', 'Learn'], ['brief', 'Briefing'], ['study', 'Study'], ['creator', 'Creator']]} value={mode} onChange={(v) => setMode(v as Mode | 'all')} />
           <FilterPill label={t.filterLang} options={[['all', t.filterAll], ['es', 'ES'], ['en', 'EN'], ['de', 'DE'], ['pt', 'PT']]} value={language} onChange={(v) => setLanguage(v as Language | 'all')} />
           <FilterPill label={t.filterDate} options={[['', t.filterDateAll], ['7', t.filterDate7], ['30', t.filterDate30]]} value={sinceDays?.toString() ?? ''} onChange={(v) => setSinceDays(v ? Number(v) : undefined)} />
         </div>

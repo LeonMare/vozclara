@@ -112,7 +112,7 @@ export interface Strings {
   progressPhrases: string[];
 
   // ─ Modes ────────────────────────────────────────────────
-  modes: Record<'learn' | 'business' | 'creator', ModeStrings>;
+  modes: Record<'learn' | 'brief' | 'study' | 'creator', ModeStrings>;
 
   // ─ Pack view ────────────────────────────────────────────
   packBackToLibrary: string;
@@ -192,7 +192,7 @@ export const STRINGS: Record<Locale, Strings> = {
     howSteps: ['Pega un enlace', 'Elige idioma y modo', 'Genera un Knowledge Pack', 'Guárdalo en tu biblioteca', 'Pregúntale más tarde'],
     howDescriptions: [
       'Cualquier vídeo de YouTube en inglés, español o alemán.',
-      'Tres modos: Learn, Business y Creator. Cada uno con su propia voz.',
+      'Cuatro modos: Learn, Briefing, Estudio y Creator. Cada uno con su propia voz.',
       'Resumen, ideas, plan de acción, vocabulario y más — adaptados a tu modo.',
       'Etiquetado, organizado y buscable. Permanece en tu dispositivo.',
       'Haz preguntas sobre todo lo que has guardado.',
@@ -232,7 +232,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Empieza gratis. Crece cuando lo necesites.',
     pricingSub: 'Sin tarjeta para empezar.',
     tiers: [
-      { name: 'Free · disponible hoy', price: '0 €', period: '', blurb: 'Todo lo que ya funciona — sin tarjeta, sin cuenta.', features: ['Knowledge Packs ilimitados', 'Los tres modos: Learn · Business · Creator', 'Cuatro idiomas: ES · PT · DE · EN', 'Repetición espaciada con racha diaria', 'Shadowing con puntuación de pronunciación', 'Tutor IA por Pack', 'Exportación a Anki (.apkg)', 'Ask My Knowledge — Q&A sobre tu biblioteca', 'Biblioteca local en tu navegador'], cta: 'Empezar' },
+      { name: 'Free · disponible hoy', price: '0 €', period: '', blurb: 'Todo lo que ya funciona — sin tarjeta, sin cuenta.', features: ['Knowledge Packs ilimitados', 'Los cuatro modos: Learn · Briefing · Estudio · Creator', 'Cuatro idiomas: ES · PT · DE · EN', 'Repetición espaciada con racha diaria', 'Shadowing con puntuación de pronunciación', 'Tutor IA por Pack', 'Exportación a Anki (.apkg)', 'Ask My Knowledge — Q&A sobre tu biblioteca', 'Biblioteca local en tu navegador'], cta: 'Empezar' },
       { name: 'Pro · próximamente', price: '9 €', period: '/ mes', blurb: 'Cuando llegue: lo que el plan gratuito no puede dar.', features: ['Sincronización entre dispositivos', 'Voz premium para texto-a-voz', 'Exportación a PDF y Notion', 'Quote-cards con tu marca', 'Soporte prioritario'], cta: 'Apúntate' },
     ],
 
@@ -264,11 +264,17 @@ export const STRINGS: Record<Locale, Strings> = {
         description: 'Explicaciones claras, vocabulario con contexto y un quiz para comprobar tu comprensión.',
         bullets: ['Resumen ejecutivo', 'Capítulos temáticos', 'Vocabulario con contexto', 'Quiz de comprensión'],
       },
-      business: {
-        name: 'Business',
+      brief: {
+        name: 'Briefing',
         tagline: 'Para decisiones rápidas.',
         description: 'Resumen ejecutivo, implicaciones estratégicas, plan de acción y citas clave para llevar.',
         bullets: ['Resumen ejecutivo', 'Ideas clave estratégicas', 'Plan de acción concreto', 'Citas memorables'],
+      },
+      study: {
+        name: 'Estudio',
+        tagline: 'Para preparar el examen.',
+        description: 'Resúmenes de capítulo, vocabulario técnico, cuestionario de comprensión y citas con marca de tiempo.',
+        bullets: ['Capítulos detallados', 'Vocabulario académico', 'Cuestionario profundo', 'Citas con timestamp'],
       },
       creator: {
         name: 'Creator',
@@ -356,7 +362,7 @@ export const STRINGS: Record<Locale, Strings> = {
     howSteps: ['Cola um link', 'Escolhe idioma e modo', 'Gera um Knowledge Pack', 'Guarda na tua biblioteca', 'Pergunta mais tarde'],
     howDescriptions: [
       'Qualquer vídeo do YouTube em inglês, espanhol ou alemão.',
-      'Três modos: Learn, Business e Creator. Cada um com voz própria.',
+      'Quatro modos: Learn, Briefing, Estudo e Creator. Cada um com voz própria.',
       'Resumo, ideias, plano de ação, vocabulário e mais — adaptado ao teu modo.',
       'Etiquetado, organizado e pesquisável. Fica no teu dispositivo.',
       'Faz perguntas sobre tudo o que guardaste.',
@@ -396,7 +402,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Começa grátis. Cresce quando precisares.',
     pricingSub: 'Sem cartão para começar.',
     tiers: [
-      { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — sem cartão, sem conta.', features: ['Knowledge Packs ilimitados', 'Os três modos: Learn · Business · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
+      { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — sem cartão, sem conta.', features: ['Knowledge Packs ilimitados', 'Os quatro modos: Learn · Briefing · Estudo · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
       { name: 'Pro · em breve', price: '9 €', period: '/ mês', blurb: 'Quando chegar: o que o plano gratuito não pode dar.', features: ['Sincronização entre dispositivos', 'Voz premium para texto-a-voz', 'Exportação para PDF e Notion', 'Quote-cards com a tua marca', 'Suporte prioritário'], cta: 'Inscreve-te' },
     ],
 
@@ -423,11 +429,17 @@ export const STRINGS: Record<Locale, Strings> = {
         description: 'Explicações claras, vocabulário em contexto e um quiz para verificar a tua compreensão.',
         bullets: ['Resumo executivo', 'Capítulos temáticos', 'Vocabulário em contexto', 'Quiz de compreensão'],
       },
-      business: {
-        name: 'Business',
+      brief: {
+        name: 'Briefing',
         tagline: 'Para decisões rápidas.',
         description: 'Resumo executivo, implicações estratégicas, plano de ação e citações-chave.',
         bullets: ['Resumo executivo', 'Ideias estratégicas', 'Plano de ação concreto', 'Citações memoráveis'],
+      },
+      study: {
+        name: 'Estudo',
+        tagline: 'Para preparar o exame.',
+        description: 'Resumos de capítulo, vocabulário técnico, questionário de compreensão e citações com timestamp.',
+        bullets: ['Capítulos detalhados', 'Vocabulário académico', 'Questionário profundo', 'Citações com timestamp'],
       },
       creator: {
         name: 'Creator',
@@ -509,7 +521,7 @@ export const STRINGS: Record<Locale, Strings> = {
     howSteps: ['Link einfügen', 'Sprache und Modus wählen', 'Knowledge Pack erzeugen', 'In Bibliothek speichern', 'Später Fragen stellen'],
     howDescriptions: [
       'Jedes YouTube-Video auf Englisch, Spanisch oder Deutsch.',
-      'Drei Modi: Learn, Business, Creator. Jeder mit eigener Stimme.',
+      'Vier Modi: Learn, Briefing, Studieren, Creator. Jeder mit eigener Stimme.',
       'Zusammenfassung, Ideen, Aktionsplan, Vokabular und mehr.',
       'Mit Tags, organisiert, durchsuchbar. Bleibt auf deinem Gerät.',
       'Stell Fragen zu allem was du gespeichert hast.',
@@ -549,7 +561,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Kostenlos starten. Wachsen wenn nötig.',
     pricingSub: 'Keine Kreditkarte zum Start.',
     tiers: [
-      { name: 'Free · heute verfügbar', price: '0 €', period: '', blurb: 'Alles was schon funktioniert — keine Kreditkarte, kein Konto.', features: ['Unbegrenzte Knowledge Packs', 'Alle drei Modi: Learn · Business · Creator', 'Vier Sprachen: ES · PT · DE · EN', 'Spaced Repetition mit Tages-Streak', 'Shadowing mit Aussprache-Bewertung', 'KI-Tutor pro Pack', 'Anki-Export (.apkg)', 'Ask My Knowledge — Q&A über deine Bibliothek', 'Lokale Bibliothek im Browser'], cta: 'Starten' },
+      { name: 'Free · heute verfügbar', price: '0 €', period: '', blurb: 'Alles was schon funktioniert — keine Kreditkarte, kein Konto.', features: ['Unbegrenzte Knowledge Packs', 'Alle vier Modi: Learn · Briefing · Studieren · Creator', 'Vier Sprachen: ES · PT · DE · EN', 'Spaced Repetition mit Tages-Streak', 'Shadowing mit Aussprache-Bewertung', 'KI-Tutor pro Pack', 'Anki-Export (.apkg)', 'Ask My Knowledge — Q&A über deine Bibliothek', 'Lokale Bibliothek im Browser'], cta: 'Starten' },
       { name: 'Pro · in Kürze', price: '9 €', period: '/ Monat', blurb: 'Wenn es kommt: was der Free-Plan nicht leisten kann.', features: ['Geräte-Sync', 'Premium-Stimme für Text-to-Speech', 'Export nach PDF und Notion', 'Quote-Cards mit deinem Branding', 'Priority-Support'], cta: 'Auf Warteliste' },
     ],
 
@@ -576,11 +588,17 @@ export const STRINGS: Record<Locale, Strings> = {
         description: 'Klare Erklärungen, Vokabular im Kontext und ein Quiz zur Überprüfung.',
         bullets: ['Executive Summary', 'Thematische Kapitel', 'Vokabular mit Kontext', 'Verständnis-Quiz'],
       },
-      business: {
-        name: 'Business',
+      brief: {
+        name: 'Briefing',
         tagline: 'Für schnelle Entscheidungen.',
         description: 'Executive Summary, strategische Implikationen, Action Plan und Schlüssel-Zitate.',
         bullets: ['Executive Summary', 'Strategische Ideen', 'Konkreter Action Plan', 'Prägnante Zitate'],
+      },
+      study: {
+        name: 'Studieren',
+        tagline: 'Für die Prüfungsvorbereitung.',
+        description: 'Kapitel-Zusammenfassungen, Fachvokabular, Verständnis-Quiz und Zitate mit Timestamps.',
+        bullets: ['Tiefe Kapitel-Summary', 'Akademisches Vokabular', 'Verständnis-Quiz', 'Zitate mit Timestamp'],
       },
       creator: {
         name: 'Creator',
@@ -662,7 +680,7 @@ export const STRINGS: Record<Locale, Strings> = {
     howSteps: ['Paste a link', 'Choose language and mode', 'Generate a Knowledge Pack', 'Save it to your library', 'Ask questions later'],
     howDescriptions: [
       'Any YouTube video in English, Spanish or German.',
-      'Three modes: Learn, Business, Creator. Each with its own voice.',
+      'Four modes: Learn, Briefing, Study, Creator. Each with its own voice.',
       'Summary, ideas, action plan, vocabulary and more — adapted to your mode.',
       'Tagged, organised, searchable. Stays on your device.',
       'Ask questions across everything you saved.',
@@ -702,7 +720,7 @@ export const STRINGS: Record<Locale, Strings> = {
     pricingTitle: 'Start free. Grow when you need it.',
     pricingSub: 'No card required to start.',
     tiers: [
-      { name: 'Free · available today', price: '€0', period: '', blurb: 'Everything that already works — no card, no account.', features: ['Unlimited Knowledge Packs', 'All three modes: Learn · Business · Creator', 'Four languages: ES · PT · DE · EN', 'Spaced repetition with daily streak', 'Voice shadowing with pronunciation score', 'AI tutor per Pack', 'Anki deck export (.apkg)', 'Ask My Knowledge — library Q&A', 'Library local in your browser'], cta: 'Start' },
+      { name: 'Free · available today', price: '€0', period: '', blurb: 'Everything that already works — no card, no account.', features: ['Unlimited Knowledge Packs', 'All four modes: Learn · Briefing · Study · Creator', 'Four languages: ES · PT · DE · EN', 'Spaced repetition with daily streak', 'Voice shadowing with pronunciation score', 'AI tutor per Pack', 'Anki deck export (.apkg)', 'Ask My Knowledge — library Q&A', 'Library local in your browser'], cta: 'Start' },
       { name: 'Pro · coming soon', price: '€9', period: '/ month', blurb: 'When it ships: what the free plan can\'t offer.', features: ['Sync across devices', 'Premium voice for text-to-speech', 'PDF and Notion export', 'Brand-customised quote-cards', 'Priority support'], cta: 'Join waitlist' },
     ],
 
@@ -729,11 +747,17 @@ export const STRINGS: Record<Locale, Strings> = {
         description: 'Clear explanations, vocabulary in context, and a quiz to verify your understanding.',
         bullets: ['Executive summary', 'Thematic chapters', 'Vocabulary in context', 'Comprehension quiz'],
       },
-      business: {
-        name: 'Business',
+      brief: {
+        name: 'Briefing',
         tagline: 'For fast decisions.',
         description: 'Executive summary, strategic implications, action plan and key quotes to take with you.',
         bullets: ['Executive summary', 'Strategic insights', 'Concrete action plan', 'Memorable quotes'],
+      },
+      study: {
+        name: 'Study',
+        tagline: 'For exam prep.',
+        description: 'Chapter-grade summaries, academic vocabulary, comprehension quiz and timestamped quotes.',
+        bullets: ['Deep chapter summaries', 'Academic vocabulary', 'Comprehension quiz', 'Timestamped quotes'],
       },
       creator: {
         name: 'Creator',

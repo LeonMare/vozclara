@@ -452,7 +452,7 @@ async function handleInsights(req: Request, env: Env): Promise<Response> {
   if (!SUPPORTED_LANGS.includes(targetLang as SupportedLang)) {
     return json({ error: 'unsupported_target_lang' }, 400);
   }
-  const mode: Mode = body.mode === 'learn' || body.mode === 'business' || body.mode === 'creator' ? body.mode : 'business';
+  const mode: Mode = normaliseMode(body.mode);
 
   try {
     const genre = body.genre ?? (await detectGenre(transcript, env));
@@ -567,7 +567,21 @@ function deriveLengthTier(transcriptChars: number): LengthTier {
   return 'comprehensive';
 }
 
-type Mode = 'learn' | 'business' | 'creator';
+/**
+ * Four production modes — mirrored from src/lib/pack.ts. The legacy
+ * key `business` migrates to `brief` here too (handlers normalise
+ * incoming payloads via normaliseMode below).
+ */
+type Mode = 'learn' | 'brief' | 'study' | 'creator';
+
+function normaliseMode(raw: unknown): Mode {
+  if (typeof raw !== 'string') return 'brief';
+  if (raw === 'learn' || raw === 'brief' || raw === 'study' || raw === 'creator') {
+    return raw;
+  }
+  if (raw === 'business') return 'brief';
+  return 'brief';
+}
 
 const LANG_NAME: Record<string, string> = {
   de: 'German',
@@ -583,8 +597,10 @@ function modePromptVoice(mode: Mode, targetLang: string): string {
   switch (mode) {
     case 'learn':
       return `You are a patient, precise teacher. Your reader is using this video to learn. Output clear explanations that scaffold from concrete to abstract. Identify what concepts depend on which, and what the learner should be able to do after watching. ${base}`;
-    case 'business':
+    case 'brief':
       return `You write executive briefings. Your reader is a decision-maker scanning for strategic implications, market signals, and second-order consequences. Be specific, not generic. ${base}`;
+    case 'study':
+      return `You are an academic study-companion. Your reader is a student turning a lecture or explainer video into study material. Output structured chapter summaries that mirror the source's pedagogy, surface the testable concepts, and produce comprehension questions that check real understanding — not trivia. Cite timestamps so the student can rewind to the source moment. ${base}`;
     case 'creator':
       return `You repurpose long-form content for short-form distribution. Your reader is a content creator looking for hooks, angles and captions that work on social platforms. Be concrete and quotable. ${base}`;
   }
@@ -662,14 +678,22 @@ function structuredInstruction(targetLang: string, mode: Mode, tier: LengthTier)
 - "actionPlan": 0-4 items (only if content actually proposes practice or experiments).
 - "keyQuotes": ${cap(0, 3, 6)} items (only memorable lines that crystallise concepts).
 - "socialAngles": [] (not relevant in Learn mode).`,
-    business: `BUSINESS-MODE — the reader is a decision-maker scanning for signal:
+    brief: `BRIEF-MODE — the reader is a decision-maker scanning for signal:
 - "insights": ${cap(5, 8, 12)} items. Strategic implications, market signals, second-order consequences, structural shifts. Each must add value the bare transcript doesn't.
-- "actionPlan": ${cap(4, 6, 10)} concrete actions a business reader could take this week. Verb-first, specific.
+- "actionPlan": ${cap(4, 6, 10)} concrete actions a brief-reader could take this week. Verb-first, specific.
 - "keyQuotes": ${cap(4, 6, 12)} items. Statements of position, fact, commitment, or contradiction. Include speaker.
 - "chapters": ${range(4, 8)} items.
 - "vocabulary": ${cap(0, 6, 12)} items (only domain-specific terms a non-specialist might miss).
-- "quiz": [] (not relevant in Business mode).
-- "socialAngles": [] (not relevant in Business mode).`,
+- "quiz": [] (not relevant in Brief mode).
+- "socialAngles": [] (not relevant in Brief mode).`,
+    study: `STUDY-MODE — the reader is a student turning this lecture / explainer into study material:
+- "insights": ${cap(6, 10, 14)} items. Each is a testable concept: state the claim, give the reasoning the video offered, note what it depends on or implies. Order them by pedagogical dependency (foundational → advanced).
+- "chapters": ${range(6, 12)} items. Each summary is 2-3 sentences and acts as a chapter-grade revision note — the student should be able to rebuild the lecture's argument from the summaries alone. Use accurate startSec timestamps so the student can rewind.
+- "quiz": ${cap(8, 12, 18)} questions. Mix recall, comprehension, application and synthesis. Each explanation is 2-3 sentences and connects to other concepts in the video. Always include timestampSec pointing to where the answer is established in the source.
+- "vocabulary": ${range(8, 14)} items. Domain terminology, key technical vocabulary, terms-of-art the lecturer assumes the student already knows or introduces explicitly.
+- "actionPlan": ${cap(3, 5, 8)} items framed as study tasks (re-read X, attempt problem Y, test yourself on Z).
+- "keyQuotes": ${cap(3, 6, 10)} items. Pick the lecturer's definitional statements, the precise framings worth memorising verbatim. Include timestampSec.
+- "socialAngles": [] (not relevant in Study mode).`,
     creator: `CREATOR-MODE — the reader is a content creator repurposing this video:
 - "insights": ${cap(4, 6, 10)} items. Focus on hooks, angles, contrarian-but-defendable points, structural moves the speaker uses.
 - "socialAngles": ${cap(6, 10, 16)} items. Each "hook" is a scroll-stopper (question, claim, or surprising stat). Each "caption" is a 3-5 sentence post body that ends with an invitation to reply.
@@ -1679,7 +1703,7 @@ function handleOG(url: URL): Response {
   const p = url.searchParams;
   const params: OGParams = {
     title: (p.get('title') ?? 'Knowledge Pack').slice(0, 200),
-    mode: (p.get('mode') ?? 'business').slice(0, 20),
+    mode: (p.get('mode') ?? 'brief').slice(0, 20),
     lang: (p.get('lang') ?? 'es').slice(0, 5).toLowerCase(),
     genre: (p.get('genre') ?? 'general').slice(0, 30),
     author: p.get('author')?.slice(0, 60) ?? undefined,
@@ -1711,7 +1735,17 @@ function renderOGSVG({ title, mode, lang, genre, author }: OGParams): string {
   // Aim for ~24 chars per line; cut at word boundaries.
   const wrapped = wrapTitle(title, 24, 3);
 
-  const modeLabel = mode === 'learn' ? 'LEARN' : mode === 'creator' ? 'CREATOR' : 'BUSINESS';
+  // Mode label used as a small pill on the OG card. `business` is
+  // tolerated for OG URLs that may still be cached/shared from before
+  // the rename — render as the new "BRIEF" label.
+  const modeLabel =
+    mode === 'learn'
+      ? 'LEARN'
+      : mode === 'study'
+        ? 'STUDY'
+        : mode === 'creator'
+          ? 'CREATOR'
+          : 'BRIEF';
   const langLabel = lang.toUpperCase();
   const genreLabel = genre.toUpperCase();
 
@@ -2235,7 +2269,7 @@ interface CuratedItem {
   title: string;           // video title
   sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
   packLangs: string[];     // languages the pack is generated in
-  mode: 'learn' | 'business' | 'creator';
+  mode: 'learn' | 'brief' | 'study' | 'creator';
   publishedAt: number;     // ms epoch — source video publication date
   source: string;          // channel name, e.g. "Tagesschau"
   excerpt: string;         // one-line teaser shown on the card
@@ -2255,7 +2289,7 @@ const FALLBACK_CURATED: CuratedItem[] = [
     title: 'Tagesschau 20:00 Uhr · 03.05.2026',
     sourceLang: 'de',
     packLangs: ['es', 'en'],
-    mode: 'business',
+    mode: 'brief',
     publishedAt: Date.UTC(2026, 4, 3),
     source: 'Tagesschau',
     excerpt: 'Ein Jahr Kanzler Merz, atmende Koalition, AfD im Osten.',
@@ -2457,7 +2491,7 @@ interface CuratedFeed {
   titleMatch?: string;                // regex (string form) to filter the feed entries
   sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
   packLangs: Array<'es' | 'pt' | 'de' | 'en' | 'fr'>;
-  mode: 'learn' | 'business' | 'creator';
+  mode: 'learn' | 'brief' | 'study' | 'creator';
   excerpt?: string;                   // optional one-line description for cards
 }
 
@@ -2473,7 +2507,7 @@ const CURATED_FEEDS: CuratedFeed[] = [
     titleMatch: 'tagesschau 20:00 uhr',
     sourceLang: 'de',
     packLangs: ['es', 'en'],
-    mode: 'business',
+    mode: 'brief',
     excerpt: 'Die Nachrichten des Tages aus Deutschland — Originalton, übersetzt.',
   },
 ];

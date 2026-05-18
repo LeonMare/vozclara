@@ -24,7 +24,7 @@ type TabKey = 'summary' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'q
 export function HeroPackPreview() {
   const { t, locale } = useLocale();
   const cta = previewCta(locale);
-  const [mode, setMode] = useState<Mode>('business');
+  const [mode, setMode] = useState<Mode>('brief');
   const [tab, setTab] = useState<TabKey>('summary');
   const [lang, setLang] = useState<Language>('es');
 
@@ -194,8 +194,13 @@ function tabsForMode(pack: KnowledgePack): TabKey[] {
     if (view.vocabulary.length > 0) out.push('vocabulary');
     if (view.quiz.length > 0) out.push('quiz');
   }
-  if (pack.mode === 'business') {
+  if (pack.mode === 'brief') {
     if (view.actionPlan.length > 0) out.push('actionPlan');
+    if (view.keyQuotes.length > 0) out.push('quotes');
+  }
+  if (pack.mode === 'study') {
+    // Hero is a mini-preview — chapter detail lives in the full PackPage.
+    if (view.quiz.length > 0) out.push('quiz');
     if (view.keyQuotes.length > 0) out.push('quotes');
   }
   if (pack.mode === 'creator') {

@@ -471,9 +471,17 @@ function tabsForMode(pack: KnowledgePack, view: PackTranslation): TabKey[] {
     if (view.quiz.length > 0) base.push('quiz');
     if (view.actionPlan.length > 0) base.push('actionPlan');
   }
-  if (pack.mode === 'business') {
+  if (pack.mode === 'brief') {
     if (view.actionPlan.length > 0) base.push('actionPlan');
     if (view.keyQuotes.length > 0) base.push('quotes');
+  }
+  if (pack.mode === 'study') {
+    // Study leans on chapter-deep + quiz + quotes-with-timestamps; the
+    // action plan is light (study tasks only) so it lands below quotes.
+    if (view.quiz.length > 0) base.push('quiz');
+    if (view.keyQuotes.length > 0) base.push('quotes');
+    if (view.actionPlan.length > 0) base.push('actionPlan');
+    if (view.vocabulary.length > 0) base.push('vocabulary');
   }
   if (pack.mode === 'creator') {
     if (view.socialAngles.length > 0) base.push('socialAngles');

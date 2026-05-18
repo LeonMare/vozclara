@@ -34,7 +34,9 @@ export function GeneratorPage() {
   // language switcher so the user lands on Generate with one click
   // left to confirm — no silent re-generation, no surprise pack.
   const initialLang = (searchParams.get('lang') as Language | null);
-  const initialMode = (searchParams.get('mode') as Mode | null);
+  // Read as plain string so we can still match the legacy `?mode=business`
+  // URL param and migrate it to `brief` without TS narrowing it away.
+  const initialMode = searchParams.get('mode');
   // ?packId=… means "merge the resulting translation into THIS existing
   // pack as an additional language" rather than creating a new pack.
   // Drives the multi-locale workflow from the Pack-view + chip.
@@ -48,7 +50,11 @@ export function GeneratorPage() {
     initialLang && ['es', 'en', 'de', 'pt'].includes(initialLang) ? initialLang : (locale as Language),
   );
   const [mode, setMode] = useState<Mode>(
-    initialMode && ['learn', 'business', 'creator'].includes(initialMode) ? initialMode : 'business',
+    initialMode === 'learn' || initialMode === 'brief' ||
+    initialMode === 'study' || initialMode === 'creator'
+      ? initialMode
+      // Legacy ?mode=business URLs map silently to the renamed key.
+      : 'brief',
   );
   const [recommended, setRecommended] = useState<Mode | undefined>();
 
@@ -388,16 +394,25 @@ function normaliseLang(raw: string): Language {
   return supported.includes(base) ? base : 'en';
 }
 
-/* Smart-default genre → mode mapping. */
+/**
+ * Smart-default genre → mode mapping (LAUNCH_PLAN §4).
+ *
+ *   news / business / interview / coaching / general  → brief
+ *   education                                         → study
+ *   creator                                           → creator
+ *
+ * Note that `learn` is intentionally NOT the auto-pick for any genre.
+ * It's only chosen when the visitor explicitly opts in (onboarding
+ * picks "I want to learn the language") — otherwise an education video
+ * would default to language-learner pacing for everyone, which is wrong
+ * for the much larger student / knowledge-worker audience.
+ */
 function modeForGenre(genre: Genre): Mode {
   switch (genre) {
-    case 'news':
-    case 'business':
-    case 'interview': return 'business';
-    case 'coaching':
-    case 'education': return 'learn';
-    case 'creator': return 'creator';
-    default: return 'business';
+    case 'education': return 'study';
+    case 'creator':   return 'creator';
+    // news, business, interview, coaching, general → brief
+    default:          return 'brief';
   }
 }
 

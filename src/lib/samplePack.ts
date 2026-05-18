@@ -385,8 +385,8 @@ const creatorEN: PackTranslation = {
 export const samplePackBusiness: KnowledgePack = {
   ...COMMON,
   id: 'sample',
-  mode: 'business',
-  // Business sample ships in both Spanish and English so visitors can
+  mode: 'brief',
+  // Brief sample ships in both Spanish and English so visitors can
   // see the language-switcher in action on /pack/sample without
   // having to generate anything themselves.
   outputLanguages: ['es', 'en'],

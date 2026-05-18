@@ -103,21 +103,21 @@ function labels(locale: string) {
   if (locale.startsWith('es')) return {
     eyebrow: 'DESTACADOS',
     title: 'Conocimiento curado',
-    modes: { learn: 'Aprender', business: 'Business', creator: 'Creator' },
+    modes: { learn: 'Aprender', brief: 'Briefing', study: 'Estudio', creator: 'Creator' },
   };
   if (locale.startsWith('pt')) return {
     eyebrow: 'DESTAQUES',
     title: 'Conhecimento curado',
-    modes: { learn: 'Aprender', business: 'Business', creator: 'Creator' },
+    modes: { learn: 'Aprender', brief: 'Briefing', study: 'Estudo', creator: 'Creator' },
   };
   if (locale.startsWith('de')) return {
     eyebrow: 'AUSGEWÄHLT',
     title: 'Kuratiertes Wissen',
-    modes: { learn: 'Lernen', business: 'Business', creator: 'Creator' },
+    modes: { learn: 'Lernen', brief: 'Briefing', study: 'Studieren', creator: 'Creator' },
   };
   return {
     eyebrow: 'FEATURED',
     title: 'Curated knowledge',
-    modes: { learn: 'Learn', business: 'Business', creator: 'Creator' },
+    modes: { learn: 'Learn', brief: 'Briefing', study: 'Study', creator: 'Creator' },
   };
 }

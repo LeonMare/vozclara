@@ -91,7 +91,15 @@ export function joinForLLM(segments: Array<{ text: string; translated?: string }
 
 function normalise(raw: Record<string, unknown>): InsightsResult {
   const genre = (typeof raw.genre === 'string' ? raw.genre : 'general') as Genre;
-  const mode = (typeof raw.mode === 'string' ? raw.mode : 'business') as Mode;
+  // Worker may still echo "business" on cached responses from before
+  // the §4 mode rename — coerce to the new key.
+  const rawMode = typeof raw.mode === 'string' ? raw.mode : 'brief';
+  const mode: Mode =
+    rawMode === 'learn' || rawMode === 'brief' || rawMode === 'study' || rawMode === 'creator'
+      ? rawMode
+      : rawMode === 'business'
+        ? 'brief'
+        : 'brief';
 
   let summary = { short: '', long: '' };
   if (raw.summary && typeof raw.summary === 'object') {

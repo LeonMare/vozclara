@@ -12,7 +12,7 @@ function pack(overrides: Partial<KnowledgePack> = {}): KnowledgePack {
     outputLang: 'es',
     outputLanguages: ['es'],
     translations: { es: { summary: { short: '', long: '' }, keyIdeas: [], chapters: [], actionPlan: [], vocabulary: [], keyQuotes: [], socialAngles: [], quiz: [] } },
-    mode: 'business',
+    mode: 'brief',
     genre: 'news',
     status: 'ready',
     tags: [],

@@ -21,7 +21,7 @@ export interface CuratedItem {
   title: string;
   sourceLang: 'de' | 'es' | 'en' | 'pt' | 'fr';
   packLangs: string[];
-  mode: 'learn' | 'business' | 'creator';
+  mode: 'learn' | 'brief' | 'study' | 'creator';
   publishedAt: number;
   source: string;
   excerpt: string;
