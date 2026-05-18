@@ -93,13 +93,15 @@ export function AppHeader() {
             </Link>
           )}
 
-          {/* Mobile burger */}
+          {/* Mobile burger — sized at 44×44 to clear Apple HIG's minimum
+              comfortable tap target. Smaller squares are harder to hit on
+              the move and showed up in our pre-launch dogfooding. */}
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-card border border-navy/15 bg-white text-navy md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-card border border-navy/15 bg-white text-navy md:hidden"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
               {mobileOpen ? (

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AppHeader } from './components/AppHeader';
 import { Landing } from './components/landing/Landing';
 import { RouteSkeleton } from './components/RouteSkeleton';
@@ -78,6 +78,9 @@ const DiscoverPage = lazy(() =>
 );
 const FounderPage = lazy(() =>
   import('./routes/FounderPage').then((m) => ({ default: m.FounderPage })),
+);
+const NotFoundPage = lazy(() =>
+  import('./routes/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 );
 
 /**
@@ -263,7 +266,16 @@ export default function App() {
             </AppShell>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <NotFoundPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
       </Routes>
       </AuthProvider>
       </ErrorBoundary>

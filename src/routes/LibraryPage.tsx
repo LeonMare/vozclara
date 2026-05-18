@@ -328,7 +328,10 @@ export function LibraryPage() {
           </div>
         )}
 
-        {/* Filters */}
+        {/* Filters — search keeps full width on mobile, the four
+            FilterPills sit in a horizontal scrollable strip below
+            so they don't stack into a tall column on iPhone. On
+            desktop the layout collapses back to one row. */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
           <input
             type="search"
@@ -337,15 +340,17 @@ export function LibraryPage() {
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1 rounded-card border border-navy/15 bg-white px-4 py-2.5 font-sans text-sm text-graphit placeholder-graphit/40 outline-none focus:border-gold focus:ring-2 focus:ring-gold/30"
           />
-          <FilterPill label={t.filterMode} options={[['all', t.filterAll], ['learn', 'Learn'], ['brief', 'Briefing'], ['study', 'Study'], ['creator', 'Creator']]} value={mode} onChange={(v) => setMode(v as Mode | 'all')} />
-          <FilterPill label={t.filterLang} options={[['all', t.filterAll], ['es', 'ES'], ['en', 'EN'], ['de', 'DE'], ['pt', 'PT']]} value={language} onChange={(v) => setLanguage(v as Language | 'all')} />
-          <FilterPill label={t.filterDate} options={[['', t.filterDateAll], ['7', t.filterDate7], ['30', t.filterDate30]]} value={sinceDays?.toString() ?? ''} onChange={(v) => setSinceDays(v ? Number(v) : undefined)} />
-          <FilterPill
-            label={sortLabel(locale)}
-            options={[['recent', sortOption(locale, 'recent')], ['rating', sortOption(locale, 'rating')]]}
-            value={sortBy}
-            onChange={(v) => setSortBy(v as 'recent' | 'rating')}
-          />
+          <div className="-mx-5 flex items-center gap-2 overflow-x-auto px-5 pb-1 sm:m-0 sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0">
+            <FilterPill label={t.filterMode} options={[['all', t.filterAll], ['learn', 'Learn'], ['brief', 'Briefing'], ['study', 'Study'], ['creator', 'Creator']]} value={mode} onChange={(v) => setMode(v as Mode | 'all')} />
+            <FilterPill label={t.filterLang} options={[['all', t.filterAll], ['es', 'ES'], ['en', 'EN'], ['de', 'DE'], ['pt', 'PT']]} value={language} onChange={(v) => setLanguage(v as Language | 'all')} />
+            <FilterPill label={t.filterDate} options={[['', t.filterDateAll], ['7', t.filterDate7], ['30', t.filterDate30]]} value={sinceDays?.toString() ?? ''} onChange={(v) => setSinceDays(v ? Number(v) : undefined)} />
+            <FilterPill
+              label={sortLabel(locale)}
+              options={[['recent', sortOption(locale, 'recent')], ['rating', sortOption(locale, 'rating')]]}
+              value={sortBy}
+              onChange={(v) => setSortBy(v as 'recent' | 'rating')}
+            />
+          </div>
         </div>
 
         {/* Tag filter chips — derived from pack.tags across the library.
