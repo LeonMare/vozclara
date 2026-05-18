@@ -786,9 +786,12 @@ In einer 6-Stunden-Session am Laptop heute Abend wurde gerissen:
   - **NICHT Cloudflare** — die verkaufen `.de`/`.eu` neue Registrierungen nicht
   - **NICHT Ionos** — teurer + Upsell-Müll
 - Domains:
-  - `vozclara.de` — €5/Jahr — Heimmarkt
-  - `vozclara.eu` — €5-7/Jahr — EU-weit
-  - `voz-clara.app` — ~€12/Jahr — verhindert Squatting durch die Konkurrenz
+  - `vozclara.de` — €5/Jahr — Heimmarkt, 301-redirect auf .app
+  - `vozclara.eu` — €5-7/Jahr — EU-weit defensive
+  - `voz-clara.app` ← **skip**. Konkurrenz ist `voz-clara.com` (Audio,
+    andere Kategorie); Wahrscheinlichkeit dass die in den .app-TLD
+    expandieren ≈ 0. Außerdem würde es die "VozClara einwörtig"
+    Brand-Konvention untergraben.
 - **DNS-Setup**: Bei INWX/Netcup die Nameserver auf Cloudflare zeigen (`aron.ns.cloudflare.com`, `joy.ns.cloudflare.com` o.ä. — Cloudflare → Add Site → vozclara.de → erhält Nameserver)
 - Später Pages-Setup → alle 3 → 301-Redirect auf `vozclara.app`
 - **Skip `vozclara.io`** ($50/Jahr für kein strategisches Plus)
