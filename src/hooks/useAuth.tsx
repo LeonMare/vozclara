@@ -25,7 +25,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { fetchMe, logout as apiLogout, type AuthUser } from '../lib/auth';
+import { fetchMe, logout as apiLogout, attachBrain, type AuthUser } from '../lib/auth';
+import { getBrainId } from '../lib/pack';
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -47,6 +48,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const fresh = await fetchMe();
     if (!mountedRef.current) return;
     setUser(fresh);
+
+    // If the user is signed in but their account record doesn't yet
+    // know about this device's brainId, attach it now — best-effort
+    // and silent on failure. Updates the local user state with the
+    // returned brainIds list so the rest of the app sees the change
+    // immediately, without forcing a second /api/auth/me round trip.
+    if (fresh) {
+      const local = getBrainId();
+      if (!fresh.brainIds.includes(local)) {
+        const res = await attachBrain(local);
+        if (mountedRef.current && res.ok && res.brainIds) {
+          setUser({ ...fresh, brainIds: res.brainIds });
+        }
+      }
+    }
   }, []);
 
   const signOut = useCallback(async () => {
@@ -57,12 +73,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Initial probe — best-effort. A 503 (auth disabled) or network
   // failure resolves to null and the app stays in anonymous mode.
+  // We route through refresh() so the brainId attach-on-mount runs
+  // for users with a still-valid cookie on a fresh device.
   useEffect(() => {
     mountedRef.current = true;
     (async () => {
       try {
-        const initial = await fetchMe();
-        if (mountedRef.current) setUser(initial);
+        await refresh();
       } finally {
         if (mountedRef.current) setLoading(false);
       }
@@ -70,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       mountedRef.current = false;
     };
-  }, []);
+  }, [refresh]);
 
   // Refresh when the tab regains focus — catches the case where the
   // user signed out in another tab. Cheap (one KV read on the worker)

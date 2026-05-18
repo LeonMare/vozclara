@@ -369,6 +369,52 @@ export async function handleAuthMe(req: Request, env: AuthEnv): Promise<Response
 }
 
 /**
+ * POST /api/auth/attach-brain   body: { brainId }
+ *
+ * The Magic-Link verify path already attaches the brainId that was
+ * present in the request — but a signed-in user who browses to a
+ * second device with a still-valid session cookie never goes through
+ * verify again, and their fresh device-local brainId would otherwise
+ * stay disconnected from their account record. This endpoint lets
+ * the frontend declare "this brainId belongs to me" on every page
+ * load so the brainIds list stays a complete inventory of the user's
+ * known devices.
+ *
+ * Idempotent: re-submitting a known brainId is a no-op.
+ * Authenticated: 401 if no session.
+ * Validated: brainId must match the standard alphanumeric shape; we
+ * cap the per-user list at 16 to bound storage and to prevent a
+ * compromised client from inflating the record.
+ */
+export async function handleAuthAttachBrain(req: Request, env: AuthEnv): Promise<Response> {
+  const user = await getCurrentUser(req, env);
+  if (!user) return json({ error: 'unauthorized' }, 401);
+
+  let body: { brainId?: string };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  const brainId = sanitizeBrainId(body.brainId);
+  if (!brainId) return json({ error: 'invalid_brain_id' }, 400);
+
+  // Already linked → fast path, no KV write.
+  if (user.brainIds.includes(brainId)) {
+    return json({ ok: true, attached: false, brainIds: user.brainIds });
+  }
+
+  // Cap list at 16 — beyond that, a client churning brainIds in a
+  // loop would be doing something pathological. Drop the oldest.
+  const next = [...user.brainIds, brainId].slice(-16);
+  user.brainIds = next;
+  await putUser(env, user);
+
+  return json({ ok: true, attached: true, brainIds: next });
+}
+
+/**
  * POST /api/auth/logout
  * Deletes the server-side session and clears the cookie. Idempotent.
  */

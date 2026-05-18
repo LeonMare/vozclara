@@ -23,6 +23,7 @@ import {
   handleAuthVerify,
   handleAuthMe,
   handleAuthLogout,
+  handleAuthAttachBrain,
 } from './auth';
 
 interface Env {
@@ -365,6 +366,10 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
       return handleAuthLogout(req, env);
+    }
+
+    if (url.pathname === '/api/auth/attach-brain' && req.method === 'POST') {
+      return handleAuthAttachBrain(req, env);
     }
 
     return json({ error: 'not_found' }, 404);

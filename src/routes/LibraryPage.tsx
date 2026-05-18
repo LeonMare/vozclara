@@ -23,6 +23,7 @@ import { getCurated, type CuratedItem } from '../lib/curated';
 import { CuratedSection } from '../components/CuratedSection';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
+import { useAuth } from '../hooks/useAuth';
 
 /**
  * /library — your saved Knowledge Packs.
@@ -33,6 +34,7 @@ import { usePageHead } from '../hooks/usePageHead';
  */
 export function LibraryPage() {
   const { t, locale } = useLocale();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [packs, setPacks] = useState<KnowledgePack[]>([]);
   const [stats, setStats] = useState<LibraryStats | null>(null);
@@ -173,6 +175,15 @@ export function LibraryPage() {
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
         {curated.length > 0 && !selectMode && (
           <CuratedSection items={curated} locale={locale} variant="header" />
+        )}
+
+        {/* Account-link banner — surfaces the user's sign-in state
+            without pressuring anonymous visitors. Two flavours:
+              • signed-in with one device: quiet "connected" badge
+              • signed-in with multiple devices: same chip + soft
+                "cross-device sync arrives with Pro" hint */}
+        {user && !selectMode && (
+          <AccountSyncBanner email={user.email} brainIds={user.brainIds} locale={locale} />
         )}
 
         {/* Review banner — surfaces SRS due-today count and routes to
@@ -642,4 +653,70 @@ function progressLinkLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Progresso';
   if (locale.startsWith('de')) return 'Fortschritt';
   return 'Progress';
+}
+
+/* ─── Account sync status banner ─────────────────────────────────── *
+ *
+ * Sits at the top of the library when the user is signed-in. Quiet
+ * by design — no exclamation marks, no upsell pressure. Two states:
+ *
+ *   1 device known  → "Connected as <email>" + dot
+ *   2+ devices      → same chip + a soft secondary line indicating
+ *                     that cross-device library sync is a Pro feature
+ *                     coming later. We don't promise a date because
+ *                     LAUNCH_PLAN §7 deliberately keeps that one in
+ *                     the Pro tier and we don't want to over-commit.
+ */
+
+function AccountSyncBanner({
+  email,
+  brainIds,
+  locale,
+}: {
+  email: string;
+  brainIds: string[];
+  locale: string;
+}) {
+  const labels = syncBannerLabels(locale);
+  const multiDevice = brainIds.length > 1;
+
+  return (
+    <div className="mb-6 flex flex-wrap items-center gap-3 rounded-card border border-navy/10 bg-white px-4 py-3 sm:px-5">
+      <span className="inline-flex h-2 w-2 shrink-0 rounded-full bg-gold" aria-hidden />
+      <div className="min-w-0 flex-1">
+        <p className="font-sans text-[13px] leading-snug text-navy">
+          {labels.connectedAs}{' '}
+          <span className="font-medium break-all">{email}</span>
+        </p>
+        {multiDevice && (
+          <p className="mt-0.5 font-sans text-[12px] leading-snug italic text-graphit/60">
+            {labels.multiDeviceHint(brainIds.length)}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function syncBannerLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    connectedAs: 'Conectado como',
+    multiDeviceHint: (n: number) =>
+      `${n} dispositivos vinculados. La biblioteca de este dispositivo es local — la sincronización entre dispositivos llega con Pro.`,
+  };
+  if (locale.startsWith('pt')) return {
+    connectedAs: 'Ligado como',
+    multiDeviceHint: (n: number) =>
+      `${n} dispositivos vinculados. A biblioteca deste dispositivo é local — a sincronização entre dispositivos chega com o Pro.`,
+  };
+  if (locale.startsWith('de')) return {
+    connectedAs: 'Angemeldet als',
+    multiDeviceHint: (n: number) =>
+      `${n} Geräte verknüpft. Die Bibliothek dieses Geräts liegt lokal — geräteübergreifende Synchronisation kommt mit Pro.`,
+  };
+  return {
+    connectedAs: 'Connected as',
+    multiDeviceHint: (n: number) =>
+      `${n} devices linked. This device's library lives locally — cross-device sync arrives with Pro.`,
+  };
 }

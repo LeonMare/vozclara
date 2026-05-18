@@ -104,6 +104,39 @@ export async function fetchMe(): Promise<AuthUser | null> {
 }
 
 /**
+ * Attach the device-local brainId to the signed-in user's record.
+ * Idempotent — the worker no-ops when the brainId is already on the
+ * account. Best-effort: failures don't surface to the user (anonymous
+ * use keeps working regardless), they just get logged.
+ *
+ * Why we call this on every signed-in mount instead of just at sign-
+ * in: a user who clears their cookies on their main device and then
+ * accepts a still-valid magic link on a second device would never go
+ * through the verify path with the second device's brainId attached.
+ * Calling attach-brain whenever the user is signed-in heals that
+ * silently.
+ */
+export async function attachBrain(brainId: string): Promise<{ ok: boolean; brainIds?: string[] }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/attach-brain`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brainId }),
+    });
+    if (!res.ok) {
+      console.warn('attachBrain non-ok:', res.status);
+      return { ok: false };
+    }
+    const body = (await res.json()) as { ok: boolean; brainIds: string[] };
+    return body;
+  } catch (err) {
+    console.warn('attachBrain failed:', err);
+    return { ok: false };
+  }
+}
+
+/**
  * Sign the user out. Idempotent — calling twice on an already
  * signed-out browser just clears the (already empty) cookie.
  */
