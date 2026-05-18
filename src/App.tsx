@@ -4,6 +4,7 @@ import { AppHeader } from './components/AppHeader';
 import { Landing } from './components/landing/Landing';
 import { RouteSkeleton } from './components/RouteSkeleton';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { AuthProvider } from './hooks/useAuth';
 
 /**
  * VozClara — multilingual knowledge cloud for videos.
@@ -69,6 +70,9 @@ const ChatPage = lazy(() =>
 const ImpressumPage = lazy(() =>
   import('./routes/ImpressumPage').then((m) => ({ default: m.ImpressumPage })),
 );
+const SignInPage = lazy(() =>
+  import('./routes/SignInPage').then((m) => ({ default: m.SignInPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -91,6 +95,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
+        <AuthProvider>
         <ScrollToTop />
       {/* Skip-link for keyboard users — invisible until focused, then
           jumps past the header into the route's <main> content. */}
@@ -222,8 +227,19 @@ export default function App() {
             </AppShell>
           }
         />
+        <Route
+          path="/signin"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <SignInPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </AuthProvider>
       </ErrorBoundary>
     </BrowserRouter>
   );
