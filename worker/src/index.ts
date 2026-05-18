@@ -24,6 +24,8 @@ import {
   handleAuthMe,
   handleAuthLogout,
   handleAuthAttachBrain,
+  handleAuthProfile,
+  handleAuthDelete,
 } from './auth';
 import {
   handleRatingPost,
@@ -382,6 +384,18 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/auth/attach-brain' && req.method === 'POST') {
       return handleAuthAttachBrain(req, env);
+    }
+
+    if (url.pathname === '/api/auth/profile' && req.method === 'PATCH') {
+      const limit = await rateLimit(env, req, 'auth_profile', 30);
+      if (limit) return limit;
+      return handleAuthProfile(req, env);
+    }
+
+    if (url.pathname === '/api/auth/account' && req.method === 'DELETE') {
+      const limit = await rateLimit(env, req, 'auth_delete', 3);
+      if (limit) return limit;
+      return handleAuthDelete(req, env);
     }
 
     /* ─── /api/rating/* — Michelin Rating ───────────────────────────── *

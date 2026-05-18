@@ -25,7 +25,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { fetchMe, logout as apiLogout, attachBrain, type AuthUser } from '../lib/auth';
+import { fetchMe, logout as apiLogout, attachBrain, updateProfile as apiUpdateProfile, deleteAccount as apiDeleteAccount, type AuthUser } from '../lib/auth';
 import { getBrainId } from '../lib/pack';
 
 interface AuthContextValue {
@@ -35,6 +35,12 @@ interface AuthContextValue {
   refresh: () => Promise<void>;
   /** POST /api/auth/logout, then clear local state. */
   signOut: () => Promise<void>;
+  /** Update mutable profile fields (displayName for now). Returns the
+   *  fresh user or null on failure. Local state is updated on success. */
+  updateProfile: (args: { displayName?: string | null }) => Promise<AuthUser | null>;
+  /** Permanently delete the account. On success, the local user state
+   *  is cleared and the caller can navigate away. Returns true/false. */
+  deleteAccount: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -71,6 +77,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const updateProfile = useCallback(async (args: { displayName?: string | null }): Promise<AuthUser | null> => {
+    const fresh = await apiUpdateProfile(args);
+    if (mountedRef.current && fresh) setUser(fresh);
+    return fresh;
+  }, []);
+
+  const deleteAccount = useCallback(async (): Promise<boolean> => {
+    const ok = await apiDeleteAccount();
+    if (mountedRef.current && ok) setUser(null);
+    return ok;
+  }, []);
+
   // Initial probe — best-effort. A 503 (auth disabled) or network
   // failure resolves to null and the app stays in anonymous mode.
   // We route through refresh() so the brainId attach-on-mount runs
@@ -102,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refresh, signOut }}>
+    <AuthContext.Provider value={{ user, loading, refresh, signOut, updateProfile, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

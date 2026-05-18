@@ -428,6 +428,116 @@ export async function handleAuthLogout(req: Request, env: AuthEnv): Promise<Resp
   );
 }
 
+/**
+ * PATCH /api/auth/profile
+ * Update mutable user fields. Currently scoped to `displayName` — email
+ * changes need a re-verification flow and aren't supported yet.
+ *
+ * Body: { displayName?: string | null }
+ *   • Non-empty string (1–40 chars, trimmed) → stored as the new name
+ *   • Empty string or `null` → clears the name (back to "nicht festgelegt")
+ */
+export async function handleAuthProfile(req: Request, env: AuthEnv): Promise<Response> {
+  const user = await getCurrentUser(req, env);
+  if (!user) return json({ error: 'unauthorized' }, 401);
+
+  let body: { displayName?: string | null };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, 'displayName')) {
+    const raw = body.displayName;
+    if (raw === null || raw === '') {
+      delete user.displayName;
+    } else if (typeof raw === 'string') {
+      const trimmed = raw.trim().slice(0, 40);
+      if (trimmed.length < 1) {
+        delete user.displayName;
+      } else {
+        user.displayName = trimmed;
+      }
+    } else {
+      return json({ error: 'invalid_display_name' }, 400);
+    }
+  }
+
+  await putUser(env, user);
+
+  return json({
+    ok: true,
+    user: {
+      id: user.id,
+      email: user.email,
+      createdAt: user.createdAt,
+      lang: user.lang,
+      brainIds: user.brainIds,
+      displayName: user.displayName,
+    },
+  });
+}
+
+/**
+ * DELETE /api/auth/account
+ * Permanently delete the signed-in user's account record + all their
+ * sessions. Idempotent. Returns 200 with cookie cleared. The user's
+ * IndexedDB library stays on their device — server-side they are
+ * scrubbed.
+ *
+ * For DSGVO Art. 17 ("Recht auf Löschung") compliance. The frontend
+ * shows a two-step confirmation before invoking this.
+ *
+ * Body: { confirm?: 'DELETE' } — small guard against accidental DELETEs.
+ */
+export async function handleAuthDelete(req: Request, env: AuthEnv): Promise<Response> {
+  if (!env.AUTH) return json({ error: 'auth_disabled' }, 503);
+
+  const user = await getCurrentUser(req, env);
+  if (!user) return json({ error: 'unauthorized' }, 401);
+
+  let body: { confirm?: string } = {};
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    // Body is optional; missing-or-malformed JSON is fine for a DELETE.
+  }
+  if (body.confirm !== 'DELETE') {
+    return json({ error: 'confirm_required', detail: 'Pass { "confirm": "DELETE" } in the body.' }, 400);
+  }
+
+  /* Sweep sessions belonging to this user. KV.list returns all session
+     records; we walk them and delete every one tied to this userId.
+     For a single user this is cheap (1–N sessions). For future scale we
+     could maintain a reverse index user→sessions, but launch traffic
+     doesn't need that. */
+  const kv = env.AUTH; // narrow once for use inside the loop closure
+  let cursor: string | undefined;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const page = await kv.list({ prefix: 'session:', cursor });
+    await Promise.all(page.keys.map(async (k) => {
+      const sess = await kv.get<Session>(k.name, 'json');
+      if (sess && sess.userId === user.id) {
+        await kv.delete(k.name);
+      }
+    }));
+    if (page.list_complete) break;
+    cursor = page.cursor;
+  }
+
+  /* Drop the user record itself and the email → id pointer. */
+  await kv.delete(`user:${user.id}`);
+  await kv.delete(`email:${user.email}`);
+
+  return json(
+    { ok: true, deleted: true },
+    200,
+    { 'Set-Cookie': clearSessionCookie() },
+  );
+}
+
 /* ─── Sanitisation ───────────────────────────────────────────────── */
 
 /**

@@ -137,6 +137,50 @@ export async function attachBrain(brainId: string): Promise<{ ok: boolean; brain
 }
 
 /**
+ * Update mutable profile fields (currently just displayName). Passing
+ * `null` or empty string clears the field. Returns the updated user
+ * record, or null on failure.
+ */
+export async function updateProfile(args: {
+  displayName?: string | null;
+}): Promise<AuthUser | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/profile`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(args),
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { ok: boolean; user: AuthUser };
+    return body.user ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Permanently delete the signed-in user's account. Two-step
+ * confirmation lives in the UI; this is the bare API call. Returns
+ * true on success, false on any failure path. The session cookie is
+ * cleared server-side so the caller should also reset local auth
+ * state (the AuthProvider does this via refresh + setUser(null)).
+ */
+export async function deleteAccount(): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/account`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm: 'DELETE' }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Sign the user out. Idempotent — calling twice on an already
  * signed-out browser just clears the (already empty) cookie.
  */

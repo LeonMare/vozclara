@@ -318,11 +318,7 @@ export function AccountPage() {
 
           <dl className="mt-6 divide-y divide-navy/10 overflow-hidden rounded-card border border-navy/15 bg-white">
             <AccountRow label={labels.fieldEmail} value={user.email} />
-            <AccountRow
-              label={labels.fieldName}
-              value={user.displayName ?? labels.notSet}
-              muted={!user.displayName}
-            />
+            <EditableNameRow labels={labels} initial={user.displayName} />
             <AccountRow
               label={labels.fieldLang}
               value={user.lang.toUpperCase()}
@@ -404,17 +400,7 @@ export function AccountPage() {
                 {labels.exportBody}
               </div>
             </a>
-            <a
-              href={`mailto:support@vozclara.app?subject=${encodeURIComponent(labels.mailDeleteSubject)}&body=${encodeURIComponent(labels.mailDeleteBody(user.email))}`}
-              className="block rounded-card border border-navy/15 bg-white px-5 py-4 transition hover:border-red-500/40"
-            >
-              <div className="font-serif text-base text-navy">
-                {labels.deleteTitle}
-              </div>
-              <div className="mt-1 font-sans text-sm leading-relaxed text-graphit/65">
-                {labels.deleteBody}
-              </div>
-            </a>
+            <DeleteAccountCard labels={labels} />
           </div>
         </section>
 
@@ -551,6 +537,191 @@ function AccountRow({
   );
 }
 
+/** Inline-editable display-name row inside the Account table.
+ *  Click on the value → swap to input → save on Enter or blur.
+ *  Escape cancels. Empty value clears the field.
+ *
+ *  Why a dedicated component rather than threading state down through
+ *  the AccountPage: the optimistic-update + revert pattern is local,
+ *  and the row needs its own focus + keyboard handling that doesn't
+ *  belong on the page-level component. */
+function EditableNameRow({
+  labels,
+  initial,
+}: {
+  labels: ReturnType<typeof accountLabels>;
+  initial?: string;
+}) {
+  const { updateProfile } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(initial ?? '');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => { setValue(initial ?? ''); }, [initial]);
+
+  async function commit() {
+    const next = value.trim();
+    // No-op if unchanged
+    if (next === (initial ?? '')) {
+      setEditing(false);
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateProfile({ displayName: next.length === 0 ? null : next });
+    } finally {
+      setSaving(false);
+      setEditing(false);
+    }
+  }
+
+  function cancel() {
+    setValue(initial ?? '');
+    setEditing(false);
+  }
+
+  return (
+    <div className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+      <dt className="shrink-0 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
+        {labels.fieldName}
+      </dt>
+      {editing ? (
+        <dd className="flex-1">
+          <input
+            type="text"
+            autoFocus
+            value={value}
+            disabled={saving}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { e.preventDefault(); void commit(); }
+              else if (e.key === 'Escape') cancel();
+            }}
+            maxLength={40}
+            placeholder={labels.namePlaceholder}
+            aria-label={labels.fieldName}
+            className="w-full rounded border border-navy/20 bg-white px-2 py-1 text-right font-serif text-base text-navy focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-60 sm:text-base"
+          />
+        </dd>
+      ) : (
+        <dd
+          role="button"
+          tabIndex={0}
+          onClick={() => setEditing(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(true); }
+          }}
+          className={[
+            'cursor-text truncate rounded text-right transition hover:bg-creme/40 focus:bg-creme/40 focus:outline-none',
+            'px-2 py-0.5 -mx-2 -my-0.5',
+            initial ? 'font-serif text-base text-navy' : 'font-serif text-base italic text-graphit/65',
+          ].join(' ')}
+          aria-label={labels.editNameAria}
+          title={labels.editNameAria}
+        >
+          {initial ?? labels.notSet}
+          <span className="ml-2 text-[11px] text-graphit/65 opacity-0 transition group-hover:opacity-100 sm:inline">✎</span>
+        </dd>
+      )}
+    </div>
+  );
+}
+
+/** Account deletion card. Two-step confirmation: click to expand the
+ *  card into a confirmation form, user types DELETE, click red button
+ *  to actually delete. Replaces the previous mailto:support fallback
+ *  with a proper DSGVO Art. 17 "Recht auf Löschung" in-app flow. */
+function DeleteAccountCard({ labels }: { labels: ReturnType<typeof accountLabels> }) {
+  const { deleteAccount } = useAuth();
+  const navigate = useNavigate();
+  const [expanded, setExpanded] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
+  const [working, setWorking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function performDelete() {
+    setWorking(true);
+    setError(null);
+    try {
+      const ok = await deleteAccount();
+      if (!ok) {
+        setError(labels.deleteErrorBody);
+        setWorking(false);
+        return;
+      }
+      // Success: bounce to landing with a small confirmation
+      navigate('/?bye=1', { replace: true });
+    } catch {
+      setError(labels.deleteErrorBody);
+      setWorking(false);
+    }
+  }
+
+  if (!expanded) {
+    return (
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        className="block w-full rounded-card border border-navy/15 bg-white px-5 py-4 text-left transition hover:border-red-500/40"
+      >
+        <div className="font-serif text-base text-navy">
+          {labels.deleteTitle}
+        </div>
+        <div className="mt-1 font-sans text-sm leading-relaxed text-graphit/65">
+          {labels.deleteBody}
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-card border border-red-300/60 bg-rose-50/40 px-5 py-4">
+      <div className="font-serif text-base text-navy">{labels.deleteTitle}</div>
+      <p className="mt-2 font-sans text-sm leading-relaxed text-graphit/85">
+        {labels.deleteConfirmBody}
+      </p>
+      <label className="mt-4 block">
+        <span className="font-sans text-[11px] uppercase tracking-widest text-graphit/65">
+          {labels.deleteConfirmLabel}
+        </span>
+        <input
+          type="text"
+          autoFocus
+          value={confirmText}
+          onChange={(e) => setConfirmText(e.target.value)}
+          disabled={working}
+          aria-label={labels.deleteConfirmLabel}
+          className="mt-1 block w-full rounded-card border border-navy/20 bg-white px-3 py-2 font-mono text-sm text-graphit focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-60"
+        />
+      </label>
+      {error && (
+        <p role="alert" className="mt-3 font-sans text-sm text-red-700">
+          {error}
+        </p>
+      )}
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          onClick={() => { setExpanded(false); setConfirmText(''); setError(null); }}
+          disabled={working}
+          className="rounded-card border border-navy/20 bg-white px-4 py-2 font-sans text-sm text-graphit/85 transition hover:border-navy/40 hover:text-navy disabled:opacity-60"
+        >
+          {labels.deleteCancel}
+        </button>
+        <button
+          type="button"
+          onClick={performDelete}
+          disabled={working || confirmText !== 'DELETE'}
+          className="rounded-card bg-red-600 px-4 py-2 font-sans text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {working ? labels.deleteWorking : labels.deleteFinal}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Labels ────────────────────────────────────────────────────────── */
 
 function accountLabels(locale: string) {
@@ -592,6 +763,14 @@ function accountLabels(locale: string) {
     fieldLang: 'IDIOMA',
     fieldUserId: 'ID DE USUARIO',
     notSet: 'sin definir',
+    namePlaceholder: 'Tu nombre',
+    editNameAria: 'Editar nombre',
+    deleteConfirmBody: 'Esto elimina tu cuenta y todos los datos asociados en nuestros servidores de forma permanente. Tu biblioteca local en este dispositivo no se borra.',
+    deleteConfirmLabel: 'Escribe DELETE para confirmar',
+    deleteCancel: 'Cancelar',
+    deleteFinal: 'Eliminar para siempre',
+    deleteWorking: 'Eliminando…',
+    deleteErrorBody: 'No se pudo eliminar la cuenta. Vuelve a intentarlo o escribe a support@vozclara.app.',
     editHint: 'Para cambiar el email o eliminar la cuenta, escribe a support@vozclara.app — durante el periodo de lanzamiento todavía no hay edición en la app.',
     sectionDevices: 'DISPOSITIVOS',
     devicesHeading: 'Tus dispositivos.',
@@ -650,6 +829,14 @@ function accountLabels(locale: string) {
     fieldLang: 'IDIOMA',
     fieldUserId: 'ID DE UTILIZADOR',
     notSet: 'não definido',
+    namePlaceholder: 'O teu nome',
+    editNameAria: 'Editar nome',
+    deleteConfirmBody: 'Isto elimina a tua conta e todos os dados associados nos nossos servidores de forma permanente. A tua biblioteca local neste dispositivo não é apagada.',
+    deleteConfirmLabel: 'Escreve DELETE para confirmar',
+    deleteCancel: 'Cancelar',
+    deleteFinal: 'Eliminar para sempre',
+    deleteWorking: 'A eliminar…',
+    deleteErrorBody: 'Não foi possível eliminar a conta. Tenta de novo ou escreve para support@vozclara.app.',
     editHint: 'Para alterar o email ou eliminar a conta, escreve para support@vozclara.app — durante o período de lançamento ainda não há edição na app.',
     sectionDevices: 'DISPOSITIVOS',
     devicesHeading: 'Os teus dispositivos.',
@@ -708,6 +895,14 @@ function accountLabels(locale: string) {
     fieldLang: 'SPRACHE',
     fieldUserId: 'BENUTZER-ID',
     notSet: 'nicht festgelegt',
+    namePlaceholder: 'Dein Name',
+    editNameAria: 'Namen bearbeiten',
+    deleteConfirmBody: 'Das löscht dein Konto und alle zugehörigen Daten auf unseren Servern dauerhaft. Deine lokale Bibliothek auf diesem Gerät bleibt unberührt.',
+    deleteConfirmLabel: 'Tippe DELETE zum Bestätigen',
+    deleteCancel: 'Abbrechen',
+    deleteFinal: 'Endgültig löschen',
+    deleteWorking: 'Wird gelöscht…',
+    deleteErrorBody: 'Konto konnte nicht gelöscht werden. Versuch es erneut oder schreib an support@vozclara.app.',
     editHint: 'Um die E-Mail zu ändern oder das Konto zu löschen, schreib an support@vozclara.app — während der Launch-Phase gibt es noch keine In-App-Bearbeitung.',
     sectionDevices: 'GERÄTE',
     devicesHeading: 'Deine Geräte.',
@@ -766,6 +961,14 @@ function accountLabels(locale: string) {
     fieldLang: 'LANGUAGE',
     fieldUserId: 'USER ID',
     notSet: 'not set',
+    namePlaceholder: 'Your name',
+    editNameAria: 'Edit name',
+    deleteConfirmBody: 'This permanently deletes your account and all associated data on our servers. Your local library on this device stays intact.',
+    deleteConfirmLabel: 'Type DELETE to confirm',
+    deleteCancel: 'Cancel',
+    deleteFinal: 'Delete forever',
+    deleteWorking: 'Deleting…',
+    deleteErrorBody: 'Could not delete the account. Try again or write to support@vozclara.app.',
     editHint: 'To change your email or delete your account, write to support@vozclara.app — during launch there is no in-app editing yet.',
     sectionDevices: 'DEVICES',
     devicesHeading: 'Your devices.',
