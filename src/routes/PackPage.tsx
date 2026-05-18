@@ -12,6 +12,7 @@ import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { ServerAudioPlayer } from '../components/ServerAudioPlayer';
 import { RatingPanel } from '../components/RatingPanel';
+import { fetchAggregate, averageStars, approvalPercent, type RatingAggregate } from '../lib/rating';
 import { checkTTSAvailability } from '../lib/ttsServer';
 import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
@@ -81,6 +82,23 @@ export function PackPage() {
     });
     return () => { cancelled = true; };
   }, []);
+
+  /**
+   * Header-level rating aggregate — used by the "Top Rated" pill next
+   * to the mode badge. The RatingPanel further down the page also
+   * fetches the same aggregate, but Cloudflare KV hits are <10 ms and
+   * the duplicate doesn't show up in waterfalls; keeping them
+   * independent lets either feature ship without coupling.
+   */
+  const [headerRating, setHeaderRating] = useState<RatingAggregate | null>(null);
+  useEffect(() => {
+    if (!pack?.source.videoId) return;
+    let cancelled = false;
+    void fetchAggregate(pack.source.videoId).then((agg) => {
+      if (!cancelled) setHeaderRating(agg);
+    }).catch(() => { /* badge stays hidden on failure */ });
+    return () => { cancelled = true; };
+  }, [pack?.source.videoId]);
 
   function toggleSection(key: TabKey) {
     setOpenSections((prev) => {
@@ -222,6 +240,11 @@ export function PackPage() {
           <span className="inline-flex items-center gap-1 rounded-full bg-navy px-2.5 py-1 text-gold">
             <span className="text-creme/50">●</span> {t.modes[pack.mode].name}
           </span>
+          {/* Top-Rated pill — only renders for videos that crossed the
+              quality bar (≥3 votes AND ≥80% approval). The threshold
+              is intentionally conservative so the badge stays scarce
+              enough to read as a signal, not as decoration. */}
+          <TopRatedPill agg={headerRating} locale={locale} />
           <span className="inline-flex items-center gap-1.5 rounded-full bg-navy/8 px-2.5 py-1 text-graphit/70">
             <span className="text-graphit/50">{pack.sourceLang.toUpperCase()}</span>
             <span className="text-gold/70">→</span>
@@ -1059,4 +1082,57 @@ function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+/* ─── Top Rated pill ─────────────────────────────────────────────── *
+ *
+ * Shows next to the Mode pill on the pack header when the video has
+ * cleared the Michelin quality bar — ≥3 thumbs AND ≥80 % approval.
+ * Two visual flavours:
+ *
+ *   • Has signed-in stars (≥3 stars cast)  → ★ pill with avg
+ *   • Just thumbs                          → approval-% pill
+ *
+ * Both are gold-edged on a creme background so they read as
+ * editorial endorsements, not as data badges.
+ */
+
+function TopRatedPill({ agg, locale }: { agg: RatingAggregate | null; locale: string }) {
+  if (!agg) return null;
+  const approval = approvalPercent(agg);
+  if (approval === null || approval < 80) return null;
+  const stars = averageStars(agg);
+  const labels = topRatedPillLabels(locale);
+
+  if (stars !== null && agg.starCount >= 3) {
+    return (
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full border border-gold bg-creme px-2.5 py-1 text-gold"
+        title={`${approval}% · ${agg.up + agg.down} ${labels.votes}`}
+      >
+        <span className="text-[12px] leading-none">★</span>
+        <span className="font-medium text-navy tabular-nums">{stars.toFixed(1)}</span>
+        <span className="text-graphit/45">·</span>
+        <span>{labels.topRated}</span>
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-gold bg-creme px-2.5 py-1 text-gold"
+      title={`${approval}% · ${agg.up + agg.down} ${labels.votes}`}
+    >
+      <span className="font-medium text-navy tabular-nums">{approval}%</span>
+      <span className="text-graphit/45">·</span>
+      <span>{labels.topRated}</span>
+    </span>
+  );
+}
+
+function topRatedPillLabels(locale: string) {
+  if (locale.startsWith('es')) return { topRated: 'Mejor valorado', votes: 'votos' };
+  if (locale.startsWith('pt')) return { topRated: 'Top avaliação', votes: 'votos' };
+  if (locale.startsWith('de')) return { topRated: 'Top bewertet', votes: 'Stimmen' };
+  return { topRated: 'Top rated', votes: 'votes' };
 }

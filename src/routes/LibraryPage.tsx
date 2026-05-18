@@ -52,6 +52,8 @@ export function LibraryPage() {
   const [mode, setMode] = useState<Mode | 'all'>('all');
   const [language, setLanguage] = useState<Language | 'all'>('all');
   const [sinceDays, setSinceDays] = useState<number | undefined>(undefined);
+  /** Sort order — recent (default) or by Michelin rating quality. */
+  const [sortBy, setSortBy] = useState<'recent' | 'rating'>('recent');
   const [activeTags, setActiveTags] = useState<Set<string>>(() => new Set());
   const [recentIds, setRecentIds] = useState<string[]>([]);
   const [due, setDue] = useState<DueSummary | null>(null);
@@ -129,8 +131,22 @@ export function LibraryPage() {
   const tags = useMemo(() => tagCounts(packs).slice(0, 10), [packs]);
 
   const filtered = useMemo(
-    () => filterPacks(packs, { query, mode, language, sinceDays, tags: activeTags }),
-    [packs, query, mode, language, sinceDays, activeTags],
+    () => {
+      const base = filterPacks(packs, { query, mode, language, sinceDays, tags: activeTags });
+      if (sortBy !== 'rating') return base;
+      // Sort by rating quality (Wilson-style approximation: approval%
+      // weighted by trust threshold). Unrated packs sink to the end
+      // but keep their createdAt order so the list is still readable.
+      return [...base].sort((a, b) => {
+        const ar = ratings[a.source.videoId];
+        const br = ratings[b.source.videoId];
+        const aScore = scoreForSort(ar);
+        const bScore = scoreForSort(br);
+        if (aScore !== bScore) return bScore - aScore;
+        return b.createdAt - a.createdAt;
+      });
+    },
+    [packs, ratings, query, mode, language, sinceDays, activeTags, sortBy],
   );
 
   function toggleTag(t: string) {
@@ -324,6 +340,12 @@ export function LibraryPage() {
           <FilterPill label={t.filterMode} options={[['all', t.filterAll], ['learn', 'Learn'], ['brief', 'Briefing'], ['study', 'Study'], ['creator', 'Creator']]} value={mode} onChange={(v) => setMode(v as Mode | 'all')} />
           <FilterPill label={t.filterLang} options={[['all', t.filterAll], ['es', 'ES'], ['en', 'EN'], ['de', 'DE'], ['pt', 'PT']]} value={language} onChange={(v) => setLanguage(v as Language | 'all')} />
           <FilterPill label={t.filterDate} options={[['', t.filterDateAll], ['7', t.filterDate7], ['30', t.filterDate30]]} value={sinceDays?.toString() ?? ''} onChange={(v) => setSinceDays(v ? Number(v) : undefined)} />
+          <FilterPill
+            label={sortLabel(locale)}
+            options={[['recent', sortOption(locale, 'recent')], ['rating', sortOption(locale, 'rating')]]}
+            value={sortBy}
+            onChange={(v) => setSortBy(v as 'recent' | 'rating')}
+          />
         </div>
 
         {/* Tag filter chips — derived from pack.tags across the library.
@@ -667,6 +689,35 @@ function progressLinkLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Progresso';
   if (locale.startsWith('de')) return 'Fortschritt';
   return 'Progress';
+}
+
+/**
+ * Sort-quality score for a Pack's video. Approximates Wilson-score
+ * sort order without the cost of computing it client-side for every
+ * comparison — uses approval × log(1 + total votes) so a 95/100 ranks
+ * above a 5/5 (small-N inflation suppressed), and packs the server
+ * hasn't rated yet sink to -1 (sorted to bottom).
+ */
+function scoreForSort(agg: RatingAggregate | undefined): number {
+  if (!agg) return -1;
+  const total = agg.up + agg.down;
+  if (total < 1) return -1;
+  const approval = agg.up / total;
+  return approval * Math.log(1 + total);
+}
+
+function sortLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Orden';
+  if (locale.startsWith('pt')) return 'Ordem';
+  if (locale.startsWith('de')) return 'Sortierung';
+  return 'Sort';
+}
+
+function sortOption(locale: string, key: 'recent' | 'rating'): string {
+  if (locale.startsWith('es')) return key === 'recent' ? 'Recientes' : 'Valoración';
+  if (locale.startsWith('pt')) return key === 'recent' ? 'Recentes' : 'Avaliação';
+  if (locale.startsWith('de')) return key === 'recent' ? 'Neueste' : 'Bewertung';
+  return key === 'recent' ? 'Recent' : 'Rating';
 }
 
 /* ─── Pack-card rating badge ─────────────────────────────────────── *

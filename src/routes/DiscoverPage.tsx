@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { usePageHead } from '../hooks/usePageHead';
-import { fetchTopRated, averageStars, approvalPercent, type RatingAggregate } from '../lib/rating';
+import {
+  fetchTopRated,
+  averageStars,
+  approvalPercent,
+  type RatingAggregate,
+  type TopSince,
+} from '../lib/rating';
 import { BrandMark } from '../components/BrandMark';
 
 /**
@@ -21,19 +27,24 @@ import { BrandMark } from '../components/BrandMark';
 export function DiscoverPage() {
   const { locale } = useLocale();
   const labels = discoverLabels(locale);
+  const [since, setSince] = useState<TopSince>('all');
   const [items, setItems] = useState<RatingAggregate[] | null>(null);
 
   usePageHead({ title: labels.headTitle, description: labels.headDescription });
 
+  // Re-fetch whenever the time-window pill changes. The list resets
+  // to null first so the skeleton re-appears — better than flashing
+  // stale content from the previous window for a beat.
   useEffect(() => {
     let cancelled = false;
-    void fetchTopRated(30).then((list) => {
+    setItems(null);
+    void fetchTopRated(30, since).then((list) => {
       if (!cancelled) setItems(list);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [since]);
 
   return (
     <main id="main" className="bg-creme paper">
@@ -62,12 +73,14 @@ export function DiscoverPage() {
         </div>
       </section>
 
-      {/* List */}
+      {/* Time-window pills + list */}
       <section className="mx-auto max-w-3xl px-5 pb-20 sm:px-8 sm:pb-28">
+        <SincePills value={since} onChange={setSince} locale={locale} />
+
         {items === null ? (
           <DiscoverSkeleton />
         ) : items.length === 0 ? (
-          <EmptyState labels={labels} />
+          <EmptyState labels={labels} since={since} />
         ) : (
           <ol className="space-y-3">
             {items.map((agg, i) => (
@@ -156,6 +169,55 @@ function pickTopSignal(agg: RatingAggregate): { key: keyof RatingAggregate['sign
   return top.count > 0 ? top : null;
 }
 
+/* ─── Time-window pills ──────────────────────────────────────────── */
+
+function SincePills({
+  value,
+  onChange,
+  locale,
+}: {
+  value: TopSince;
+  onChange: (next: TopSince) => void;
+  locale: string;
+}) {
+  const labels = sinceLabels(locale);
+  const options: Array<{ key: TopSince; label: string }> = [
+    { key: 'week', label: labels.week },
+    { key: 'month', label: labels.month },
+    { key: 'all', label: labels.all },
+  ];
+  return (
+    <div className="mb-6 flex flex-wrap gap-2">
+      {options.map((o) => {
+        const active = o.key === value;
+        return (
+          <button
+            key={o.key}
+            type="button"
+            onClick={() => onChange(o.key)}
+            aria-pressed={active}
+            className={[
+              'rounded-full border px-3.5 py-1.5 font-sans text-[12px] uppercase tracking-widest transition',
+              active
+                ? 'border-gold bg-gold/15 text-navy'
+                : 'border-navy/15 bg-white text-graphit/70 hover:border-gold/60 hover:text-navy',
+            ].join(' ')}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function sinceLabels(locale: string) {
+  if (locale.startsWith('es')) return { week: 'Esta semana', month: 'Este mes', all: 'Todos los tiempos' };
+  if (locale.startsWith('pt')) return { week: 'Esta semana', month: 'Este mês', all: 'Todos os tempos' };
+  if (locale.startsWith('de')) return { week: 'Diese Woche', month: 'Diesen Monat', all: 'Allzeit' };
+  return { week: 'This week', month: 'This month', all: 'All time' };
+}
+
 /* ─── States ─────────────────────────────────────────────────────── */
 
 function DiscoverSkeleton() {
@@ -171,23 +233,35 @@ function DiscoverSkeleton() {
   );
 }
 
-function EmptyState({ labels }: { labels: ReturnType<typeof discoverLabels> }) {
+function EmptyState({
+  labels,
+  since,
+}: {
+  labels: ReturnType<typeof discoverLabels>;
+  since: TopSince;
+}) {
+  // The empty-state copy adapts to the active window — "no top-rated
+  // videos this week" reads differently than "no top-rated videos
+  // yet". The all-time variant gets the activation nudge.
+  const heading = since === 'all' ? labels.emptyTitle : labels.emptyTitleWindow;
+  const body = since === 'all' ? labels.emptyBody : labels.emptyBodyWindow;
+
   return (
     <div className="rounded-card border border-navy/10 bg-white p-10 text-center sm:p-14">
       <BrandMark variant="monogram" size="lg" tone="gold" decorative />
-      <h2 className="mt-6 font-serif text-2xl text-navy sm:text-3xl">
-        {labels.emptyTitle}
-      </h2>
+      <h2 className="mt-6 font-serif text-2xl text-navy sm:text-3xl">{heading}</h2>
       <div className="mx-auto mt-4 h-px w-12 bg-gold" aria-hidden />
       <p className="mx-auto mt-5 max-w-md font-serif text-lg leading-relaxed text-graphit/75">
-        {labels.emptyBody}
+        {body}
       </p>
-      <Link
-        to="/new"
-        className="mt-7 inline-block rounded-card bg-navy px-5 py-2.5 font-sans text-sm font-medium text-creme transition hover:bg-navy/90"
-      >
-        {labels.emptyCta}
-      </Link>
+      {since === 'all' && (
+        <Link
+          to="/new"
+          className="mt-7 inline-block rounded-card bg-navy px-5 py-2.5 font-sans text-sm font-medium text-creme transition hover:bg-navy/90"
+        >
+          {labels.emptyCta}
+        </Link>
+      )}
     </div>
   );
 }
@@ -222,6 +296,8 @@ function discoverLabels(locale: string) {
     openCta: 'Crear pack',
     emptyTitle: 'Aún sin valoraciones suficientes.',
     emptyBody: 'Sé tú quien empiece. Genera tu primer Pack y valora — la siguiente persona te lo agradecerá.',
+    emptyTitleWindow: 'Nada destacable en este periodo.',
+    emptyBodyWindow: 'No hay vídeos suficientemente valorados en este intervalo. Prueba "Todos los tiempos".',
     emptyCta: 'Crear mi primer Pack',
     signalLabel,
   };
@@ -239,6 +315,8 @@ function discoverLabels(locale: string) {
     openCta: 'Criar pack',
     emptyTitle: 'Ainda sem avaliações suficientes.',
     emptyBody: 'Sê tu a começar. Gera o teu primeiro Pack e avalia — a próxima pessoa vai agradecer.',
+    emptyTitleWindow: 'Nada notável neste período.',
+    emptyBodyWindow: 'Não há vídeos suficientemente avaliados neste intervalo. Experimenta "Todos os tempos".',
     emptyCta: 'Criar o meu primeiro Pack',
     signalLabel,
   };
@@ -256,6 +334,8 @@ function discoverLabels(locale: string) {
     openCta: 'Pack erstellen',
     emptyTitle: 'Noch zu wenig Bewertungen.',
     emptyBody: 'Sei der Erste. Erstell deinen ersten Pack und bewerte — die nächste Person dankt es dir.',
+    emptyTitleWindow: 'Nichts Erwähnenswertes in diesem Zeitraum.',
+    emptyBodyWindow: 'In diesem Intervall gibt es noch zu wenig hochbewertete Videos. Probier „Allzeit".',
     emptyCta: 'Meinen ersten Pack erstellen',
     signalLabel,
   };
@@ -273,6 +353,8 @@ function discoverLabels(locale: string) {
     openCta: 'Create pack',
     emptyTitle: 'Not enough ratings yet.',
     emptyBody: 'Be the first. Generate your first Pack and rate — the next visitor will thank you.',
+    emptyTitleWindow: 'Nothing notable in this window.',
+    emptyBodyWindow: 'No video has crossed the quality bar in this interval. Try "All time".',
     emptyCta: 'Create my first Pack',
     signalLabel,
   };

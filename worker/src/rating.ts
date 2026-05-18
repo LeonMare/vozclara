@@ -403,7 +403,7 @@ export async function handleRatingBulk(req: Request, env: AuthEnv): Promise<Resp
 }
 
 /**
- * GET /api/rating/top?limit=20
+ * GET /api/rating/top?limit=20&since=all|week|month
  *
  * Lists the highest-quality videos by Wilson-score lower bound. KV
  * list-prefix is cheap (no scan beyond the matched keys) and we cap
@@ -414,10 +414,24 @@ export async function handleRatingBulk(req: Request, env: AuthEnv): Promise<Resp
  * ratio is higher, because the small sample is less trustworthy.
  * That's the right behaviour for a /discover page: hide flukes,
  * surface durable quality.
+ *
+ * The `since` window narrows candidates by lastRatedAt — "this week"
+ * means at least one fresh vote in the last 7 days, not "got its
+ * first vote in the last 7 days". That matches user expectation:
+ * trending = active. The Wilson ranking then still uses the full
+ * vote history so a long-respected video with one fresh vote ranks
+ * above a single-thumb fluke.
  */
 export async function handleRatingTop(url: URL, env: AuthEnv): Promise<Response> {
   if (!env.AUTH) return json({ error: 'rating_disabled' }, 503);
   const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') ?? 20)));
+  const sinceRaw = url.searchParams.get('since') ?? 'all';
+  const since: 'all' | 'week' | 'month' =
+    sinceRaw === 'week' ? 'week' : sinceRaw === 'month' ? 'month' : 'all';
+  const sinceCutoff =
+    since === 'week' ? Date.now() - 7 * 24 * 3600 * 1000 :
+    since === 'month' ? Date.now() - 30 * 24 * 3600 * 1000 :
+    0;
 
   const candidates: RatingAggregate[] = [];
   let cursor: string | undefined;
@@ -431,7 +445,9 @@ export async function handleRatingTop(url: URL, env: AuthEnv): Promise<Response>
         const agg = JSON.parse(raw) as RatingAggregate;
         // Need at least 3 thumbs to qualify — single 👍 shouldn't
         // ride into the top list as "best of all time".
-        if (agg.up + agg.down >= 3) candidates.push(agg);
+        if (agg.up + agg.down < 3) continue;
+        if (sinceCutoff > 0 && agg.lastRatedAt < sinceCutoff) continue;
+        candidates.push(agg);
       } catch { /* skip malformed */ }
       scanned += 1;
     }
@@ -444,7 +460,7 @@ export async function handleRatingTop(url: URL, env: AuthEnv): Promise<Response>
     .slice(0, limit)
     .map(({ a, score }) => ({ ...a, score }));
 
-  return json({ items: scored });
+  return json({ items: scored, since });
 }
 
 /**

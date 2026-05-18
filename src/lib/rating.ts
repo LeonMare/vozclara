@@ -114,9 +114,12 @@ export async function fetchAggregatesBulk(videoIds: string[]): Promise<Record<st
   }
 }
 
-export async function fetchTopRated(limit = 20): Promise<RatingAggregate[]> {
+export type TopSince = 'all' | 'week' | 'month';
+
+export async function fetchTopRated(limit = 20, since: TopSince = 'all'): Promise<RatingAggregate[]> {
   try {
-    const res = await fetch(`${API_BASE}/api/rating/top?limit=${limit}`, {
+    const params = new URLSearchParams({ limit: String(limit), since });
+    const res = await fetch(`${API_BASE}/api/rating/top?${params.toString()}`, {
       credentials: 'include',
     });
     if (!res.ok) return [];
