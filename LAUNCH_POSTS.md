@@ -71,6 +71,19 @@ is brand new and the discovery page won't have much in it for a few
 days; cross-device library sync is a Pro-tier feature that isn't
 shipped yet.
 
+The "why not just NotebookLM?" question — fair, worth naming. Their
+strength is mixing many sources (YouTube + PDF + audio) into one
+notebook; that's a great fit if you're building a literature map
+across ten papers. VozClara goes the other direction: single source,
+deeper output. The editorial-mode prompts bend the shape of the pack
+(study vs. brief vs. learn-the-language vs. creator), the vocabulary
+is CEFR-calibrated, there's a real SRS layer for daily review, voice
+shadowing, Anki export, and a Michelin-style rating on the source
+video itself so the next visitor doesn't waste an hour on a click-
+bait. Different tool for a different job. If you're a student or a
+language learner who actually wants to retain what they watched,
+this is built for that.
+
 If you want to poke without signing up: the study-mode pack on
 Veritasium's "Most Misunderstood Concept in Physics" lives at
 https://vozclara.app/pack/sample-study (24-min lecture → 7 chapters
