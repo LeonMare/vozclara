@@ -21,6 +21,14 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Founder Deal — launch cashflow page. Critical at launch, less
+       relevant after the 100 seats sell out. -->
+  <url>
+    <loc>https://vozclara.pages.dev/founder</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- About — founder story + roadmap -->
   <url>
     <loc>https://vozclara.pages.dev/about</loc>

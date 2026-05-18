@@ -662,6 +662,7 @@ function footerColumns(locale: string) {
         heading: 'Sobre',
         items: [
           { label: 'Sobre Voz Clara', href: '/about' },
+          { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Planes y precios', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
         ],
@@ -694,6 +695,7 @@ function footerColumns(locale: string) {
         heading: 'Sobre',
         items: [
           { label: 'Sobre a Voz Clara', href: '/about' },
+          { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Planos e preços', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
         ],
@@ -726,6 +728,7 @@ function footerColumns(locale: string) {
         heading: 'Über',
         items: [
           { label: 'Über Voz Clara', href: '/about' },
+          { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Preise', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
         ],
@@ -758,6 +761,7 @@ function footerColumns(locale: string) {
         heading: 'About',
         items: [
           { label: 'About Voz Clara', href: '/about' },
+          { label: 'Founder Deal · €99', href: '/founder' },
           { label: 'Pricing', href: '/pricing' },
           { label: 'LEON MARÉ', href: 'https://leonmare.de' },
         ],

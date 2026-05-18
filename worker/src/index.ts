@@ -32,6 +32,11 @@ import {
   handleRatingTop,
   handleRatingBulk,
 } from './rating';
+import {
+  handleFounderStatus,
+  handleFounderIncrement,
+  handleFounderSet,
+} from './founder';
 
 interface Env {
   SUPADATA_API_KEY?: string;
@@ -404,6 +409,22 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/rating/bulk' && req.method === 'POST') {
       return handleRatingBulk(req, env);
+    }
+
+    /* ─── /api/founder/* — Founder Deal counter (launch cashflow) ────── *
+     *
+     * Public read of how many of the 100 seats remain; admin-only
+     * write to bump the counter when a sale comes in. See
+     * worker/src/founder.ts.
+     */
+    if (url.pathname === '/api/founder/status' && req.method === 'GET') {
+      return handleFounderStatus(req, env);
+    }
+    if (url.pathname === '/api/founder/admin/increment' && req.method === 'POST') {
+      return handleFounderIncrement(req, env);
+    }
+    if (url.pathname === '/api/founder/admin/set' && req.method === 'POST') {
+      return handleFounderSet(req, env);
     }
 
     return json({ error: 'not_found' }, 404);

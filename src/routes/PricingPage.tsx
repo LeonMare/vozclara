@@ -52,6 +52,11 @@ export function PricingPage() {
         </p>
       </section>
 
+      {/* Founder Deal banner — sits above the Free/Pro grid until the
+          100 seats sell out. Editorial tone, not a popup, not a
+          modal. Routes to /founder where the full pitch lives. */}
+      <FounderBanner locale={locale} />
+
       {/* The plans grid + disclaimer copy */}
       <PricingPreview />
 
@@ -143,5 +148,103 @@ function pricingPageLabels(locale: string) {
     ctaBody: 'No credit card. Create your first Knowledge Pack, then decide later if you want to move up.',
     primaryCta: 'Start free',
     secondaryCta: 'See a sample pack',
+  };
+}
+
+/* ─── Founder Deal banner ────────────────────────────────────────── *
+ *
+ * Sits above the Free/Pro pricing grid until the 100 seats sell out.
+ * Reads the live counter via /api/founder/status so the urgency is
+ * truthful. Routes to /founder for the full pitch + Stripe checkout.
+ */
+
+import { useEffect, useState } from 'react';
+import { fetchFounderStatus, type FounderStatus } from '../lib/founder';
+
+function FounderBanner({ locale }: { locale: string }) {
+  const [status, setStatus] = useState<FounderStatus | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    void fetchFounderStatus().then((s) => {
+      if (!cancelled) setStatus(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Hide entirely once sold out — the slot becomes free for the next
+  // launch hook without us having to remove this banner manually.
+  if (status && !status.available) return null;
+
+  const labels = founderBannerLabels(locale);
+  const remaining = status?.claimed != null ? status.max - status.claimed : null;
+
+  return (
+    <section className="mx-auto mt-10 max-w-6xl px-5 sm:px-8">
+      <Link
+        to="/founder"
+        className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-card border border-gold/50 bg-white p-6 transition hover:border-gold sm:flex-row sm:items-center sm:gap-8 sm:p-8"
+      >
+        {/* Big counter, left side */}
+        <div className="flex shrink-0 items-baseline gap-2">
+          <span className="font-serif text-4xl text-navy tabular-nums sm:text-5xl">
+            {status?.claimed ?? '—'}
+          </span>
+          <span className="font-serif text-xl text-graphit/55 tabular-nums sm:text-2xl">
+            / 100
+          </span>
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+            § {labels.eyebrow}
+          </div>
+          <h2 className="mt-2 font-serif text-2xl leading-tight text-navy sm:text-3xl">
+            {labels.heading}
+          </h2>
+          <p className="mt-2 font-serif italic text-graphit/70 sm:text-lg">
+            {remaining != null && remaining > 0
+              ? labels.remainingFn(remaining)
+              : labels.tagline}
+          </p>
+        </div>
+
+        <span className="font-sans text-sm text-graphit/65 transition group-hover:text-navy sm:self-center">
+          {labels.cta} →
+        </span>
+      </Link>
+    </section>
+  );
+}
+
+function founderBannerLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    eyebrow: 'Founder Deal · €99 · solo 100',
+    heading: 'Pro de por vida por €99 — para los primeros cien.',
+    tagline: 'Disponible solo en el lanzamiento.',
+    remainingFn: (n: number) => (n === 1 ? 'Última plaza disponible.' : `${n} plazas disponibles.`),
+    cta: 'Ver el Founder Deal',
+  };
+  if (locale.startsWith('pt')) return {
+    eyebrow: 'Founder Deal · €99 · só 100',
+    heading: 'Pro vitalício por €99 — para os primeiros cem.',
+    tagline: 'Disponível só no lançamento.',
+    remainingFn: (n: number) => (n === 1 ? 'Último lugar disponível.' : `${n} lugares disponíveis.`),
+    cta: 'Ver o Founder Deal',
+  };
+  if (locale.startsWith('de')) return {
+    eyebrow: 'Founder Deal · €99 · nur 100',
+    heading: 'Pro auf Lebenszeit für €99 — für die ersten hundert.',
+    tagline: 'Nur zum Launch verfügbar.',
+    remainingFn: (n: number) => (n === 1 ? 'Letzter Platz verfügbar.' : `${n} Plätze verfügbar.`),
+    cta: 'Zum Founder Deal',
+  };
+  return {
+    eyebrow: 'Founder Deal · €99 · only 100',
+    heading: 'Pro for life at €99 — for the first hundred.',
+    tagline: 'Available only at launch.',
+    remainingFn: (n: number) => (n === 1 ? 'Last seat available.' : `${n} seats available.`),
+    cta: 'See the Founder Deal',
   };
 }
