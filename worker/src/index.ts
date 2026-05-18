@@ -2386,7 +2386,16 @@ async function handleCurated(env: Env): Promise<Response> {
     if (!Array.isArray(parsed.items) || parsed.items.length === 0) {
       return json({ items: FALLBACK_CURATED }, 200, headers);
     }
-    return json({ items: parsed.items }, 200, headers);
+    /* Migrate legacy `mode: 'business'` entries on read. The next daily
+       cron run will overwrite the KV with normalised values, but until
+       then we sanitise so the landing/library doesn't show the old
+       mode label in the curated row. */
+    const items = parsed.items.map((it) => ({
+      ...it,
+      // @ts-expect-error — `it.mode` is typed as the new union; legacy data may still carry 'business'.
+      mode: it.mode === 'business' ? 'brief' : it.mode,
+    }));
+    return json({ items }, 200, headers);
   } catch {
     return json({ items: FALLBACK_CURATED }, 200, headers);
   }
