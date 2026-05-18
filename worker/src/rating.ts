@@ -528,6 +528,102 @@ export async function handleRatingReviews(url: URL, env: AuthEnv): Promise<Respo
 }
 
 /**
+ * Purge every vote cast by any of the given voter IDs and adjust the
+ * affected video aggregates accordingly. Used by the DSGVO account-
+ * deletion flow in worker/src/auth.ts: when a signed-in user
+ * exercises their Art. 17 right to erasure, we sweep their account-
+ * scoped reviews (voterId = user.id) AND all anonymous votes they
+ * ever cast from devices they signed in on (voterId ∈ user.brainIds).
+ *
+ * Two-pass design:
+ *   1. List rvote:* in batches, JSON-parse each, filter by voterId,
+ *      stash the (key, videoId, vote) triples in memory.
+ *   2. Group by videoId so we only touch each rating:<videoId>
+ *      aggregate once, decrementing for the sum of that user's
+ *      contributions before deleting the rvote entries themselves.
+ *
+ * Aggregate floor-clamped at 0 — we never want a counter to underflow
+ * if the data on disk is somehow inconsistent with the votes we found.
+ *
+ * Returns { deleted, videos } so the caller can log the scope of the
+ * erasure. For launch-volume libraries (~100 users × ~10 votes each)
+ * this completes well within a Workers request budget; if/when we
+ * scale to thousands of users with thousands of votes apiece, we'd
+ * want a reverse-index (user:<id>:votes → Set<videoId>) so this
+ * becomes O(N) rather than O(total-votes-in-system).
+ */
+export async function purgeVotesForVoters(
+  env: AuthEnv,
+  voterIds: Set<string>,
+): Promise<{ deleted: number; videos: number }> {
+  if (!env.AUTH || voterIds.size === 0) return { deleted: 0, videos: 0 };
+
+  // Pass 1 — sweep rvote:* and collect every entry that matches.
+  const matched: Array<{ key: string; videoId: string; vote: VoteRecord }> = [];
+  let cursor: string | undefined;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const page = await env.AUTH.list({ prefix: 'rvote:', cursor });
+    await Promise.all(
+      page.keys.map(async (k) => {
+        const v = await env.AUTH!.get<VoteRecord>(k.name, 'json');
+        if (!v || !voterIds.has(v.voterId)) return;
+        // Key format: rvote:<videoId>:<voterId> — videoId may contain
+        // dashes/underscores but not colons (sanitizeVideoId enforces
+        // [A-Za-z0-9_-]+), so splitting on ':' is safe.
+        const parts = k.name.split(':');
+        if (parts.length < 3) return;
+        const videoId = parts[1];
+        matched.push({ key: k.name, videoId, vote: v });
+      }),
+    );
+    if (page.list_complete) break;
+    cursor = page.cursor;
+  }
+
+  if (matched.length === 0) return { deleted: 0, videos: 0 };
+
+  // Pass 2 — group by video, decrement each aggregate exactly once.
+  const byVideo = new Map<string, VoteRecord[]>();
+  for (const m of matched) {
+    const list = byVideo.get(m.videoId) ?? [];
+    list.push(m.vote);
+    byVideo.set(m.videoId, list);
+  }
+
+  await Promise.all(
+    [...byVideo.entries()].map(async ([videoId, votes]) => {
+      const raw = await env.AUTH!.get(`rating:${videoId}`);
+      if (!raw) return;
+      let agg: RatingAggregate;
+      try {
+        agg = JSON.parse(raw) as RatingAggregate;
+      } catch {
+        return;
+      }
+      for (const v of votes) {
+        if (v.thumb === 'up') agg.up = Math.max(0, agg.up - 1);
+        if (v.thumb === 'down') agg.down = Math.max(0, agg.down - 1);
+        if (v.stars !== null && v.stars !== undefined) {
+          agg.starSum = Math.max(0, agg.starSum - v.stars);
+          agg.starCount = Math.max(0, agg.starCount - 1);
+        }
+        for (const sig of VALID_SIGNALS) {
+          agg.signals[sig] = Math.max(0, agg.signals[sig] - (v.signals?.[sig] ?? 0));
+        }
+      }
+      await env.AUTH!.put(`rating:${videoId}`, JSON.stringify(agg));
+    }),
+  );
+
+  // Pass 3 — finally delete the rvote entries. Done last so a partial
+  // failure in the aggregate-update step doesn't lose the audit trail.
+  await Promise.all(matched.map(({ key }) => env.AUTH!.delete(key)));
+
+  return { deleted: matched.length, videos: byVideo.size };
+}
+
+/**
  * Wilson score interval lower bound at 95% confidence.
  * https://www.evanmiller.org/how-not-to-sort-by-average-rating.html
  */

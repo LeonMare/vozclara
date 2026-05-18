@@ -32,6 +32,7 @@
  */
 
 import { sendMagicLink, sendWelcomeEmail } from './email';
+import { purgeVotesForVoters } from './rating';
 
 export interface AuthEnv {
   /** KV namespace for users, sessions, magic-link tokens, email index. */
@@ -544,9 +545,24 @@ export async function handleAuthDelete(req: Request, env: AuthEnv): Promise<Resp
     cursor = page.cursor;
   }
 
-  /* Drop the user record itself and the email → id pointer. */
+  /* DSGVO Art. 17 erasure — purge every Pack-rating + review this
+     user ever cast, both as a signed-in account (voterId = user.id)
+     and as anonymous from any device they later signed in on
+     (voterId ∈ user.brainIds). Aggregates are decremented as votes
+     come off so the public counters stay truthful. */
+  const voterIds = new Set<string>([user.id, ...user.brainIds]);
+  const purge = await purgeVotesForVoters(env, voterIds);
+  if (purge.deleted > 0) {
+    console.log(`auth_delete_purge: user=${user.id} deleted=${purge.deleted} videos=${purge.videos}`);
+  }
+
+  /* Drop the user record itself and the email → id pointer.
+     The email pointer was written by putUser() with .toLowerCase()
+     applied — we mirror that here so a future code path that ever
+     calls putUser with mixed-case email can't leave a stale
+     pointer behind after delete. */
   await kv.delete(`user:${user.id}`);
-  await kv.delete(`email:${user.email}`);
+  await kv.delete(`email:${user.email.toLowerCase()}`);
 
   return json(
     { ok: true, deleted: true },
