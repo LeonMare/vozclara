@@ -40,14 +40,14 @@ Tagesschau, the German finance podcasts I followed, the explainer
 videos in her field — but a 30-minute transcript is text, not
 knowledge.
 
-What VozClara does, in one paragraph: you paste a YouTube URL, pick a
-language and a mode (Briefing, Study, Learn, Creator), and it produces
-a Knowledge Pack — TL;DR, chapter summaries, key ideas with timestamps,
-vocabulary at your CEFR level, comprehension quiz, key quotes, and a
-chat tutor that knows the pack's content. Your library stays on your
-device (IndexedDB); only the analysis call leaves your browser.
+Concretely: you paste a YouTube URL, pick a language and a mode
+(Briefing, Study, Learn, Creator), and you get back a Knowledge Pack —
+TL;DR, chapter summaries, key ideas with timestamps, vocabulary at
+your CEFR level, comprehension quiz, key quotes, and a chat tutor
+that knows the pack's content. Your library stays on your device
+(IndexedDB); only the analysis call leaves your browser.
 
-Two things I think are interesting technically:
+Two technical bets I'd love HN's take on:
 
 1. Mode-aware prompts. The same transcript becomes very different
    output depending on whether you asked for a briefing or a study
@@ -78,15 +78,16 @@ pack on the Lex Fridman × Yann LeCun interview is at
 https://vozclara.app/pack/sample-news (3-hour podcast → 8 chapters,
 6 quotable lines, in 5 minutes of reading).
 
-I'd love feedback on the editorial-mode prompts — that's the layer
-that took the longest and where I think the differentiation lives.
+I'd love HN's take on the editorial-mode prompts specifically.
+That's the layer I've spent the most time on, and it's where I
+think the product either works or doesn't. The rest is plumbing.
 
 — Christian, Frankfurt
 ```
 
 **HN comment to post yourself, 30 minutes in:**
 ```
-Quick FAQ from threads on r/languagelearning earlier this week:
+Anticipating the recurring questions:
 
 — Why YouTube only? It's the largest public corpus where transcripts
   already exist as captions. Whisper + uploads is on the Pro roadmap.
@@ -127,10 +128,11 @@ Hi r/languagelearning,
 
 Quick context: my partner is a Spanish speaker, I'm German, we live
 in Frankfurt. She wanted to learn German *with content she actually
-cared about* — the news, Wirtschaftspodcasts, history docs — and the
-existing tooling kept disappointing her. Transcripts felt raw,
-generic summaries lost what was useful, copying vocab into Anki was
-half an hour of friction per video.
+cared about* — the news, Wirtschaftspodcasts, history docs — but
+what existed felt either too dumb (copy-paste transcript summaries
+with no structure) or too generic (ChatGPT forgets the thread after
+five minutes and loses the vocabulary by tomorrow). Copying vocab
+into Anki was half an hour of friction per video.
 
 So I built VozClara: https://vozclara.app
 
@@ -174,7 +176,7 @@ What I'd love feedback on:
 — Shadowing: which languages are the pronunciation scoring weak on?
   It's Web Speech API under the hood, accuracy varies.
 
-Happy to answer anything.
+I'll be in the comments — please be specific if it sucks.
 
 — Christian
 ```
@@ -194,16 +196,16 @@ educational videos so the good ones surface and the noise sinks.
 
 **Body:**
 ```
-The pitch: YouTube ranks by retention + watch time + clickthrough.
-None of those measure whether a video was actually worth the time
-afterwards. That's why a 90-minute talk on a deep topic loses to a
-3-minute hook video that wasted you 3 minutes.
+YouTube ranks by retention, watch time, and clickthrough. None of
+those measure whether a video was actually worth your hour afterwards.
+That's why a 90-minute talk on a deep topic loses to a 3-minute hook
+video that wasted you three minutes.
 
 VozClara (https://vozclara.app) adds the missing layer: a quality
 rating built into the tooling people *already use to remember what
 they watched*.
 
-The flow:
+How I use it:
 
 1. You paste a YouTube URL → get a Knowledge Pack: TL;DR, key ideas
    with timestamps, action plan, quotes. Your library stays on your
@@ -268,10 +270,10 @@ from students who actually use it.
 ```
 Hi r/getstudying,
 
-Quick background: I'm building a tool called VozClara
-(https://vozclara.app) and the part most relevant to this sub is
-the Study mode — it takes a lecture-style YouTube video and produces
-a structured study pack.
+I'm building a tool called VozClara (https://vozclara.app). The
+part most relevant to this sub is Study mode — it takes a lecture-
+style YouTube video and produces a structured study pack you can
+actually run before an exam.
 
 Specifically, you get:
 
@@ -340,10 +342,9 @@ it breaks.
 
 **Tweet 1 — link tweet:**
 ```
-Shipped VozClara — save the knowledge from every YouTube video you watch.
+Shipped VozClara. Turn every video you watch into a Knowledge Pack you can search years later.
 
-Editorial-mode prompts, anonymous-first, lifetime €99 founder deal
-capped at 100 seats.
+First 100 founders pay €99 once.
 
 🔗 https://vozclara.app
 ```
