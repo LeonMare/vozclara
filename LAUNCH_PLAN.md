@@ -867,4 +867,105 @@ Liest LAUNCH_PLAN.md §27 (dieses Kapitel) und FINAL_QA.md für die Walkthrough-
 
 — Übergabe Mo 18.5.2026 abends. Switching to PC. Gute Pause.
 
+---
+
+## 28 · Sprint-Status — PC-Session Mo 18.5. Spätabend → Übergabe an Di 19.5.
+
+> §27 war die Übergabe Laptop→PC. Dieses §28 schließt die PC-Session
+> ab und übergibt an Di 19.5. Beim nächsten Session-Start zuerst §28
+> lesen, dann §27 für historischen Kontext.
+
+### Stand: Mo 18.5.2026 spätabends — **T-6/7 Tage zum Launch**
+
+PC-Session war eine 2-Stunden-Polish-Runde nach dem Laptop-Push.
+Code-Review der Laptop-Commits + Founder-Discord-Wiring + Stripe
+Success-URL gesetzt + 4 commits geshippt.
+
+### ✅ In dieser PC-Session geshippt
+
+| Commit | Was |
+|---|---|
+| `c8a02e3` | CI-Fix: `labels` prop in ReviewsList.tsx durchgereicht — Z. 85+87 hatten den dict-Closure verloren, tsc-Fehler killed `§27`-Deploy. ReviewRow ist jetzt typsicher mit `ReturnType<typeof reviewsLabels>` |
+| `5ecfedc` | **DSGVO Art. 17 vollständig** beim Account-Delete — Code-Review hatte zwei reale Gaps gefunden: (1) `email:${user.email}` ohne `.toLowerCase()` als stale-pointer-Risiko, (2) `rvote:<videoId>:<voterId>` Reviews/Stars wurden beim Account-Delete nicht entfernt. Neue `purgeVotesForVoters()` in rating.ts sweept + dekrementiert Aggregates korrekt vor dem User-Record-Delete |
+| `6f4d7b3` | `DISCORD_SETUP.md` — copy-paste-Pack für den Server-Setup mit Channel-Topics + 2 Welcome-Pinned-Posts (general/founders-only) + Roles + Permissions + Setup-Checklist |
+| `2441ca3` | Founder Discord-Invite verdrahtet — `FOUNDER_DISCORD_INVITE` konstante in lib/founder.ts. `/founder?welcome=1` rendert jetzt einen goldenen Welcome-Banner mit prominentem "Join the Discord" CTA. 4 Locales |
+
+### ✅ User-side heute Abend erledigt
+
+| Task | Status |
+|---|---|
+| **Stripe Public-Name** `Leon Maré` → `VozClara` | ✅ |
+| **Discord-Server `VozClara`** mit 3 Channels + Roles + Pinned-Posts + privatem #founders-only | ✅ Live-Link `https://discord.gg/z93CKmUSv6` |
+| **Stripe Payment Link Success-URL** → `https://vozclara.app/founder?welcome=1` | ✅ |
+| **Server-Nickname** in VozClara-Server → `Christian (VozClara)` | ✅ |
+
+### 🎯 End-to-End Founder-Flow ist komplett verdrahtet
+
+1. Besucher → `/founder` → klickt €99-CTA
+2. Stripe-Checkout → zahlt
+3. Stripe redirected → `vozclara.app/founder?welcome=1`
+4. Welcome-Banner erscheint mit Discord-CTA
+5. Käufer tritt Discord bei
+6. Christian bekommt Stripe-Email + macht zwei manuelle Steps:
+   - Discord → Mitglied → `Founder` Role assignen
+   - Terminal: `curl -X POST /api/founder/admin/increment` → Counter +1
+
+### 🟡 Verbleibende Tasks vor Launch (Di–So)
+
+**Reihenfolge wenn du Di morgen anfängst:**
+
+#### 1. Reddit-Karma sammeln — täglich 30 Min ab Di 19.5.
+- **Di** r/languagelearning: 2-3 substanzielle Comments auf andere Threads (keine VozClara-Links)
+- **Mi** r/productivity: gleiches Spiel
+- **Do** r/getstudying: gleiches Spiel
+- **Fr** Round 2 in allen 3 Subs (1-2 Comments je)
+- Reddit-Spam-Filter blockt sonst den Launch-Post
+
+#### 2. LAUNCH_POSTS persönlicher Pass — 30 Min (Fr passt)
+Drafts in `LAUNCH_POSTS.md` sind editorial-clean, brauchen aber
+deinen persönlichen Ton. Vor allem:
+- HN-Body: gibt's einen Satz wo du anders klingst?
+- r/languagelearning: Partner-Anekdote authentisch?
+- X-Tweet 1: schärfer machen?
+- r/getstudying: noch zu „Claude-glatt"?
+
+#### 3. Mock-QA echtes iPhone — Sa 23.5., ~1 h
+- `FINAL_QA.md` als Checkliste durchgehen
+- /signin Magic-Link mit echter Email
+- /me Inline-Name-Edit auf Touch
+- /founder Stripe-Tap → Apple-Pay-Flow
+- Welcome-Banner nach Test-Kauf?
+
+#### 4. Pre-Launch-Check — So 24.5., ~15 Min
+- Sentry: keine Error-Trends letzte 24 h
+- Cloudflare Analytics: RPS-Werte normal
+- Stripe: **Test-Mode → Live-Mode** umschalten (falls aktuell Test)
+
+### 🔵 Nach hinten verschoben (User-Entscheidung)
+
+- **DPMA-Trademark** (€290) — vorerst skip, nach Launch wenn Sichtbarkeit echte Bedrohung wird
+- **Defensive Domains** `vozclara.de/.eu` (€20) — vorerst skip, gleicher Grund
+- Beide haben User-Entscheidung-Status, sind nicht Launch-Blocker
+
+### 📋 Wo der Stand morgen am Laptop/PC liegt
+
+**Repo:** alles auf `main`, latest commit `2441ca3`. `git pull` reicht.
+
+**Live:** vozclara.app ist deployed mit allem von heute. Founder-
+Flow ist End-to-End klickbar.
+
+**Discord:** `https://discord.gg/z93CKmUSv6` — Permanent-Invite,
+landet in #general, manuelle Role-Vergabe für Founder.
+
+### 🎯 Erste 10 Min wenn du Di anfängst
+
+1. `git pull` (sollte clean sein, ich hab heute alles gepushed)
+2. Reddit-Tab öffnen → r/languagelearning durchscrollen → 3 Threads finden wo du was substanzielles beitragen kannst
+3. 30 Min organische Comments schreiben (KEIN VozClara-Link)
+4. Wenn Energie da: LAUNCH_POSTS.md aufmachen, durchlesen, Bauchgefühl-Stellen markieren
+
+Nicht vergessen: **DPMA + Domains** als Reminder für Tag 1 post-launch — sobald HN-Buzz da ist, ist Squatting-Risiko real.
+
+— PC-Session-Ende Mo 18.5. spätabends. Sprint weiter 3+ Tage voraus. Gute Pause.
+
 
