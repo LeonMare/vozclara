@@ -494,3 +494,144 @@ Dann: **Auth Foundation** (So) → **Auth Complete** (Mo) → **Michelin Rating*
 Mache es gut. Bleib geduldig. Ship wöchentlich.
 
 — Letzte Pre-Launch-Beratung, 17.5.2026
+
+---
+
+## 25 · Sprint-Status — Übergabe Mo 18.5. (PC → Laptop)
+
+> Lebt unten ans Doc, damit die nächste Session sofort den Stand
+> hat. **Wenn du am Laptop git pull machst, lies zuerst diesen
+> Abschnitt — §10 und §20 sind veraltet.**
+
+### Stand: Mo 18.5.2026 abends — **T-7/8 Tage zum Launch, 3 Tage vorm Plan**
+
+Heute Mo (eigentlich nur Mo geplant für Auth Foundation) wurde
+effektiv Mo+Di+Mi+Do+halb-Fr durchgezogen. 12 Commits, ~3000 Zeilen.
+
+### ✅ Geshippt (live auf vozclara.app + Worker deployed)
+
+| Block | Plan-Tag | Status | Commits |
+|---|---|---|---|
+| **A · Auth Foundation** | Mo | ✅ Backend + Frontend + Brand-Email | `0af8f7f`, `187796e`, `8b3c74a` |
+| **A · Mode-Rebrand** | Mo Bonus | ✅ `business→brief`, neuer `study`, Auto-Pick | `6e61db5` |
+| **A · BrainId-Sync** | Mo Bonus | ✅ attach-brain + Library-Status-Banner | `5983806` |
+| **B · Michelin Rating** | Di+Mi | ✅ Backend + RatingPanel + Discover + Bulk + Polish | `66244fc`, `a120955`, `bbe8739` |
+| **C · Founder Deal** | Do | ✅ Code komplett · Stripe-Klicks offen | `62032ff` |
+| **D · Audience + Citations** | Fr | ✅ AudienceTiles klickbar + Citation Copy | `8368dc3` |
+| **E · 404 + Mobile + Drafts** | Sa+So | ✅ Editorial 404 + Mobile-FilterPills + LAUNCH_POSTS.md | `68a0247` |
+| **Sentry-Bugfixes** | inline | ✅ Mobile-Safari TypeError + Chunk-Reload-Recovery | `3330c5e` |
+
+### 🟡 Offen — Reihenfolge nach Wichtigkeit
+
+#### 1. Resend API-Key rotieren — KRITISCH
+Der Key `re_2EsmBs3o_QJbMibnQSbTzxi9igTqq5me4` wurde Sonntag im
+Chat geteilt. Nicht mehr vertraulich.
+
+```bash
+# 1. https://resend.com/api-keys → revoke alten Key → neuen erstellen
+# 2. Im Worker setzen:
+cd worker
+npx wrangler secret put RESEND_API_KEY
+# → neuen Key einfügen
+npx wrangler deploy
+```
+
+#### 2. Stripe-Setup — Founder Deal aktivieren (15 Min)
+1. https://dashboard.stripe.com → **Products** → **+ Add product**
+   - Name: `Voz Clara Founder · Lifetime Pro`
+   - Price: **€99 EUR · One-time**
+   - Save → **Create payment link** vom Product aus
+2. Payment-Link-Settings:
+   - Quantity: 1 (kein adjustable)
+   - Collect customer email: ✅
+   - Success URL: `https://vozclara.app/founder?welcome=1`
+3. Copy Payment Link URL (`https://buy.stripe.com/<hash>`)
+4. In `.env.production` einsetzen:
+   ```
+   VITE_FOUNDER_CHECKOUT_URL=https://buy.stripe.com/...
+   ```
+5. `git commit -am "Wire live Founder Deal Stripe Payment Link"`
+6. `git push` → Cloudflare Pages baut automatisch → Button live
+
+#### 3. Live-Test (30 Min)
+Klick durch alles was heute neu ist:
+- [ ] `/signin` Magic-Link Flow (Mail + Cookie)
+- [ ] Header-Avatar Dropdown wenn signed-in
+- [ ] Landing: AudienceTiles klickbar mit Aktiv-Badge
+- [ ] Generator: Default-Mode = ausgewählte Audience
+- [ ] PackPage: § Bewertung-Panel + Top-Rated-Pill (sobald rated)
+- [ ] QuotesTab: Copy-Citation Button
+- [ ] Library: Account-Sync-Banner + Sort-Filter + Rating-Badges
+- [ ] `/discover`: 3 Tabs, Wilson-Score-Ranking
+- [ ] `/founder`: Counter-Card (zeigt 0/100)
+- [ ] `/pricing`: Founder-Banner zwischen Hero und Free/Pro
+- [ ] `/foobar` → neue 404-Seite
+
+#### 4. Sample-Packs Entscheidung — OPTIONAL
+LAUNCH_PLAN §10 will 5 Sample-Packs. Aktuell 3 (sample, sample-learn,
+sample-creator). Vorgeschlagen:
+- `sample-study` (Study-Mode — neuer Mode hat noch keinen Sample!)
+  → z.B. Veritasium 25-Min Wissenschaft oder Lex-Fridman-Snippet
+- `sample-news` (Brief-Mode, anderer Tone als der Politik-Sample)
+  → z.B. YC-Founder-Talk oder Tech-News
+
+**Entscheidung am Laptop**: 2 YouTube-URLs geben → Claude baut die
+Packs. ODER: skippen, der Sprint ist eh 3 Tage vorne.
+
+#### 5. LAUNCH_POSTS.md personalisieren — OPTIONAL
+`LAUNCH_POSTS.md` enthält 4 Drafts (HN, r/languagelearning,
+r/productivity, X-Thread). Editorial-Voice, brauchen aber deinen
+persönlichen Pass bevor sie raus gehen.
+
+### 🔵 Was NICHT angegangen wurde (bewusst geschnitten)
+
+Aus `§10` ursprünglich für Fr/Sa/So vorgesehen, fliegen ins
+Post-Launch-Roadmap (`§11`):
+- Google OAuth (Magic-Link reicht für Launch — Woche 2)
+- Email-to-Pack (Pro-Feature, Woche 3)
+- MP3/MP4-Uploads (Pro-Feature, Woche 2)
+- Folders + Public Pack URLs (Tags reichen — Woche 3)
+- Email-Sequenz 4-Stufen (1 Welcome-Mail im LAUNCH_POSTS spezifiziert)
+- 10 Blog-Posts (4 Posts in LAUNCH_POSTS.md statt 10)
+- Status-Page (Sentry deckt das ab)
+- PostHog (Cloudflare Analytics + Sentry reichen)
+- Onboarding-4-Schritt-Wizard (1-Click AudienceTiles statt)
+
+### 📋 Datei-Spickzettel — was wo lebt
+
+**Frontend (src/)**
+- `lib/auth.ts` · `hooks/useAuth.tsx` · `routes/SignInPage.tsx` — Auth
+- `lib/audience.ts` — Audience-Onboarding-Persistenz
+- `lib/rating.ts` · `components/RatingPanel.tsx` · `routes/DiscoverPage.tsx` — Michelin Rating
+- `lib/founder.ts` · `routes/FounderPage.tsx` — Founder Deal
+- `routes/NotFoundPage.tsx` — 404
+- `components/landing/sections.tsx` — AudienceTiles + Pricing-FounderBanner
+
+**Worker (worker/src/)**
+- `auth.ts` — Magic-Link KV-State + 4 endpoints + attach-brain
+- `email.ts` — Resend-API-Wrapper + brand-konforme Magic-Link Email
+- `rating.ts` — Rating-Endpoints + Wilson-Score
+- `founder.ts` — Founder-Counter + admin-endpoints
+
+**Build / Config**
+- `wrangler.toml` — AUTH KV binding (id `32113624ca574c16867b434f453b3237`)
+- `.env.production` — `VITE_FOUNDER_CHECKOUT_URL=PLACEHOLDER` ← muss ersetzt werden
+- `scripts/generate-brand-pngs.mjs` — Lighthouse-PNG-Generator (für Brand-Email)
+- `public/brand-mark-256.png` + `brand-mark-512.png` — Email-Logo
+
+**Docs**
+- `LAUNCH_PLAN.md` — dieses Doc (Strategy + Sprint-Status, §25 = aktuell)
+- `LAUNCH_POSTS.md` — 4 Post-Drafts für die Launch-Woche
+
+### 🎯 Empfohlene erste 30 Min am Laptop
+
+1. `git pull` + `npm install` (falls Dep-Drift seit letztem Build)
+2. LAUNCH_PLAN.md §25 lesen (dieses Kapitel)
+3. **Resend-Key rotieren** (5 Min)
+4. **Stripe-Setup** (15 Min) → Founder-Deal-Button live
+5. Auf vozclara.app einmal selber den Auth + Rating + Founder-Flow durchklicken
+
+Danach: Sample-Pack-Entscheidung, dann je nach Energie weitere
+Launch-Vorbereitung oder eine letzte Polish-Iteration.
+
+— Übergabe Mo 18.5.2026 abends. Sprint 3 Tage voraus. Gute Pause.
