@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useLocale } from '../lib/i18n';
 import { usePageHead } from '../hooks/usePageHead';
-import { getBrainId, libraryStats, type LibraryStats } from '../lib/pack';
-import { dueSummary, type DueSummary } from '../lib/srs';
+import { getBrainId, libraryStats, listPacks, type LibraryStats, type KnowledgePack } from '../lib/pack';
+import { dueSummary, getStreak, type DueSummary, type StreakState } from '../lib/srs';
+import { getRecentlyViewed } from '../lib/recentlyViewed';
+import { Avatar } from '../components/Avatar';
 
 /**
  * /me — signed-in user dashboard.
@@ -33,19 +35,44 @@ export function AccountPage() {
 
   const [stats, setStats] = useState<LibraryStats | null>(null);
   const [due, setDue] = useState<DueSummary | null>(null);
+  const [streak, setStreak] = useState<StreakState | null>(null);
+  const [recentPacks, setRecentPacks] = useState<KnowledgePack[]>([]);
 
   usePageHead({
     title: labels.headTitle,
     description: labels.headDescription,
   });
 
-  /* Pull stats on mount. Cheap — IndexedDB reads. Re-runs if the user
-     attaches a new brainId (different identity → different library). */
+  /* Pull all dashboard data on mount. Each call is a cheap IndexedDB
+     read so we can fire them in parallel without choreographing a
+     loading state — the UI just fills in as data arrives. Re-runs when
+     the signed-in user changes (different brainId → different library). */
   useEffect(() => {
     const brainId = getBrainId();
     void libraryStats(brainId).then(setStats);
     void dueSummary(brainId).then(setDue);
+    void getStreak(brainId).then(setStreak);
+    // Recent activity: resolve last-viewed pack IDs against the library.
+    // Drop any IDs we can't resolve (deleted packs), cap at 3.
+    void (async () => {
+      const ids = getRecentlyViewed();
+      if (ids.length === 0) return;
+      const all = await listPacks(brainId);
+      const map = new Map(all.map((p) => [p.id, p]));
+      setRecentPacks(
+        ids
+          .map((id) => map.get(id))
+          .filter((p): p is KnowledgePack => !!p)
+          .slice(0, 3),
+      );
+    })();
   }, [user?.id]);
+
+  /* Compute the 7-day calendar strip from the streak's activeDays log.
+     Yesterday → today reads left-to-right; missing days render as a
+     hollow dot, active days as a filled gold dot. Memoised so we don't
+     re-build the grid on every keystroke elsewhere. */
+  const last7Days = useMemo(() => buildLast7Days(streak?.activeDays ?? []), [streak?.activeDays]);
 
   /* Anonymous-first product — but /me only makes sense signed in. */
   useEffect(() => {
@@ -75,12 +102,25 @@ export function AccountPage() {
           <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
             § {labels.eyebrow}
           </p>
-          <h1 className="mt-3 font-serif text-4xl leading-tight text-navy sm:text-5xl">
-            {labels.greeting(displayName)}
-          </h1>
-          <div className="mt-4 h-px w-16 bg-gold" aria-hidden />
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 font-sans text-[10px] uppercase tracking-widest">
+          <div className="mt-5 flex items-start gap-5 sm:gap-6">
+            {/* Avatar on the left — brand monogram, no Gravatar.
+                Decorative because the name is already in the headline. */}
+            <Avatar name={user.displayName} email={user.email} size="lg" decorative />
+
+            <div className="min-w-0 flex-1">
+              <h1 className="font-serif text-3xl leading-tight text-navy sm:text-5xl">
+                {labels.greeting(displayName)}
+              </h1>
+              <p className="mt-2 break-all font-serif italic text-graphit/65 sm:text-lg">
+                {user.email}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 h-px w-16 bg-gold" aria-hidden />
+
+          <div className="mt-5 flex flex-wrap items-center gap-2 font-sans text-[10px] uppercase tracking-widest">
             <span className="inline-flex items-center gap-1 rounded-full bg-navy px-2.5 py-1 text-gold">
               <span className="text-creme/50">●</span> {labels.planFree}
             </span>
@@ -90,6 +130,15 @@ export function AccountPage() {
             <span className="rounded-full bg-navy/8 px-2.5 py-1 text-graphit/70">
               {user.brainIds.length} {user.brainIds.length === 1 ? labels.device : labels.devices}
             </span>
+            {/* Surface today's streak right in the chip row so the most
+                gamified number is visible without scrolling. Hidden when
+                the user has never reviewed (current === 0) — empty
+                gamification screams "you're behind". */}
+            {streak && streak.current > 0 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-gold">
+                {labels.streakChip(streak.current)}
+              </span>
+            )}
           </div>
         </section>
 
@@ -99,22 +148,128 @@ export function AccountPage() {
             value={stats?.totalPacks ?? 0}
             label={labels.statPacks}
             href="/library"
-            hint={labels.statPacksHint}
+            hint={
+              stats && stats.totalPacks === 0
+                ? labels.statPacksEmpty
+                : labels.statPacksHint
+            }
           />
           <StatCard
             value={stats?.totalLangs ?? 0}
             label={labels.statLangs}
             href="/library"
-            hint={labels.statLangsHint}
+            hint={
+              stats && stats.totalLangs === 0
+                ? labels.statLangsEmpty
+                : labels.statLangsHint
+            }
           />
           <StatCard
             value={due?.due ?? 0}
             label={labels.statDue}
             href="/review"
-            hint={labels.statDueHint}
+            hint={
+              due && due.due === 0
+                ? labels.statDueEmpty
+                : labels.statDueHint
+            }
             accent={Boolean(due?.due && due.due > 0)}
           />
         </section>
+
+        {/* ─── 2b · Streak + 7-day calendar strip ────────────────────── */}
+        <section className="mt-10 rounded-card border border-navy/15 bg-white p-6 sm:p-7">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+                {labels.streakLabel}
+              </div>
+              <div className="mt-1 flex items-baseline gap-2">
+                <span className="font-serif text-4xl tabular-nums text-navy sm:text-5xl">
+                  {streak?.current ?? 0}
+                </span>
+                <span className="font-serif italic text-graphit/65">
+                  {labels.streakDays(streak?.current ?? 0)}
+                </span>
+              </div>
+              <div className="mt-1 font-sans text-xs text-graphit/55">
+                {(streak?.longest ?? 0) > 0
+                  ? labels.streakLongest(streak?.longest ?? 0)
+                  : labels.streakStart}
+              </div>
+            </div>
+
+            {/* 7-day strip — yesterday → today reads left to right.
+                Gold filled circle = active that day, hollow = miss. */}
+            <ol className="flex items-end gap-2 self-end sm:self-auto">
+              {last7Days.map((d) => (
+                <li key={d.ymd} className="flex flex-col items-center gap-1.5">
+                  <span
+                    aria-hidden
+                    className={[
+                      'inline-block h-3 w-3 rounded-full transition',
+                      d.active
+                        ? 'bg-gold'
+                        : 'border border-navy/15 bg-creme/50',
+                      d.isToday ? 'ring-2 ring-gold/40 ring-offset-2 ring-offset-white' : '',
+                    ].join(' ')}
+                  />
+                  <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+                    {d.dayLabel(locale)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ─── 2c · Recent activity (only when there's any) ──────────── */}
+        {recentPacks.length > 0 && (
+          <section className="mt-10">
+            <SectionEyebrow text={labels.sectionRecent} />
+            <h2 className="mt-3 font-serif text-2xl leading-tight text-navy sm:text-3xl">
+              {labels.recentHeading}
+            </h2>
+            <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
+
+            <ul className="mt-6 divide-y divide-navy/10 overflow-hidden rounded-card border border-navy/15 bg-white">
+              {recentPacks.map((p) => (
+                <li key={p.id}>
+                  <Link
+                    to={`/pack/${p.id}`}
+                    className="flex items-center gap-4 px-5 py-4 transition hover:bg-creme/40"
+                  >
+                    {p.source.thumbnailUrl ? (
+                      <img
+                        src={p.source.thumbnailUrl}
+                        alt=""
+                        className="h-12 w-20 shrink-0 rounded-md object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="h-12 w-20 shrink-0 rounded-md bg-navy/10" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-serif text-base text-navy">
+                        {p.title}
+                      </div>
+                      <div className="mt-0.5 font-sans text-xs text-graphit/55">
+                        {new Date(p.updatedAt).toLocaleDateString(locale, {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                        {' · '}
+                        {p.outputLang.toUpperCase()}
+                      </div>
+                    </div>
+                    <span className="shrink-0 font-sans text-xs text-gold">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* ─── 3 · Plan & billing ────────────────────────────────────── */}
         <section className="mt-16">
@@ -281,6 +436,41 @@ export function AccountPage() {
   );
 }
 
+/* ─── Helpers ───────────────────────────────────────────────────────── */
+
+interface CalendarDay {
+  ymd: string;
+  active: boolean;
+  isToday: boolean;
+  dayLabel: (locale: string) => string;
+}
+
+/** Build the 7-day strip ending today. Uses the activeDays log from
+ *  StreakState so a missed yesterday renders as a hollow dot rather
+ *  than being skipped. */
+function buildLast7Days(activeDays: string[]): CalendarDay[] {
+  const set = new Set(activeDays);
+  const out: CalendarDay[] = [];
+  const today = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const ymd = `${y}-${m}-${day}`;
+    const captured = new Date(d);
+    out.push({
+      ymd,
+      active: set.has(ymd),
+      isToday: i === 0,
+      dayLabel: (locale: string) =>
+        captured.toLocaleDateString(locale, { weekday: 'narrow' }),
+    });
+  }
+  return out;
+}
+
 /* ─── Subcomponents ─────────────────────────────────────────────────── */
 
 function SectionEyebrow({ text }: { text: string }) {
@@ -375,10 +565,20 @@ function accountLabels(locale: string) {
     devices: 'dispositivos',
     statPacks: 'PACKS',
     statPacksHint: 'En tu biblioteca personal',
+    statPacksEmpty: 'Crea tu primer Knowledge Pack →',
     statLangs: 'IDIOMAS',
     statLangsHint: 'Idiomas en los que aprendes',
+    statLangsEmpty: 'Empieza con uno cualquiera →',
     statDue: 'POR REPASAR',
     statDueHint: 'Tarjetas SRS para hoy',
+    statDueEmpty: 'Todo al día — vuelve mañana',
+    streakChip: (n: number) => `🔥 ${n} ${n === 1 ? 'día' : 'días'}`,
+    streakLabel: 'RACHA DIARIA',
+    streakDays: (n: number) => (n === 1 ? 'día seguido' : 'días seguidos'),
+    streakLongest: (n: number) => `Récord: ${n} ${n === 1 ? 'día' : 'días'}`,
+    streakStart: 'Empieza tu racha con un repaso hoy.',
+    sectionRecent: 'ÚLTIMOS PACKS',
+    recentHeading: 'Lo último que viste.',
     sectionPlan: 'PLAN Y FACTURACIÓN',
     planHeading: 'Tu plan.',
     currentPlan: 'Plan actual',
@@ -423,10 +623,20 @@ function accountLabels(locale: string) {
     devices: 'dispositivos',
     statPacks: 'PACKS',
     statPacksHint: 'Na tua biblioteca pessoal',
+    statPacksEmpty: 'Cria o teu primeiro Knowledge Pack →',
     statLangs: 'IDIOMAS',
     statLangsHint: 'Línguas em que aprendes',
+    statLangsEmpty: 'Começa por uma qualquer →',
     statDue: 'POR REVER',
     statDueHint: 'Cartões SRS para hoje',
+    statDueEmpty: 'Tudo em dia — volta amanhã',
+    streakChip: (n: number) => `🔥 ${n} ${n === 1 ? 'dia' : 'dias'}`,
+    streakLabel: 'SEQUÊNCIA DIÁRIA',
+    streakDays: (n: number) => (n === 1 ? 'dia seguido' : 'dias seguidos'),
+    streakLongest: (n: number) => `Recorde: ${n} ${n === 1 ? 'dia' : 'dias'}`,
+    streakStart: 'Começa a tua sequência com uma revisão hoje.',
+    sectionRecent: 'ÚLTIMOS PACKS',
+    recentHeading: 'O que viste por último.',
     sectionPlan: 'PLANO E FATURAÇÃO',
     planHeading: 'O teu plano.',
     currentPlan: 'Plano atual',
@@ -471,10 +681,20 @@ function accountLabels(locale: string) {
     devices: 'Geräte',
     statPacks: 'PACKS',
     statPacksHint: 'In deiner persönlichen Bibliothek',
+    statPacksEmpty: 'Erstell deinen ersten Knowledge Pack →',
     statLangs: 'SPRACHEN',
     statLangsHint: 'Sprachen die du lernst',
+    statLangsEmpty: 'Fang mit einer beliebigen an →',
     statDue: 'ZU WIEDERHOLEN',
     statDueHint: 'SRS-Karten heute fällig',
+    statDueEmpty: 'Alles erledigt — komm morgen wieder',
+    streakChip: (n: number) => `🔥 ${n} ${n === 1 ? 'Tag' : 'Tage'}`,
+    streakLabel: 'TAGES-STREAK',
+    streakDays: (n: number) => (n === 1 ? 'Tag in Folge' : 'Tage in Folge'),
+    streakLongest: (n: number) => `Rekord: ${n} ${n === 1 ? 'Tag' : 'Tage'}`,
+    streakStart: 'Starte deinen Streak mit einer Wiederholung heute.',
+    sectionRecent: 'ZULETZT ANGESEHEN',
+    recentHeading: 'Was du zuletzt geöffnet hast.',
     sectionPlan: 'PLAN UND ABRECHNUNG',
     planHeading: 'Dein Plan.',
     currentPlan: 'Aktueller Plan',
@@ -519,10 +739,20 @@ function accountLabels(locale: string) {
     devices: 'devices',
     statPacks: 'PACKS',
     statPacksHint: 'In your personal library',
+    statPacksEmpty: 'Create your first Knowledge Pack →',
     statLangs: 'LANGUAGES',
     statLangsHint: 'Languages you learn',
+    statLangsEmpty: 'Start with any one →',
     statDue: 'TO REVIEW',
     statDueHint: 'SRS cards due today',
+    statDueEmpty: 'All caught up — come back tomorrow',
+    streakChip: (n: number) => `🔥 ${n} ${n === 1 ? 'day' : 'days'}`,
+    streakLabel: 'DAILY STREAK',
+    streakDays: (n: number) => (n === 1 ? 'day in a row' : 'days in a row'),
+    streakLongest: (n: number) => `Best: ${n} ${n === 1 ? 'day' : 'days'}`,
+    streakStart: 'Start your streak with a review today.',
+    sectionRecent: 'RECENTLY OPENED',
+    recentHeading: 'What you opened last.',
     sectionPlan: 'PLAN & BILLING',
     planHeading: 'Your plan.',
     currentPlan: 'Current plan',

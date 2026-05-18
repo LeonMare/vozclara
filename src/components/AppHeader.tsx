@@ -4,6 +4,7 @@ import { useLocale } from '../lib/i18n';
 import { LanguagePicker } from './LanguagePicker';
 import { BrandMark } from './BrandMark';
 import { useAuth } from '../hooks/useAuth';
+import { Avatar } from './Avatar';
 
 /**
  * App-wide sticky header.
@@ -295,8 +296,6 @@ function UserDropdown({
     };
   }, [open]);
 
-  const initial = (user.displayName ?? user.email).charAt(0).toUpperCase();
-
   return (
     <div className="relative hidden md:inline-block">
       <button
@@ -306,9 +305,9 @@ function UserDropdown({
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white font-serif text-sm text-navy transition hover:border-gold focus:outline-none focus:ring-2 focus:ring-gold/40"
+        className="rounded-full transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-gold/40"
       >
-        {initial}
+        <Avatar name={user.displayName} email={user.email} size="sm" decorative />
       </button>
       {open && (
         <div

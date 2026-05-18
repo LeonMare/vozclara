@@ -65,6 +65,9 @@ export interface StreakState {
   longest: number;
   /** ISO yyyy-mm-dd of the last day with at least one review. */
   lastReviewedYmd: string | null;
+  /** Last 30 active days (most recent first) for calendar-strip viz.
+   *  Optional so older stored states don't break — defaults to [] on load. */
+  activeDays?: string[];
 }
 
 interface SrsStore {
@@ -333,6 +336,13 @@ function advanceStreak(prev: StreakState, today: string): StreakState {
       ? { ...prev, current: prev.current + 1, lastReviewedYmd: today }
       : { ...prev, current: 1, lastReviewedYmd: today };
   next.longest = Math.max(next.longest, next.current);
+  // Append today to the active-days log, dedupe, keep last 30. This
+  // powers the 7-day calendar strip on /me without needing extra
+  // storage keys — same place a future server-side sync would land.
+  const prevDays = prev.activeDays ?? [];
+  next.activeDays = prevDays.includes(today)
+    ? prevDays.slice(0, 30)
+    : [today, ...prevDays].slice(0, 30);
   return next;
 }
 
