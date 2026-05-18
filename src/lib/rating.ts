@@ -90,6 +90,30 @@ export async function fetchMyVote(args: { videoId: string; brainId?: string }): 
   return body.vote;
 }
 
+/**
+ * Bulk-fetch aggregates for up to 64 video ids in one round trip.
+ * Returns a map keyed by videoId — missing entries are omitted, so
+ * the consumer can `map[id] ?? null` and treat absence as "never
+ * rated". Used by /library to decorate pack cards without making
+ * N requests.
+ */
+export async function fetchAggregatesBulk(videoIds: string[]): Promise<Record<string, RatingAggregate>> {
+  if (videoIds.length === 0) return {};
+  try {
+    const res = await fetch(`${API_BASE}/api/rating/bulk`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoIds }),
+    });
+    if (!res.ok) return {};
+    const body = (await res.json()) as { aggregates: Record<string, RatingAggregate> };
+    return body.aggregates;
+  } catch {
+    return {};
+  }
+}
+
 export async function fetchTopRated(limit = 20): Promise<RatingAggregate[]> {
   try {
     const res = await fetch(`${API_BASE}/api/rating/top?limit=${limit}`, {

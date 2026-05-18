@@ -59,6 +59,7 @@ export function AppHeader() {
           ) : (
             <>
               <HeaderLink to="/library">{t.navLibrary}</HeaderLink>
+              <HeaderLink to="/discover">{discoverNavLabel(locale)}</HeaderLink>
               <HeaderLink to="/new">{t.navNew}</HeaderLink>
               <HeaderLink to="/pricing">{landingNav(locale, 'pricing')}</HeaderLink>
             </>
@@ -138,6 +139,9 @@ export function AppHeader() {
             <Link to="/library" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
               {t.navLibrary}
             </Link>
+            <Link to="/discover" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
+              {discoverNavLabel(locale)}
+            </Link>
             {!isLanding && (
               <Link to="/pricing" className="rounded-card px-3 py-2 transition hover:bg-white hover:text-navy">
                 {landingNav(locale, 'pricing')}
@@ -208,6 +212,13 @@ function aboutNavLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Sobre';
   if (locale.startsWith('de')) return 'Über';
   return 'About';
+}
+
+function discoverNavLabel(locale: string): string {
+  if (locale.startsWith('es')) return 'Descubrir';
+  if (locale.startsWith('pt')) return 'Descobrir';
+  if (locale.startsWith('de')) return 'Entdecken';
+  return 'Discover';
 }
 
 /* ─── Auth slots — desktop user menu + mobile drawer block ─────── */

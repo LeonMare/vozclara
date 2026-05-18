@@ -30,6 +30,7 @@ import {
   handleRatingGet,
   handleRatingMe,
   handleRatingTop,
+  handleRatingBulk,
 } from './rating';
 
 interface Env {
@@ -399,6 +400,10 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/rating/top' && req.method === 'GET') {
       return handleRatingTop(url, env);
+    }
+
+    if (url.pathname === '/api/rating/bulk' && req.method === 'POST') {
+      return handleRatingBulk(req, env);
     }
 
     return json({ error: 'not_found' }, 404);

@@ -24,6 +24,7 @@ import { CuratedSection } from '../components/CuratedSection';
 import { getSamplePack } from '../lib/samplePack';
 import { usePageHead } from '../hooks/usePageHead';
 import { useAuth } from '../hooks/useAuth';
+import { fetchAggregatesBulk, averageStars, approvalPercent, type RatingAggregate } from '../lib/rating';
 
 /**
  * /library — your saved Knowledge Packs.
@@ -38,6 +39,9 @@ export function LibraryPage() {
   const navigate = useNavigate();
   const [packs, setPacks] = useState<KnowledgePack[]>([]);
   const [stats, setStats] = useState<LibraryStats | null>(null);
+  /** videoId → aggregate. Populated in a single bulk request after
+   *  pack list loads so cards can show a Michelin-rating badge. */
+  const [ratings, setRatings] = useState<Record<string, RatingAggregate>>({});
 
   usePageHead({
     title: libraryTitle(locale),
@@ -88,6 +92,11 @@ export function LibraryPage() {
     Promise.all([listPacks(brainId), libraryStats(brainId)]).then(([p, s]) => {
       setPacks(p);
       setStats(s);
+      // Bulk-fetch rating aggregates for every pack so cards can show
+      // a Michelin-rating badge without N round trips. Best-effort:
+      // a failure leaves the map empty and cards render without badge.
+      const ids = Array.from(new Set(p.map((pk) => pk.source.videoId).filter(Boolean)));
+      void fetchAggregatesBulk(ids).then(setRatings);
     });
     setRecentIds(getRecentlyViewed());
     // Background back-fill: any pack saved before Vectorize was available
@@ -452,6 +461,11 @@ export function LibraryPage() {
                       {new Date(p.createdAt).toLocaleDateString(locale, { day: '2-digit', month: 'short' })}
                     </span>
                   </div>
+
+                  {/* Rating badge — only renders past the 3-vote trust
+                      threshold so a single 👍 doesn't make every freshly-
+                      generated card show "100 %". */}
+                  <RatingBadge agg={ratings[p.source.videoId]} />
                 </div>
               </button>
               );
@@ -653,6 +667,42 @@ function progressLinkLabel(locale: string): string {
   if (locale.startsWith('pt')) return 'Progresso';
   if (locale.startsWith('de')) return 'Fortschritt';
   return 'Progress';
+}
+
+/* ─── Pack-card rating badge ─────────────────────────────────────── *
+ *
+ * Sub-component on the library card. Renders only when the
+ * aggregate exists AND has ≥3 thumb votes — single-vote items
+ * shouldn't ride into the card list as "100 % approved".
+ *
+ * Layout: gold dot + approval percent + thumbs total · ★ + avg + count
+ * The dot doubles as a discrete "community-rated" marker — the user
+ * recognises rated packs without needing to read the row.
+ */
+
+function RatingBadge({ agg }: { agg: RatingAggregate | undefined }) {
+  if (!agg) return null;
+  const approval = approvalPercent(agg);
+  if (approval === null) return null;
+  const stars = averageStars(agg);
+  const total = agg.up + agg.down;
+
+  return (
+    <div className="mt-3 flex items-baseline gap-3 border-t border-navy/8 pt-3 font-sans text-[11px] text-graphit/65">
+      <span className="inline-flex items-baseline gap-1.5">
+        <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-gold" />
+        <span className="font-medium text-navy tabular-nums">{approval}%</span>
+        <span className="text-graphit/40 tabular-nums">· {total}</span>
+      </span>
+      {stars !== null && (
+        <span className="inline-flex items-baseline gap-1 tabular-nums">
+          <span className="text-gold">★</span>
+          <span className="text-navy">{stars.toFixed(1)}</span>
+          <span className="text-graphit/40">· {agg.starCount}</span>
+        </span>
+      )}
+    </div>
+  );
 }
 
 /* ─── Account sync status banner ─────────────────────────────────── *

@@ -357,6 +357,52 @@ export async function handleRatingMe(req: Request, env: AuthEnv): Promise<Respon
 }
 
 /**
+ * POST /api/rating/bulk   body: { videoIds: string[] }
+ *
+ * Library renders N pack cards on every visit; a per-card fetch
+ * would cost N round trips. This endpoint takes up to 64 ids in one
+ * request and returns a map { [videoId]: aggregate }. Missing ids
+ * (never rated) are omitted from the map so the client can branch
+ * on `aggregate ?? null` cleanly. Public — same trust model as the
+ * single-id GET.
+ */
+export async function handleRatingBulk(req: Request, env: AuthEnv): Promise<Response> {
+  if (!env.AUTH) return json({ error: 'rating_disabled' }, 503);
+
+  let body: { videoIds?: unknown };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  if (!Array.isArray(body.videoIds)) return json({ error: 'missing_ids' }, 400);
+
+  const ids = body.videoIds
+    .map((v) => sanitizeVideoId(v))
+    .filter((v): v is string => v !== null)
+    .slice(0, 64);
+
+  if (ids.length === 0) return json({ aggregates: {} });
+
+  const entries = await Promise.all(
+    ids.map(async (id) => {
+      const raw = await env.AUTH!.get(`rating:${id}`);
+      if (!raw) return null;
+      try {
+        return [id, JSON.parse(raw) as RatingAggregate] as const;
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  const aggregates: Record<string, RatingAggregate> = {};
+  for (const e of entries) if (e) aggregates[e[0]] = e[1];
+  return json({ aggregates });
+}
+
+/**
  * GET /api/rating/top?limit=20
  *
  * Lists the highest-quality videos by Wilson-score lower bound. KV
