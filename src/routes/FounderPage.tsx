@@ -56,7 +56,7 @@ export function FounderPage() {
       <section className="mx-auto max-w-3xl px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
         <div className="text-center">
           <BrandMark variant="monogram" size="lg" tone="gold" decorative />
-          <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.eyebrow}
           </div>
           <h1 className="mt-4 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -76,7 +76,7 @@ export function FounderPage() {
           <div className="mt-6 flex flex-col items-center gap-3">
             <div className="flex items-baseline justify-center gap-2">
               <span className="font-serif text-5xl text-navy">€99</span>
-              <span className="font-sans text-sm text-graphit/55">{labels.priceQualifier}</span>
+              <span className="font-sans text-sm text-graphit/65">{labels.priceQualifier}</span>
             </div>
 
             {soldOut ? (
@@ -95,7 +95,7 @@ export function FounderPage() {
                 {labels.comingSoon}
               </div>
             )}
-            <p className="mt-1 font-sans text-[11px] text-graphit/50">{labels.checkoutNote}</p>
+            <p className="mt-1 font-sans text-[11px] text-graphit/65">{labels.checkoutNote}</p>
           </div>
         </div>
       </section>
@@ -103,7 +103,7 @@ export function FounderPage() {
       {/* What's included */}
       <section className="bg-white/70 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.includedSection}
           </div>
           <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
@@ -132,7 +132,7 @@ export function FounderPage() {
       {/* The honest case */}
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.caseSection}
           </div>
           <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
@@ -153,7 +153,7 @@ export function FounderPage() {
           <p className="mx-auto max-w-2xl font-serif text-lg italic leading-relaxed text-graphit/75 sm:text-xl">
             {labels.closingBody}
           </p>
-          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/45">
+          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
             — Christian Leon · LEON MARÉ · Frankfurt
           </p>
 
@@ -195,7 +195,7 @@ function FounderCounter({
 
   return (
     <div>
-      <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+      <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
         {labels.counterLabel}
       </div>
       <div className="mt-3 flex items-baseline justify-center gap-3">
@@ -206,7 +206,7 @@ function FounderCounter({
             <span className="font-serif text-5xl text-navy tabular-nums sm:text-6xl">
               {claimed}
             </span>
-            <span className="font-serif text-2xl text-graphit/50 tabular-nums sm:text-3xl">
+            <span className="font-serif text-2xl text-graphit/65 tabular-nums sm:text-3xl">
               / {max}
             </span>
           </>

@@ -76,7 +76,7 @@ export function HeroPackPreview() {
             <span className="h-2 w-2 rounded-full bg-navy/15" />
             <span className="h-2 w-2 rounded-full bg-navy/15" />
           </div>
-          <div className="font-sans text-[10px] tabular-nums tracking-widest text-graphit/45">
+          <div className="font-sans text-[10px] tabular-nums tracking-widest text-graphit/65">
             vozclara.app/pack/{pack.id}
           </div>
           <BrandMark variant="monogram" size="xs" tone="gold" decorative />
@@ -110,7 +110,7 @@ export function HeroPackPreview() {
                         'px-2 py-0.5 font-medium transition',
                         active
                           ? 'bg-navy text-gold'
-                          : 'bg-white text-graphit/55 hover:bg-creme hover:text-navy',
+                          : 'bg-white text-graphit/65 hover:bg-creme hover:text-navy',
                       ].join(' ')}
                     >
                       {l.toUpperCase()}
@@ -144,7 +144,7 @@ export function HeroPackPreview() {
                 onClick={() => setTab(k)}
                 className={[
                   'relative whitespace-nowrap pb-1 font-sans transition-colors',
-                  isActive ? 'font-medium text-navy' : 'text-graphit/55 hover:text-navy',
+                  isActive ? 'font-medium text-navy' : 'text-graphit/65 hover:text-navy',
                 ].join(' ')}
               >
                 {t.packTabs[k as keyof typeof t.packTabs]}
@@ -177,7 +177,7 @@ export function HeroPackPreview() {
         </div>
       </div>
 
-      <p className="mt-4 text-center font-serif text-xs italic text-graphit/55">
+      <p className="mt-4 text-center font-serif text-xs italic text-graphit/65">
         {cta.tip}
       </p>
     </div>
@@ -272,7 +272,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
           <div key={i} className="flex flex-wrap items-baseline gap-2">
             <span className="font-serif text-base text-navy">{v.word}</span>
             {v.partOfSpeech && (
-              <span className="font-sans text-[9px] uppercase tracking-widest text-graphit/45">
+              <span className="font-sans text-[9px] uppercase tracking-widest text-graphit/65">
                 {v.partOfSpeech}
               </span>
             )}
@@ -307,7 +307,7 @@ function PreviewBody({ pack, tab }: { pack: KnowledgePack; tab: TabKey }) {
           <blockquote key={i} className="border-l-2 border-gold/50 pl-3">
             <p className="font-serif text-[15px] italic leading-snug text-navy">"{q.text}"</p>
             {q.speaker && (
-              <footer className="mt-1 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              <footer className="mt-1 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {q.speaker}
               </footer>
             )}

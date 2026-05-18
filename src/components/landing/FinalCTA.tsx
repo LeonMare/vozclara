@@ -38,7 +38,7 @@ export function FinalCTA() {
         aria-hidden
       />
       <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">§ 10</div>
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">§ 10</div>
         <h2 className="mt-3 font-serif text-4xl leading-tight text-navy sm:text-5xl">
           {t.finalTitle}
         </h2>
@@ -54,6 +54,7 @@ export function FinalCTA() {
               inputMode="url"
               autoComplete="off"
               spellCheck={false}
+              aria-label={t.heroUrlInputLabel}
               placeholder={t.heroPlaceholder}
               value={value}
               onChange={(e) => setValue(e.target.value)}

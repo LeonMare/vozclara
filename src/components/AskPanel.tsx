@@ -97,7 +97,7 @@ export function AskPanel({
     >
       <div className="flex items-baseline justify-between gap-3">
         <div>
-          <div className="font-sans text-[10px] uppercase tracking-[0.35em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.35em] text-gold-deep">
             {labels.eyebrow}
           </div>
           <h2 className="mt-1 font-serif text-2xl leading-tight text-navy sm:text-3xl">
@@ -105,7 +105,7 @@ export function AskPanel({
           </h2>
         </div>
         {scope === 'library' && (
-          <span className="hidden text-[11px] tabular-nums text-graphit/45 sm:inline">
+          <span className="hidden text-[11px] tabular-nums text-graphit/65 sm:inline">
             {packs.length}{' '}
             {packs.length === 1 ? labels.packsSingular : labels.packsPlural}
           </span>
@@ -137,7 +137,7 @@ export function AskPanel({
       </form>
 
       {/* Subtle progress + privacy note */}
-      <p className="mt-2.5 font-sans text-[11px] italic text-graphit/55">
+      <p className="mt-2.5 font-sans text-[11px] italic text-graphit/65">
         {loading
           ? labels.runningNote
           : labels.privacyNote}
@@ -154,7 +154,7 @@ export function AskPanel({
           <AnswerBody answer={result.answer} />
           {scope === 'library' && citedPacks.length > 0 && (
             <div className="mt-5">
-              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {labels.citations}
               </div>
               <div className="mt-2 flex flex-wrap gap-2">

@@ -88,7 +88,7 @@ function ErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <main className="bg-creme paper min-h-screen">
       <div className="mx-auto max-w-xl px-5 pb-16 pt-16 text-center sm:px-8 sm:pt-24">
-        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           {t.eyebrow}
         </p>
         <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">
@@ -100,7 +100,7 @@ function ErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
         </p>
 
         <details className="mx-auto mt-6 max-w-md rounded-card border border-navy/15 bg-white px-4 py-3 text-left">
-          <summary className="cursor-pointer font-sans text-xs uppercase tracking-widest text-graphit/55">
+          <summary className="cursor-pointer font-sans text-xs uppercase tracking-widest text-graphit/65">
             {t.detailsLabel}
           </summary>
           <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-graphit/70">

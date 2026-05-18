@@ -305,8 +305,12 @@ function UserDropdown({
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((v) => !v)}
-        className="rounded-full transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-gold/40"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-gold/40"
       >
+        {/* Avatar stays 32×32 visually; the surrounding button is 44×44 so
+            touch-targets meet WCAG 2.5.5 on mobile without bloating the
+            visual mark. The h-11 w-11 wrapper is the hit area, not the
+            visible disc. */}
         <Avatar name={user.displayName} email={user.email} size="sm" decorative />
       </button>
       {open && (
@@ -316,7 +320,7 @@ function UserDropdown({
           className="absolute right-0 top-full z-40 mt-2 w-64 rounded-card border border-navy/10 bg-white p-2 shadow-lg shadow-navy/5"
         >
           <div className="px-3 pb-2 pt-1.5">
-            <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+            <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
               {labels.account}
             </div>
             <div className="mt-1 break-all font-serif text-sm text-graphit/80">{user.email}</div>
@@ -402,7 +406,7 @@ function MobileAuthBlock({ locale }: { locale: string }) {
 
   return (
     <div className="mt-1 rounded-card border border-navy/8 bg-white/60 px-3 py-2">
-      <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+      <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
         {labels.account}
       </div>
       <div className="mt-1 break-all font-serif text-sm text-graphit/80">{user.email}</div>

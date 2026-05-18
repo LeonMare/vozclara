@@ -86,7 +86,7 @@ export function GenerationProgress({ active, meta, mergeMode }: Props) {
                 'font-serif italic leading-tight transition-all duration-700',
                 isCurrent
                   ? 'text-navy text-xl sm:text-2xl opacity-100'
-                  : 'text-graphit/45 text-base opacity-60 sm:text-lg',
+                  : 'text-graphit/65 text-base opacity-60 sm:text-lg',
               ].join(' ')}
               style={{
                 animation: 'fade-in-up 700ms cubic-bezier(0.22,1,0.36,1) both',

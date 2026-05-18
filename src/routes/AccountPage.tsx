@@ -99,7 +99,7 @@ export function AccountPage() {
 
         {/* ─── 1 · Hero ──────────────────────────────────────────────── */}
         <section>
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.eyebrow}
           </p>
 
@@ -181,7 +181,7 @@ export function AccountPage() {
         <section className="mt-10 rounded-card border border-navy/15 bg-white p-6 sm:p-7">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
                 {labels.streakLabel}
               </div>
               <div className="mt-1 flex items-baseline gap-2">
@@ -192,7 +192,7 @@ export function AccountPage() {
                   {labels.streakDays(streak?.current ?? 0)}
                 </span>
               </div>
-              <div className="mt-1 font-sans text-xs text-graphit/55">
+              <div className="mt-1 font-sans text-xs text-graphit/65">
                 {(streak?.longest ?? 0) > 0
                   ? labels.streakLongest(streak?.longest ?? 0)
                   : labels.streakStart}
@@ -214,7 +214,7 @@ export function AccountPage() {
                       d.isToday ? 'ring-2 ring-gold/40 ring-offset-2 ring-offset-white' : '',
                     ].join(' ')}
                   />
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+                  <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                     {d.dayLabel(locale)}
                   </span>
                 </li>
@@ -253,7 +253,7 @@ export function AccountPage() {
                       <div className="truncate font-serif text-base text-navy">
                         {p.title}
                       </div>
-                      <div className="mt-0.5 font-sans text-xs text-graphit/55">
+                      <div className="mt-0.5 font-sans text-xs text-graphit/65">
                         {new Date(p.updatedAt).toLocaleDateString(locale, {
                           day: '2-digit',
                           month: 'short',
@@ -282,7 +282,7 @@ export function AccountPage() {
           <div className="mt-6 rounded-card border border-navy/15 bg-white p-6 sm:p-7">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
               <div>
-                <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+                <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
                   {labels.currentPlan}
                 </div>
                 <div className="mt-1 font-serif text-xl text-navy">{labels.planFree}</div>
@@ -334,7 +334,7 @@ export function AccountPage() {
             />
           </dl>
 
-          <p className="mt-3 font-sans text-xs leading-relaxed text-graphit/55">
+          <p className="mt-3 font-sans text-xs leading-relaxed text-graphit/65">
             {labels.editHint}
           </p>
         </section>
@@ -364,12 +364,12 @@ export function AccountPage() {
                       <div className="font-sans text-sm text-navy">
                         {labels.brainIdLabel} {i + 1}
                       </div>
-                      <div className="mt-0.5 truncate font-mono text-[11px] text-graphit/55">
+                      <div className="mt-0.5 truncate font-mono text-[11px] text-graphit/65">
                         {bid}
                       </div>
                     </div>
                     {isCurrent && (
-                      <span className="shrink-0 rounded-full bg-gold/15 px-2 py-0.5 font-sans text-[10px] uppercase tracking-widest text-gold">
+                      <span className="shrink-0 rounded-full bg-gold/15 px-2 py-0.5 font-sans text-[10px] uppercase tracking-widest text-gold-deep">
                         {labels.thisDevice}
                       </span>
                     )}
@@ -475,7 +475,7 @@ function buildLast7Days(activeDays: string[]): CalendarDay[] {
 
 function SectionEyebrow({ text }: { text: string }) {
   return (
-    <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+    <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
       § {text}
     </p>
   );
@@ -512,10 +512,10 @@ function StatCard({
       >
         {value}
       </div>
-      <div className="mt-3 font-sans text-[11px] uppercase tracking-widest text-gold">
+      <div className="mt-3 font-sans text-[11px] uppercase tracking-widest text-gold-deep">
         {label}
       </div>
-      <div className="mt-1 font-sans text-xs leading-relaxed text-graphit/55 group-hover:text-graphit/75">
+      <div className="mt-1 font-sans text-xs leading-relaxed text-graphit/65 group-hover:text-graphit/75">
         {hint}
       </div>
     </Link>
@@ -535,14 +535,14 @@ function AccountRow({
 }) {
   return (
     <div className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-      <dt className="shrink-0 font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+      <dt className="shrink-0 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
         {label}
       </dt>
       <dd
         className={[
           'truncate text-right',
           mono ? 'font-mono text-xs text-graphit/65' : 'font-serif text-base',
-          muted ? 'italic text-graphit/45' : 'text-navy',
+          muted ? 'italic text-graphit/65' : 'text-navy',
         ].join(' ')}
       >
         {value}

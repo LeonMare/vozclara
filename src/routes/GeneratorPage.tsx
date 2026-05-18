@@ -269,7 +269,7 @@ export function GeneratorPage() {
   return (
     <main id="main" className="bg-creme paper">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-16">
-        <div className="mb-8 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="mb-8 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {t.newPageTitle}
         </div>
 
@@ -286,6 +286,7 @@ export function GeneratorPage() {
                   inputMode="url"
                   autoComplete="off"
                   spellCheck={false}
+                  aria-label={t.heroUrlInputLabel}
                   placeholder={t.heroPlaceholder}
                   value={pasteValue}
                   onChange={(e) => setPasteValue(e.target.value)}
@@ -320,7 +321,7 @@ export function GeneratorPage() {
             </div>
 
             <div className="mt-10">
-              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {t.outputLangLabel}
               </div>
               <div className="mt-2">

@@ -186,10 +186,10 @@ export function ServerAudioPlayer({ pack, segments, onSegmentChange }: Props) {
         preload="auto"
       />
       <div className="mx-auto max-w-3xl px-5 py-4 sm:px-8 sm:py-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
           <div className="flex items-center gap-2">
             <span className="text-gold">{audioLabel(locale, 'kicker')}</span>
-            <span className="text-graphit/40">·</span>
+            <span className="text-graphit/65">·</span>
             <span>{audioLabel(locale, 'studioVoice')}</span>
             <span className="rounded-full bg-gold/15 px-1.5 py-0.5 text-[9px] text-navy">
               STUDIO
@@ -231,7 +231,7 @@ export function ServerAudioPlayer({ pack, segments, onSegmentChange }: Props) {
             type="button"
             onClick={() => handleSkip(-1)}
             aria-label="Skip back"
-            className="hidden h-9 w-9 items-center justify-center rounded-full text-graphit/55 transition hover:text-navy sm:inline-flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-full text-graphit/65 transition hover:text-navy sm:inline-flex"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
               <path d="M9 2L4 7l5 5V2z" fill="currentColor" />
@@ -242,7 +242,7 @@ export function ServerAudioPlayer({ pack, segments, onSegmentChange }: Props) {
             type="button"
             onClick={() => handleSkip(1)}
             aria-label="Skip forward"
-            className="hidden h-9 w-9 items-center justify-center rounded-full text-graphit/55 transition hover:text-navy sm:inline-flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-full text-graphit/65 transition hover:text-navy sm:inline-flex"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
               <path d="M5 2l5 5-5 5V2z" fill="currentColor" />
@@ -251,7 +251,7 @@ export function ServerAudioPlayer({ pack, segments, onSegmentChange }: Props) {
           </button>
 
           <div className="min-w-0 flex-1">
-            <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/45">
+            <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
               {audioLabel(locale, status)}
             </div>
             <p className="truncate font-serif text-sm italic text-navy sm:text-base">

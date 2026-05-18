@@ -64,7 +64,7 @@ export function ModePicker({ value, onChange, recommended }: Props) {
                 </span>
               )}
 
-              <div className={selected ? 'text-gold' : 'text-graphit/55 group-hover:text-gold'}>
+              <div className={selected ? 'text-gold' : 'text-graphit/65 group-hover:text-gold'}>
                 <ModeCipher mode={m} />
               </div>
 
@@ -110,7 +110,7 @@ function ModePreview({ mode, isHover }: { mode: Mode; isHover: boolean }) {
         <span className="text-gold">
           {isHover ? labels.headingHover : labels.headingActive}
         </span>
-        <span className="text-graphit/40">
+        <span className="text-graphit/65">
           {labels.modeLabel}: <span className="text-graphit/70">{labels.modes[mode]}</span>
         </span>
       </div>
@@ -122,7 +122,7 @@ function ModePreview({ mode, isHover }: { mode: Mode; isHover: boolean }) {
         <div className="grid gap-4 sm:grid-cols-2">
           {examples.map((ex, i) => (
             <div key={i} className="border-l-2 border-gold/40 pl-3.5">
-              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {ex.label}
               </div>
               <p className="mt-1.5 font-serif text-[14px] leading-snug text-navy sm:text-[15px]">

@@ -286,7 +286,7 @@ export function LibraryPage() {
             back into what they were just reading. */}
         {recentPacks.length > 1 && (
           <div className="mb-6">
-            <div className="mb-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+            <div className="mb-2 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
               {recentlyViewedLabel(locale)}
             </div>
             <div className="-mx-2 flex gap-3 overflow-x-auto px-2 pb-1">
@@ -359,7 +359,7 @@ export function LibraryPage() {
             shown when the library has at least one tagged pack. */}
         {tags.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="mr-1 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+            <span className="mr-1 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
               {tagFilterLabel(locale)}
             </span>
             {tags.map(({ tag, count }) => {
@@ -378,7 +378,7 @@ export function LibraryPage() {
                   ].join(' ')}
                 >
                   <span>{tag}</span>
-                  <span className="text-[10px] tabular-nums text-graphit/45">{count}</span>
+                  <span className="text-[10px] tabular-nums text-graphit/65">{count}</span>
                 </button>
               );
             })}
@@ -386,7 +386,7 @@ export function LibraryPage() {
               <button
                 type="button"
                 onClick={() => setActiveTags(new Set())}
-                className="ml-2 font-sans text-[11px] text-graphit/55 underline-offset-4 hover:text-navy hover:underline"
+                className="ml-2 font-sans text-[11px] text-graphit/65 underline-offset-4 hover:text-navy hover:underline"
               >
                 {clearTagsLabel(locale)}
               </button>
@@ -396,7 +396,7 @@ export function LibraryPage() {
 
         {/* Grid */}
         {filtered.length === 0 ? (
-          <p className="py-12 text-center font-serif italic text-graphit/55">— —</p>
+          <p className="py-12 text-center font-serif italic text-graphit/65">— —</p>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => {
@@ -478,13 +478,13 @@ export function LibraryPage() {
                   <div className="mt-3 h-px w-6 bg-gold/50" aria-hidden />
 
                   {/* Meta row: idea count + date + genre */}
-                  <div className="mt-3 flex items-baseline justify-between gap-2 font-sans text-[11px] text-graphit/55">
+                  <div className="mt-3 flex items-baseline justify-between gap-2 font-sans text-[11px] text-graphit/65">
                     <span className="inline-flex items-baseline gap-1 tabular-nums">
                       <span className="font-medium text-navy">{view.keyIdeas.length}</span>
-                      <span className="text-graphit/45">·</span>
+                      <span className="text-graphit/65">·</span>
                       <span className="italic">{t.genreNames[p.genre] ?? p.genre}</span>
                     </span>
-                    <span className="tabular-nums text-graphit/45">
+                    <span className="tabular-nums text-graphit/65">
                       {new Date(p.createdAt).toLocaleDateString(locale, { day: '2-digit', month: 'short' })}
                     </span>
                   </div>
@@ -559,7 +559,7 @@ function FilterPill({
 }) {
   return (
     <label className="inline-flex items-center gap-2 rounded-card border border-navy/15 bg-white px-3 py-2 font-sans text-xs text-graphit/70">
-      <span className="uppercase tracking-widest text-[10px] text-graphit/50">{label}</span>
+      <span className="uppercase tracking-widest text-[10px] text-graphit/65">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -748,13 +748,13 @@ function RatingBadge({ agg }: { agg: RatingAggregate | undefined }) {
       <span className="inline-flex items-baseline gap-1.5">
         <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-gold" />
         <span className="font-medium text-navy tabular-nums">{approval}%</span>
-        <span className="text-graphit/40 tabular-nums">· {total}</span>
+        <span className="text-graphit/65 tabular-nums">· {total}</span>
       </span>
       {stars !== null && (
         <span className="inline-flex items-baseline gap-1 tabular-nums">
           <span className="text-gold">★</span>
           <span className="text-navy">{stars.toFixed(1)}</span>
-          <span className="text-graphit/40">· {agg.starCount}</span>
+          <span className="text-graphit/65">· {agg.starCount}</span>
         </span>
       )}
     </div>

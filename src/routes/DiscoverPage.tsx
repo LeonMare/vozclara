@@ -60,7 +60,7 @@ export function DiscoverPage() {
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 pb-10 pt-10 sm:px-8 sm:pb-14 sm:pt-14">
         <div className="text-center sm:text-left">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.eyebrow}
           </div>
           <h1 className="mt-5 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -140,7 +140,7 @@ function DiscoverRow({
             {stars !== null && (
               <span>
                 <span className="text-gold">★</span> {stars.toFixed(1)}{' '}
-                <span className="text-graphit/45">· {agg.starCount}</span>
+                <span className="text-graphit/65">· {agg.starCount}</span>
               </span>
             )}
             {topSignal && (
@@ -150,7 +150,7 @@ function DiscoverRow({
             )}
           </div>
         </div>
-        <div className="flex items-center font-sans text-xs text-graphit/55 transition group-hover:text-navy sm:self-center">
+        <div className="flex items-center font-sans text-xs text-graphit/65 transition group-hover:text-navy sm:self-center">
           {labels.openCta} →
         </div>
       </Link>

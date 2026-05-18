@@ -12,7 +12,7 @@ export function HowItWorks() {
     <section className="bg-white/70 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <header className="mb-12 sm:mb-16">
-          <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § 04
           </div>
           <h2 className="font-serif text-3xl text-navy sm:text-4xl">

@@ -67,7 +67,7 @@ export function Hero() {
               <div className="hidden sm:block">
                 <BrandMark variant="monogram" size="xl" tone="navy" decorative />
               </div>
-              <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold sm:mt-4">
+              <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep sm:mt-4">
                 {t.heroEyebrow}
               </div>
             </div>
@@ -103,6 +103,7 @@ export function Hero() {
                   inputMode="url"
                   autoComplete="off"
                   spellCheck={false}
+                  aria-label={t.heroUrlInputLabel}
                   placeholder={t.heroPlaceholder}
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
@@ -123,7 +124,7 @@ export function Hero() {
                 </button>
               </div>
               {/* Trust note — immediately under the input, never far from the CTA. */}
-              <p className="mt-2.5 font-sans text-[12px] text-graphit/55">
+              <p className="mt-2.5 font-sans text-[12px] text-graphit/65">
                 {trustNote(locale)}
               </p>
               {error && (
@@ -144,7 +145,7 @@ export function Hero() {
               </button>
               <Link
                 to="/pack/sample"
-                className="text-graphit/55 italic underline-offset-4 transition hover:text-gold hover:underline"
+                className="text-graphit/65 italic underline-offset-4 transition hover:text-gold hover:underline"
               >
                 {t.trySamplePack}
               </Link>

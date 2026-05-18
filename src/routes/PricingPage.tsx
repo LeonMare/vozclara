@@ -40,7 +40,7 @@ export function PricingPage() {
           inside. Screen readers and SEO crawlers expect one h1 per
           page; this surfaces the page intent before the grid. */}
       <section className="mx-auto max-w-6xl px-5 pb-2 pt-8 sm:px-8 sm:pt-12">
-        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.eyebrow}
         </p>
         <h1 className="mt-4 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -191,13 +191,13 @@ function FounderBanner({ locale }: { locale: string }) {
           <span className="font-serif text-4xl text-navy tabular-nums sm:text-5xl">
             {status?.claimed ?? '—'}
           </span>
-          <span className="font-serif text-xl text-graphit/55 tabular-nums sm:text-2xl">
+          <span className="font-serif text-xl text-graphit/65 tabular-nums sm:text-2xl">
             / 100
           </span>
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.eyebrow}
           </div>
           <h2 className="mt-2 font-serif text-2xl leading-tight text-navy sm:text-3xl">

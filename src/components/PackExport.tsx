@@ -186,7 +186,7 @@ function MenuItem({
       className="flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-left font-sans text-sm text-navy transition hover:bg-creme/60"
     >
       <span>{label}</span>
-      {hint && <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/45">{hint}</span>}
+      {hint && <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">{hint}</span>}
     </button>
   );
 }

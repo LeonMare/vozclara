@@ -183,7 +183,7 @@ export function ShadowPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">
@@ -205,7 +205,7 @@ export function ShadowPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">
@@ -231,7 +231,7 @@ export function ShadowPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">
@@ -265,14 +265,14 @@ export function ShadowPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-2xl px-5 pb-16 pt-6 sm:px-8 sm:pt-10">
-        <div className="flex items-center justify-between font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+        <div className="flex items-center justify-between font-sans text-[11px] uppercase tracking-widest text-graphit/65">
           <span>{labels.eyebrow}</span>
           <span>{progress}</span>
         </div>
 
         {/* Sentence card */}
         <div className="mt-6 rounded-card border border-navy/15 bg-white px-6 py-10 text-center shadow-card sm:px-10 sm:py-14">
-          <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/40">
+          <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
             {pack.sourceLang.toUpperCase()}
           </p>
           <p className="mt-4 font-serif text-2xl leading-snug text-navy sm:text-3xl">
@@ -281,7 +281,7 @@ export function ShadowPage() {
           {current.translated && (
             <>
               <hr className="mx-auto my-6 w-12 border-t border-gold" />
-              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/40">
+              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {pack.outputLang.toUpperCase()}
               </p>
               <p className="mt-2 font-sans text-base italic text-graphit/70">
@@ -311,11 +311,11 @@ export function ShadowPage() {
                   ? labels.verdictGood
                   : labels.verdictTryAgain}
               </p>
-              <p className="font-sans text-xs text-graphit/55">
+              <p className="font-sans text-xs text-graphit/65">
                 {Math.round(match.score * 100)} %
               </p>
             </div>
-            <p className="mt-2 font-sans text-xs uppercase tracking-widest text-graphit/45">
+            <p className="mt-2 font-sans text-xs uppercase tracking-widest text-graphit/65">
               {labels.youSaid}
             </p>
             <p className="mt-1 font-serif italic text-graphit/80">{spoken || '—'}</p>
@@ -372,7 +372,7 @@ export function ShadowPage() {
         </div>
 
         {!caps.recognize && (
-          <p className="mt-4 text-center font-sans text-xs text-graphit/55">
+          <p className="mt-4 text-center font-sans text-xs text-graphit/65">
             {labels.recognizeHint}
           </p>
         )}
@@ -446,7 +446,7 @@ function SummaryStat({ value, label, tone }: { value: number; label: string; ton
   return (
     <div className="rounded-card border border-navy/15 bg-white px-3 py-4">
       <p className={`font-serif text-3xl leading-none ${toneClass}`}>{value}</p>
-      <p className="mt-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">{label}</p>
+      <p className="mt-2 font-sans text-[10px] uppercase tracking-widest text-graphit/65">{label}</p>
     </div>
   );
 }

@@ -133,7 +133,7 @@ export function NotificationToggle() {
             {t.onShort}
           </span>
         ) : (
-          <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/45">
+          <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
             {t.offShort}
           </span>
         )}

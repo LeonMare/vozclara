@@ -57,7 +57,7 @@ export function ProgressPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">
@@ -78,7 +78,7 @@ export function ProgressPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-4xl px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
-        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           {labels.eyebrow}
         </p>
         <h1 className="mt-3 font-serif text-3xl text-navy sm:text-4xl">{labels.title}</h1>
@@ -97,7 +97,7 @@ export function ProgressPage() {
         {/* Per-language breakdown — CEFR estimate + counts. */}
         <section className="mt-12">
           <h2 className="font-serif text-xl text-navy sm:text-2xl">{labels.langsTitle}</h2>
-          <p className="mt-2 max-w-2xl font-sans text-xs leading-relaxed text-graphit/55">
+          <p className="mt-2 max-w-2xl font-sans text-xs leading-relaxed text-graphit/65">
             {labels.cefrCaveat}
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -144,7 +144,7 @@ function KpiCard({
         (accent ? 'border-gold/50' : 'border-navy/15')
       }
     >
-      <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+      <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
         {label}
       </p>
       <p
@@ -154,7 +154,7 @@ function KpiCard({
       >
         {value}
       </p>
-      <p className="mt-1 font-sans text-[11px] text-graphit/55">{hint}</p>
+      <p className="mt-1 font-sans text-[11px] text-graphit/65">{hint}</p>
     </div>
   );
 }
@@ -175,7 +175,7 @@ function LanguageRow({ row, locale }: { row: LanguageProgress; locale: string })
           {row.cefr}
         </span>
       </div>
-      <p className="mt-1 font-sans text-[11px] text-graphit/55">{cefrDescriptor}</p>
+      <p className="mt-1 font-sans text-[11px] text-graphit/65">{cefrDescriptor}</p>
 
       <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-navy/10">
         <div className="h-full bg-gold" style={{ width: `${pct}%` }} aria-hidden />

@@ -35,7 +35,7 @@ export function CuratedSection({ items, locale, variant }: Props) {
       aria-labelledby="curated-heading"
     >
       <header className={variant === 'empty' ? 'text-center' : ''}>
-        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           {t.eyebrow}
         </p>
         <h2
@@ -82,7 +82,7 @@ function CuratedCard({ item, locale }: { item: CuratedItem; locale: string }) {
       to={target}
       className="group flex flex-col gap-2 rounded-card border border-navy/15 bg-white px-4 py-4 transition hover:border-gold"
     >
-      <div className="flex items-center justify-between font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+      <div className="flex items-center justify-between font-sans text-[10px] uppercase tracking-widest text-graphit/65">
         <span>{item.source}</span>
         <span>{date}</span>
       </div>
@@ -92,7 +92,7 @@ function CuratedCard({ item, locale }: { item: CuratedItem; locale: string }) {
       <p className="line-clamp-2 font-sans text-xs leading-relaxed text-graphit/70">
         {item.excerpt}
       </p>
-      <div className="mt-1 flex items-center justify-between font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+      <div className="mt-1 flex items-center justify-between font-sans text-[10px] uppercase tracking-widest text-graphit/65">
         <span>{modeLabel}</span>
         <span>
           {item.sourceLang.toUpperCase()} → {item.packLangs.map((l) => l.toUpperCase()).join(' · ')}

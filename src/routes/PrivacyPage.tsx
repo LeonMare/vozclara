@@ -45,7 +45,7 @@ export function PrivacyPage() {
 
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 pb-10 pt-10 sm:px-8 sm:pb-14 sm:pt-14">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.sectionLabel}
         </div>
         <h1 className="mt-5 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -55,7 +55,7 @@ export function PrivacyPage() {
         <p className="mt-6 font-serif text-xl leading-relaxed text-graphit/85 sm:text-2xl">
           {labels.heroLead}
         </p>
-        <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/45">
+        <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
           {labels.lastUpdatedLabel} {labels.lastUpdated}
         </p>
       </section>
@@ -64,7 +64,7 @@ export function PrivacyPage() {
       {labels.sections.map((s, i) => (
         <section key={i} className={i % 2 === 0 ? 'bg-white/70 py-12 sm:py-16' : 'py-12 sm:py-16'}>
           <div className="mx-auto max-w-3xl px-5 sm:px-8">
-            <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+            <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
               · {String(i + 1).padStart(2, '0')}
             </div>
             <h2 className="mt-3 font-serif text-2xl leading-tight text-navy sm:text-3xl">
@@ -96,7 +96,7 @@ export function PrivacyPage() {
           <p className="font-serif text-lg italic leading-relaxed text-graphit/75 sm:text-xl">
             {labels.contactBody}
           </p>
-          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/45">
+          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
             — Christian Leon · LEON MARÉ · Frankfurt
           </p>
         </div>

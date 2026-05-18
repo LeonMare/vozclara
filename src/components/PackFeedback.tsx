@@ -114,7 +114,7 @@ export function PackFeedback({ pack }: Props) {
       {vote === 'not_useful' && (
         <div className="mt-5 space-y-4">
           <div>
-            <div className="mb-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+            <div className="mb-2 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
               {labels.reasonsLabel}
             </div>
             <div className="flex flex-wrap gap-2">
@@ -143,7 +143,7 @@ export function PackFeedback({ pack }: Props) {
           <div>
             <label
               htmlFor="feedback-note"
-              className="mb-2 block font-sans text-[10px] uppercase tracking-widest text-graphit/55"
+              className="mb-2 block font-sans text-[10px] uppercase tracking-widest text-graphit/65"
             >
               {labels.noteLabel}
             </label>
@@ -157,7 +157,7 @@ export function PackFeedback({ pack }: Props) {
               className="w-full rounded-card border border-navy/15 bg-white px-3 py-2 font-sans text-sm text-graphit outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
             />
             {noteSaved && (
-              <p className="mt-1 font-sans text-[11px] italic text-graphit/55">
+              <p className="mt-1 font-sans text-[11px] italic text-graphit/65">
                 {labels.noteSaved}
               </p>
             )}
@@ -177,7 +177,7 @@ export function PackFeedback({ pack }: Props) {
         </div>
       )}
 
-      <p className="mt-5 border-t border-navy/8 pt-3 font-sans text-[11px] italic text-graphit/45">
+      <p className="mt-5 border-t border-navy/8 pt-3 font-sans text-[11px] italic text-graphit/65">
         {labels.privacyNote}
       </p>
     </section>

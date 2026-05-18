@@ -36,7 +36,7 @@ export function NotFoundPage() {
     <main id="main" className="bg-creme paper min-h-screen">
       <section className="mx-auto max-w-xl px-5 pb-16 pt-16 text-center sm:px-8 sm:pt-24">
         <BrandMark variant="monogram" size="lg" tone="gold" decorative />
-        <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.eyebrow}
         </div>
         <h1 className="mt-4 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -48,7 +48,7 @@ export function NotFoundPage() {
           {labels.heroBody}
         </p>
 
-        <p className="mt-4 font-mono text-[12px] leading-tight text-graphit/45 break-all">
+        <p className="mt-4 font-mono text-[12px] leading-tight text-graphit/65 break-all">
           {location.pathname}
         </p>
 

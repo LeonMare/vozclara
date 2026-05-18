@@ -144,12 +144,12 @@ export function RatingPanel({
     <section className="mt-6 rounded-card border border-navy/10 bg-white p-5 sm:p-6">
       {/* Eyebrow + summary line */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.eyebrow}
         </div>
         <div className="font-sans text-[12px] text-graphit/65">
           {total === 0 ? (
-            <span className="italic text-graphit/50">{labels.beTheFirst}</span>
+            <span className="italic text-graphit/65">{labels.beTheFirst}</span>
           ) : (
             <>
               <span className="font-medium text-navy">{total}</span>{' '}
@@ -188,7 +188,7 @@ export function RatingPanel({
 
       {/* Signals — 4 quick-tap chips */}
       <div className="mt-5">
-        <div className="font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+        <div className="font-sans text-[11px] uppercase tracking-widest text-graphit/65">
           {labels.signalsHeading}
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -231,13 +231,13 @@ export function RatingPanel({
           nudge with no pressure, no modal hijack. */}
       <div className="mt-5">
         <div className="flex items-baseline justify-between gap-3">
-          <div className="font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+          <div className="font-sans text-[11px] uppercase tracking-widest text-graphit/65">
             {labels.starsHeading}
           </div>
           {stars !== null && (
             <div className="font-serif text-sm text-navy">
               <span className="text-gold">★</span> {stars.toFixed(1)}{' '}
-              <span className="font-sans text-[11px] text-graphit/55">
+              <span className="font-sans text-[11px] text-graphit/65">
                 · {agg!.starCount} {agg!.starCount === 1 ? labels.starsCountSingular : labels.starsCountPlural}
               </span>
             </div>
@@ -268,7 +268,7 @@ export function RatingPanel({
                 type="button"
                 onClick={() => onStars(myVote.stars!)}
                 disabled={submitting}
-                className="ml-2 self-center font-sans text-[11px] text-graphit/55 underline-offset-4 hover:text-navy hover:underline"
+                className="ml-2 self-center font-sans text-[11px] text-graphit/65 underline-offset-4 hover:text-navy hover:underline"
               >
                 {labels.starsClear}
               </button>
@@ -302,7 +302,7 @@ export function RatingPanel({
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder={labels.reviewPlaceholder}
-                className="w-full rounded-card border border-navy/15 bg-white px-3 py-2 font-serif text-sm text-graphit placeholder:text-graphit/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-full rounded-card border border-navy/15 bg-white px-3 py-2 font-serif text-sm text-graphit placeholder:text-graphit/65 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
               />
               <div className="mt-2 flex items-baseline justify-end gap-3">
                 <button
@@ -327,7 +327,7 @@ export function RatingPanel({
             </>
           ) : myVote?.review ? (
             <div>
-              <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
                 {labels.yourReview}
               </div>
               <p className="mt-1.5 font-serif italic leading-relaxed text-graphit/80">
@@ -457,7 +457,7 @@ function SignalChip({
       <span className="text-[14px] leading-none">{glyph}</span>
       <span>{label}</span>
       {count > 0 && (
-        <span className="ml-0.5 text-graphit/45 tabular-nums">· {count}</span>
+        <span className="ml-0.5 text-graphit/65 tabular-nums">· {count}</span>
       )}
     </button>
   );

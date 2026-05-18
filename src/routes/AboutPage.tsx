@@ -35,7 +35,7 @@ export function AboutPage() {
 
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 pb-10 pt-10 sm:px-8 sm:pb-14 sm:pt-14">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.aboutSection}
         </div>
         <h1 className="mt-5 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">
@@ -50,7 +50,7 @@ export function AboutPage() {
       {/* Origin */}
       <section className="bg-white/70 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">§ {labels.originSection}</div>
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">§ {labels.originSection}</div>
           <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
             {labels.originHeading}
           </h2>
@@ -66,7 +66,7 @@ export function AboutPage() {
       {/* LEON MARÉ context */}
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">§ {labels.parentSection}</div>
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">§ {labels.parentSection}</div>
           <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
             {labels.parentHeading}
           </h2>
@@ -82,7 +82,7 @@ export function AboutPage() {
       {/* Roadmap */}
       <section className="bg-white/70 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">§ {labels.roadmapSection}</div>
+          <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">§ {labels.roadmapSection}</div>
           <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
             {labels.roadmapHeading}
           </h2>
@@ -116,7 +116,7 @@ export function AboutPage() {
           <p className="mx-auto mt-6 max-w-2xl font-serif text-lg italic leading-relaxed text-graphit/75 sm:text-xl">
             {labels.signatureBody}
           </p>
-          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/45">
+          <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
             — Christian Leon · LEON MARÉ · Frankfurt
           </p>
 

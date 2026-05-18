@@ -115,7 +115,7 @@ export function ReviewPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">{labels.emptyTitle}</h1>
@@ -135,7 +135,7 @@ export function ReviewPage() {
     return (
       <main className="bg-creme paper">
         <div className="mx-auto max-w-2xl px-5 pb-16 pt-10 text-center sm:px-8">
-          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             {labels.eyebrow}
           </p>
           <h1 className="mt-6 font-serif text-3xl text-navy sm:text-4xl">{labels.doneTitle}</h1>
@@ -145,11 +145,11 @@ export function ReviewPage() {
 
           {streak && (
             <div className="mx-auto mt-10 max-w-sm rounded-card border border-navy/15 bg-white px-6 py-5">
-              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {labels.streakLabel}
               </p>
               <p className="mt-2 font-serif text-3xl text-navy">{streak.current}</p>
-              <p className="mt-1 font-sans text-xs text-graphit/55">
+              <p className="mt-1 font-sans text-xs text-graphit/65">
                 {labels.streakSub(streak.longest)}
               </p>
             </div>
@@ -184,19 +184,19 @@ export function ReviewPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-2xl px-5 pb-16 pt-6 sm:px-8 sm:pt-10">
-        <div className="flex items-center justify-between font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+        <div className="flex items-center justify-between font-sans text-[11px] uppercase tracking-widest text-graphit/65">
           <span>{labels.eyebrow}</span>
           <span>{progress}</span>
         </div>
 
         {/* Card */}
         <div className="mt-6 rounded-card border border-navy/15 bg-white px-6 py-10 text-center shadow-card sm:px-10 sm:py-14">
-          <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/40">
+          <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
             {card.sourceLang.toUpperCase()}
           </p>
           <h1 className="mt-3 font-serif text-3xl text-navy sm:text-4xl">{card.word}</h1>
           {card.partOfSpeech && (
-            <p className="mt-2 font-sans text-xs uppercase tracking-widest text-graphit/55">
+            <p className="mt-2 font-sans text-xs uppercase tracking-widest text-graphit/65">
               {card.partOfSpeech}
             </p>
           )}
@@ -204,7 +204,7 @@ export function ReviewPage() {
           {revealed && (
             <>
               <hr className="mx-auto my-7 w-12 border-t border-gold" />
-              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/40">
+              <p className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {card.outputLang.toUpperCase()}
               </p>
               <p className="mt-2 font-serif text-2xl text-navy sm:text-3xl">{card.translation}</p>
@@ -213,7 +213,7 @@ export function ReviewPage() {
                   {card.context}
                 </p>
               )}
-              <p className="mt-6 font-sans text-[10px] uppercase tracking-widest text-graphit/40">
+              <p className="mt-6 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {labels.fromPack}: {card.packTitle}
               </p>
             </>
@@ -247,7 +247,7 @@ export function ReviewPage() {
         )}
 
         {streak && streak.current > 0 && (
-          <p className="mt-6 text-center font-sans text-xs text-graphit/55">
+          <p className="mt-6 text-center font-sans text-xs text-graphit/65">
             {labels.streakLine(streak.current)}
           </p>
         )}

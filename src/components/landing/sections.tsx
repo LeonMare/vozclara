@@ -78,7 +78,7 @@ export function KnowledgePackPreview() {
               style={{ animationDelay: `${i * 50}ms` }}
             >
               <span className="corner-tr" /><span className="corner-bl" />
-              <div className="font-sans text-[10px] uppercase tracking-widest text-gold tabular-nums">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep tabular-nums">
                 · {String(i + 1).padStart(2, '0')}
               </div>
               <h3 className="mt-2 font-serif text-xl text-navy">{s.label}</h3>
@@ -122,12 +122,12 @@ export function LibraryPreview() {
             <div key={i} className="card-hover rounded-card border border-navy/10 bg-creme p-5 sm:p-6">
               <div className="flex items-center justify-between font-sans text-[10px] uppercase tracking-widest">
                 <span className="rounded-full bg-navy/8 px-2 py-0.5 text-graphit/65">{m.mode}</span>
-                <span className="text-graphit/45 tabular-nums">{m.lang}</span>
+                <span className="text-graphit/65 tabular-nums">{m.lang}</span>
               </div>
               <h3 className="mt-3 font-serif text-lg leading-snug text-navy">{m.title}</h3>
               <div className="mt-3 h-px w-6 bg-gold/50" aria-hidden />
               <div className="mt-3 inline-flex items-baseline gap-1.5 font-sans text-[11px]">
-                <span className="text-graphit/40">·</span>
+                <span className="text-graphit/65">·</span>
                 <span className="italic text-graphit/65">{m.tag}</span>
               </div>
             </div>
@@ -153,7 +153,7 @@ export function AskMyKnowledge() {
         aria-hidden
       />
       <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § 07  ·  {t.askEyebrow}
         </div>
         <h2 className="mt-5 font-serif text-3xl leading-tight text-creme sm:text-5xl">
@@ -192,7 +192,7 @@ export function LanguageSection() {
         <div className="mt-8 font-inscriptional text-2xl tracking-[0.25em] text-navy sm:text-4xl">
           {t.langActive}
         </div>
-        <div className="mt-5 font-sans text-sm tracking-widest text-graphit/55">
+        <div className="mt-5 font-sans text-sm tracking-widest text-graphit/65">
           {t.langSoon}
         </div>
       </div>
@@ -234,12 +234,12 @@ export function PricingPreview() {
                     : 'border border-navy/10 bg-creme hover:border-gold/50',
                 ].join(' ')}
               >
-                <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+                <div className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                   {tier.name}
                 </div>
                 <div className="mt-3 flex items-baseline gap-1">
                   <span className="font-serif text-4xl text-navy">{tier.price}</span>
-                  <span className="font-sans text-xs text-graphit/55">{tier.period}</span>
+                  <span className="font-sans text-xs text-graphit/65">{tier.period}</span>
                 </div>
                 <p className="mt-2 font-serif italic text-sm text-graphit/65">{tier.blurb}</p>
                 <div className="mt-4 h-px w-8 bg-gold/50" aria-hidden />
@@ -276,7 +276,7 @@ export function PricingPreview() {
         </div>
 
         {/* Honest tag — say it out loud */}
-        <p className="mt-8 text-center font-serif italic text-sm text-graphit/55">
+        <p className="mt-8 text-center font-serif italic text-sm text-graphit/65">
           {ctaLabels.disclaimer}
         </p>
       </div>
@@ -520,7 +520,7 @@ function SectionEyebrow({ number, center = false }: { number: string; center?: b
   return (
     <div
       className={[
-        'mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold',
+        'mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep',
         center ? 'mx-auto' : '',
       ].join(' ')}
     >
@@ -559,7 +559,7 @@ export function FounderNote() {
         <p className="mx-auto mt-6 max-w-2xl font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
           {note[locale]}
         </p>
-        <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/45">
+        <p className="mt-5 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
           — Christian Leon · LEON MARÉ · Frankfurt
         </p>
       </div>
@@ -607,7 +607,7 @@ export function LandingFooter() {
 
           {cols.groups.map((g, gi) => (
             <div key={gi}>
-              <div className="font-sans text-[10px] uppercase tracking-widest text-gold">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-gold-deep">
                 {g.heading}
               </div>
               <ul className="mt-4 space-y-2.5 font-sans text-sm text-graphit/75">
@@ -638,7 +638,7 @@ export function LandingFooter() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-baseline justify-between gap-3 border-t border-navy/8 pt-6 font-sans text-[11px] tracking-wide text-graphit/55 sm:flex-row">
+        <div className="mt-10 flex flex-col items-baseline justify-between gap-3 border-t border-navy/8 pt-6 font-sans text-[11px] tracking-wide text-graphit/65 sm:flex-row">
           <div className="italic">{t.footerBuiltBy}</div>
           <div className="wordmark text-[10px]">{t.footerTagline}</div>
         </div>
@@ -846,7 +846,7 @@ export function AudienceTiles() {
                     {t.title}
                   </h3>
                   {isSelected && (
-                    <span className="ml-auto rounded-full bg-gold/15 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold">
+                    <span className="ml-auto rounded-full bg-gold/15 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold-deep">
                       {labels.selectedBadge}
                     </span>
                   )}
@@ -868,7 +868,7 @@ export function AudienceTiles() {
                 <span
                   className={[
                     'mt-5 font-sans text-xs underline-offset-4 transition',
-                    isSelected ? 'text-gold' : 'text-graphit/55 group-hover:text-navy group-hover:underline',
+                    isSelected ? 'text-gold' : 'text-graphit/65 group-hover:text-navy group-hover:underline',
                   ].join(' ')}
                 >
                   {isSelected ? labels.confirmed : labels.pickCta}

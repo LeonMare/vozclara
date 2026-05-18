@@ -228,7 +228,7 @@ export function PackPage() {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="font-sans text-xs text-graphit/45 underline-offset-4 hover:text-red-700 hover:underline"
+                className="font-sans text-xs text-graphit/65 underline-offset-4 hover:text-red-700 hover:underline"
               >
                 {t.packDelete}
               </button>
@@ -247,7 +247,7 @@ export function PackPage() {
               enough to read as a signal, not as decoration. */}
           <TopRatedPill agg={headerRating} locale={locale} />
           <span className="inline-flex items-center gap-1.5 rounded-full bg-navy/8 px-2.5 py-1 text-graphit/70">
-            <span className="text-graphit/50">{pack.sourceLang.toUpperCase()}</span>
+            <span className="text-graphit/65">{pack.sourceLang.toUpperCase()}</span>
             <span className="text-gold/70">→</span>
             <span className="font-medium text-navy">{pack.outputLang.toUpperCase()}</span>
           </span>
@@ -264,7 +264,7 @@ export function PackPage() {
               {pack.difficulty}
             </span>
           )}
-          <span className="tabular-nums text-graphit/55">
+          <span className="tabular-nums text-graphit/65">
             {new Date(pack.createdAt).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' })}
           </span>
         </div>
@@ -320,7 +320,7 @@ export function PackPage() {
                     onClick={() => setTab(k)}
                     className={[
                       'relative whitespace-nowrap px-3 py-3.5 font-sans transition-colors',
-                      isActive ? 'text-navy' : 'text-graphit/55 hover:text-navy',
+                      isActive ? 'text-navy' : 'text-graphit/65 hover:text-navy',
                     ].join(' ')}
                   >
                     <span className={[
@@ -328,7 +328,7 @@ export function PackPage() {
                       isActive ? 'font-medium' : '',
                     ].join(' ')}>{t.packTabs[k]}</span>
                     {count > 0 && (
-                      <span className="ml-1.5 text-[11px] tabular-nums text-graphit/45">
+                      <span className="ml-1.5 text-[11px] tabular-nums text-graphit/65">
                         {count}
                       </span>
                     )}
@@ -370,14 +370,14 @@ export function PackPage() {
                       {t.packTabs[k]}
                     </span>
                     {count > 0 && (
-                      <span className="font-sans text-[11px] tabular-nums text-graphit/55">
+                      <span className="font-sans text-[11px] tabular-nums text-graphit/65">
                         {count}
                       </span>
                     )}
                   </span>
                   <span className={[
                     'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-all duration-200',
-                    isOpen ? 'bg-gold/15 text-gold rotate-180' : 'text-graphit/45',
+                    isOpen ? 'bg-gold/15 text-gold rotate-180' : 'text-graphit/65',
                   ].join(' ')}>
                     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
                       <path d="M2 4 L6 8 L10 4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -440,7 +440,7 @@ function LanguageSwitcher({
   return (
     <div className="mt-5 flex flex-wrap items-center gap-3 rounded-card border border-navy/10 bg-white/70 px-4 py-2.5">
       {/* Already-materialised translations — instant switch */}
-      <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+      <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
         {viewInLabel(locale)}
       </span>
       <div className="flex flex-wrap gap-1.5">
@@ -470,7 +470,7 @@ function LanguageSwitcher({
       {!hideAddCta && missing.length > 0 && (
         <>
           <span className="hidden text-navy/20 sm:inline">·</span>
-          <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+          <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
             {addLanguageLabel(locale)}
           </span>
           <div className="flex flex-wrap gap-1.5">
@@ -478,7 +478,7 @@ function LanguageSwitcher({
               <Link
                 key={l}
                 to={`/new?v=${pack.source.videoId}&lang=${l}&mode=${pack.mode}&packId=${pack.id}`}
-                className="rounded-card border border-dashed border-navy/20 bg-white px-2.5 py-1 font-sans text-xs uppercase tracking-widest text-graphit/55 transition hover:border-gold hover:text-navy"
+                className="rounded-card border border-dashed border-navy/20 bg-white px-2.5 py-1 font-sans text-xs uppercase tracking-widest text-graphit/65 transition hover:border-gold hover:text-navy"
                 title={addLanguageTooltip(locale, l)}
               >
                 + {l.toUpperCase()}
@@ -654,7 +654,7 @@ function SummaryTab({ view }: { view: PackTranslation }) {
     <div>
       {tldr && (
         <div className="mb-6 rounded-card border-l-2 border-gold bg-creme/40 px-5 py-4">
-          <div className="font-sans text-[10px] uppercase tracking-[0.3em] text-gold">
+          <div className="font-sans text-[10px] uppercase tracking-[0.3em] text-gold-deep">
             TL;DR
           </div>
           <p className="mt-2 font-serif text-lg leading-snug text-navy sm:text-xl">
@@ -725,7 +725,7 @@ function VocabularyTab({ view }: { view: PackTranslation }) {
           <div className="flex flex-wrap items-baseline gap-3">
             <span className="font-serif text-xl text-navy">{v.word}</span>
             {v.partOfSpeech && (
-              <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/45">
+              <span className="font-sans text-[10px] uppercase tracking-widest text-graphit/65">
                 {v.partOfSpeech}
               </span>
             )}
@@ -829,7 +829,7 @@ function QuotesTab({
         <blockquote key={i} className="group relative border-l-2 border-gold/50 pl-5 sm:pl-6">
           <p className="pr-12 font-serif text-xl italic leading-snug text-navy sm:text-2xl">“{q.text}”</p>
           {(q.speaker || q.timestampSec) && (
-            <footer className="mt-2 font-sans text-[11px] uppercase tracking-widest text-graphit/55">
+            <footer className="mt-2 font-sans text-[11px] uppercase tracking-widest text-graphit/65">
               {q.speaker && <span>{q.speaker}</span>}
               {q.speaker && q.timestampSec ? ' · ' : ''}
               {q.timestampSec ? (
@@ -848,7 +848,7 @@ function QuotesTab({
             </footer>
           )}
           {q.original && q.original !== q.text && (
-            <p className="mt-2 font-sans text-sm italic text-graphit/55">{q.original}</p>
+            <p className="mt-2 font-sans text-sm italic text-graphit/65">{q.original}</p>
           )}
 
           {/* Two affordances stack top-right: copy-citation + share-image.
@@ -976,7 +976,7 @@ function TranscriptTab({
   const labels = transcriptLabels(locale);
 
   if (segments.length === 0) {
-    return <p className="font-serif italic text-graphit/55">— —</p>;
+    return <p className="font-serif italic text-graphit/65">— —</p>;
   }
 
   // Filter to matching segments when there's a query. Case-insensitive
@@ -995,7 +995,7 @@ function TranscriptTab({
       {/* Search row — sticky inside the tab content so the input stays
           reachable while the reader scrolls through long transcripts. */}
       <div className="sticky top-[calc(104px+env(safe-area-inset-top))] z-10 mb-3 flex items-center gap-2 rounded-card border border-navy/15 bg-creme/95 px-3 py-2 backdrop-blur sm:top-[calc(112px+env(safe-area-inset-top))]">
-        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden className="shrink-0 text-graphit/55">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden className="shrink-0 text-graphit/65">
           <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
           <path d="M10.5 10.5 L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
         </svg>
@@ -1008,7 +1008,7 @@ function TranscriptTab({
         />
         {trimmed && (
           <>
-            <span className="font-sans text-[11px] tabular-nums text-graphit/55">
+            <span className="font-sans text-[11px] tabular-nums text-graphit/65">
               {matches.length === 1
                 ? `1 ${labels.matchSingular}`
                 : `${matches.length} ${labels.matchPlural}`}
@@ -1017,7 +1017,7 @@ function TranscriptTab({
               type="button"
               onClick={() => setQuery('')}
               aria-label={labels.clear}
-              className="rounded-card px-1.5 py-0.5 font-sans text-[11px] text-graphit/55 transition hover:text-navy"
+              className="rounded-card px-1.5 py-0.5 font-sans text-[11px] text-graphit/65 transition hover:text-navy"
             >
               ✕
             </button>
@@ -1027,7 +1027,7 @@ function TranscriptTab({
 
       {/* Empty-state for an active search with zero matches. */}
       {trimmed && matches.length === 0 ? (
-        <p className="py-10 text-center font-serif italic text-graphit/55">
+        <p className="py-10 text-center font-serif italic text-graphit/65">
           {labels.noMatches}
         </p>
       ) : (
@@ -1049,7 +1049,7 @@ function TranscriptTab({
                 <HighlightedText text={s.translated ?? s.text} query={trimmed} />
               </p>
               {s.translated && s.translated !== s.text && (
-                <p className="mt-1 font-sans text-xs leading-snug text-graphit/55">
+                <p className="mt-1 font-sans text-xs leading-snug text-graphit/65">
                   <HighlightedText text={s.text} query={trimmed} />
                 </p>
               )}
@@ -1161,7 +1161,7 @@ function ChaptersTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: nu
 }
 
 function Empty() {
-  return <p className="font-serif italic text-graphit/55">— —</p>;
+  return <p className="font-serif italic text-graphit/65">— —</p>;
 }
 
 function formatTime(seconds: number): string {
@@ -1198,7 +1198,7 @@ function TopRatedPill({ agg, locale }: { agg: RatingAggregate | null; locale: st
       >
         <span className="text-[12px] leading-none">★</span>
         <span className="font-medium text-navy tabular-nums">{stars.toFixed(1)}</span>
-        <span className="text-graphit/45">·</span>
+        <span className="text-graphit/65">·</span>
         <span>{labels.topRated}</span>
       </span>
     );
@@ -1210,7 +1210,7 @@ function TopRatedPill({ agg, locale }: { agg: RatingAggregate | null; locale: st
       title={`${approval}% · ${agg.up + agg.down} ${labels.votes}`}
     >
       <span className="font-medium text-navy tabular-nums">{approval}%</span>
-      <span className="text-graphit/45">·</span>
+      <span className="text-graphit/65">·</span>
       <span>{labels.topRated}</span>
     </span>
   );

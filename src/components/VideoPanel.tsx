@@ -58,7 +58,7 @@ export function VideoPanel({ source, seek }: Props) {
     <section ref={sectionRef} className="mt-6 overflow-hidden rounded-card border border-navy/10 bg-white">
       {/* Header row — always visible */}
       <div className="flex items-center justify-between gap-3 border-b border-navy/8 bg-creme/40 px-4 py-2.5 sm:px-5">
-        <div className="flex items-center gap-2 font-sans text-[10px] uppercase tracking-widest text-graphit/55">
+        <div className="flex items-center gap-2 font-sans text-[10px] uppercase tracking-widest text-graphit/65">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
           {labels.eyebrow}
         </div>

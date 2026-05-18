@@ -93,7 +93,7 @@ export function SignInPage() {
         {/* Editorial header — brand seal + eyebrow + heading */}
         <div className="text-center">
           <BrandMark variant="monogram" size="lg" tone="navy" decorative />
-          <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="mt-6 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § {labels.eyebrow}
           </div>
           <h1 className="mt-4 font-serif text-3xl leading-[1.1] text-navy sm:text-4xl">
@@ -134,7 +134,7 @@ export function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={submitting}
-                className="w-full rounded-card border border-navy/15 bg-white px-4 py-3 font-sans text-base text-graphit placeholder:text-graphit/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-60"
+                className="w-full rounded-card border border-navy/15 bg-white px-4 py-3 font-sans text-base text-graphit placeholder:text-graphit/65 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-60"
               />
               <button
                 type="submit"
@@ -145,7 +145,7 @@ export function SignInPage() {
               </button>
             </form>
 
-            <p className="mt-8 font-sans text-xs leading-relaxed text-graphit/55">
+            <p className="mt-8 font-sans text-xs leading-relaxed text-graphit/65">
               {labels.privacyNote}{' '}
               <Link to="/privacy" className="underline-offset-4 hover:text-navy hover:underline">
                 {labels.privacyLink}
@@ -167,7 +167,7 @@ function SentState({ labels, email }: { labels: SignInLabels; email: string }) {
           {labels.sentLead}
         </p>
         <p className="mt-3 font-sans text-sm break-all text-graphit/70">
-          <span className="text-graphit/45">→ </span>
+          <span className="text-graphit/65">→ </span>
           {email}
         </p>
         <div className="mt-6 h-px w-12 bg-gold" aria-hidden />

@@ -90,7 +90,7 @@ export function SeeTheAIWork() {
     <section className="bg-creme paper py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <header className="mb-12 sm:mb-16">
-          <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+          <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
             § 04½
           </div>
           <h2 className="font-serif text-3xl leading-tight text-navy sm:text-4xl">
@@ -105,7 +105,7 @@ export function SeeTheAIWork() {
         <div className="grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
           {/* Left — raw transcript */}
           <div className="rounded-card border border-navy/10 bg-white p-6 sm:p-8">
-            <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-graphit/45">
+            <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-graphit/65">
               {leftLabel[locale]} · DE
             </div>
             <div className="space-y-3">
@@ -131,7 +131,7 @@ export function SeeTheAIWork() {
 
           {/* Right — editorial key idea */}
           <div className="rounded-card border-l-4 border-gold bg-white p-6 shadow-card sm:p-8">
-            <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+            <div className="mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
               {rightLabel[locale]} · {locale.toUpperCase()}
             </div>
             <h3 className="font-serif text-2xl leading-tight text-navy sm:text-3xl">

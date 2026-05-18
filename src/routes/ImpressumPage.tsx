@@ -36,7 +36,7 @@ export function ImpressumPage() {
       </div>
 
       <section className="mx-auto max-w-3xl px-5 pb-10 pt-10 sm:px-8 sm:pb-14 sm:pt-14">
-        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+        <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {labels.sectionLabel}
         </div>
         <h1 className="mt-5 font-serif text-4xl leading-[1.05] text-navy sm:text-5xl">

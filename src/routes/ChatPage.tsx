@@ -133,7 +133,7 @@ export function ChatPage() {
       <div className="mx-auto flex h-[calc(100vh-72px)] max-w-2xl flex-col px-5 pb-4 pt-4 sm:px-8 sm:pt-6">
         <div className="flex items-baseline justify-between gap-3 pb-3">
           <div>
-            <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+            <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
               {labels.eyebrow}
             </p>
             <h1 className="mt-1 font-serif text-xl leading-tight text-navy sm:text-2xl">
@@ -223,7 +223,7 @@ export function ChatPage() {
             <button
               type="button"
               onClick={onClear}
-              className="font-sans text-[11px] text-graphit/50 underline-offset-4 hover:text-amber-700 hover:underline"
+              className="font-sans text-[11px] text-graphit/65 underline-offset-4 hover:text-amber-700 hover:underline"
             >
               {labels.clear}
             </button>
@@ -243,7 +243,7 @@ function Bubble({ role, content, dim }: { role: 'user' | 'assistant'; content: s
           'max-w-[85%] rounded-card px-3.5 py-2.5 font-sans text-sm leading-relaxed ' +
           (isUser
             ? 'bg-navy text-creme'
-            : 'border border-navy/10 bg-white text-graphit ' + (dim ? 'italic text-graphit/55' : ''))
+            : 'border border-navy/10 bg-white text-graphit ' + (dim ? 'italic text-graphit/65' : ''))
         }
       >
         {content}

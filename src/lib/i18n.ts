@@ -43,6 +43,9 @@ export interface Strings {
   heroHeadline: string;
   heroSub: string;
   heroPlaceholder: string;
+  /** Screen-reader label for the URL input. WCAG 3.3.2 requires labels
+   *  or instructions; the visual placeholder disappears on type. */
+  heroUrlInputLabel: string;
   primaryCTA: string;
   seeHowCTA: string;
   invalidUrl: string;
@@ -176,6 +179,7 @@ export const STRINGS: Record<Locale, Strings> = {
     heroEyebrow: 'VÍDEO · CONOCIMIENTO · APRENDIZAJE',
     heroHeadline: 'Deja de perder lo que ves.',
     heroSub: 'Guarda cualquier vídeo. Recibe las ideas, el vocabulario y las citas — en tu idioma.',
+    heroUrlInputLabel: 'Enlace de YouTube',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Empieza tu nube de conocimiento',
     seeHowCTA: 'Ver cómo funciona',
@@ -346,6 +350,7 @@ export const STRINGS: Record<Locale, Strings> = {
     heroEyebrow: 'VÍDEO · CONHECIMENTO · APRENDIZAGEM',
     heroHeadline: 'Para de perder o que vês.',
     heroSub: 'Guarda qualquer vídeo. Recebe as ideias, o vocabulário e as citações — na tua língua.',
+    heroUrlInputLabel: 'Link do YouTube',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Começa a tua nuvem de conhecimento',
     seeHowCTA: 'Ver como funciona',
@@ -505,6 +510,7 @@ export const STRINGS: Record<Locale, Strings> = {
     heroEyebrow: 'VIDEO · WISSEN · LERNEN',
     heroHeadline: 'Verlier nie wieder, was du schaust.',
     heroSub: 'Speichere jedes Video. Bekomm die Ideen, das Vokabular und die Zitate zurück — in deiner Sprache.',
+    heroUrlInputLabel: 'YouTube-Link',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Wissens-Cloud starten',
     seeHowCTA: 'So funktioniert es',
@@ -664,6 +670,7 @@ export const STRINGS: Record<Locale, Strings> = {
     heroEyebrow: 'VIDEO · KNOWLEDGE · LEARNING',
     heroHeadline: 'Stop losing what you watch.',
     heroSub: 'Save any video. Get back the ideas, the vocabulary, and the citations — in your language.',
+    heroUrlInputLabel: 'YouTube link',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
     primaryCTA: 'Start building your knowledge cloud',
     seeHowCTA: 'See how it works',

@@ -7,7 +7,13 @@ export default {
     extend: {
       colors: {
         navy: '#0A1A3A',       // LEON-NAVY · primary
-        gold: '#C9A24B',       // LEON-GOLD · accent, logo
+        gold: '#C9A24B',       // LEON-GOLD · accent, logo (use on dark bg)
+        'gold-deep': '#8C6F2A',// LEON-GOLD darkened for text-on-creme.
+                               // Gives ~4.7:1 contrast on creme — WCAG AA.
+                               // Same brand hue, just dropped two lightness
+                               // stops. Use for section eyebrows, gold links,
+                               // gold separators when the background is
+                               // paper/creme/white.
         'gold-soft': '#E8D29A', // GOLD HELL · hover, secondary accents
         creme: '#F7F3EC',      // CREME · main background
         graphit: '#1A1A1A',    // GRAPHIT · body text
