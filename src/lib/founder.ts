@@ -43,3 +43,17 @@ export function founderCheckoutUrl(): string | null {
   if (!url || url.length === 0 || url.startsWith('PLACEHOLDER')) return null;
   return url;
 }
+
+/**
+ * The Founder Discord invite link. Hard-coded here because the link
+ * is a permanent, no-expiry Discord URL — it isn't sensitive and
+ * doesn't change per environment. If we ever rotate the server (or
+ * generate a fresh invite for any reason), update this single spot
+ * and every surface — /founder page, Stripe success message,
+ * Welcome-Email — picks it up.
+ *
+ * The invite landing channel is #general; the Founder role gates
+ * #founders-only and is assigned manually by Christian after each
+ * Stripe sale until we wire the Stripe→Discord webhook post-launch.
+ */
+export const FOUNDER_DISCORD_INVITE = 'https://discord.gg/z93CKmUSv6';

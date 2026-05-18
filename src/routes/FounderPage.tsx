@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
 import { usePageHead } from '../hooks/usePageHead';
-import { fetchFounderStatus, founderCheckoutUrl, type FounderStatus } from '../lib/founder';
+import {
+  fetchFounderStatus,
+  founderCheckoutUrl,
+  FOUNDER_DISCORD_INVITE,
+  type FounderStatus,
+} from '../lib/founder';
 
 /**
  * /founder — the launch-cashflow page.
@@ -41,6 +46,14 @@ export function FounderPage() {
   const remaining = claimed === null ? null : Math.max(0, max - claimed);
   const soldOut = status ? !status.available : false;
 
+  /* Stripe success_url is wired to /founder?welcome=1 — when present
+     we surface a prominent "welcome, founder" banner with the Discord
+     invite, sitting above the regular page so the buyer's next step
+     is unmissable. The query param survives a refresh too, so a buyer
+     who closes the tab and reopens from history still sees it. */
+  const [searchParams] = useSearchParams();
+  const isWelcome = searchParams.get('welcome') === '1';
+
   return (
     <main id="main" className="bg-creme paper">
       <div className="mx-auto max-w-3xl px-5 pt-6 sm:px-8 sm:pt-8">
@@ -51,6 +64,37 @@ export function FounderPage() {
           ← {labels.backHome}
         </Link>
       </div>
+
+      {/* Welcome banner — only after a successful Stripe checkout. The
+          founder lands here with ?welcome=1 set by the Stripe success
+          URL. Big, gold, unmissable: their next step is the Discord. */}
+      {isWelcome && (
+        <section className="mx-auto mt-6 max-w-3xl px-5 sm:px-8">
+          <div className="rounded-card border border-gold bg-gold/10 px-6 py-7 text-center sm:px-8 sm:py-8">
+            <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold">
+              § {labels.welcomeEyebrow}
+            </div>
+            <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
+              {labels.welcomeHeading}
+            </h2>
+            <div className="mx-auto mt-5 h-px w-12 bg-gold" aria-hidden />
+            <p className="mx-auto mt-5 max-w-xl font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
+              {labels.welcomeBody}
+            </p>
+            <a
+              href={FOUNDER_DISCORD_INVITE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-7 inline-block rounded-card bg-navy px-6 py-3 font-sans text-base font-medium text-creme transition hover:bg-navy/90"
+            >
+              {labels.welcomeDiscordCta} →
+            </a>
+            <p className="mt-4 font-sans text-[12px] italic leading-relaxed text-graphit/65">
+              {labels.welcomeRoleNote}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Hero — counter is the loudest element */}
       <section className="mx-auto max-w-3xl px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
@@ -248,6 +292,11 @@ function founderLabels(locale: string) {
     soldOut: 'Plazas agotadas. Gracias a los cien que lo hicieron posible.',
     comingSoon: 'Disponible en horas. Stripe está terminando la verificación de la cuenta.',
     checkoutNote: 'Pago seguro con Stripe · sin tarjeta guardada · sin renovación automática',
+    welcomeEyebrow: 'Bienvenido, fundador',
+    welcomeHeading: 'Listo. Eres parte de los cien.',
+    welcomeBody: 'Tu siguiente paso es entrar al Discord — ahí pasa la conversación con los demás founders. Cuando entres, mándame un mensaje y te añado al canal #founders-only.',
+    welcomeDiscordCta: 'Unirme al Discord',
+    welcomeRoleNote: 'Tras entrar al Discord, te asigno la insignia "Founder" manualmente — suele ser en menos de 24 h.',
 
     includedSection: 'Qué incluye',
     includedHeading: 'Pro de por vida — más cosas que los demás no tienen.',
@@ -285,6 +334,11 @@ function founderLabels(locale: string) {
     soldOut: 'Lugares esgotados. Obrigado aos cem que tornaram isto possível.',
     comingSoon: 'Disponível em horas. O Stripe está a terminar a verificação da conta.',
     checkoutNote: 'Pagamento seguro com Stripe · sem cartão guardado · sem renovação automática',
+    welcomeEyebrow: 'Bem-vindo, founder',
+    welcomeHeading: 'Pronto. És um dos cem.',
+    welcomeBody: 'O teu próximo passo é entrar no Discord — é lá que a conversa acontece. Quando entrares, manda-me uma mensagem e adiciono-te ao canal #founders-only.',
+    welcomeDiscordCta: 'Entrar no Discord',
+    welcomeRoleNote: 'Depois de entrares no Discord, atribuo-te o emblema "Founder" manualmente — costuma demorar menos de 24 h.',
 
     includedSection: 'O que inclui',
     includedHeading: 'Pro vitalício — e mais coisas que outros não têm.',
@@ -322,6 +376,11 @@ function founderLabels(locale: string) {
     soldOut: 'Plätze ausverkauft. Danke an die Hundert, die das möglich gemacht haben.',
     comingSoon: 'Verfügbar in Stunden. Stripe schließt gerade die Account-Verifizierung ab.',
     checkoutNote: 'Sichere Zahlung über Stripe · keine gespeicherte Karte · keine Auto-Verlängerung',
+    welcomeEyebrow: 'Willkommen, Founder',
+    welcomeHeading: 'Erledigt. Du bist einer der Hundert.',
+    welcomeBody: 'Dein nächster Schritt ist der Discord — dort findet die Conversation statt. Schreib mir kurz wenn du drin bist, dann füge ich dich dem #founders-only Kanal hinzu.',
+    welcomeDiscordCta: 'Zum Discord',
+    welcomeRoleNote: 'Sobald du im Discord bist, weise ich dir das „Founder"-Abzeichen manuell zu — meist in unter 24 h.',
 
     includedSection: 'Was enthalten ist',
     includedHeading: 'Pro auf Lebenszeit — plus Sachen die andere nicht bekommen.',
@@ -359,6 +418,11 @@ function founderLabels(locale: string) {
     soldOut: 'All seats taken. Thanks to the hundred who made this possible.',
     comingSoon: 'Live in hours. Stripe is finishing account verification.',
     checkoutNote: 'Secure Stripe checkout · no stored card · no auto-renewal',
+    welcomeEyebrow: 'Welcome, founder',
+    welcomeHeading: "You're one of the hundred.",
+    welcomeBody: "Your next step is Discord — that's where the conversation lives. Send me a quick message when you're in and I'll add you to the #founders-only channel.",
+    welcomeDiscordCta: 'Join the Discord',
+    welcomeRoleNote: "Once you're in Discord, I'll assign your Founder badge manually — usually within 24 h.",
 
     includedSection: "What's included",
     includedHeading: 'Pro for life — plus things others never get.',

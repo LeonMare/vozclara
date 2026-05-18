@@ -143,7 +143,13 @@ Discord → Server-Settings → Invites → Create Invite:
 - **Ablauf:** Never
 - **Save**
 
-Den `https://discord.gg/<code>` Link an drei Stellen:
+**Live-Link (set 19.5.2026):** `https://discord.gg/z93CKmUSv6`
+
+If you ever need to rotate this (server move, compromise), regenerate
+in Discord then update the `FOUNDER_DISCORD_INVITE` constant in
+`src/lib/founder.ts` — every surface re-renders on the next deploy.
+
+Diesen Link an drei Stellen:
 
 1. **Welcome-Email für Founder-Käufer** — der Stripe-Email-Trigger sollte den Link enthalten. (Wir bauen den Email-Template gleich.)
 2. **`/founder` Page** — am Ende der „What's included"-Liste: „Direkter Discord-Zugang — Link nach Kauf per Email."
