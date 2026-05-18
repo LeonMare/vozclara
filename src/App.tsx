@@ -82,6 +82,9 @@ const FounderPage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('./routes/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 );
+const ChangelogPage = lazy(() =>
+  import('./routes/ChangelogPage').then((m) => ({ default: m.ChangelogPage })),
+);
 const AccountPage = lazy(() =>
   import('./routes/AccountPage').then((m) => ({ default: m.AccountPage })),
 );
@@ -265,6 +268,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <FounderPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/changelog"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <ChangelogPage />
               </Suspense>
             </AppShell>
           }
