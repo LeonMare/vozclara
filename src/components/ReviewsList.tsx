@@ -54,14 +54,22 @@ export function ReviewsList({ videoId }: { videoId: string }) {
 
       <ol className="mt-6 space-y-5">
         {items.map((r) => (
-          <ReviewRow key={r.voterId + r.updatedAt} review={r} locale={locale} />
+          <ReviewRow key={r.voterId + r.updatedAt} review={r} locale={locale} labels={labels} />
         ))}
       </ol>
     </section>
   );
 }
 
-function ReviewRow({ review, locale }: { review: ReviewItem; locale: string }) {
+function ReviewRow({
+  review,
+  locale,
+  labels,
+}: {
+  review: ReviewItem;
+  locale: string;
+  labels: ReturnType<typeof reviewsLabels>;
+}) {
   const initial = review.voterId.charAt(0).toUpperCase() || '?';
   const date = new Date(review.updatedAt).toLocaleDateString(locale, {
     day: '2-digit',
