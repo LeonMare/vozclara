@@ -306,7 +306,7 @@ export function LibraryPage() {
                       />
                     )}
                     <span className="absolute left-2 top-2 rounded-full bg-navy/90 px-1.5 py-0.5 font-sans text-[8px] uppercase tracking-widest text-gold backdrop-blur-sm">
-                      {t.modes[p.mode].name}
+                      {t.modes[p.mode]?.name ?? p.mode}
                     </span>
                   </div>
                   <div className="p-3">
@@ -423,7 +423,7 @@ export function LibraryPage() {
                   )}
                   {/* Mode badge overlay */}
                   <span className="absolute left-3 top-3 rounded-full bg-navy/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold backdrop-blur-sm">
-                    {t.modes[p.mode].name}
+                    {t.modes[p.mode]?.name ?? p.mode}
                   </span>
                   {/* Difficulty badge — only when the pack carries one */}
                   {p.difficulty && (

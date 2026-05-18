@@ -34,6 +34,22 @@ export class ErrorBoundary extends Component<Props, State> {
     // onto window.__VOZCLARA_ERROR_HOOK before mount.
     const hook = (window as unknown as { __VOZCLARA_ERROR_HOOK?: (e: Error, info: unknown) => void }).__VOZCLARA_ERROR_HOOK;
     hook?.(error, info);
+
+    // Stale-chunk recovery — when a deploy lands while the user has
+    // a tab open, the existing JS references chunk hashes that no
+    // longer resolve on the CDN. A hard reload picks up the fresh
+    // index.html with the new hashes. Guarded with a sessionStorage
+    // flag so a persistent failure (network down, deploy actually
+    // broken) doesn't put the user in a reload loop.
+    if (isStaleChunkError(error) && typeof window !== 'undefined') {
+      try {
+        const last = parseInt(sessionStorage.getItem('vc:chunk-reload-at') ?? '0', 10);
+        if (Date.now() - last > 60_000) {
+          sessionStorage.setItem('vc:chunk-reload-at', String(Date.now()));
+          window.location.reload();
+        }
+      } catch { /* sessionStorage blocked → fall through to fallback UI */ }
+    }
   }
 
   reset = (): void => {
@@ -46,6 +62,23 @@ export class ErrorBoundary extends Component<Props, State> {
     }
     return this.props.children;
   }
+}
+
+/**
+ * Detect the family of errors thrown when a lazy import or asset
+ * resolves to a 404 — most commonly because a new deploy invalidated
+ * the chunk hash this tab loaded with. Sentry shows them as
+ *   - "error loading dynamically imported module"
+ *   - "Loading chunk N failed"
+ *   - "Failed to fetch dynamically imported module"
+ *   - ChunkLoadError (Webpack lineage)
+ */
+function isStaleChunkError(err: Error): boolean {
+  const msg = err.message ?? '';
+  if (err.name === 'ChunkLoadError') return true;
+  return /loading (chunk|dynamically imported module)|Failed to fetch dynamically imported module|importing a module script failed/i.test(
+    msg,
+  );
 }
 
 function ErrorFallback({ error, reset }: { error: Error; reset: () => void }) {

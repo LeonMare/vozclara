@@ -46,9 +46,12 @@ export function HeroPackPreview() {
 
   return (
     <div className="relative">
-      {/* Mode switcher above the plate — looks like a print edition selector */}
+      {/* Mode switcher above the plate — looks like a print edition selector.
+          Three of the four production modes are surfaced here; `study` is
+          intentionally omitted because the hero preview pack doesn't have
+          a study-mode rendering and would just be a duplicate of brief. */}
       <div className="mb-4 flex items-center justify-center gap-1.5 sm:justify-end">
-        {(['learn', 'business', 'creator'] as Mode[]).map((m) => (
+        {(['learn', 'brief', 'creator'] as Mode[]).map((m) => (
           <button
             key={m}
             type="button"
@@ -60,7 +63,7 @@ export function HeroPackPreview() {
                 : 'border border-navy/15 bg-white text-graphit/65 hover:border-gold hover:text-navy',
             ].join(' ')}
           >
-            {t.modes[m].name}
+            {t.modes[m]?.name ?? m}
           </button>
         ))}
       </div>
@@ -83,7 +86,7 @@ export function HeroPackPreview() {
         <div className="border-b border-navy/10 bg-creme px-5 py-4">
           <div className="flex flex-wrap items-center gap-1.5 font-sans text-[9px] uppercase tracking-widest">
             <span className="rounded-full bg-navy px-2 py-0.5 text-gold">
-              {t.modes[pack.mode].name}
+              {t.modes[pack.mode]?.name ?? pack.mode}
             </span>
             {/* Language chips — interactive when the pack ships multiple
                 translations (Business sample does, learn/creator don't).

@@ -65,7 +65,10 @@ function CuratedCard({ item, locale }: { item: CuratedItem; locale: string }) {
     day: '2-digit',
     month: 'short',
   });
-  const modeLabel = t.modes[item.mode];
+  // Legacy curated entries stored before the mode rename can carry a
+  // mode key not present in the new locale dict; fall back to the raw
+  // key rather than rendering an empty pill.
+  const modeLabel = t.modes[item.mode] ?? item.mode;
 
   // Auto-generated entries (videoId present) route to /new with the
   // YouTube id pre-filled; static fallback entries route directly to

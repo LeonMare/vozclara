@@ -239,7 +239,7 @@ export function PackPage() {
         {/* Pack metadata pills — three things the reader needs to see */}
         <div className="mt-6 flex flex-wrap items-center gap-2 font-sans text-[10px] uppercase tracking-widest">
           <span className="inline-flex items-center gap-1 rounded-full bg-navy px-2.5 py-1 text-gold">
-            <span className="text-creme/50">●</span> {t.modes[pack.mode].name}
+            <span className="text-creme/50">●</span> {t.modes[pack.mode]?.name ?? pack.mode}
           </span>
           {/* Top-Rated pill — only renders for videos that crossed the
               quality bar (≥3 votes AND ≥80% approval). The threshold
