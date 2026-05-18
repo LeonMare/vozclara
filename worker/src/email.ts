@@ -298,6 +298,204 @@ function renderMagicLinkText(labels: MagicLinkLabels, link: string): string {
 }
 
 /**
+ * Send a one-shot welcome email after the user's *first* magic-link
+ * verification. NOT a drip campaign — that's a post-launch decision.
+ * This single mail gives the new user a personal-voiced orientation:
+ * one CTA to a sample pack, plus the founder-deal mention if they're
+ * the type that converts on first impression.
+ *
+ * Best-effort: failures are swallowed so a Resend hiccup never breaks
+ * sign-in. Returns the result for telemetry but the auth handler
+ * ignores it.
+ */
+export async function sendWelcomeEmail(
+  env: ResendEnv,
+  args: { to: string; locale: string },
+): Promise<SendMailResult> {
+  const labels = welcomeLabels(args.locale);
+  const html = renderWelcomeHTML(labels);
+  const text = renderWelcomeText(labels);
+  return sendMail(env, {
+    to: args.to,
+    subject: labels.subject,
+    html,
+    text,
+    replyTo: 'support@vozclara.app',
+  });
+}
+
+interface WelcomeLabels {
+  subject: string;
+  preheader: string;
+  greeting: string;
+  body: string;
+  tryLine: string;
+  ctaLabel: string;
+  ctaUrl: string;
+  founderHint: string;
+  founderUrl: string;
+  signoff: string;
+  fromName: string;
+}
+
+function welcomeLabels(locale: string): WelcomeLabels {
+  const l = (locale ?? '').toLowerCase();
+  if (l.startsWith('es')) return {
+    subject: 'Bienvenido a VozClara',
+    preheader: 'Tu primera ruta — un pack de muestra para probar en 60 segundos.',
+    greeting: 'Hola.',
+    body: 'Soy Christian, el que está construyendo VozClara desde Frankfurt. Gracias por entrar — significa más de lo que crees.',
+    tryLine: 'Para empezar sin pensarlo: prueba este Knowledge Pack sobre la entropía (vídeo de 24 min, pack en 60 segundos). Es un buen ejemplo de cómo se siente la cosa.',
+    ctaLabel: 'Ver el pack de muestra',
+    ctaUrl: 'https://vozclara.app/pack/sample-study',
+    founderHint: 'PD: Los primeros 100 fundadores tienen Pro de por vida por €99 una sola vez. Si te suena bien, está en /founder. Si no, Free seguirá funcionando.',
+    founderUrl: 'https://vozclara.app/founder',
+    signoff: 'Cualquier cosa, escríbeme a este mismo correo.',
+    fromName: 'Christian · LEON MARÉ',
+  };
+  if (l.startsWith('pt')) return {
+    subject: 'Bem-vindo a VozClara',
+    preheader: 'O teu primeiro percurso — um pack de exemplo para experimentar em 60 segundos.',
+    greeting: 'Olá.',
+    body: 'Sou Christian, o tipo que está a construir VozClara em Frankfurt. Obrigado por entrares — significa mais do que pensas.',
+    tryLine: 'Para começar sem pensar: experimenta este Knowledge Pack sobre entropia (vídeo de 24 min, pack em 60 segundos). É um bom exemplo de como a coisa se sente.',
+    ctaLabel: 'Ver o pack de exemplo',
+    ctaUrl: 'https://vozclara.app/pack/sample-study',
+    founderHint: 'PS: Os primeiros 100 fundadores têm Pro para sempre por €99 uma única vez. Se te resuena, está em /founder. Se não, Free continuará a funcionar.',
+    founderUrl: 'https://vozclara.app/founder',
+    signoff: 'Qualquer coisa, responde a este mesmo email.',
+    fromName: 'Christian · LEON MARÉ',
+  };
+  if (l.startsWith('de')) return {
+    subject: 'Willkommen bei VozClara',
+    preheader: 'Dein erster Weg rein — ein Beispiel-Pack zum Anschauen in 60 Sekunden.',
+    greeting: 'Hi.',
+    body: 'Ich bin Christian, der VozClara aus Frankfurt baut. Danke dass du dabei bist — bedeutet mir mehr als du denkst.',
+    tryLine: 'Schnellster Einstieg: probier diesen Knowledge Pack über Entropie (24-Min-Video, Pack in 60 Sekunden). Zeigt dir wie sich die Sache anfühlt.',
+    ctaLabel: 'Beispiel-Pack ansehen',
+    ctaUrl: 'https://vozclara.app/pack/sample-study',
+    founderHint: 'PS: Die ersten 100 Founder bekommen Pro für immer für einmalig €99. Wenn das passt, liegt es unter /founder. Falls nicht, läuft Free wie gewohnt.',
+    founderUrl: 'https://vozclara.app/founder',
+    signoff: 'Bei irgendwas — antworte einfach auf diese Mail.',
+    fromName: 'Christian · LEON MARÉ',
+  };
+  return {
+    subject: 'Welcome to VozClara',
+    preheader: 'Your first path in — a sample pack to try in 60 seconds.',
+    greeting: 'Hi.',
+    body: "I'm Christian, building VozClara out of Frankfurt. Thanks for being here — means more than you think.",
+    tryLine: 'Fastest way in: try this Knowledge Pack on entropy (24-min video, pack in 60 seconds). Good example of how it actually feels.',
+    ctaLabel: 'Open the sample pack',
+    ctaUrl: 'https://vozclara.app/pack/sample-study',
+    founderHint: 'PS: The first 100 founders get Pro for life at €99, one time. If that lands, it lives at /founder. If not, Free keeps working.',
+    founderUrl: 'https://vozclara.app/founder',
+    signoff: 'Anything at all — just hit reply.',
+    fromName: 'Christian · LEON MARÉ',
+  };
+}
+
+function renderWelcomeHTML(labels: WelcomeLabels): string {
+  const PALETTE = { navy: '#0A1A3A', gold: '#C9A24B', creme: '#F7F3EC', graphit: '#2A2F3A' };
+  const LOGO_URL = 'https://vozclara.app/brand-mark-256.png';
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>${escapeHtml(labels.subject)}</title>
+  </head>
+  <body style="margin:0;padding:0;background:${PALETTE.creme};font-family:Georgia,'Times New Roman',serif;color:${PALETTE.graphit};">
+    <div style="display:none;max-height:0;overflow:hidden;color:transparent;visibility:hidden;mso-hide:all;">
+      ${escapeHtml(labels.preheader)}
+    </div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${PALETTE.creme};">
+      <tr>
+        <td align="center" style="padding:56px 16px;">
+          <table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;max-width:520px;width:100%;border:1px solid rgba(10,26,58,0.08);">
+            <tr>
+              <td style="padding:48px 36px 0;text-align:center;">
+                <img src="${escapeAttr(LOGO_URL)}" width="88" height="88" alt="VozClara"
+                     style="display:inline-block;width:88px;height:88px;border:0;outline:none;text-decoration:none;" />
+                <div style="margin-top:20px;font-family:Georgia,serif;letter-spacing:0.22em;color:${PALETTE.navy};font-size:13px;">VOZ&nbsp;·&nbsp;CLARA</div>
+                <div style="height:1px;width:36px;background:${PALETTE.gold};margin:14px auto 0;line-height:1px;font-size:1px;">&nbsp;</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px 44px 0;">
+                <p style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.35;color:${PALETTE.navy};">${escapeHtml(labels.greeting)}</p>
+                <p style="margin:0 0 20px;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.6;color:${PALETTE.graphit};">${escapeHtml(labels.body)}</p>
+                <p style="margin:0 0 28px;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.6;color:${PALETTE.graphit};">${escapeHtml(labels.tryLine)}</p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:0 44px 28px;">
+                <a href="${escapeAttr(labels.ctaUrl)}"
+                   style="display:inline-block;background:${PALETTE.navy};color:${PALETTE.creme};text-decoration:none;padding:15px 32px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:500;letter-spacing:0.04em;border-radius:2px;">
+                  ${escapeHtml(labels.ctaLabel)}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 44px 28px;">
+                <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:14px;line-height:1.55;color:rgba(42,47,58,0.7);">
+                  ${escapeHtml(labels.founderHint)} <a href="${escapeAttr(labels.founderUrl)}" style="color:${PALETTE.gold};text-decoration:none;border-bottom:1px solid ${PALETTE.gold};">/founder</a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 44px;">
+                <div style="height:1px;background:rgba(10,26,58,0.08);line-height:1px;font-size:1px;">&nbsp;</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 44px 8px;">
+                <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:14px;line-height:1.55;color:rgba(42,47,58,0.7);">${escapeHtml(labels.signoff)}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px 44px 40px;text-align:center;">
+                <div style="height:1px;width:24px;background:${PALETTE.gold};margin:0 auto 18px;line-height:1px;font-size:1px;">&nbsp;</div>
+                <p style="margin:0 0 4px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.3;color:${PALETTE.navy};letter-spacing:0.04em;">${escapeHtml(labels.fromName)}</p>
+                <p style="margin:0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(10,26,58,0.5);">Frankfurt</p>
+              </td>
+            </tr>
+          </table>
+          <table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;width:100%;">
+            <tr>
+              <td style="padding:20px 12px 0;text-align:center;">
+                <p style="margin:0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.08em;color:rgba(42,47,58,0.4);">vozclara.app · Frankfurt</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function renderWelcomeText(labels: WelcomeLabels): string {
+  return [
+    labels.greeting,
+    '',
+    labels.body,
+    '',
+    labels.tryLine,
+    '',
+    labels.ctaUrl,
+    '',
+    labels.founderHint,
+    labels.founderUrl,
+    '',
+    labels.signoff,
+    '',
+    '—',
+    labels.fromName,
+    'vozclara.app · Frankfurt',
+  ].join('\n');
+}
+
+/**
  * Send the magic-link email. Returns the underlying SendMailResult so
  * the caller can decide whether to surface a soft error to the user
  * (or, in dev, log the URL to the worker console).

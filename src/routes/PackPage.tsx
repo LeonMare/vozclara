@@ -12,6 +12,7 @@ import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { ServerAudioPlayer } from '../components/ServerAudioPlayer';
 import { RatingPanel } from '../components/RatingPanel';
+import { ReviewsList } from '../components/ReviewsList';
 import { fetchAggregate, averageStars, approvalPercent, type RatingAggregate } from '../lib/rating';
 import { checkTTSAvailability } from '../lib/ttsServer';
 import { VideoPanel } from '../components/VideoPanel';
@@ -295,6 +296,9 @@ export function PackPage() {
             not per pack, since a single YouTube video can yield several
             Packs across modes and languages. */}
         <RatingPanel videoId={pack.source.videoId} videoTitle={pack.title} />
+        {/* Text reviews from other signed-in users on this video.
+            Renders nothing if none exist yet. */}
+        <ReviewsList videoId={pack.source.videoId} />
       </div>
 
       {/* Audio companion — non-sticky, in document flow. */}

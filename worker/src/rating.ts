@@ -464,6 +464,70 @@ export async function handleRatingTop(url: URL, env: AuthEnv): Promise<Response>
 }
 
 /**
+ * GET /api/rating/reviews?videoId=X&limit=20
+ *
+ * List the most recent text reviews for a video. Returns up to `limit`
+ * (default 20, hard-capped at 50) sorted by `updatedAt` desc. Anonymous
+ * thumbs and signal-only votes are excluded — only votes with a
+ * non-empty `review` string make the list. The `voterId` is exposed as
+ * an opaque string so the frontend can show a per-reviewer avatar via
+ * the existing initials-on-navy Avatar component (no PII leaked).
+ *
+ * Account-only feature — by definition (reviews require an account to
+ * write) — but reading is anonymous and unauthenticated so any visitor
+ * can browse the social-proof on a public pack.
+ */
+export async function handleRatingReviews(url: URL, env: AuthEnv): Promise<Response> {
+  if (!env.AUTH) return json({ error: 'rating_disabled' }, 503);
+  const videoId = sanitizeVideoId(url.searchParams.get('videoId'));
+  if (!videoId) return json({ error: 'invalid_video_id' }, 400);
+  const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') ?? 20)));
+
+  /* Walk the rvote:{videoId}:* prefix. KV doesn't promise ordering, so
+     we collect every record then sort by updatedAt desc in memory. Per-
+     video review counts will stay small for a long time (each user can
+     only write one), so this is cheap. */
+  const reviews: Array<{
+    voterId: string;
+    voterType: 'user' | 'brain';
+    stars: number | null;
+    review: string;
+    updatedAt: number;
+  }> = [];
+
+  const kv = env.AUTH;
+  let cursor: string | undefined;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const page = await kv.list({ prefix: `rvote:${videoId}:`, cursor, limit: 100 });
+    for (const k of page.keys) {
+      const raw = await kv.get(k.name);
+      if (!raw) continue;
+      try {
+        const v = JSON.parse(raw) as VoteRecord;
+        if (!v.review) continue;
+        reviews.push({
+          // Truncate voterId to first 8 chars — enough for stable
+          // per-reviewer avatar colouring, opaque enough that nobody
+          // reconstructs the full ID from it.
+          voterId: v.voterId.slice(0, 8),
+          voterType: v.voterType,
+          stars: v.stars,
+          review: v.review.slice(0, 800),
+          updatedAt: v.updatedAt,
+        });
+      } catch { /* skip malformed */ }
+    }
+    if (page.list_complete) break;
+    cursor = page.cursor;
+  }
+
+  reviews.sort((a, b) => b.updatedAt - a.updatedAt);
+
+  return json({ videoId, items: reviews.slice(0, limit) });
+}
+
+/**
  * Wilson score interval lower bound at 95% confidence.
  * https://www.evanmiller.org/how-not-to-sort-by-average-rating.html
  */

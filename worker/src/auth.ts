@@ -31,7 +31,7 @@
  * IndexedDB library on first sign-in.
  */
 
-import { sendMagicLink } from './email';
+import { sendMagicLink, sendWelcomeEmail } from './email';
 
 export interface AuthEnv {
   /** KV namespace for users, sessions, magic-link tokens, email index. */
@@ -313,6 +313,7 @@ export async function handleAuthVerify(req: Request, env: AuthEnv): Promise<Resp
   await deleteMagic(env, token);
 
   let user = await getUserByEmail(env, magic.email);
+  let isFirstSignIn = false;
   if (!user) {
     user = {
       id: randomToken().slice(0, 22),
@@ -322,6 +323,7 @@ export async function handleAuthVerify(req: Request, env: AuthEnv): Promise<Resp
       brainIds: magic.brainId ? [magic.brainId] : [],
     };
     await putUser(env, user);
+    isFirstSignIn = true;
   } else if (magic.brainId && !user.brainIds.includes(magic.brainId)) {
     // Returning user signing in from a new device — adopt the new
     // brainId so the upcoming sync layer can merge that library.
@@ -337,6 +339,21 @@ export async function handleAuthVerify(req: Request, env: AuthEnv): Promise<Resp
     ua: req.headers.get('User-Agent')?.slice(0, 200) ?? undefined,
   };
   await putSession(env, sessionToken, session);
+
+  /* First-sign-in only: send a personal-voice welcome email. Awaited
+     so the worker request stays alive long enough for the Resend POST
+     to complete (no ctx.waitUntil in this handler signature), but the
+     200ms extra latency on the very first sign-in is acceptable.
+     Failures are swallowed so a Resend hiccup never blocks a working
+     session creation. */
+  if (isFirstSignIn) {
+    try {
+      const r = await sendWelcomeEmail(env, { to: user.email, locale: user.lang });
+      if (!r.ok) console.log('welcome_email_send_failed:', r.reason);
+    } catch (err) {
+      console.log('welcome_email_threw:', err instanceof Error ? err.message : String(err));
+    }
+  }
 
   return new Response(null, {
     status: 302,

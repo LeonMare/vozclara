@@ -33,6 +33,7 @@ import {
   handleRatingMe,
   handleRatingTop,
   handleRatingBulk,
+  handleRatingReviews,
 } from './rating';
 import {
   handleFounderStatus,
@@ -423,6 +424,10 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/rating/bulk' && req.method === 'POST') {
       return handleRatingBulk(req, env);
+    }
+
+    if (url.pathname === '/api/rating/reviews' && req.method === 'GET') {
+      return handleRatingReviews(url, env);
     }
 
     /* ─── /api/founder/* — Founder Deal counter (launch cashflow) ────── *

@@ -201,3 +201,33 @@ export function approvalPercent(agg: RatingAggregate, minVotes = 3): number | nu
   if (total < minVotes) return null;
   return Math.round((agg.up / total) * 100);
 }
+
+/* ─── Reviews — per-video list of signed-in text reviews ────────── */
+
+export interface ReviewItem {
+  /** 8-char opaque slice of the original voterId. Stable per reviewer,
+   *  reveals nothing about identity. Used for per-row avatar colour. */
+  voterId: string;
+  voterType: 'user' | 'brain';
+  stars: number | null;
+  review: string;
+  updatedAt: number;
+}
+
+/**
+ * Fetch the most recent text reviews on a video. Returns an empty array
+ * for unrated videos, never throws — review-display is non-critical UI
+ * and should degrade silently if the worker is unreachable.
+ */
+export async function fetchReviews(videoId: string, limit = 20): Promise<ReviewItem[]> {
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/rating/reviews?videoId=${encodeURIComponent(videoId)}&limit=${limit}`,
+    );
+    if (!res.ok) return [];
+    const body = (await res.json()) as { items?: ReviewItem[] };
+    return Array.isArray(body.items) ? body.items : [];
+  } catch {
+    return [];
+  }
+}
