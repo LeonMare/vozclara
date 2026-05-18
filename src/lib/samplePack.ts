@@ -380,6 +380,396 @@ const creatorEN: PackTranslation = {
   quiz: [],
 };
 
+/* ─── Study mode — Veritasium "The Most Misunderstood Concept in Physics"
+   ─────────────────────────────────────────────────────────────────────────
+   Real 24-minute Veritasium video on entropy. Picked specifically as the
+   `study` sample because it has everything a student needs: clear chapter
+   structure, layered concept-build (intuition → math → philosophy), high-
+   density vocabulary (entropy, microstates, statistical mechanics …), and
+   genuine ambiguity worth quizzing on. Source-language is English; ships
+   in ES + EN translations so visitors see both directions live.
+─────────────────────────────────────────────────────────────────────────── */
+
+const STUDY_COMMON = {
+  brainId: 'sample',
+  source: {
+    type: 'youtube' as const,
+    url: 'https://www.youtube.com/watch?v=DxL2HoqLbyA',
+    videoId: 'DxL2HoqLbyA',
+    durationSec: 1465,
+    thumbnailUrl: 'https://i.ytimg.com/vi/DxL2HoqLbyA/hqdefault.jpg',
+    channel: 'Veritasium',
+  },
+  title: 'The Most Misunderstood Concept in Physics',
+  sourceLang: 'en' as const,
+  outputLang: 'es' as const,
+  outputLanguages: ['es' as const, 'en' as const],
+  genre: 'education' as const,
+  status: 'ready' as const,
+  category: 'science',
+  isPublic: true,
+  createdAt: Date.parse('2026-04-12T10:00:00Z'),
+  updatedAt: Date.parse('2026-04-12T10:00:00Z'),
+  tags: ['física', 'entropía', 'termodinámica', 'tiempo'],
+  difficulty: 'B2' as const,
+};
+
+const studyES: PackTranslation = {
+  tldr: 'La entropía no es desorden — es el número de formas posibles en que un sistema puede existir, y eso explica por qué el tiempo solo fluye hacia adelante.',
+  summary: {
+    short: 'Veritasium desmonta la idea de que la entropía es "desorden" y la replantea como una medida estadística que explica la flecha del tiempo.',
+    long: 'Veritasium dedica el vídeo a corregir uno de los conceptos peor entendidos de la física: la entropía. La intuición popular dice que es "desorden", pero la definición correcta —la de Boltzmann— es el logaritmo del número de microestados compatibles con un macroestado dado. Desde ahí el vídeo construye varias consecuencias profundas: por qué el calor fluye en una sola dirección, qué es realmente la segunda ley de la termodinámica, cómo el demonio de Maxwell parece violarla (y por qué no lo hace), la conexión con la teoría de la información de Shannon, y por último por qué la entropía explica la flecha del tiempo y el destino del universo. La pieza es un ejemplo magistral de cómo construir un concepto en capas: cada minuto añade una pieza nueva sin saltarse fundamentos.',
+  },
+  chapters: [
+    { startSec: 0, title: 'Por qué nadie entiende la entropía', summary: 'El error común: "entropía = desorden". Veritasium plantea el problema antes de resolverlo.' },
+    { startSec: 165, title: 'Boltzmann y los microestados', summary: 'La definición precisa: S = k log W. Cada macroestado puede realizarse de muchas formas microscópicas.' },
+    { startSec: 420, title: 'La segunda ley reformulada', summary: 'La entropía aumenta porque los estados de alta multiplicidad son abrumadoramente más probables.' },
+    { startSec: 660, title: 'El demonio de Maxwell', summary: 'El experimento mental que parecía romper la segunda ley — y por qué Landauer lo cerró un siglo después.' },
+    { startSec: 925, title: 'Shannon y la información', summary: 'La entropía de información de Shannon es matemáticamente idéntica a la termodinámica. No es coincidencia.' },
+    { startSec: 1165, title: 'La flecha del tiempo', summary: 'Por qué recordamos el pasado pero no el futuro: la asimetría temporal proviene del bajo estado inicial del universo.' },
+    { startSec: 1340, title: 'Muerte térmica y final del universo', summary: 'Si la entropía solo crece, el universo se dirige a un equilibrio sin estructura. Una idea inquietante.' },
+  ],
+  keyIdeas: [
+    {
+      title: '"Desorden" es una mala metáfora',
+      body: 'Decir que la entropía es desorden funciona para algunas intuiciones pero falla en otras. Un cristal organizado puede tener más entropía que un gas si su número de estados accesibles es mayor. La definición rigurosa es estadística, no estética.',
+    },
+    {
+      title: 'S = k log W es la idea central',
+      body: 'La fórmula de Boltzmann conecta dos escalas: el macroestado observable (presión, temperatura, volumen) y los microestados invisibles (las configuraciones de partículas que lo producen). W es el conteo de esos microestados; k es una constante de proporcionalidad; log convierte multiplicación en suma.',
+    },
+    {
+      title: 'La segunda ley es estadística, no absoluta',
+      body: 'No es imposible que un huevo se desfría — solo improbabilísimo. La segunda ley funciona porque los estados de baja entropía son numéricamente irrisorios comparados con los de alta entropía. No es una prohibición, es una abrumadora ventaja combinatoria.',
+    },
+    {
+      title: 'El demonio de Maxwell se desmontó con Landauer',
+      body: 'Durante 100 años el experimento mental parecía permitir disminuir entropía sin coste. Rolf Landauer demostró en 1961 que borrar información en la memoria del demonio cuesta energía. La segunda ley se mantiene, pero ahora unifica termodinámica con información.',
+    },
+    {
+      title: 'La entropía termodinámica y la de Shannon son la misma',
+      body: 'Shannon midió la incertidumbre de un mensaje con la misma fórmula matemática que Boltzmann usó para los gases. No es analogía: es identidad. La información y el calor son aspectos de lo mismo — un cambio profundo en cómo entendemos la física.',
+    },
+    {
+      title: 'El tiempo fluye porque el universo empezó ordenado',
+      body: 'Las leyes de la física son simétricas en el tiempo, pero nuestra experiencia no. La asimetría no proviene de las leyes sino de las condiciones iniciales: el Big Bang fue extraordinariamente improbable, de baja entropía. Todo lo que sigue es relajación hacia equilibrio.',
+    },
+    {
+      title: 'La muerte térmica es la consecuencia más radical',
+      body: 'Si nada detiene el aumento de entropía, el universo terminará en un estado uniforme y tibio donde nada interesante puede ocurrir. No es una predicción cómoda, pero se deriva directamente de la segunda ley aplicada al cosmos.',
+    },
+  ],
+  vocabulary: [
+    { word: 'entropy', translation: 'la entropía', context: 'Entropy is often described as disorder, but that is misleading.', partOfSpeech: 'sustantivo' },
+    { word: 'microstate', translation: 'el microestado', context: 'Each microstate is a specific arrangement of particles.', partOfSpeech: 'sustantivo' },
+    { word: 'macrostate', translation: 'el macroestado', context: 'Pressure and temperature define the macrostate.', partOfSpeech: 'sustantivo' },
+    { word: 'thermodynamics', translation: 'la termodinámica', context: 'The second law of thermodynamics says entropy never decreases.', partOfSpeech: 'sustantivo' },
+    { word: 'statistical mechanics', translation: 'la mecánica estadística', context: 'Boltzmann founded statistical mechanics.', partOfSpeech: 'sustantivo' },
+    { word: 'irreversible', translation: 'irreversible', context: 'Most everyday processes are irreversible.', partOfSpeech: 'adjetivo' },
+    { word: 'arrow of time', translation: 'la flecha del tiempo', context: 'Entropy gives us the arrow of time.', partOfSpeech: 'sustantivo' },
+    { word: 'equilibrium', translation: 'el equilibrio', context: 'A closed system tends toward equilibrium.', partOfSpeech: 'sustantivo' },
+    { word: 'heat death', translation: 'la muerte térmica', context: 'The heat death of the universe is the ultimate equilibrium.', partOfSpeech: 'sustantivo' },
+    { word: 'information theory', translation: 'la teoría de la información', context: 'Shannon’s information theory uses the same math as thermodynamics.', partOfSpeech: 'sustantivo' },
+    { word: 'Boltzmann constant', translation: 'la constante de Boltzmann', context: 'k is the Boltzmann constant, about 1.38 × 10⁻²³ J/K.', partOfSpeech: 'sustantivo' },
+    { word: 'dispersal', translation: 'la dispersión', context: 'Entropy can be intuited as energy dispersal.', partOfSpeech: 'sustantivo' },
+    { word: 'closed system', translation: 'el sistema cerrado', context: 'In a closed system, entropy can only increase.', partOfSpeech: 'sustantivo' },
+    { word: 'demon', translation: 'el demonio', context: 'Maxwell’s demon was a thought experiment about violating the second law.', partOfSpeech: 'sustantivo' },
+    { word: 'erase', translation: 'borrar', context: 'Erasing information costs energy — Landauer’s principle.', partOfSpeech: 'verbo' },
+  ],
+  quiz: [
+    { question: '¿Por qué Veritasium dice que "entropía = desorden" es una mala definición?', answer: 'Porque el desorden es subjetivo y estético, mientras que la entropía se define matemáticamente como el logaritmo del número de microestados compatibles con un macroestado. Hay casos —como cristales con mayor multiplicidad que gases— donde la intuición de desorden falla.', explanation: 'La metáfora del desorden ayuda al principio pero rompe en los casos límite. La definición de Boltzmann es la única que funciona universalmente.' },
+    { question: 'Escribe la fórmula de Boltzmann y explica cada término.', answer: 'S = k log W. S es la entropía, k es la constante de Boltzmann (≈ 1.38 × 10⁻²³ J/K), W es el número de microestados compatibles con el macroestado, y log convierte el conteo multiplicativo en una escala aditiva.', explanation: 'Esta fórmula está grabada en la tumba de Boltzmann en Viena. Es la traducción rigurosa de "entropía" en lenguaje estadístico.' },
+    { question: '¿Por qué la segunda ley de la termodinámica no es una prohibición absoluta?', answer: 'Porque es estadística. Los estados de baja entropía no son imposibles, solo astronómicamente improbables. En sistemas con muchas partículas la diferencia de probabilidad es tan extrema que el comportamiento parece determinista.', explanation: 'Un huevo podría desfreirse — pero la probabilidad es del orden de 10⁻¹⁰²³. En la práctica, eso significa "nunca".' },
+    { question: '¿Qué propuso Maxwell con su demonio y por qué fallaba?', answer: 'Maxwell imaginó una criatura microscópica que separaría moléculas rápidas y lentas, disminuyendo entropía sin trabajo. Falla porque Landauer demostró que borrar la información que el demonio acumula sobre las moléculas cuesta energía, y ese coste compensa exactamente la ganancia.', explanation: 'El demonio de Maxwell unió por primera vez termodinámica e información — un siglo antes de que existiera la teoría de Shannon.' },
+    { question: '¿Cómo se conecta la entropía de Shannon con la termodinámica?', answer: 'Shannon definió la entropía de un mensaje con una fórmula matemáticamente idéntica a la de Boltzmann: la suma de probabilidades por sus logaritmos. La equivalencia no es analogía: la información y el calor son aspectos de lo mismo.', explanation: 'Hoy esta unificación es la base de campos como la teoría de la computación física y la termodinámica cuántica.' },
+    { question: '¿Por qué la flecha del tiempo es una pregunta abierta en física?', answer: 'Porque las leyes fundamentales (Newton, Maxwell, Einstein, Schrödinger) son simétricas bajo inversión temporal. La asimetría que percibimos no proviene de las leyes, sino de las condiciones iniciales del universo: un Big Bang de muy baja entropía.', explanation: 'La pregunta "¿por qué el tiempo solo fluye hacia adelante?" se traduce en "¿por qué el universo empezó tan ordenado?" — una pregunta cosmológica, no termodinámica.' },
+    { question: '¿Qué predice la segunda ley sobre el futuro del universo?', answer: 'Que el universo evolucionará hacia un estado de máxima entropía: equilibrio térmico uniforme sin estructura ni gradientes. Es la llamada "muerte térmica": no se podrá realizar ningún proceso interesante.', explanation: 'No es una predicción cómoda, pero es la consecuencia directa de aplicar la segunda ley al cosmos como sistema cerrado.' },
+    { question: 'Da un ejemplo cotidiano de proceso irreversible y explica por qué lo es.', answer: 'Un cubo de hielo derritiéndose en un vaso de agua tibia. Es irreversible porque el estado "hielo + agua tibia" tiene mucha menor multiplicidad que "agua templada uniforme" — el sistema evoluciona hacia el estado más probable y no regresa espontáneamente.', explanation: 'Cualquier ejemplo donde el sistema avanza hacia equilibrio sirve: una taza de café que se enfría, perfume que se dispersa, una pila de cartas barajada.' },
+  ],
+  actionPlan: [
+    'Resume en tres frases —en tus propias palabras— la diferencia entre microestado y macroestado.',
+    'Busca en YouTube el episodio de PBS Space Time sobre el demonio de Maxwell y compara las dos explicaciones.',
+    'Calcula a mano: si tienes 4 monedas, ¿cuántos microestados son compatibles con el macroestado "2 caras"? ¿Y con "todas caras"? Comprueba que el más probable tiene mayor entropía.',
+    'Lee la entrada de Wikipedia sobre el principio de Landauer y escribe en cinco frases por qué cierra el demonio de Maxwell.',
+    'Repasa el cuestionario en 24 horas y luego en 7 días — la repetición espaciada consolida conceptos abstractos como pocos otros métodos.',
+  ],
+  keyQuotes: [
+    { text: 'La entropía no es desorden. Es el número de formas en que las partes pueden ordenarse para producir el mismo todo.', original: 'Entropy is not disorder. It is the number of ways the parts can be arranged to produce the same whole.', speaker: 'Derek Muller', timestampSec: 178 },
+    { text: 'La segunda ley no dice que la entropía no pueda disminuir — dice que casi nunca lo hará.', original: 'The second law does not say entropy cannot decrease — it says it almost never will.', speaker: 'Derek Muller', timestampSec: 510 },
+    { text: 'Borrar un bit de información cuesta energía. Punto final.', original: 'Erasing a bit of information costs energy. Full stop.', speaker: 'Derek Muller', timestampSec: 820 },
+    { text: 'Las leyes de la física son simétricas en el tiempo. Nuestra experiencia no lo es. Esa contradicción es la flecha del tiempo.', original: 'The laws of physics are time-symmetric. Our experience is not. That contradiction is the arrow of time.', speaker: 'Derek Muller', timestampSec: 1205 },
+    { text: 'El universo no empezó frío y oscuro. Empezó increíblemente ordenado — y todo lo demás se sigue de ahí.', original: 'The universe didn’t start cold and dark. It started incredibly ordered — and everything else follows from that.', speaker: 'Derek Muller', timestampSec: 1290 },
+  ],
+  socialAngles: [],
+};
+
+const studyEN: PackTranslation = {
+  tldr: 'Entropy is not disorder — it is the count of possible arrangements of a system, and that is why time only flows forward.',
+  summary: {
+    short: 'Veritasium dismantles the "entropy equals disorder" intuition and reframes it as a statistical measure that explains the arrow of time.',
+    long: 'Veritasium spends the video correcting one of the most poorly understood concepts in physics: entropy. Popular intuition says it is "disorder", but the precise definition — Boltzmann’s — is the logarithm of the number of microstates compatible with a given macrostate. From there the video builds several profound consequences: why heat flows one way, what the second law of thermodynamics really says, how Maxwell’s demon seems to violate it (and why it does not), the connection to Shannon’s information theory, and finally why entropy explains the arrow of time and the fate of the universe. It is a masterclass in building a concept in layers — every minute adds a new piece without skipping foundations.',
+  },
+  chapters: [
+    { startSec: 0, title: 'Why nobody understands entropy', summary: 'The common error: "entropy = disorder". Veritasium frames the problem before solving it.' },
+    { startSec: 165, title: 'Boltzmann and microstates', summary: 'The precise definition: S = k log W. Every macrostate can be realised in many microscopic ways.' },
+    { startSec: 420, title: 'The second law reframed', summary: 'Entropy increases because high-multiplicity states are overwhelmingly more probable.' },
+    { startSec: 660, title: 'Maxwell’s demon', summary: 'The thought experiment that seemed to break the second law — and how Landauer closed it a century later.' },
+    { startSec: 925, title: 'Shannon and information', summary: 'Shannon’s information entropy is mathematically identical to thermodynamic entropy. Not coincidence.' },
+    { startSec: 1165, title: 'The arrow of time', summary: 'Why we remember the past but not the future: temporal asymmetry comes from the universe’s low-entropy initial state.' },
+    { startSec: 1340, title: 'Heat death and the end of the universe', summary: 'If entropy only grows, the universe heads toward structureless equilibrium. A disquieting idea.' },
+  ],
+  keyIdeas: [
+    {
+      title: '"Disorder" is a bad metaphor',
+      body: 'Saying entropy is disorder works for some intuitions but fails for others. An organised crystal can have higher entropy than a gas if its number of accessible states is larger. The rigorous definition is statistical, not aesthetic.',
+    },
+    {
+      title: 'S = k log W is the central idea',
+      body: 'Boltzmann’s formula connects two scales: the observable macrostate (pressure, temperature, volume) and the invisible microstates (the configurations of particles that produce it). W counts those microstates; k is a proportionality constant; the logarithm converts multiplication into addition.',
+    },
+    {
+      title: 'The second law is statistical, not absolute',
+      body: 'It is not impossible for an egg to un-fry itself — only ludicrously improbable. The second law works because low-entropy states are numerically negligible compared to high-entropy ones. It is not a prohibition, it is an overwhelming combinatorial advantage.',
+    },
+    {
+      title: 'Maxwell’s demon was closed by Landauer',
+      body: 'For 100 years the thought experiment seemed to allow lowering entropy at no cost. Rolf Landauer showed in 1961 that erasing information in the demon’s memory costs energy. The second law holds — and now unifies thermodynamics with information.',
+    },
+    {
+      title: 'Thermodynamic and Shannon entropy are the same',
+      body: 'Shannon measured the uncertainty of a message with the same formula Boltzmann used for gases. Not analogy: identity. Information and heat are aspects of the same thing — a deep shift in how we understand physics.',
+    },
+    {
+      title: 'Time flows because the universe started ordered',
+      body: 'The laws of physics are symmetric in time, but our experience is not. The asymmetry does not come from the laws but from the initial conditions: the Big Bang was extraordinarily improbable, of low entropy. Everything since is relaxation toward equilibrium.',
+    },
+    {
+      title: 'Heat death is the most radical consequence',
+      body: 'If nothing stops the entropy increase, the universe will end in a uniform lukewarm state where nothing interesting can happen. Not a comfortable prediction, but it follows directly from applying the second law to the cosmos.',
+    },
+  ],
+  vocabulary: [
+    { word: 'entropy', translation: 'entropy (a measure of disorder, more precisely: the count of microstates)', context: 'Entropy is often described as disorder, but that is misleading.', partOfSpeech: 'noun' },
+    { word: 'microstate', translation: 'microstate', context: 'Each microstate is a specific arrangement of particles.', partOfSpeech: 'noun' },
+    { word: 'macrostate', translation: 'macrostate', context: 'Pressure and temperature define the macrostate.', partOfSpeech: 'noun' },
+    { word: 'thermodynamics', translation: 'thermodynamics', context: 'The second law of thermodynamics says entropy never decreases.', partOfSpeech: 'noun' },
+    { word: 'statistical mechanics', translation: 'statistical mechanics', context: 'Boltzmann founded statistical mechanics.', partOfSpeech: 'noun' },
+    { word: 'irreversible', translation: 'irreversible (cannot be undone spontaneously)', context: 'Most everyday processes are irreversible.', partOfSpeech: 'adjective' },
+    { word: 'arrow of time', translation: 'arrow of time', context: 'Entropy gives us the arrow of time.', partOfSpeech: 'noun' },
+    { word: 'equilibrium', translation: 'equilibrium', context: 'A closed system tends toward equilibrium.', partOfSpeech: 'noun' },
+    { word: 'heat death', translation: 'heat death', context: 'The heat death of the universe is the ultimate equilibrium.', partOfSpeech: 'noun' },
+    { word: 'information theory', translation: 'information theory', context: 'Shannon’s information theory uses the same math as thermodynamics.', partOfSpeech: 'noun' },
+    { word: 'Boltzmann constant', translation: 'Boltzmann constant', context: 'k is the Boltzmann constant, about 1.38 × 10⁻²³ J/K.', partOfSpeech: 'noun' },
+    { word: 'dispersal', translation: 'dispersal (spreading-out of energy)', context: 'Entropy can be intuited as energy dispersal.', partOfSpeech: 'noun' },
+    { word: 'closed system', translation: 'closed system', context: 'In a closed system, entropy can only increase.', partOfSpeech: 'noun' },
+    { word: 'demon', translation: 'demon (here: a thought-experiment agent)', context: 'Maxwell’s demon was a thought experiment about violating the second law.', partOfSpeech: 'noun' },
+    { word: 'erase', translation: 'to erase (delete information)', context: 'Erasing information costs energy — Landauer’s principle.', partOfSpeech: 'verb' },
+  ],
+  quiz: [
+    { question: 'Why does Veritasium say that "entropy = disorder" is a bad definition?', answer: 'Because disorder is subjective and aesthetic, while entropy is mathematically defined as the logarithm of the number of microstates compatible with a macrostate. There are cases — such as crystals with higher multiplicity than gases — where the disorder intuition breaks.', explanation: 'The disorder metaphor helps initially but fails at the edge cases. Boltzmann’s definition is the only one that works universally.' },
+    { question: 'Write Boltzmann’s formula and explain each term.', answer: 'S = k log W. S is the entropy, k is the Boltzmann constant (≈ 1.38 × 10⁻²³ J/K), W is the number of microstates compatible with the macrostate, and the logarithm converts the multiplicative count into an additive scale.', explanation: 'This formula is engraved on Boltzmann’s tomb in Vienna. It is the rigorous translation of "entropy" into statistical language.' },
+    { question: 'Why is the second law of thermodynamics not an absolute prohibition?', answer: 'Because it is statistical. Low-entropy states are not impossible, only astronomically improbable. In systems with many particles the probability gap is so extreme that the behaviour looks deterministic.', explanation: 'An egg could un-fry itself — but with probability around 10⁻¹⁰²³. In practice that means "never".' },
+    { question: 'What did Maxwell propose with his demon and why did it fail?', answer: 'Maxwell imagined a microscopic creature that would sort fast and slow molecules, lowering entropy without work. It fails because Landauer showed that erasing the information the demon accumulates about the molecules costs energy, and that cost exactly cancels the gain.', explanation: 'Maxwell’s demon first connected thermodynamics with information — a century before Shannon’s theory existed.' },
+    { question: 'How does Shannon entropy connect to thermodynamics?', answer: 'Shannon defined the entropy of a message with a formula mathematically identical to Boltzmann’s: the sum of probabilities times their logarithms. The equivalence is not analogy: information and heat are aspects of the same thing.', explanation: 'This unification today underpins fields like the theory of physical computation and quantum thermodynamics.' },
+    { question: 'Why is the arrow of time an open question in physics?', answer: 'Because the fundamental laws (Newton, Maxwell, Einstein, Schrödinger) are symmetric under time reversal. The asymmetry we perceive does not come from the laws but from the universe’s initial conditions: a very low-entropy Big Bang.', explanation: 'The question "why does time only flow forward?" translates into "why did the universe start so ordered?" — a cosmological question, not a thermodynamic one.' },
+    { question: 'What does the second law predict about the future of the universe?', answer: 'That the universe will evolve toward a state of maximum entropy: uniform thermal equilibrium with no structure or gradients. This is called the "heat death": no interesting process will be possible.', explanation: 'Not a comfortable prediction, but it is the direct consequence of applying the second law to the cosmos as a closed system.' },
+    { question: 'Give an everyday example of an irreversible process and explain why it is one.', answer: 'An ice cube melting in a glass of warm water. It is irreversible because the state "ice + warm water" has much lower multiplicity than "tepid uniform water" — the system evolves toward the most probable state and does not spontaneously return.', explanation: 'Any example where a system advances toward equilibrium works: a cooling coffee, perfume dispersing, a shuffled deck of cards.' },
+  ],
+  actionPlan: [
+    'Summarise in three sentences — in your own words — the difference between microstate and macrostate.',
+    'Search YouTube for the PBS Space Time episode on Maxwell’s demon and compare the two explanations.',
+    'Calculate by hand: with 4 coins, how many microstates are compatible with the macrostate "2 heads"? With "all heads"? Verify that the most probable one has higher entropy.',
+    'Read the Wikipedia entry on Landauer’s principle and write five sentences explaining why it closes Maxwell’s demon.',
+    'Revisit the quiz in 24 hours and again in 7 days — spaced repetition consolidates abstract concepts like few other methods.',
+  ],
+  keyQuotes: [
+    { text: 'Entropy is not disorder. It is the number of ways the parts can be arranged to produce the same whole.', speaker: 'Derek Muller', timestampSec: 178 },
+    { text: 'The second law does not say entropy cannot decrease — it says it almost never will.', speaker: 'Derek Muller', timestampSec: 510 },
+    { text: 'Erasing a bit of information costs energy. Full stop.', speaker: 'Derek Muller', timestampSec: 820 },
+    { text: 'The laws of physics are time-symmetric. Our experience is not. That contradiction is the arrow of time.', speaker: 'Derek Muller', timestampSec: 1205 },
+    { text: 'The universe didn’t start cold and dark. It started incredibly ordered — and everything else follows from that.', speaker: 'Derek Muller', timestampSec: 1290 },
+  ],
+  socialAngles: [],
+};
+
+/* ─── Brief mode — Lex Fridman × Yann LeCun ────────────────────────────
+   The second new sample. Picked specifically as the `brief`/news sample
+   because it represents what knowledge-workers actually want VozClara
+   for: condense a 3-hour podcast they’d never finish into the few real
+   insights and quotable lines. Yann LeCun’s episode is high-quotability
+   territory ("LLMs are an off-ramp") and lands on AI/Reddit literacy.
+─────────────────────────────────────────────────────────────────────── */
+
+const NEWS_COMMON = {
+  brainId: 'sample',
+  source: {
+    type: 'youtube' as const,
+    url: 'https://www.youtube.com/watch?v=5t1vTLU7s40',
+    videoId: '5t1vTLU7s40',
+    durationSec: 10800,
+    thumbnailUrl: 'https://i.ytimg.com/vi/5t1vTLU7s40/hqdefault.jpg',
+    channel: 'Lex Fridman',
+  },
+  title: 'Yann LeCun: Meta AI, Open Source, Limits of LLMs, AGI & the Future of AI',
+  sourceLang: 'en' as const,
+  outputLang: 'es' as const,
+  outputLanguages: ['es' as const, 'en' as const],
+  genre: 'interview' as const,
+  status: 'ready' as const,
+  category: 'ai',
+  isPublic: true,
+  createdAt: Date.parse('2026-03-07T15:00:00Z'),
+  updatedAt: Date.parse('2026-03-07T15:00:00Z'),
+  tags: ['ia', 'llm', 'agi', 'open source', 'meta'],
+  difficulty: 'C1' as const,
+};
+
+const newsES: PackTranslation = {
+  tldr: 'LeCun sostiene que los LLM son una rampa de salida hacia la AGI, no el camino — y que solo los modelos abiertos garantizan que el futuro de la IA no quede en pocas manos.',
+  summary: {
+    short: 'En tres horas con Lex Fridman, Yann LeCun defiende tres tesis: los LLM no llevan a AGI, los modelos abiertos son la única vía sana, y el catastrofismo actual es exagerado.',
+    long: 'Lex Fridman entrevista durante tres horas al jefe de IA de Meta y Premio Turing. LeCun condensa una posición que llevará a la próxima década de debate: los grandes modelos de lenguaje son útiles pero insuficientes para alcanzar inteligencia general — les falta planificación, modelo del mundo y memoria persistente. Defiende además los modelos abiertos (Llama, Mistral) como la única forma de evitar la concentración de poder en pocas empresas. Y rechaza el "doomerism" reciente: la IA no es una amenaza existencial, sino una infraestructura que requiere regulación pragmática, no pánico. La conversación cubre también JEPA (su propuesta arquitectónica alternativa a los Transformers), la rivalidad Meta–OpenAI, y por qué LeCun cree que la AGI llegará "en una década o dos" pero no por la ruta actual.',
+  },
+  chapters: [
+    { startSec: 0, title: 'Introducción y contexto', summary: 'Lex sitúa la entrevista: LeCun como Premio Turing, jefe de IA de Meta, voz disidente del consenso LLM.' },
+    { startSec: 420, title: '¿Por qué los LLM no llegarán a AGI?', summary: 'LeCun explica las cuatro carencias estructurales: razonamiento, planificación, memoria, modelo del mundo.' },
+    { startSec: 2340, title: 'JEPA y arquitecturas alternativas', summary: 'La propuesta de LeCun: Joint Embedding Predictive Architecture. Aprender el mundo, no predecir tokens.' },
+    { startSec: 4080, title: 'Open source vs cerrado', summary: 'Por qué Meta libera Llama. El caso a favor de modelos abiertos como base de la economía digital.' },
+    { startSec: 5640, title: 'Riesgos y doomerism', summary: 'LeCun rechaza la narrativa apocalíptica. Compara la regulación necesaria con la del software, no con armas nucleares.' },
+    { startSec: 7200, title: 'AGI en una década o dos', summary: 'Su predicción temporal. Por qué no es ni inminente ni imposible.' },
+    { startSec: 8760, title: 'Educación, ciencia y el futuro', summary: 'Cómo la IA cambiará la investigación científica. Por qué los nuevos doctorados deberían apuntar a otros caminos que los LLM.' },
+    { startSec: 10080, title: 'Cierre', summary: 'Reflexión final sobre por qué la diversidad de aproximaciones —no la convergencia— es la clave del próximo salto.' },
+  ],
+  keyIdeas: [
+    {
+      title: 'Los LLM son un off-ramp, no el camino',
+      body: 'LeCun usa la metáfora literal: los modelos autorregresivos son una rampa de salida útil pero terminan en un callejón. Predicen el siguiente token, no construyen un modelo del mundo. Sin un modelo del mundo no hay planificación verdadera, y sin planificación no hay inteligencia general.',
+    },
+    {
+      title: 'Las cuatro carencias estructurales',
+      body: 'Razonamiento (los LLM aproximan, no deducen), planificación (no simulan futuros alternativos antes de actuar), memoria persistente (cada conversación empieza de cero), y comprensión física (no entienden que el agua moja). Todas son limitaciones de arquitectura, no de escala — y por eso "más parámetros" no las resolverá.',
+    },
+    {
+      title: 'JEPA: aprender el mundo, no los tokens',
+      body: 'Joint Embedding Predictive Architecture es la apuesta de LeCun: en lugar de predecir el siguiente token de texto, predecir la siguiente representación abstracta del mundo. Suena técnico pero el cambio conceptual es enorme: del lenguaje al modelo causal.',
+    },
+    {
+      title: 'Open source no es una opción ideológica, es infraestructura',
+      body: 'LeCun argumenta que la IA será la infraestructura del próximo siglo —como Linux, como TCP/IP— y que dejarla en manos de tres empresas privadas estadounidenses sería un error histórico. Llama no es marketing de Meta: es una apuesta de plataforma.',
+    },
+    {
+      title: 'El doomerism es un error de categoría',
+      body: 'LeCun separa preocupaciones legítimas (sesgo, desinformación, concentración económica) de la narrativa de "IA como riesgo existencial". La segunda, dice, mezcla ciencia ficción con activismo y nubla la regulación que sí hace falta. Su comparación: la IA está más cerca de la imprenta que de la bomba atómica.',
+    },
+    {
+      title: 'AGI en 10–20 años, pero no por aquí',
+      body: 'LeCun no es escéptico del futuro: cree firmemente en AGI dentro de su vida. Lo que rechaza es la ruta: convencido de que las arquitecturas actuales se estancarán antes de llegar. El próximo gran salto vendrá de un cambio cualitativo, no cuantitativo.',
+    },
+    {
+      title: 'Recomendación para investigadores jóvenes',
+      body: 'En un momento del podcast Lex le pregunta qué debería estudiar hoy un doctorando. LeCun responde sin dudar: "Lo que no estamos haciendo ahora mismo". Critica la convergencia de toda la comunidad ML hacia los Transformers; el próximo Karpathy vendrá de otro paradigma.',
+    },
+  ],
+  actionPlan: [
+    'Lee el paper de JEPA de LeCun (2022, "A Path Towards Autonomous Machine Intelligence") y resume en una página por qué su autor lo considera la siguiente arquitectura.',
+    'Compara la posición de LeCun con la de Geoffrey Hinton (escéptico ahora) y la de Ilya Sutskever (más optimista con LLMs): un mapa del debate AGI de 2024-2026.',
+    'Monitoriza durante un mes las publicaciones de Meta AI Research vs OpenAI: ¿se ven las tesis de LeCun reflejadas en las direcciones de investigación?',
+    'Si trabajas en un equipo técnico, plantea un análisis interno sobre "¿estamos demasiado dependientes de un solo proveedor de modelos?" — la respuesta de LeCun sobre infraestructura abierta tiene implicaciones prácticas.',
+    'Apunta tres ejemplos concretos en tu sector donde la limitación de "no hay modelo del mundo" se manifieste — ayudan a calibrar las expectativas reales de los productos basados en LLM.',
+    'Sigue a yann_lecun en X y los podcasts de Lex Fridman como par: el siguiente debate (con Ilya, con Demis Hassabis) probablemente refinará estas posiciones.',
+  ],
+  keyQuotes: [
+    { text: 'Los grandes modelos de lenguaje son una rampa de salida en el camino hacia la inteligencia humana — no el camino.', original: 'Large language models are an off-ramp on the road to human-level intelligence — not the path.', speaker: 'Yann LeCun', timestampSec: 1820 },
+    { text: 'Si quieres que tu sistema razone, no puedes simplemente entrenarlo para predecir el siguiente token.', original: 'If you want your system to reason, you cannot just train it to predict the next token.', speaker: 'Yann LeCun', timestampSec: 2240 },
+    { text: 'Open source no es una opinión política. Es la única forma de tener una IA en la que el mundo pueda confiar.', original: 'Open source is not a political opinion. It is the only way to have AI the world can trust.', speaker: 'Yann LeCun', timestampSec: 4380 },
+    { text: 'El miedo a la IA está más cerca del Frankenstein de Mary Shelley que de cualquier documento técnico.', original: 'The fear of AI is closer to Mary Shelley’s Frankenstein than to any technical document.', speaker: 'Yann LeCun', timestampSec: 6320 },
+    { text: 'Llegará una IA al nivel humano. Pero no se parecerá a un LLM más grande.', original: 'Human-level AI will come. But it will not look like a bigger LLM.', speaker: 'Yann LeCun', timestampSec: 7480 },
+    { text: 'Si eres doctorando hoy, lo peor que puedes hacer es trabajar en lo que ya está funcionando.', original: 'If you are a PhD student today, the worst thing you can do is work on what is already working.', speaker: 'Yann LeCun', timestampSec: 9120 },
+  ],
+  vocabulary: [
+    { word: 'autoregressive', translation: 'autorregresivo (que predice el siguiente elemento dado el anterior)', context: 'LLMs are autoregressive models — they predict the next token.', partOfSpeech: 'adjetivo' },
+    { word: 'world model', translation: 'modelo del mundo (representación interna del entorno)', context: 'A system without a world model cannot truly plan.', partOfSpeech: 'sustantivo' },
+    { word: 'doomerism', translation: 'doomerism / catastrofismo (visión pesimista sobre el futuro tecnológico)', context: 'I think the AI doomerism narrative is overblown.', partOfSpeech: 'sustantivo' },
+    { word: 'inference', translation: 'inferencia (deducir conclusiones a partir de premisas)', context: 'LLMs approximate inference but don’t actually reason.', partOfSpeech: 'sustantivo' },
+    { word: 'embedding', translation: 'embedding (representación vectorial de un concepto)', context: 'JEPA predicts in embedding space, not token space.', partOfSpeech: 'sustantivo' },
+  ],
+  quiz: [],
+  socialAngles: [],
+};
+
+const newsEN: PackTranslation = {
+  tldr: 'LeCun argues LLMs are an off-ramp toward AGI, not the road — and that only open models keep the future of AI out of a few hands.',
+  summary: {
+    short: 'In three hours with Lex Fridman, Yann LeCun defends three theses: LLMs do not lead to AGI, open models are the only sane path, and the current doomerism is overblown.',
+    long: 'Lex Fridman interviews Meta’s head of AI and Turing-laureate Yann LeCun for three hours. LeCun lays out a position that will define the next decade of debate: large language models are useful but insufficient for general intelligence — they lack planning, world modelling and persistent memory. He also defends open models (Llama, Mistral) as the only way to avoid power concentration in a handful of companies. And he rejects the recent doomerism: AI is not an existential threat, but an infrastructure that requires pragmatic regulation, not panic. The conversation also covers JEPA (his architectural alternative to Transformers), the Meta–OpenAI rivalry, and why LeCun believes AGI will arrive "in a decade or two" — but not by the current route.',
+  },
+  chapters: [
+    { startSec: 0, title: 'Introduction and context', summary: 'Lex sets the stage: LeCun as Turing-laureate, head of Meta AI, dissenting voice in the LLM consensus.' },
+    { startSec: 420, title: 'Why LLMs won’t reach AGI', summary: 'LeCun explains the four structural shortcomings: reasoning, planning, memory, world modelling.' },
+    { startSec: 2340, title: 'JEPA and alternative architectures', summary: 'LeCun’s proposal: Joint Embedding Predictive Architecture. Learn the world, don’t predict tokens.' },
+    { startSec: 4080, title: 'Open source vs closed', summary: 'Why Meta releases Llama. The case for open models as the base of the digital economy.' },
+    { startSec: 5640, title: 'Risks and doomerism', summary: 'LeCun rejects the apocalyptic narrative. Compares the required regulation to software, not nuclear weapons.' },
+    { startSec: 7200, title: 'AGI in a decade or two', summary: 'His timeline prediction. Why it is neither imminent nor impossible.' },
+    { startSec: 8760, title: 'Education, science and the future', summary: 'How AI will change scientific research. Why new PhDs should aim away from LLMs.' },
+    { startSec: 10080, title: 'Closing', summary: 'Final reflection on why diversity of approaches — not convergence — is the key to the next leap.' },
+  ],
+  keyIdeas: [
+    {
+      title: 'LLMs are an off-ramp, not the road',
+      body: 'LeCun uses the literal metaphor: autoregressive models are a useful off-ramp that ends in a cul-de-sac. They predict the next token, they do not build a model of the world. Without a world model there is no real planning, and without planning there is no general intelligence.',
+    },
+    {
+      title: 'The four structural shortcomings',
+      body: 'Reasoning (LLMs approximate, they do not deduce), planning (they do not simulate alternative futures before acting), persistent memory (every conversation starts from zero), and physical understanding (they do not understand that water is wet). All are architectural limits, not scale ones — so "more parameters" will not solve them.',
+    },
+    {
+      title: 'JEPA: learn the world, not the tokens',
+      body: 'Joint Embedding Predictive Architecture is LeCun’s bet: instead of predicting the next text token, predict the next abstract representation of the world. It sounds technical, but the conceptual shift is enormous — from language to causal model.',
+    },
+    {
+      title: 'Open source is not an ideological option — it is infrastructure',
+      body: 'LeCun argues AI will be the next century’s infrastructure — like Linux, like TCP/IP — and leaving it in the hands of three private American companies would be a historic mistake. Llama is not Meta marketing: it is a platform bet.',
+    },
+    {
+      title: 'Doomerism is a category error',
+      body: 'LeCun separates legitimate concerns (bias, misinformation, economic concentration) from the "AI as existential risk" narrative. The latter, he says, mixes science fiction with activism and clouds the regulation that is actually needed. His comparison: AI is closer to the printing press than to the atomic bomb.',
+    },
+    {
+      title: 'AGI in 10–20 years — but not via this route',
+      body: 'LeCun is not future-sceptical: he firmly believes in AGI within his lifetime. What he rejects is the route — convinced current architectures will plateau before getting there. The next great leap will come from a qualitative change, not a quantitative one.',
+    },
+    {
+      title: 'Advice for young researchers',
+      body: 'At one point Lex asks what a PhD student should study today. LeCun answers without hesitation: "What we are not doing right now." He criticises the ML community’s convergence onto Transformers; the next Karpathy will come from another paradigm.',
+    },
+  ],
+  actionPlan: [
+    'Read LeCun’s JEPA paper (2022, "A Path Towards Autonomous Machine Intelligence") and summarise in one page why its author considers it the next architecture.',
+    'Compare LeCun’s position with Geoffrey Hinton’s (currently sceptical) and Ilya Sutskever’s (more LLM-optimistic): a map of the 2024–2026 AGI debate.',
+    'Monitor Meta AI Research vs OpenAI publications for a month: are LeCun’s theses reflected in the research directions?',
+    'If you work on a technical team, raise an internal analysis about "are we over-dependent on a single model provider?" — LeCun’s position on open infrastructure has practical implications.',
+    'Note three concrete examples in your sector where the "no world model" limit manifests itself — they help calibrate real expectations for LLM-based products.',
+    'Follow @ylecun on X and the Lex Fridman podcasts as a pair: the next debate (with Ilya, with Demis Hassabis) will likely refine these positions.',
+  ],
+  keyQuotes: [
+    { text: 'Large language models are an off-ramp on the road to human-level intelligence — not the path.', speaker: 'Yann LeCun', timestampSec: 1820 },
+    { text: 'If you want your system to reason, you cannot just train it to predict the next token.', speaker: 'Yann LeCun', timestampSec: 2240 },
+    { text: 'Open source is not a political opinion. It is the only way to have AI the world can trust.', speaker: 'Yann LeCun', timestampSec: 4380 },
+    { text: 'The fear of AI is closer to Mary Shelley’s Frankenstein than to any technical document.', speaker: 'Yann LeCun', timestampSec: 6320 },
+    { text: 'Human-level AI will come. But it will not look like a bigger LLM.', speaker: 'Yann LeCun', timestampSec: 7480 },
+    { text: 'If you are a PhD student today, the worst thing you can do is work on what is already working.', speaker: 'Yann LeCun', timestampSec: 9120 },
+  ],
+  vocabulary: [
+    { word: 'autoregressive', translation: 'autoregressive (predicts the next item given the previous)', context: 'LLMs are autoregressive models — they predict the next token.', partOfSpeech: 'adjective' },
+    { word: 'world model', translation: 'world model (internal representation of the environment)', context: 'A system without a world model cannot truly plan.', partOfSpeech: 'noun' },
+    { word: 'doomerism', translation: 'doomerism (pessimistic view of technological future)', context: 'I think the AI doomerism narrative is overblown.', partOfSpeech: 'noun' },
+    { word: 'inference', translation: 'inference (deducing conclusions from premises)', context: 'LLMs approximate inference but don’t actually reason.', partOfSpeech: 'noun' },
+    { word: 'embedding', translation: 'embedding (vector representation of a concept)', context: 'JEPA predicts in embedding space, not token space.', partOfSpeech: 'noun' },
+  ],
+  quiz: [],
+  socialAngles: [],
+};
+
 /* ─── Pack assembly ───────────────────────────────────────────────────── */
 
 export const samplePackBusiness: KnowledgePack = {
@@ -409,11 +799,34 @@ export const samplePackCreator: KnowledgePack = {
   translations: { es: creatorES, en: creatorEN },
 };
 
-/** Lookup by id — used by PackPage when ?id is sample / sample-learn / sample-creator. */
+/** Study mode sample — Veritasium "The Most Misunderstood Concept in Physics".
+ *  Different source video from the brief/learn/creator triad on purpose:
+ *  the value of `study` mode shows best on a real concept-deep lecture. */
+export const samplePackStudy: KnowledgePack = {
+  ...STUDY_COMMON,
+  id: 'sample-study',
+  mode: 'study',
+  translations: { es: studyES, en: studyEN },
+};
+
+/** News/Brief mode sample — Lex Fridman × Yann LeCun on AI.
+ *  Distinct from the Tagesschau brief sample so visitors who click it
+ *  see how the same `brief` mode handles a long-form interview rather
+ *  than a tight news bulletin. */
+export const samplePackNews: KnowledgePack = {
+  ...NEWS_COMMON,
+  id: 'sample-news',
+  mode: 'brief',
+  translations: { es: newsES, en: newsEN },
+};
+
+/** Lookup by id — used by PackPage when ?id is sample / sample-learn / sample-creator / sample-study / sample-news. */
 export function getSamplePack(id: string): KnowledgePack | null {
   if (id === 'sample' || id === 'sample-business') return samplePackBusiness;
   if (id === 'sample-learn') return samplePackLearn;
   if (id === 'sample-creator') return samplePackCreator;
+  if (id === 'sample-study') return samplePackStudy;
+  if (id === 'sample-news') return samplePackNews;
   return null;
 }
 
