@@ -11,6 +11,7 @@ import { usePageHead } from '../hooks/usePageHead';
 import { getSamplePack } from '../lib/samplePack';
 import { PackAudioPlayer } from '../components/PackAudioPlayer';
 import { ServerAudioPlayer } from '../components/ServerAudioPlayer';
+import { RatingPanel } from '../components/RatingPanel';
 import { checkTTSAvailability } from '../lib/ttsServer';
 import { VideoPanel } from '../components/VideoPanel';
 import { PackFeedback } from '../components/PackFeedback';
@@ -265,6 +266,11 @@ export function PackPage() {
           onSwitch={handleSwitchLanguage}
           hideAddCta={isSample}
         />
+
+        {/* Pack rating — Michelin Rating. Aggregated per source video,
+            not per pack, since a single YouTube video can yield several
+            Packs across modes and languages. */}
+        <RatingPanel videoId={pack.source.videoId} videoTitle={pack.title} />
       </div>
 
       {/* Audio companion — non-sticky, in document flow. */}

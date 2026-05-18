@@ -25,6 +25,12 @@ import {
   handleAuthLogout,
   handleAuthAttachBrain,
 } from './auth';
+import {
+  handleRatingPost,
+  handleRatingGet,
+  handleRatingMe,
+  handleRatingTop,
+} from './rating';
 
 interface Env {
   SUPADATA_API_KEY?: string;
@@ -370,6 +376,29 @@ async function routeRequest(req: Request, env: Env): Promise<Response> {
 
     if (url.pathname === '/api/auth/attach-brain' && req.method === 'POST') {
       return handleAuthAttachBrain(req, env);
+    }
+
+    /* ─── /api/rating/* — Michelin Rating ───────────────────────────── *
+     *
+     * 👍/👎 + 4 1-tap signals anonymously, ⭐ + text review with an
+     * account. Aggregated per videoId. See worker/src/rating.ts.
+     */
+    if (url.pathname === '/api/rating' && req.method === 'POST') {
+      const limit = await rateLimit(env, req, 'rating_post', 20);
+      if (limit) return limit;
+      return handleRatingPost(req, env);
+    }
+
+    if (url.pathname === '/api/rating' && req.method === 'GET') {
+      return handleRatingGet(url, env);
+    }
+
+    if (url.pathname === '/api/rating/me' && req.method === 'GET') {
+      return handleRatingMe(req, env);
+    }
+
+    if (url.pathname === '/api/rating/top' && req.method === 'GET') {
+      return handleRatingTop(url, env);
     }
 
     return json({ error: 'not_found' }, 404);
