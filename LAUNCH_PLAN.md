@@ -1007,7 +1007,8 @@ BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. 
 **Tier S — gratis erst (insgesamt ~1h Aufwand):**
 - ❌ Futurepedia — **2026 komplett paid** ($247 Sold Out / $497 Verified). Skip pre-revenue, reconsider post-launch wenn Cashflow stimmt. Update Di 19.5. 15:02.
 - ❌ TAAFT — **auch komplett paid**, aber unterer Tier ist tatsächlich interessant. Siehe TAAFT-Eintrag in Tier-A unten. Update Di 19.5. 15:38.
-- ⏳ futuretools.io, toolify.ai — als nächstes prüfen (vermutlich noch free)
+- ✅ **futuretools.io** — submitted Di 19.5. 15:59 als Freemium / Education. Matt Wolfe reviewt manuell, ~1-2 Wochen bis Listing (oder Reject). Free bestätigt, keine Paywall in 2026. Mail-Confirm an salvador7eon@gmail.com.
+- ⏳ toolify.ai — als nächstes prüfen
 - Product Hunt Setup (Mi nach Launch) — bisher nicht angefasst
 
 **Lesson learned (Di 19.5.):** 2026er AI-Tool-Directory-Landschaft hat sich
