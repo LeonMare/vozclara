@@ -16,9 +16,13 @@
 | Pro Plus €19/mo (Custom Lenses + Season Pack + Premium AI) | ✅ |
 | Free Tier: 3 Videos/Woche, Summary + Transcript only | ✅ |
 | Pro Gate: SRS+Anki, Lenses, alle Modes, Multi-Lang, Streaming | ✅ |
-| Pro Plus Gate: Custom Lenses, Season Pack, Anthropic Sonnet 4.7, Voice-Modes | ✅ |
+| Pro Plus Gate: Custom Lenses, Season Pack, Anthropic Sonnet 4.5, Voice-Modes | ✅ |
 | Primary LLM (Free/Pro): Llama 3.3 70B via Workers AI | ✅ |
-| Premium LLM (Pro Plus): Claude Sonnet 4.7 via Anthropic API | ✅ |
+| Premium LLM (Pro Plus): **Claude Sonnet 4.5** via Cloudflare AI Gateway → Anthropic (NOT 4.7) | ✅ |
+| Season Pack: **Summarize-then-Synthesize** Pattern (Llama → Sonnet), nicht raw 800k context | ✅ |
+| Prompt Caching: 1h TTL auf Lens System-Prompts (mandatory, 70% cost reduction) | ✅ |
+| Quotas: Pro Plus capped 40 standard + 2 Season Packs/mo, overage $0.10/pack | ✅ |
+| MCP Stack: Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` | ✅ |
 | Transcript Provider: Supadata (legally clean) | ✅ |
 | Payments: TBD Polar.sh ODER Stripe + Tax | ⏳ Mi |
 | Launch-Date: WHEN-READY, nicht fixed 25.5. | ✅ |
@@ -26,213 +30,395 @@
 
 ---
 
-## Phase 1 — Foundation Polish (Woche 1, ~5 Tage)
+## ⚠️ SUSTAINABILITY-PRINCIPLE (added Di 19.5. 21:00)
 
-**Ziel:** Alles legal-clean, alles wow-ready, alles polished. Kein Feature kommt rein ohne Polish.
+Daily-Schedule basierend auf realer 2025-26 Solo-Founder-Data:
+**6h Deep Work + 2-3h Shallow** = max productive ceiling.
+Hard stop 20:00. 5 build days + 1 marketing/admin day + 1 FULL day off per week.
+**Day 13 mandatory deload.** Siehe MASTER.md §9 für Details.
 
-### Mi 20.5. — Foundation Day
+15h/Tag-Pattern = burnout (Sifted 2025: 54% solo founders burned out).
+Tony Dinh shipped $1M MRR mit 20-30h/WOCHE. Marc Lou: 4h/day deep. Pieter Levels: "I was working all the time because I was lonely."
 
-| Slot | Block | Aufwand |
+---
+
+## Phase 1 — Foundation Polish (Woche 1: Mi-Di, 5 Build-Tage)
+
+**Ziel:** Alles legal-clean, alles wow-ready, MCP-Server live. Sustainable Tempo: 6h Deep + 3h Shallow täglich, hard stop 20:00.
+
+### Daily Structure (gilt für alle Build-Tage)
+
+| Slot | Block | Type |
 |---|---|---|
-| 9-10 | Wrangler-Secret-Check (SUPADATA_API_KEY, RESEND_API_KEY, STRIPE_*) | 30min |
-| 10-11 | Anthropic API Account + Billing + Key in Workers Secret | 1h |
-| 11-13 | **Compliance Bundle** (Task #33): AI-Disclosure-Banner + /privacy Update + Sentry browser drop | 3h |
-| 14-17 | **MCP Server** Anfang: Tools definition + handler scaffolding | 3h |
-| 17-19 | **MCP Server** Tools 1-3: generate_pack, list_packs, get_pack | 2h |
+| 9:00-10:00 | Morning anchor: walk + previous-day review | shallow |
+| 10:00-13:00 | **Deep Block 1** (3h) — hardest build work | **DEEP** |
+| 13:00-14:00 | Lunch + walk OFF SCREEN | break |
+| 14:00-17:00 | **Deep Block 2** (3h) — second-hardest work | **DEEP** |
+| 17:00-19:00 | Shallow: outreach, content, support, catering admin | shallow |
+| 19:00-20:00 | Reddit/Discord + build-in-public post | shallow |
+| 20:00 | **HARD STOP** | — |
+
+### Mi 20.5. — Foundation Day (~9h productive)
+
+**Deep Block 1 (10-13):** Compliance Bundle (Task #33)
+- Wrangler-Secret-Check + Anthropic Account/Billing setup
+- AI-Disclosure-Banner First-Run
+- /privacy Update mit Subprocessors (Anthropic/Cloudflare/Supadata)
+- Drop browser Sentry SDK
+- AI-Watermark Plumbing in Export-Pipeline
+
+**Deep Block 2 (14-17):** MCP Server Foundation (Task #32)
+- Install `agents` SDK + `workers-oauth-provider`
+- Create `worker/src/mcp/agent.ts` scaffold
+- First composite tool: `vozclara.generate_pack(url, language, depth)`
+- Smithery account erstellen
+
+**Shallow (17-19):** Polar.sh evaluation + Anthropic API key in Workers Secret + r/anki Karma Comment
 
 ### Do 21.5. — MCP + Citations Day
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-12 | **MCP Server** Tools 4-5 + Auth + Smithery Publish | 3h |
-| 12-13 | **Claude Skills Bundle** (Task #36) | 1h |
-| 14-16 | **Inline Timestamp-Citations** (Task #22) Prompt-Engineering + Render-Layer | 4h |
-| 16-19 | **Inline Timestamp-Citations** Continue + Test mit Lex Fridman Pack | 3h |
+**Deep Block 1 (10-13):** MCP Server complete
+- Tools 2-3: `get_pack`, `search_my_library`
+- OAuth handler + Smithery publish
+
+**Deep Block 2 (14-17):** Inline Timestamp-Citations (Task #22)
+- Prompt-Engineering für `[MM:SS]`-Pattern Output
+- Render-Layer: parsed `[04:23]` → klickbare YouTube-Deep-Links
+
+**Shallow (17-19):** Claude Skills Bundle (Task #36) + Polar.sh Decision
 
 ### Fr 22.5. — Account-less + Streaming Day
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **Account-less First Pack** (Task #23): anonymous endpoint + migration on signup | 4h |
-| 14-17 | **Streaming Pack-Gen** + **Agent-Thinking-Sidebar** (Task #24 + #37) | 3h |
-| 17-19 | **AI-Watermark on Exports** (.apkg + PDF + Markdown footers) | 2h |
+**Deep Block 1 (10-13):** Account-less First Pack (Task #23)
+- Anonymous endpoint mit IP-rate-limit
+- KV `anonymous-{nonce}` storage
+- Migration-on-signup flow
 
-### Sa 23.5. — Pricing + Polar Day
+**Deep Block 2 (14-17):** Streaming + Agent-Thinking-Stream (Tasks #24 + #37)
+- SSE in Worker
+- Sidebar component für Live-"Thoughts"
+- Mix echte Status + cosmetic Filler
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **/pricing-Page** mit Vergleichs-Tabelle vs NotebookLM/Eightify | 4h |
-| 14-18 | **Polar.sh Migration** ODER **Stripe Tax Setup** (Task #34) | 4h |
-| 18-19 | **Pack-Share-URL + OG-Preview** (mit Watermark) | 1h |
+**Shallow (17-19):** /pricing-Page Skeleton + Vergleichstabelle Outline
 
-### So 24.5. — Pack-Share + RUNBOOK Day
+### Sa 23.5. — Pricing + Pack-Share Day
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-14 | **Pack-Share-URL** continued + OG dynamic generation per locale | 5h |
-| 14-16 | **RUNBOOK.md** schreiben (Task #35) | 90min |
-| 16-19 | **/pricing-Page** polish + Founder-Deal-Banner re-design | 3h |
+**Deep Block 1 (10-13):** /pricing-Page complete
+- Vergleichs-Tabelle vs NotebookLM/Eightify/NoteGPT
+- 3-Tier-Layout (Free/Pro/Pro Plus)
+- Founder-Deal-Banner mit Cap-Counter
+
+**Deep Block 2 (14-17):** Pack-Share-URL + OG-Preview
+- `vozclara.app/p/{id}` öffentliche Pack-Pages
+- OG-Image dynamisch generiert per Locale
+- Watermark eingebaut
+
+**Shallow (17-19):** RUNBOOK.md schreiben (Task #35)
+
+### So 24.5. — MARKETING DAY (kein Code, leichter Tag)
+
+- Demo-Video Konzept-Outline (für Tasks #29)
+- Influencer-Spreadsheet anlegen mit 40 Targets (Task #31)
+- Discord post + Twitter build-in-public
+- Lighthouse-Baseline-Audit (informational)
+
+### Mo 25.5. — FULL DAY OFF (non-negotiable)
+
+Recharge. Walk. Movie. Family. Kein Laptop. Marc Lou's Pattern.
 
 **Woche 1 Output:**
 - ✅ MCP Server live + published auf Smithery
-- ✅ Claude Skills Bundle in Anthropic Marketplace
-- ✅ Citations sentence-level mit YouTube-Deep-Links
+- ✅ Compliance Bundle (AI Disclosure + Watermark + Sentry-Drop + /privacy)
+- ✅ Inline Citations mit YouTube-Deep-Links
 - ✅ Account-less First Pack funktioniert
-- ✅ Streaming + Agent-Thinking-Stream demoable
-- ✅ AI-Watermark auf allen Exports
-- ✅ Compliance-Bundle EU AI Act + DSGVO ready
-- ✅ Polar.sh ODER Stripe Tax aktiv
+- ✅ Streaming + Agent-Thinking-Sidebar demoable
 - ✅ /pricing-Page production-ready
-- ✅ RUNBOOK.md für Launch-Woche
+- ✅ Pack-Share-URL + OG-Preview
+- ✅ Claude Skills Bundle in Marketplace
+- ✅ RUNBOOK.md baseline ready
 
 ---
 
-## Phase 2 — Wow Features (Woche 2, ~7 Tage)
+## Phase 2 — Wow Features (Woche 2: Di-Mo, 5 Build-Tage)
 
-**Ziel:** Die echte Magic einbauen. Lenses + Season Pack + Brand sind die viralen Differenziatoren.
+**Ziel:** 18 Lenses + Season Pack + Per-Language Typography + Anthropic Integration. Die echte Magic.
 
-### Mo 26.5. - Mi 28.5. — Lenses Sprint (3 Tage)
+### Di 26.5. (Build Day 1) — Anthropic Integration
 
-| Tag | Block | Aufwand |
-|---|---|---|
-| Mo | **8 Format-Lenses** (Anki/Cornell/CEFR/Briefing/TikTok/SRS-Plan/Academic/Code) Prompt-Templates | 8h |
-| Di Vormittag | **10 Interpretive Lenses** (Skeptic/ELI5/Devil/Buddhist/Stoic/Marxist/Steel-Man/Counter/First-Principles/Researcher) | 4h |
-| Di Nachmittag | **Lens-UI**: Dropdown-Selector + Hover-Preview + Context-Aware-Filter | 4h |
-| Mi | **Lens-Generation-Pipeline** integriert ins Pack-Workflow | 6h |
-| Mi PM | Lens-Testing mit echten Sample-Videos | 2h |
+**Deep Block 1 (10-13):** Cloudflare AI Gateway Setup
+- Account-Setup in CF Dashboard, gateway `vozclara-prod`
+- `worker/src/anthropic.ts` schreiben: callAnthropic + withRetry
+- ANTHROPIC_API_KEY via wrangler secret
 
-### Do 29.5. - Fr 30.5. — Season Pack + Anthropic Sprint (2 Tage)
+**Deep Block 2 (14-17):** Streaming Implementation
+- `worker/src/anthropic-stream.ts`: ReadableStream re-streaming
+- `worker/src/llm-router.ts`: tier-aware Llama/Sonnet routing
+- Usage tracking via ctx.waitUntil()
 
-| Tag | Block | Aufwand |
-|---|---|---|
-| Do AM | **Anthropic API Integration** in Worker (parallel zu Workers AI) | 3h |
-| Do PM | **Long-Context Season Pack** Endpoint (Task #27) + Playlist-URL-Detection | 5h |
-| Fr AM | **Season Pack** Output-Synthesis (Themes / Contradictions / Concept-Evolution) | 4h |
-| Fr PM | **Season Pack** UI + Pro-Plus-Gate + Quota-Limiting (5/Monat) | 4h |
+**Shallow (17-19):** D1 Migration `user_usage` Table + Discord build-in-public
 
-### Sa 31.5. — Typography + Polish Day
+### Mi 27.5. (Build Day 2) — 8 Format Lenses
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-12 | **Per-Language Typography** (Task #38) — Font-Lizenzen, CSS-Variables, :lang() switching | 3h |
-| 13-17 | **Pack-Generation-Animation Polish** + Empty-States + Loading-States | 4h |
-| 17-19 | **404 + 500 + Error-States** mit Brand-Voice | 2h |
+**Deep Block 1 (10-13):** Prompt-Templates für Format Lenses 1-4
+- Anki Deck Lens
+- Cornell Notes Lens
+- CEFR Worksheet (A1-C2)
+- Executive Briefing
+
+**Deep Block 2 (14-17):** Prompt-Templates für Format Lenses 5-8
+- TikTok Hook 60s
+- SRS Schedule Plan
+- Academic Notes (LaTeX)
+- Code Tutorial Mode
+
+**Shallow (17-19):** Lens Selector UI mockup + r/PKM Karma Comment
+
+### Do 28.5. (Build Day 3) — 10 Interpretive Lenses
+
+**Deep Block 1 (10-13):** Interpretive Lenses 9-13 (Skeptic, ELI5, Devil's, Buddhist, Stoic)
+- Each gets dedicated system-prompt mit Voice + Tone calibration
+- Anti-preachy guardrails
+
+**Deep Block 2 (14-17):** Interpretive Lenses 14-18 (Marxist, Steel-Man, Counter, First-Principles, Researcher)
+- Same prompt engineering depth
+- Test mit Lex Fridman Sample-Pack
+
+**Shallow (17-19):** Lens Hover-Preview System mit Beispiel-Outputs
+
+### Fr 29.5. (Build Day 4) — Lens UI + Generation Pipeline
+
+**Deep Block 1 (10-13):** Lens Dropdown + Context-Aware Filter
+- React Component für Lens-Selector
+- Context-aware (Cornell zeigt nicht bei Cooking-Video)
+- Pro Plus Gate für Interpretive Lenses
+
+**Deep Block 2 (14-17):** Pack-Generation Pipeline Integration
+- Lens-Choice flows through Worker → Anthropic call
+- Cache Lens system-prompts mit 1h TTL
+- Quota check at endpoint level
+
+**Shallow (17-19):** Lens Marketplace-Foundation Data-Model + Pack-Storage updates
+
+### Sa 30.5. (MARKETING DAY) — Seed-Packs ES + Demo-Recording Start
+
+- 50 ES Public Packs aus 4-5 Top-Channels (Marc Vidal, Dot CSV, La Hiperactina, Veritasium-ES)
+- Demo-Video 30s TikTok roughcut
+- Twitter build-in-public update
+- Reddit r/getstudying participation
+
+### So 31.5. — FULL DAY OFF
+
+Non-negotiable. Walk. Movie. Family. Kein Laptop.
+
+### Mo 1.6. (Build Day 5) — Season Pack + Per-Lang Typography
+
+**🛑 Day 13 of sprint — wenn Energy below baseline, statt Code: zusätzlicher Off-Day.**
+
+**Deep Block 1 (10-13):** Season Pack Endpoint (Task #27)
+- Summarize-then-Synthesize Pipeline
+- Step 1: Each episode → Llama 3.3 (5k summary)
+- Step 2: Combined 200k summaries → Sonnet 4.5 synthesis
+- Quota: 2/month Pro Plus
+
+**Deep Block 2 (14-17):** Per-Language Typography (Task #38)
+- Font-Lizenzen ordern (Reforma + Adelle Sans wenn budget, sonst Plex)
+- CSS-Variables mit `:lang()` switching
+- Heading-Hierarchy pro Sprache
+
+**Shallow (17-19):** Empty-States + Error-States Brand-Voice in 4 Sprachen
 
 **Woche 2 Output:**
+- ✅ Anthropic API + AI Gateway integriert
+- ✅ Streaming + tier-aware LLM-Router
 - ✅ 18 Lenses live (8 Format + 10 Interpretive)
-- ✅ Lens-Marketplace-Foundation gelegt (für Monat 1 post-launch)
-- ✅ Season Pack live (Pro Plus Tier-Feature)
-- ✅ Anthropic API parallel zu Workers AI
-- ✅ Per-Language Typography (4 Sprach-Identitäten)
-- ✅ Alle Empty-/Error-/Loading-States mit Brand-Voice
+- ✅ Lens Dropdown UI + Context-Aware Filter
+- ✅ Season Pack via Summarize-then-Synthesize ($0.75/pack)
+- ✅ Per-Language Typography
+- ✅ 50 ES Seed Packs done
 
 ---
 
-## Phase 3 — Quality + Launch-Prep (Woche 3, ~5 Tage)
+## Phase 3 — Quality + Launch-Prep (Woche 3: Di-Mo, 5 Build-Tage)
 
-**Ziel:** Production-Quality. Demos vorab. Seed-Content. Influencer-Outreach.
+**Ziel:** Production-Quality. Demos polished. Seed-Content komplett. Influencer-Outreach raus. Lighthouse 90+. FINAL_QA grün.
 
-### Mo 2.6. — Demo-Videos + Seed-Content Day
+### Di 2.6. (Build Day 1) — Demo-Videos
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **3 Demo-Videos** (Task #29): 30s TikTok + 90s Twitter + 4min YouTube | 4h |
-| 14-19 | **50 Public Packs** in EN seed (Lex/Huberman/Veritasium/3B1B) | 5h |
+**Deep Block 1 (10-13):** 30s TikTok Vertical + 90s Twitter Horizontal aufnehmen
+- Setup: Loom oder Descript für Capture + Edit
+- Hook: "Stop losing what you watch"
+- Hero-Demo: Season Pack 40-Episode Synthesis
 
-### Di 3.6. — Seed-Content Continue Day
+**Deep Block 2 (14-17):** 4min YouTube/PH Long-Form Demo
+- Full Tour mit Founder-Story
+- Lenses-Demo (Marxist Lens auf Joe Rogan = viral money shot)
+- Founder Deal pitch
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **50 Public Packs** in DE (Tilo Jung/maiLab/Mr Wissen2Go/Kurzgesagt-DE) | 4h |
-| 14-19 | **50 Public Packs** in ES (Marc Vidal/Dot CSV/Veritasium-ES) | 5h |
+**Shallow (17-19):** Demo-Videos export + caption-tracks in 4 Sprachen
 
-### Mi 4.6. — Seed-Content Final + QA Day
+### Mi 3.6. (Build Day 2) — Seed-Packs EN + DE
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **50 Public Packs** in PT (Joana Marques/Nerdologia/Manual do Mundo) | 4h |
-| 14-17 | **Lighthouse-Audit** alle Pages — Target Mobile 90+ Performance/A11y/SEO/BP | 3h |
-| 17-19 | **WCAG 2.1 AA Audit** — Tab-Navigation, Focus-Rings, Alt-Text, Contrast | 2h |
+**Deep Block 1 (10-13):** 50 EN Public Packs
+- Lex Fridman (10), Huberman Lab (10), Veritasium (10), 3Blue1Brown (10), MKBHD/Naval (10)
+- Generated via VozClara selbst, hand-curated for quality
 
-### Do 5.6. — Mikro-Influencer + Status-Page Day
+**Deep Block 2 (14-17):** 50 DE Public Packs
+- Tilo Jung (10), maiLab (10), Mr Wissen2Go (10), Doktor Whatson (10), Kurzgesagt-DE (10)
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-13 | **40 Mikro-Influencer Outreach** (Task #31): 10 pro Sprache mit Founder-Codes | 4h |
-| 14-15 | **status.vozclara.app** via Instatus oder BetterStack | 1h |
-| 15-17 | **Crisp.chat Support-Widget** auf landing + dashboard | 2h |
-| 17-19 | **FINAL_QA.md Re-Run** alle 185 Items durchklicken | 2h |
+**Shallow (17-19):** Lighthouse Baseline-Audit + erste Findings dokumentieren
 
-### Fr 6.6. — Polish Day
+### Do 4.6. (Build Day 3) — Seed-Packs PT + Lighthouse-Fix
 
-| Slot | Block | Aufwand |
-|---|---|---|
-| 9-19 | **Bug-Fix-Day**: alles was im Lighthouse + WCAG + FINAL_QA aufgekommen ist | 10h |
+**Deep Block 1 (10-13):** 50 PT Public Packs
+- Joana Marques (10), Nerdologia (10), Manual do Mundo (10), Schwarza (10), Portuguese with Leo (10)
+
+**Deep Block 2 (14-17):** Lighthouse-Fixes
+- Performance: LCP <2.5s, CLS <0.1, INP <200ms
+- Image-Optimization, code-splitting wenn nötig
+- Target: Mobile 90+ alle 4 Categories
+
+**Shallow (17-19):** WCAG 2.1 AA Audit beginnen — Tab-Navigation, Focus-Rings
+
+### Fr 5.6. (Build Day 4) — Mikro-Influencer Outreach + WCAG Continue
+
+**Deep Block 1 (10-13):** 40 Mikro-Influencer Outreach (Task #31)
+- Spreadsheet: 10 pro Sprache mit Channel-URL + Pitch-Status
+- DMs via Twitter/Instagram + Email wenn findable
+- Pitch: Founder-Deal-Code + Free-Pro-Year wenn 1× organisch erwähnt
+
+**Deep Block 2 (14-17):** WCAG 2.1 AA komplett
+- Alt-Text everywhere, Contrast 4.5:1, `aria-label` icon buttons
+- Keyboard-Nav Test komplett
+
+**Shallow (17-19):** status.vozclara.app via Instatus + Crisp.chat Support-Widget
+
+### Sa 6.6. (MARKETING DAY) — FINAL_QA Re-Run + Polish
+
+- FINAL_QA.md 185 Items durchklicken
+- Bugs sammeln (in TaskList als #41-#XX)
+- Cross-Browser-Test: Safari, Chrome, Firefox, Edge
+- Mobile-Test: iPhone, Android, iPad
+
+### So 7.6. — FULL DAY OFF
+
+Recharge. Walk. Family.
+
+### Mo 8.6. (Build Day 5) — Bug-Fix-Day
+
+**Deep Block 1+2 (10-17):** P0 Bugs aus FINAL_QA + Lighthouse + WCAG fixen
+- Priorisiert nach Severity
+- Wenn P0 zu groß: defer P1 zu Phase 4
+
+**Shallow (17-19):** Founder-Deal-Page Copy final, Pre-Launch Discord-Beta-Invite drafted
 
 **Woche 3 Output:**
-- ✅ 3 polierte Demo-Videos ready
+- ✅ 3 polierte Demo-Videos in 4 Sprachen
 - ✅ 200 hand-curated Public Packs (50 × 4 Sprachen)
-- ✅ 40 Mikro-Influencer angesprochen (für Day 3-7 Drip)
+- ✅ 40 Mikro-Influencer angesprochen
 - ✅ Lighthouse 90+ alle Kategorien
 - ✅ WCAG 2.1 AA compliant
-- ✅ Status-Page + Support-Widget live
+- ✅ Status-Page + Crisp Support live
 - ✅ FINAL_QA grünt durchgelaufen
+- ✅ 0 P0 Bugs
 
 ---
 
-## Phase 4 — Soft-Launch + Bug-Fix (Woche 4, ~5 Tage)
+## Phase 4 — Soft-Launch + Bug-Fix (Woche 4: Di-Mo, 5 Build-Tage)
 
-**Ziel:** Beta-Testing mit Friends & Family + Discord. Real launch wenn 0 P0-Bugs.
+**Ziel:** Discord Beta. Real-User-Feedback. Performance unter Last. 0 P0 Bugs vor Real-Launch.
 
-### Mo 9.6. — Discord Beta Opens
+### Di 9.6. — Discord Beta Opens
 
-- Invite Discord-Community + Founder-Wartelist zum „Soft-Launch"
-- Sammeln Feedback in #beta-feedback Channel
-- Monitoring: Sentry-Alerts, Cloudflare-Analytics, User-Signups
+**Deep Block 1 (10-13):** Beta-Invite an Discord + Founder-Wartelist
+- 50-100 hand-selected Beta-User
+- #beta-feedback Channel dedicated
+- Sentry-Alerts auf Real-Time Slack/Email
 
-### Di 10.6. - Do 12.6. — Bug-Fix-Sprint
+**Deep Block 2 (14-17):** Monitoring-Setup für Beta-Phase
+- Sentry-Triage-Rules: P0/P1/P2
+- Cloudflare Analytics dashboards
+- User-Signup-Stream
 
-- Tägliche Bugs aus Beta-Feedback fixen
-- Performance-Optimierung wenn nötig
-- UX-Friction-Points aus Feedback ironen out
+**Shallow (17-19):** Beta-Feedback erstes Triage + Reddit r/anki engagement
 
-### Fr 13.6. — Pre-Launch QA Final
+### Mi 10.6. - Fr 12.6. — Bug-Fix-Sprint (3 Build-Tage)
 
-- Komplette FINAL_QA Re-Run
-- Lighthouse alle Pages
-- Mobile-Test auf 3 Devices (iPhone, Android, iPad)
-- Cross-Browser (Safari, Chrome, Firefox, Edge)
+Same sustainable schedule. Daily:
+- Deep Block 1: P0/P1 Bugs aus Beta-Feedback fixen
+- Deep Block 2: Performance-Optimization + UX-Friction-Fixes
+- Shallow: Direct-User-DMs für Pain-Point-Verständnis
+
+Target: every reported P0 fixed within 24h. P1 within 72h. P2 batched.
+
+### Sa 13.6. (MARKETING DAY) — Pre-Launch Final QA + Press-Kit
+
+- Komplette FINAL_QA.md Re-Run
+- Lighthouse alle Pages re-audit
+- Cross-Browser final (Safari, Chrome, Firefox, Edge)
+- Mobile final auf 3 Devices
+- Press-Kit zusammenstellen: Logo-Varianten, Screenshots, Founder-Photo, Brand-Colors, Tone-of-Voice-Snippets
+
+### So 14.6. — FULL DAY OFF
+
+Pre-Launch-Rest. Walk. Family. Last-Minute-Decisions vermeiden.
+
+### Mo 15.6. — Pre-Launch Final Day
+
+**Deep Block 1 (10-13):** Last P0 Bugs + Polish-Last-Mile
+- Final Lighthouse Targets validieren
+- Stripe/Polar Live-Mode-Test
+
+**Deep Block 2 (14-17):** Launch-Day Pre-Production
+- HN/PH/Uneed-Posts draften (final copy)
+- Twitter Thread aufsetzen
+- Discord Launch-Post draften
+- LinkedIn Founder-Post draften
+
+**Shallow (17-19):** Beta-Closure-Email + Thank-You-Note an alle Beta-Tester
 
 **Phase 4 Output:**
 - ✅ ~50-100 Beta-User getestet
-- ✅ Top Bugs gefixt
-- ✅ Performance baseline gelock
-- ✅ Production-Ready
+- ✅ 0 P0 Bugs
+- ✅ Performance baseline locked
+- ✅ Press-Kit ready
+- ✅ Launch-Posts pre-drafted in 4 Sprachen
 
 ---
 
 ## Phase 5 — REAL LAUNCH (Woche 5)
 
-### Mo 16.6. — Launch Day
+### Di 16.6. — LAUNCH DAY
 
-| Slot | Action |
-|---|---|
-| 06:00 | Final Smoke-Test + Deploy-Check + Sentry-Dashboard live |
-| 09:00 PST = 18:00 CET | **Show HN** Post (Twitter-Founder bereits aktiv) |
-| 09:01 PST | **Product Hunt** Launch (Hunter triggered, Maker-Comments ready) |
-| 09:30 PST | **Uneed Skip-Line** Slot aktiv |
-| 10:00 PST | **Twitter/X Thread** posted |
-| 14:00 CET | Reddit Status-Check — keine Posts heute |
-| Abends | LinkedIn Founder-Post |
+**Morning (German Time):**
+- 06:00 Final Smoke-Test + Deploy-Check + Sentry-Dashboard offen
+- 07:00 RUNBOOK.md griffbereit
+- 08:00 Discord-Community erste Mention
 
-### Di 17.6. - So 22.6. — Sustained Drip
+**US Morning = Launch Window:**
+- 09:00 PST (= 18:00 CET): **Show HN** posted
+- 09:01 PST: **Product Hunt** Launch geht live (Hunter pre-triggered)
+- 09:30 PST: **Uneed Skip-Line** Slot aktiv
+- 10:00 PST: **Twitter/X Thread** posted
+- 11:00 PST: **LinkedIn Founder-Post**
 
-- Tag 2: r/languagelearning Build-Story (1× Chance, gut burning)
-- Tag 3: r/Anki Subreddit Pitch
-- Tag 4: r/PKM + r/Notion + r/getstudying
-- Tag 5: 40 Mikro-Influencer Day-1-Posts startet
-- Tag 6: HN Show HN Follow-Up
-- Tag 7: Polyglot Discord-Drops
+**Evening (CET):**
+- 14:00-20:00: HN/PH-Comment-Beantwortung (drop to 4h focused work, rest is community)
+- 22:00 hard stop, sleep
+
+**Wichtig:** Pre-launch RUNBOOK.md hat Tweet-Templates für outage, Cloudflare-Rate-Limit-Bump-Path, Sentry-Triage-Order.
+
+### Mi 17.6. - Mo 22.6. — Sustained Drip (Post-Launch Week 1)
+
+**Drop to 4h deep work/day.** Rest is support + community.
+
+- Mi: r/languagelearning Build-Story (1× Chance, well-crafted)
+- Do: r/Anki Subreddit Pitch
+- Fr: r/PKM + r/Notion + r/getstudying
+- Sa: 40 Mikro-Influencer Day-3-Activations starten
+- So: REST DAY (mandatory!)
+- Mo: HN Show HN Follow-Up + Polyglot Discord-Drops
+
+**Anti-pattern warning:** Founders die in Launch-Woche weiterbauen crashen by Day 30. Ship → Talk. Lovable/Cluely lesson.
 
 ---
 
@@ -296,25 +482,49 @@
 
 ---
 
-## Daily-Operations-Template (während Sprint)
+## Daily Operations Template (SUSTAINABLE — based on 2025-26 real founder data)
 
-| Slot | Was | Why |
+| Slot | Was | Block Type |
 |---|---|---|
-| 9-12 | Deep-Work Code-Block #1 | Frischer Brain, harte Probleme |
-| 12-13 | Break + Walk | Body-Mind-Reset |
-| 13-14 | Lunch | nicht skipen |
-| 14-17 | Deep-Work Code-Block #2 | Bug-Fix oder Feature-Polish |
-| 17-18 | Break + Reddit/Discord-Check | Community-Pulse |
-| 18-19 | Light-Work: Marketing-Copy, Outreach-DMs, Demo-Aufnahmen | Variation |
-| 19-20 | Dinner + Reset | Recharge |
-| 20-22 | Optional: Reading / Inspiration / leichte Tasks | Don't push |
-| 22+ | Hartstopp | Sleep ist Code-Quality |
+| 9:00-10:00 | Morning anchor: walk + previous-day review | shallow |
+| 10:00-13:00 | **Deep Block 1** (3h) — hardest build work, Claude Code plan-mode | **DEEP** |
+| 13:00-14:00 | Lunch + walk OFF SCREEN | break |
+| 14:00-17:00 | **Deep Block 2** (3h) — second-hardest work, debugging, polish | **DEEP** |
+| 17:00-19:00 | Shallow: outreach, content, support, **catering admin batch** | shallow |
+| 19:00-20:00 | Reddit/Discord + build-in-public post | shallow |
+| 20:00 | **HARD STOP** — no code after dinner | — |
+| 22:30+ | Bed. 7h sleep minimum. | sleep |
+
+**Why this is the only sustainable pattern (2025-26 data):**
+- Tony Dinh ($1M MRR): 20-30h/WEEK, not 100h
+- Marc Lou (€46k/mo): 4h/day deep, more = crash
+- Boris Cherny (Claude Code creator): higher density per hour via parallel worktrees, NOT longer hours
+- Sifted Survey 2025: 54% solo founders burnout, 75% anxiety, 83% high stress when ignoring this
+
+**Weekly Rhythm:**
+- 5 Build Days (Mi-So) à 8.5h productive
+- 1 Marketing/Content Day (Sa) à 6-8h lighter work
+- 1 FULL Day OFF (So) — non-negotiable
+
+**Day 13 Deload:** Mid-sprint reset, full off-day, walk, no laptop. Falls Energy below baseline → cancel build, take extra rest.
 
 ---
 
-**Total Build-Time bis Real-Launch:** ~25 Tage focused Solo-Founder-Work
-**Total Features im Launch:** ~45 von 87 IDEAS.md-Items
-**Investment:** ~€500 Font-Lizenzen + Anthropic-Credit $20-50 + Polar/Stripe Account + Claude Max $199 + Founder-Time
+## Sprint Summary
 
-**Last updated:** Di 19.5.2026, 20:00
-**Status:** LOCKED. Build mode aktiv ab Mi früh.
+**Total Build-Time bis Real-Launch:** ~4 Wochen (5 Build + 1 Marketing + 1 Off per week)
+**Total effective deep-work hours:** ~125-150h
+**Total Features im Launch:** ~45 von 87 IDEAS.md-Items
+**Investment:** 
+- ~€500 Font-Lizenzen (optional, sonst free Plex)
+- Anthropic API credit $50-200 (Pro Plus features) 
+- Polar/Stripe Account setup
+- **Claude Max $199** (Sprint duration)
+- Founder-Time + Catering-Revenue als Backup
+
+**Anti-Crutch-Reminder:** Wenn Claude in Week 3-4 anfängt Decisions zu treffen die contradict earlier ones → CLAUDE.md re-reading + tighter scope. Karpathy Jan 2026: "AI starts making decisions that contradict earlier decisions" around heavy use → Mitigation in CLAUDE.md §1 Invariants.
+
+**Last updated:** Di 19.5.2026, 21:30 — Final sustainable schedule after research sweep #6.
+**Status:** LOCKED. Build mode aktiv ab Mi 20.5. 9:00.
+
+**The one thing to internalize:** Eine ausgeruhte Foundering-Person die 30h/Woche shipped beats eine ausgebrannte Person die 80h/Woche shipped. Plane den Sprint so dass die Version von dir auf Day 30 — die Reddit beantwortet, Production-Bugs fixt, erste 10 Customers closed — tatsächlich existiert.
