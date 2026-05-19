@@ -475,3 +475,139 @@ Zum bestehenden 5-Punkte-Heuristic-Set (siehe §7) wird hinzugefügt:
 7. **Ist es Demo-Wow oder Daily-Use?** Demo-Wow gehört auf /pricing + Landing. Daily-Use gehört in App-Core.
 8. **Welches Word-of-Mouth-Meme entsteht daraus?** (Lenses = „guck mal wie das gleiche Video 7 unterschiedliche Outputs wird"; Mascot = „Voz hat geweint")
 
+---
+
+## 9. UPDATE Di 19.5. 18:30 — 4. Research-Sweep „Mining 2026's Wow Patterns"
+
+Research-Agent durch alle relevanten 2026er-Apps die wir NOCH NICHT abgedeckt hatten (Snipd, Talkpal, Speak, Heptabase, Tana, Mem.ai, Manus, Dia, Comet, Atlas, Polar.sh, Lovable's Remix, Finch, plus alle Engineering/Brand-Patterns). Der Agent hat 3 Dinge ALLES verändert:
+
+### 9.1 🔥 Manus-Style „Agent Thinking" Stream — NEUER P0 (1 Tag, WOW 8/10)
+
+Während Pack generiert: Live-Sidebar mit Agent-Gedanken:
+- „Watching minute 04:30..."
+- „Detecting key concept: information theory..."
+- „Cross-referencing with your previous packs..."
+
+Manus ging März 2025 viral wegen sichtbarem Denken — Theatrical Transparency = Trust. Granola-Pattern in lite. Niemand bei Eightify/NoteGPT/YouLearn macht das. Pure perception-Win.
+
+**Implementation:** Server-Sent Events parallel zu Pack-Generation, Sidebar-Component zeigt zeitversetzt die „Thoughts". Cosmetic-Theater + echte Status-Updates gemischt.
+
+### 9.2 🌐 Long-Context „Season Pack" — KILLER #6 (3 Tage, WOW 10/10)
+
+DAS Killer-Feature, das niemand kopieren kann ohne Re-Architecting.
+
+User dropt YouTube-Playlist (z.B. 40 Lex-Fridman-Episoden). Bekommt EINEN synthesisierten Pack über die ganze Season — Themes, Widersprüche, Concept-Evolution.
+
+**Warum unkopierbar:** Wir laufen schon auf Claude Sonnet 4.7 mit 1M Context. Konkurrenz auf GPT-4o-mini 128k kann nicht ohne kompletten Re-Architect. Strukturell defensible für 6-12 Monate mindestens.
+
+**Tweet-Worthy Demo:** „Drop a 40-episode podcast season. Get one pack. 4 minutes."
+
+**Implementation:** Playlist-URL-Detection → batch fetch transcripts → single Claude call mit 800k-Token-Context → output: Multi-Episode-Pack mit Episode-Cross-References.
+
+### 9.3 🎨 Per-Language Typographic Identity — UNIQUE BRAND-MOVE (3h, WOW 7/10)
+
+Statt EINE Schrift in 4 Sprachen: **4 sorgfältig gepaarte Schriftpaare**:
+- **ES:** Reforma (TypeTogether, Buenos Aires-designed) — warm, lateinisch
+- **PT:** Adelle Sans (TypeTogether, Portuguese-designed) — humanistisch
+- **DE:** Inter / FF Mark — engineered, präzise (haben wir schon!)
+- **EN:** Tiempos Text / aktuelle Cormorant — editorial
+
+Beim Sprachwechsel verändert sich gesamte App-Typografie subtil.
+
+**Marketing-Line:** „VozClara speaks every language — in its own voice."
+
+**Bear + iA Writer** haben Cult-Followings auf Typography allein gebaut. Niemand im AI-Learning-Space hat das gemacht.
+
+**Implementation:** CSS-Variablen mit `:lang(es)`, `:lang(pt)`, `:lang(de)`, `:lang(en)` switchen Font-Family. 3h + ~€500 Font-Lizenzen.
+
+**Fallback wenn Lizenz-Time knapp:** IBM Plex hat Language-Variants (Plex Sans + Plex Serif kombiniert per Locale), 100% free, ähnlicher Effekt.
+
+### 9.4 🚨 BRUTAL CUT — Chrome-Extension + Cmd+K aus P0 raus
+
+Agent's Pushback (richtig): „A Chrome extension shipped in week 2 with announcement is better than a rushed one at launch."
+
+**Beide gehen in v1.1 Woche 1-2 post-Launch** mit dedizierter PR-Ankündigung. Erzeugt mehr Hebel als beigemischt in Launch-Lärm.
+
+### 9.5 ⭐ DAS WICHTIGSTE — Polish > Quantity
+
+Agent's ehrlichster Pushback: „You should probably add ZERO features and instead spend the 6 days on:
+1. Polish existing P0s to Linear-level fit-and-finish
+2. Pre-record 3 launch demo videos (30s TikTok + 90s Twitter + 4min YouTube)
+3. Seed 50 hand-curated public packs per language (200 total)
+4. Line up 10 micro-influencers per language (40 total) for days 3-7"
+
+**Granola hat mit WENIGER gewonnen weil sie EXTREM poliert haben.**
+
+Drei neue Pre-Launch-Tasks unten (siehe Task #26-#28).
+
+### 9.6 Architecture-Bets festlegen
+
+**Bet 1: Claude Sonnet 4.7 als Primary** (NICHT GPT-4o-mini wegen Cost-Optimization)
+- 1M Context Window ist unser Moat für Season Pack
+- OpenRouter/LiteLLM als Abstraction für Swap-Fähigkeit
+- Prompts müssen für Long-Context designed sein
+- Check: ist worker/src bereits Claude-primary? Wenn nicht → migrate vor Launch
+
+**Bet 2: PWA-First + Capacitor für Native (KEIN React Native)**
+- Capacitor wrapt PWA für iOS/Android-Store wenn Native-App nötig
+- 90% Native UX bei 10% Aufwand
+- React Native = 6-Monate-Tax den Solo-Founder nicht braucht
+- Lovable/Cluely/Granola haben alle Web-First gemacht
+
+**Anti-Bet:** KEIN Vision Pro, KEIN Friend/Limitless. <100k Devices = Distraktion.
+
+### 9.7 Tier-B Additions (Post-Launch Woche 1-3)
+
+Aus dem Sweep für Backlog persistiert:
+
+| Pattern | Quelle | Effort | Wann |
+|---|---|---|---|
+| Snipd „Moment Cards" (auto-decomposed 30-90s Segmente Swipe-Carousel) | Snipd 1M+ User | 2-3 Tage | Woche 1-2 |
+| TikTok-Mode Swipe-Deck (vertikal, autoplay Video hinter Card) | Brilliant/Duo/NoteGPT | 2-3 Tage | Woche 2-3 |
+| WebGPU On-Device-Transcription (Privacy-Flagship für DE/EU) | transformers.js + MLC | 4-5 Tage | Monat 1 |
+| Speak/Talkpal Roleplay-Mode (Voice-Practice mit Pack-Vocab) | Speak $1B Valuation | 3 Tage | **Monat 2 (DEDIZIERTER Launch!)** |
+| Heptabase Pack-Canvas (Drag Cards Whiteboard, draw connections) | Heptabase $2M ARR | 5+ Tage | Monat 3 |
+| Finch „Knowledge Garden" (Plant grows, wilkt bei Skip) | Finch #1 Wellness | 4 Tage | Monat 4 |
+| Dia „Skill Recipes" (User-saved Lens+Citation+Format-Combos sharable URLs) | Dia Browser | 2 Tage | Monat 2 |
+| Polar.sh vs Stripe Evaluation (Merchant-of-Record removes EU VAT pain) | Polar.sh seed funded | 1 Tag Eval | **Diese Woche** |
+| PostHog Session-Replay (Day 1 activate) | PostHog | 30min | **Pre-Launch** |
+| Cal.com „Founder Office Hours" Embed (free, signals founder-led) | Cal.com | 30min | Pre-Launch |
+| Resend für transactional Email (haben wir bereits) | Resend | done | done |
+
+### 9.8 FINALER P0-Lock für Pre-Launch
+
+Nach 4 Research-Sweeps locke ich die Pre-Launch-Liste:
+
+**Tier S (MUST, ~30h):**
+1. Inline Timestamp-Citations (8h) — Perplexity-Pattern, 10× Leap
+2. FSRS Marketing-Copy ✅ DONE
+3. Pack-Share-URL + OG-Preview (6h)
+4. Account-less First Pack (4h) — Lovable Growth-Hack
+5. Streaming + Agent-Thinking-Sidebar (5h) — Manus-Pattern + Visible Tokens
+6. /pricing Page mit Vergleichs-Tabelle (4h)
+7. Per-Language Typography (3h) — Brand-Move
+
+**Tier A (16h, sollten wenn Zeit):**
+8. VozClara Lenses (16h) — Granola Recipes
+9. Long-Context Season Pack (24h) — KILLER Demo
+
+**Pre-Launch-WORK (nicht Features, sondern Launch-Vorbereitung — 16h):**
+10. 3 Demo-Videos vorab aufnehmen (6h)
+11. 50 hand-curated Public Packs pro Sprache (6h)
+12. 10 Mikro-Influencer pro Sprache ansprechen (4h)
+
+**Deferred zu v1.1 (Woche 1-2):**
+- Chrome-Extension MVP
+- Cmd+K Palette
+- Onboarding-Tour
+- JSON-Export
+- URL-Schema /y/[videoId]
+- Animation polish
+
+### 9.9 Final Decision-Heuristic-Addition
+
+9. **Wird das Feature beim Launch-Demo viral?** Wenn nein → v1.1.
+10. **Können wir es ohne Re-Architecting auf 1M Context skalieren?** Wenn nein → architectural decision JETZT lösen, nicht später.
+11. **Wenn ich 6 Tage Zeit hätte: Polish ein bestehendes Feature oder bauen ein neues?** Polish > New feature (Granola-Lesson).
+
+
