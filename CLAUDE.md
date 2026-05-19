@@ -178,7 +178,7 @@ Scopes: `worker`, `frontend`, `lens`, `mcp`, `compliance`, `docs`, `meta`.
 
 ## 5. Forbidden Patterns
 
-❌ **Do NOT:**
+❌ **Do NOT (technical):**
 - Use `any` without an `// eslint-disable-next-line` justification comment
 - Edit `package.json` dependencies without explicit user permission
 - Touch `wrangler.toml` secrets/IDs (read-only — user manages via `wrangler secret put`)
@@ -191,6 +191,20 @@ Scopes: `worker`, `frontend`, `lens`, `mcp`, `compliance`, `docs`, `meta`.
 - Set Anthropic call without `max_tokens` (runaway cost risk)
 - Use Workers AI binding (`env.AI.run`) for Anthropic calls (doesn't BYOK)
 - Implement features that exist in IDEAS.md backlog as Phase 6+ without confirming priority shift
+
+❌ **Do NOT (brand-voice / UX, from IDEAS §11):**
+- Animated confetti / celebration on user actions (bricht LEON MARÉ Editorial)
+- Passive-aggressive notifications (Duolingo Owl pattern — works for them, kills us)
+- Fake social proof numbers ("12,000 upgraded this hour" wenn es 12 sind)
+- Pre-Wow Paywall (CC vor First Pack — Top-of-Funnel kills 6-8×)
+- Asymmetric cancel flow (EU DSA verbietet's, plus brand-trust-broken)
+- Modal interruption mid-generation
+- Countdown timers on upgrade pages
+- Grayed-out features visible everywhere (Pro-features sind discovery-moments, nicht permanent reminders)
+- Generic empty states ("No data yet") — empty states ARE onboarding (Linear-pattern)
+- More than 5 emails in 7 days (declarative tone only, never guilt-framed)
+- Push notifications opt-in on first visit (only after earned moment like "remind me")
+- Hard-wall quota before user has experienced value (soft chip > hard wall)
 
 ✅ **DO:**
 - Reference MASTER.md sections by number in commit messages

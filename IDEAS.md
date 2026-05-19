@@ -736,5 +736,125 @@ DROPPED aus P0:
 14. **Dual-Use-Feature?** (Watermark = legal + growth-loop, MCP = distribution + future-proof)
 15. **Wenn der CEO eines 25-Mann-Teams das fragt: würde sein CTO ja sagen?** Wenn nein → nicht bauen pre-Launch.
 
+---
+
+## 11. UPDATE Di 19.5. 22:00 — 6. Research-Sweep: User-Retention + First-60-Seconds + Stickiness
+
+Final Research-Sweep durch erfolgreichen 2026er Apps für User-Retention-Patterns die wir noch nicht systematisch abgedeckt hatten.
+
+### 11.1 💎 Signature Micro-Interaction: Citation Hover-Replay
+
+DAS Brand-defining Pattern das niemand sonst macht.
+
+Hover/Tap auf Timestamp-Citation `[12:34]` → **6-Sekunden Inline-Video-Clip** spielt an exakter Stelle, muted, captioned, in navy-gerahmter rounded Card schwebend über Text. Release → Card bleibt 2s, dismisses.
+
+**Why unique:** Eightify zeigt static text. NoteGPT links extern raus. NIEMAND macht inline-Replay.
+
+**Why viral:** Frozen-State (navy + gold + creme) = perfect Social-Asset für Screenshots.
+
+**Effort:** 1.5 Tage (YouTube iframe mit start=/end= + hidden controls + caption track aus existing transcript).
+
+**Integration:** Add to Task #22 (Inline Timestamp-Citations) — elevates Citations from feature to SIGNATURE.
+
+### 11.2 First-60-Seconds Choreographie (frame-by-frame)
+
+T=0s: Navy headline + paste input. NO nav, NO pricing above-fold.
+T=2s: Paste & Enter, NO signup gate, generation startet sofort auf `/p/draft-{uuid}`.
+T=3s: Video-Thumbnail + Title slim navy strip. "Pulling transcript..." → "Found 14:32 of ES audio."
+T=5-8s: Thinking-Stream monospace creme on navy. Sentence-per-second pace.
+T=8-25s: Streaming Reveal — Lenses 3-spalten Grid. **Citations rendern VOR text completes (Perplexity anchoring, no reflow).**
+T=25s: Erste Lens fertig — subtle Gold-Pulse 200ms ease-out. NO sound default, NO confetti.
+T=30s: "Made in 27 seconds from a 14-minute video" (Linear-style specific number).
+T=35s: Email-Gate slides UP (NICHT modal): "Where should we send your pack?"
+T=45s: URL-bar Focus, placeholder: "Try another video — second pack is on us"
+T=60s: Streak silently primed (kein celebration, editorial restraint).
+
+**Pattern-Sources:** Lovable (pre-auth build), Granola (invisible during action), Linear (success state polish), Perplexity (anchored citations), Manus (thinking stream).
+
+### 11.3 7-Day Retention Playbook (exact cadence)
+
+| Tag | Email | In-App |
+|---|---|---|
+| 0 | "Your first pack is saved" (immediate, 1 link, NO CTA-stack) | Completion chime wenn enabled |
+| 1 | NONE (Duolingo over-mails) | Banner wenn return: "Yesterday's pack is still here. 17 flashcards waiting" |
+| 2 | Wenn dormant: "What did [Video Author] get wrong?" | — |
+| 3 | Wenn dormant: "A 2-pack streak ended yesterday" (loss-aversion stated, nicht pleaded) | Streak-Counter erscheint zum ersten Mal — Gold chip |
+| 5 | Wenn dormant: "Pack #2 is the hardest" + curated Public Pack | Trending Pack in language surfaced |
+| 7 | Engaged: "What's in Pro" (3 features max, NO urgency). Dormant: "Should we close your VozClara?" | Soft upgrade-wall wenn quota approach |
+
+**Tone:** editorial friend, NICHT coach. Brand-voice: declarative, observant, NEVER excited.
+
+### 11.4 Free → Pro Conversion Stack (5 triggers in order)
+
+1. **Pack #2** — Lock-Card unter Pro-Lens "Counter-Arguments is a Pro lens. Try it once free."
+2. **Pack #3-5** — Navy chip "3 of 5 packs this month" (NO red, NO urgency)
+3. **15-min Cap hit** — "This video is 23 min. Free packs cap at 15. Pro removes the cap — €9/mo"
+4. **Cmd+K 5× used** — "You've used the palette 5 times. Pro unlocks API access" (identity-flatter, NICHT pressure)
+5. **Tag 14, Pro-Trial** — "Pay once, keep forever. €99 Lifetime — 47 spots left" (Pieter Levels honesty pattern)
+
+### 11.5 Top-20 Stickiness Patterns (ranked impact-to-effort)
+
+| Pattern | Source | Effort | Impact |
+|---|---|---|---|
+| Account-less first pack | Lovable, Granola | 4h | High |
+| Streaming pack + anchored citations | Perplexity, Claude | 8h | High |
+| Public Pack Link (no-login view) | Granola Note-Link | 6h | High |
+| Empty-state-as-onboarding | Linear, Notion | 2h | High |
+| Streak counter (light touch) | Duolingo (loss-aversion) | 4h | High |
+| Behavioral upgrade trigger after pack #3 | Cursor (soft wall) | 4h | High |
+| Cmd+K command palette | Linear, Raycast, Notion | 12h | High |
+| Watermark-as-growth | Eightify (lesson learned) | 3h | High |
+| Thinking-stream during generation | Manus, Claude Artifacts | 8h | High |
+| Win-back: "your last pack was X" | Duolingo | 4h | High |
+| Share-as-WhatsApp-card OG | Spotify Wrapped, Granola | 6h | High |
+| Sound design via near-silence | Granola (whisper) | 3h | Medium |
+| Templates/Saved Recipes | Cursor commands | 6h | Medium |
+| Founder presence (light, NO face) | Marc Lou | 1h | Medium |
+| PWA add-to-home (delayed Pack #2) | iOS 16.4+ Safari | 4h | Medium |
+| Web Push opt-in via earned moment | Reteno pattern | 3h | Medium |
+| Live-activity static number (NOT feed) | Cursor "trusted by" | 2h | Medium |
+| API access for Pro Plus | Granola dev mode | 8h | Medium |
+| Brand-voice error messages | Linear, Marc Lou (joke+fix) | 4h | Medium |
+| Per-language typography | RESTORED — Task #38 | 3h | Medium |
+
+### 11.6 ❌ 5 Forbidden Patterns (NIEMALS einbauen)
+
+1. **Roach Motel** — asymmetric cancel-flow. EU DSA verbietet's. Cancel MUSS one-click.
+2. **Confetti Cult** — animated celebration auf jeder Action. Bricht LEON MARÉ.
+3. **Notification Owl Death-Spiral** — Duolingo's passive-aggressive Pattern funktioniert für deren Meme-Brand, NICHT für Editorial. Max 5 Emails/7 Tage, alle declarative.
+4. **Phantom Social Proof** — fake numbers ("12.000 users upgraded this hour" wenn 12). Use real or none.
+5. **Pre-Wow Paywall** — CC vor First Pack. ChartMogul 2026: konvertiert höher per-signup, ABER kills Top-of-Funnel 6-8×.
+
+### 11.7 Retention-Targets (Success-Definition)
+
+| Metric | App-Median | Prosumer-AI Top-Quartile | VozClara Phase-1-Ziel |
+|---|---|---|---|
+| D1 Retention | 26% | 40% | **35%** |
+| D7 Retention | 13% | 22% | **18%** |
+| D30 Retention | 7% | 12% | **10%** |
+
+**D30 ≥ 15% = PMF Signal. D7 < 12% = wow-moment sticks nicht — debug Phase 4 Soft-Launch.**
+
+### 11.8 Agent's Honest Pushback gegen unsere Annahmen
+
+1. "More notifications = better retention" → WRONG für LEON MARÉ. Editorial brands earn retention by being missed, NOT by demanding attention. Spotify low-friction trust beats Duolingo high-friction urgency.
+
+2. "Social proof live-activity feed" (Lovable pattern) → NOT für VozClara. Lovable's live builds funktionieren weil visually exciting. Scrolling Pack-Titles ist Noise. ONE static honest number (nightly refresh) statt Websocket-Layer.
+
+### 11.9 Pattern-Sources (für Build-Sessions referenzieren)
+
+- **Granola** — invisible interface, note-link viral, near-silence sound, signature note-while-talking
+- **Lovable** — pre-auth build, visual edit, gate-after-wow
+- **Linear** — empty-state-illustration + CTA, brand-voice errors, specific-number-precision ("Made in 27 seconds")
+- **Cursor** — soft quota wall, identity-flatter upgrade prompts, real Fortune-500 logos
+- **Perplexity** — anchored citations rendering before text completes
+- **Manus** — narrate-the-work thinking stream
+- **Notion** — drag-block onboarding, /AI slash command
+- **Duolingo** — streak loss-aversion (light touch only — Owl behavior NOT for us)
+- **Raycast** — Cmd+K palette, power-user-identity
+- **Pieter Levels (Nomads)** — honest specific numbers (47 spots left, NOT "limited time")
+- **Marc Lou** — joke+fix error pattern, 1-message-reply guarantee footer
+
+
 
 

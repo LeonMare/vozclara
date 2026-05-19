@@ -299,6 +299,31 @@ Long-running streams → Durable Object for client reconnect resilience.
 - **Crisp.chat** support widget (free tier)
 - **0 P0 bugs** from FINAL_QA.md re-run
 
+### Retention-Targets (Phase-1 nach Launch — Success-Definition)
+
+| Metric | App-Median | Prosumer-AI Top-Quartile | **VozClara Phase-1-Ziel** |
+|---|---|---|---|
+| D1 Retention | 26% | 40% | **35%** |
+| D7 Retention | 13% | 22% | **18%** |
+| D30 Retention | 7% | 12% | **10%** |
+
+**Signal:** D30 ≥ 15% = PMF erreicht. D7 < 12% = wow-moment sticks nicht → debug Phase 4 Soft-Launch.
+
+### Brand-Voice Forbidden Patterns (siehe CLAUDE.md §5 + IDEAS §11.6)
+
+NIEMALS einbauen — wir sind editorial, nicht algorithm-doomscroll:
+- ❌ Confetti / Animated Celebration auf Actions
+- ❌ Passive-aggressive Notifications (Duolingo Owl)
+- ❌ Fake Social Proof Numbers
+- ❌ Pre-Wow Paywall (CC vor First Pack)
+- ❌ Asymmetric Cancel Flow (EU DSA-Verstoß)
+
+### Signature Micro-Interaction (siehe IDEAS §11.1)
+
+**Citation Hover-Replay:** Hover/Tap auf `[12:34]` Citation → 6s Inline-Video-Clip an exakter Stelle, muted, captioned, navy-gerahmte Card schwebend. Das ist DAS Brand-defining Moment das Leute screenshoten.
+
+Implementation in Task #22 (Citations) erweitert um 1.5 Tage.
+
 ---
 
 ## 8. Risk Register
