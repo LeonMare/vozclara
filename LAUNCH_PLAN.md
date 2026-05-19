@@ -1005,10 +1005,14 @@ BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. 
 #### Marketing-Spend-Hierarchie (mit Cashflow nach Founder Deal)
 
 **Tier S — gratis erst (insgesamt ~1h Aufwand):**
-- ⏳ Futurepedia Submission (https://www.futurepedia.io/submit-tool) — Texte schon definiert in der Chat-Historie
-- ⏳ TAAFT (theresanaiforthat.com/submit) — gleiche Texte
-- ⏳ futuretools.io, toolify.ai — quick wins
+- ❌ Futurepedia — **2026 komplett paid** ($247 Sold Out / $497 Verified). Selbe Logik wie BetaList: skip pre-revenue, reconsider post-launch wenn Cashflow stimmt. Update Di 19.5. 15:02 (Laptop-Session).
+- ⏳ TAAFT (theresanaiforthat.com/submit) — Free-Tier verifizieren beim Submit, Paid wenn nicht
+- ⏳ futuretools.io, toolify.ai — quick wins (free directories)
 - Product Hunt Setup (Mi nach Launch) — bisher nicht angefasst
+
+**Lesson learned (Di 19.5.):** 2026er AI-Tool-Directory-Landschaft hat sich
+in 12 Monaten komplett paywalled. Vor dem Submit immer kurz Pricing-Page
+checken. Gratis bleibt nur was unmittelbar nach dem Auth-Wall liegt.
 
 **Tier A — €500-1000 Spend (post-Launch, datengetrieben):**
 - TLDR AI Newsletter Sponsorship $350-500 (200k+ tech-savvy)
