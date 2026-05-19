@@ -1008,13 +1008,17 @@ BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. 
 - ❌ Futurepedia — **2026 komplett paid** ($247 Sold Out / $497 Verified). Skip pre-revenue, reconsider post-launch wenn Cashflow stimmt. Update Di 19.5. 15:02.
 - ❌ TAAFT — **auch komplett paid**, aber unterer Tier ist tatsächlich interessant. Siehe TAAFT-Eintrag in Tier-A unten. Update Di 19.5. 15:38.
 - ✅ **futuretools.io** — submitted Di 19.5. 15:59 als Freemium / Education. Matt Wolfe reviewt manuell, ~1-2 Wochen bis Listing (oder Reject). Free bestätigt, keine Paywall in 2026. Mail-Confirm an salvador7eon@gmail.com.
-- ⏳ toolify.ai — als nächstes prüfen
+- ❌ **toolify.ai** — **2026 auch paid**, $99 minimum (48h-Listing). Audience-Match aber sehr stark (5,1M Monthly Visits, Multi-language Intro auto-translates ES/PT/DE/EN — passt 1:1 zu unserer i18n-Positionierung). Siehe Tier-A Monat 2 unten. Update Di 19.5. 16:02.
 - Product Hunt Setup (Mi nach Launch) — bisher nicht angefasst
 
-**Lesson learned (Di 19.5.):** 2026er AI-Tool-Directory-Landschaft hat sich
-in 12 Monaten komplett paywalled. Aber: nicht alle Paywall-Tiers sind
-gleich teuer — TAAFT $49 Website-Only ist günstiger als BetaList Lite $39
-bei 80× größerer Reichweite. Vor dem Reflex-Skip pricing genau lesen.
+**Lesson learned (Di 19.5.):** 2026er AI-Tool-Directory-Landschaft hat
+sich in 12 Monaten komplett paywalled. Sweep-Bilanz: 3 von 4 Major-
+Directories (Futurepedia, TAAFT, Toolify) haben ihre Free-Lane
+geschlossen — nur Futuretools.io bleibt für 2026 free. Aber: nicht
+alle Paywall-Tiers sind gleich teuer. TAAFT $49 Website-Only ist
+günstiger als BetaList Lite $39 bei 80× größerer Reichweite. Toolify
+$99 ist Audience-Match-Premium wegen Multi-language Intro. Vor dem
+Reflex-Skip pricing genau lesen.
 
 **Tier-A Reach-Spend — sequenzielle Roadmap mit Cashflow-Trigger**
 
@@ -1031,6 +1035,7 @@ Eyeball-€:
 | Woche 4 | $350-500 | **TLDR AI Newsletter** | 200k AI-curious Devs, direktes Audience-Match, beste €/Conversion |
 | Monat 2 (wenn TAAFT konvertiert) | $347 | **TAAFT Maximum Exposure** | Upgrade auf das Newsletter-Tier nur wenn $49-Tier Daten geliefert hat dass die Audience konvertiert. 2,5M Newsletter-Subscribers + 10× mehr Traffic |
 | Monat 2 | $247 | **Futurepedia Basic** *(wenn Sold-In)* | Reines SEO-Investment, DR 70 Backlink, payoff Monat 4+ |
+| Monat 2-3 (wenn TAAFT $49 konvertiert) | $99 | **Toolify.ai Submit** | 5,1M Monthly Visits + **Multi-language Intro** auto-translatet unsere Tool-Description in ES/PT/DE/EN — direkter Audience-Match zu unserer i18n. 48h-Turnaround. Conditional auf TAAFT-Daten weil günstigerer Test zuerst |
 | Monat 3 | $300 | **Indie Hackers Newsletter** | Cross-Promotion + Word-of-Mouth |
 | Monat 3 | $200 | **Google Search Ads Test** | „youtube to anki", „study from youtube", „youtube transcript" Keywords |
 
