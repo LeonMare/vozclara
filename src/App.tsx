@@ -55,6 +55,9 @@ const PrivacyPage = lazy(() =>
 const TermsPage = lazy(() =>
   import('./routes/TermsPage').then((m) => ({ default: m.TermsPage })),
 );
+const RefundPage = lazy(() =>
+  import('./routes/RefundPage').then((m) => ({ default: m.RefundPage })),
+);
 const ReviewPage = lazy(() =>
   import('./routes/ReviewPage').then((m) => ({ default: m.ReviewPage })),
 );
@@ -228,6 +231,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <TermsPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/refund"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <RefundPage />
               </Suspense>
             </AppShell>
           }

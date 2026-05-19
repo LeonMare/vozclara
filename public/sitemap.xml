@@ -72,6 +72,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://vozclara.app/refund</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 
   <!-- App routes — leave for navigation but lower priority -->
   <url>

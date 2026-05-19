@@ -675,6 +675,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacidad', href: '/privacy' },
           { label: 'Términos', href: '/terms' },
+          { label: 'Reembolsos', href: '/refund' },
           { label: 'Aviso legal', href: '/impressum' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -708,6 +709,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacidade', href: '/privacy' },
           { label: 'Termos', href: '/terms' },
+          { label: 'Reembolsos', href: '/refund' },
           { label: 'Informações legais', href: '/impressum' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -741,6 +743,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Datenschutz', href: '/privacy' },
           { label: 'Nutzungsbedingungen', href: '/terms' },
+          { label: 'Rückerstattung', href: '/refund' },
           { label: 'Impressum', href: '/impressum' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
@@ -774,6 +777,7 @@ function footerColumns(locale: string) {
         items: [
           { label: 'Privacy', href: '/privacy' },
           { label: 'Terms', href: '/terms' },
+          { label: 'Refunds', href: '/refund' },
           { label: 'Imprint', href: '/impressum' },
           { label: 'Sitemap', href: '/sitemap.xml' },
         ],
