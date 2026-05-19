@@ -162,6 +162,21 @@ function privacyLabels(locale: string) {
         ],
       },
       {
+        heading: 'Suscripciones de pago y subencargados',
+        body: [
+          'Si te suscribes a un plan de pago (Pro, Pro Plus o el pase Founder vitalicio), el cuadro cambia ligeramente: necesitamos un email para enviarte el enlace de inicio de sesión y necesitamos procesar un pago.',
+          'Aun así, contratamos solo con un número pequeño de subencargados externos. Cada uno aparece abajo con su función y enlace a su política de privacidad.',
+        ],
+        bullets: [
+          'Cloudflare (Workers, Pages, Workers AI, Vectorize, KV, D1) — hosting e inferencia Llama 3.3 70B. Servidores en la UE. Política: cloudflare.com/privacypolicy',
+          'Anthropic (Claude Sonnet 4.5) — funciones interpretativas para Pro Plus vía Cloudflare AI Gateway. Datos no usados para entrenamiento. Política: anthropic.com/privacy',
+          'Supadata — obtención de transcripciones de URLs de vídeo públicas. Política: supadata.ai/privacy',
+          'Paddle — Merchant-of-Record para planes de pago. Gestiona checkout, facturación, IVA UE, impuestos US, chargebacks. Política: paddle.com/legal/privacy',
+          'Resend — email transaccional (enlace de inicio de sesión, confirmaciones de reembolso). Remitente noreply@leonmare.de. Política: resend.com/legal/privacy-policy',
+          'OpenAI (solo si activas el text-to-speech) — tts-1 para audio. Datos de API no usados para entrenamiento. Política: openai.com/policies/privacy-policy',
+        ],
+      },
+      {
         heading: 'Cookies y almacenamiento local',
         body: [
           'VozClara no usa cookies. Usa localStorage e IndexedDB del navegador para guardar tus preferencias (idioma, tema) y tu biblioteca de Packs. Estos datos no salen de tu dispositivo.',
@@ -170,8 +185,9 @@ function privacyLabels(locale: string) {
       {
         heading: 'Tus derechos',
         body: [
-          'Como no recopilamos datos personales identificables, no hay un "perfil de usuario" que solicitar, exportar o eliminar de nuestros servidores. Todo lo que controla tu experiencia vive en tu navegador.',
-          `Para borrar todo: ajustes del navegador → "Borrar datos del sitio" para ${SITE_HOST}. Eso elimina la biblioteca, las preferencias y el brainId. La próxima visita empieza desde cero.`,
+          'En uso gratuito anónimo, no hay datos personales en nuestros servidores — los derechos del RGPD (acceso, rectificación, supresión) se aplican de forma trivial porque no hay nada que acceder.',
+          'En uso de pago, puedes eliminar tu cuenta desde tu página de perfil. La eliminación del lado del servidor borra tu puntero de email, tokens de sesión, votos y reseñas (RGPD Art. 17). Tu biblioteca IndexedDB se elimina limpiando los datos del navegador.',
+          `Para borrar el estado del navegador: ajustes del navegador → "Borrar datos del sitio" para ${SITE_HOST}.`,
         ],
       },
     ],
@@ -226,6 +242,21 @@ function privacyLabels(locale: string) {
         ],
       },
       {
+        heading: 'Subscrições pagas e subcontratantes',
+        body: [
+          'Se te subscreveres a um plano pago (Pro, Pro Plus ou o passe Founder vitalício), o quadro muda ligeiramente: precisamos de um email para te enviar o link de início de sessão e precisamos de processar um pagamento.',
+          'Mesmo assim, contratamos apenas com um pequeno número de subcontratantes externos. Cada um aparece abaixo com a sua função e link para a sua política de privacidade.',
+        ],
+        bullets: [
+          'Cloudflare (Workers, Pages, Workers AI, Vectorize, KV, D1) — hosting e inferência Llama 3.3 70B. Servidores na UE. Política: cloudflare.com/privacypolicy',
+          'Anthropic (Claude Sonnet 4.5) — funcionalidades interpretativas para Pro Plus via Cloudflare AI Gateway. Dados não usados para treino. Política: anthropic.com/privacy',
+          'Supadata — obtenção de transcrições de URLs de vídeo públicos. Política: supadata.ai/privacy',
+          'Paddle — Merchant-of-Record para planos pagos. Gere checkout, faturação, IVA UE, impostos US, chargebacks. Política: paddle.com/legal/privacy',
+          'Resend — email transacional (link de início de sessão, confirmações de reembolso). Remetente noreply@leonmare.de. Política: resend.com/legal/privacy-policy',
+          'OpenAI (apenas se ativares o text-to-speech) — tts-1 para áudio. Dados de API não usados para treino. Política: openai.com/policies/privacy-policy',
+        ],
+      },
+      {
         heading: 'Cookies e armazenamento local',
         body: [
           'A VozClara não usa cookies. Usa localStorage e IndexedDB do navegador para guardar as tuas preferências (idioma, tema) e a tua biblioteca de Packs. Estes dados não saem do teu dispositivo.',
@@ -234,8 +265,9 @@ function privacyLabels(locale: string) {
       {
         heading: 'Os teus direitos',
         body: [
-          'Como não recolhemos dados pessoais identificáveis, não há um "perfil de utilizador" para solicitar, exportar ou eliminar dos nossos servidores. Tudo o que controla a tua experiência vive no teu navegador.',
-          `Para apagar tudo: definições do navegador → "Limpar dados do site" para ${SITE_HOST}. Isso elimina a biblioteca, as preferências e o brainId. A próxima visita começa do zero.`,
+          'Em uso gratuito anónimo, não há dados pessoais nos nossos servidores — os direitos do RGPD (acesso, retificação, eliminação) aplicam-se de forma trivial porque não há nada para aceder.',
+          'Em uso pago, podes eliminar a tua conta a partir da tua página de perfil. A eliminação do lado do servidor apaga o teu apontador de email, tokens de sessão, votos e avaliações (RGPD Art. 17). A tua biblioteca IndexedDB é eliminada ao limpar os dados do navegador.',
+          `Para apagar o estado do navegador: definições do navegador → "Limpar dados do site" para ${SITE_HOST}.`,
         ],
       },
     ],
@@ -290,6 +322,21 @@ function privacyLabels(locale: string) {
         ],
       },
       {
+        heading: 'Bezahlte Pläne und Auftragsverarbeiter',
+        body: [
+          'Wenn du einen bezahlten Plan abonnierst (Pro, Pro Plus oder den lebenslangen Founder-Pass), ändert sich das Bild leicht: wir brauchen eine E-Mail-Adresse für den Sign-in-Link und müssen eine Zahlung abwickeln.',
+          'Auch dann arbeiten wir nur mit einer kleinen Zahl externer Auftragsverarbeiter zusammen. Jeder ist unten mit seiner Rolle und seiner Datenschutzerklärung aufgeführt.',
+        ],
+        bullets: [
+          'Cloudflare (Workers, Pages, Workers AI, Vectorize, KV, D1) — Hosting und Llama 3.3 70B Inference. EU-Server. Datenschutz: cloudflare.com/privacypolicy',
+          'Anthropic (Claude Sonnet 4.5) — interpretative Funktionen für Pro Plus über Cloudflare AI Gateway. Daten werden nicht für Training verwendet. Datenschutz: anthropic.com/privacy',
+          'Supadata — Transkript-Abruf für öffentliche Video-URLs. Datenschutz: supadata.ai/privacy',
+          'Paddle — Merchant-of-Record für bezahlte Pläne. Wickelt Checkout, Rechnung, EU-USt, US-Sales-Tax, Chargebacks ab. Speichert Abrechnungsdaten. Datenschutz: paddle.com/legal/privacy',
+          'Resend — transaktionale E-Mails (Sign-in-Link, Erstattungsbestätigungen). Absender noreply@leonmare.de. Datenschutz: resend.com/legal/privacy-policy',
+          'OpenAI (nur wenn Text-to-Speech aktiviert) — tts-1 für Audio. API-Daten werden nicht für Training verwendet. Datenschutz: openai.com/policies/privacy-policy',
+        ],
+      },
+      {
         heading: 'Cookies und lokaler Speicher',
         body: [
           'VozClara verwendet keine Cookies. Es nutzt localStorage und IndexedDB des Browsers um deine Präferenzen (Sprache, Theme) und deine Pack-Bibliothek zu speichern. Diese Daten verlassen dein Gerät nicht.',
@@ -298,8 +345,9 @@ function privacyLabels(locale: string) {
       {
         heading: 'Deine Rechte',
         body: [
-          'Da wir keine personenbeziehbaren Daten erheben, gibt es kein „Nutzerprofil" das von unseren Servern angefordert, exportiert oder gelöscht werden könnte. Alles was dein Erlebnis steuert lebt in deinem Browser.',
-          `Um alles zu löschen: Browser-Einstellungen → „Site-Daten löschen" für ${SITE_HOST}. Das entfernt Bibliothek, Präferenzen und brainId. Der nächste Besuch beginnt bei null.`,
+          'Bei anonymer kostenloser Nutzung liegen keine personenbezogenen Daten auf unseren Servern — die DSGVO-Rechte (Auskunft, Berichtigung, Löschung) sind trivial erfüllt, weil es nichts zum Abrufen gibt.',
+          'Bei bezahlter Nutzung kannst du dein Konto auf deiner Profil-Seite löschen. Die serverseitige Löschung räumt deinen E-Mail-Pointer, Session-Tokens, Stimmen und Reviews ab (DSGVO Art. 17). Deine IndexedDB-Bibliothek entfernst du durch Löschen der Browser-Daten.',
+          `Um den Browser-State zu löschen: Browser-Einstellungen → „Site-Daten löschen" für ${SITE_HOST}.`,
         ],
       },
     ],
@@ -354,6 +402,21 @@ function privacyLabels(locale: string) {
         ],
       },
       {
+        heading: 'Paid tiers and subprocessors',
+        body: [
+          'If you sign up for a paid tier (Pro, Pro Plus, or the Founder lifetime pass), the picture changes slightly: we need an email to send your sign-in link and we need to process a payment.',
+          'Even then, we contract with only a small number of third-party subprocessors. Each is listed below with its role and a link to its privacy policy.',
+        ],
+        bullets: [
+          'Cloudflare (Workers, Pages, Workers AI, Vectorize, KV, D1) — hosting and Llama 3.3 70B inference. EU-hosted. Policy: cloudflare.com/privacypolicy',
+          'Anthropic (Claude Sonnet 4.5) — interpretive features for Pro Plus via Cloudflare AI Gateway. Data not used for training. Policy: anthropic.com/privacy',
+          'Supadata — transcript fetching for public video URLs. Policy: supadata.ai/privacy',
+          'Paddle — Merchant-of-Record for paid tiers. Handles checkout, billing, EU VAT, US sales tax, chargebacks. Stores billing data. Policy: paddle.com/legal/privacy',
+          'Resend — transactional email (magic-link sign-in, refund confirmations). From noreply@leonmare.de. Policy: resend.com/legal/privacy-policy',
+          'OpenAI (only if text-to-speech is activated) — tts-1 for audio. API data not used for training. Policy: openai.com/policies/privacy-policy',
+        ],
+      },
+      {
         heading: 'Cookies and local storage',
         body: [
           "VozClara doesn't use cookies. It uses the browser's localStorage and IndexedDB to store your preferences (language, theme) and your Pack library. None of this leaves your device.",
@@ -362,8 +425,9 @@ function privacyLabels(locale: string) {
       {
         heading: 'Your rights',
         body: [
-          'Because we collect no personally identifiable data, there is no "user profile" to request, export, or delete from our servers. Everything that shapes your experience lives in your browser.',
-          `To wipe everything: browser settings → "Clear site data" for ${SITE_HOST}. That removes the library, the preferences, and the brainId. The next visit starts from zero.`,
+          'For anonymous free use, no personal data sits on our servers — the GDPR rights (access, rectification, erasure) apply trivially because there is nothing to access.',
+          'For paid use, you can delete your account from your profile page. Server-side deletion sweeps your email pointer, session tokens, votes, and reviews (GDPR Art. 17). Your IndexedDB library is removed by clearing browser data.',
+          `To wipe browser state: browser settings → "Clear site data" for ${SITE_HOST}.`,
         ],
       },
     ],
