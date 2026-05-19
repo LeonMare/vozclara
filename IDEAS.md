@@ -335,3 +335,143 @@ Wenn ein neues Feature evaluiert wird, frag:
 **Killer-Features:** 5
 **Moonshots:** 3
 **Bewusst nicht gebaut:** 10
+
+---
+
+## 8. UPDATE Di 19.5. 18:00 — 2026 Viral-AI-App Research Findings
+
+Research-Agent durch 2026's viral AI landscape geschickt (Granola, Perplexity,
+Lovable, Cluely, Wispr Flow, Linear, Notion, Claude Artifacts, ElevenLabs,
+HeyGen, NoteGPT, YouLearn, Mochi, Spotify Wrapped, Duolingo). 5 game-changing
+Insights die das P0 verändern:
+
+### 8.1 🔥 VozClara Lenses (Granola Recipes Pattern) — NEUER KILLER
+
+Same Video, multiple Output-Lenses via Dropdown:
+- Anki-Deck (.apkg direkt)
+- Cornell-Notes (für Studenten)
+- German B2 Worksheet (CEFR-spezifisch)
+- 60s TikTok-Hook (Creator-Mode)
+- Executive Briefing
+- Spaced-Repetition-Plan mit Schedule
+- Comparison-Pack (vs anderes Video)
+
+**Moat:** 7/10 (Brand + Differenzierung)
+**Effort:** 2-3 Tage (Prompt-Templates + UI-Selector)
+**Why critical:** Eightify/NoteGPT/YouLearn haben das nicht. Höchster ROI-Feature.
+
+### 8.2 ⚡ Inline Timestamp-Citations (Perplexity Pattern)
+
+Jedes Statement im Pack hat klickbare Timestamp. Klick → öffnet YouTube bei 04:23.
+Wir haben die Daten schon. Konkurrenz nicht.
+
+**Moat:** 6/10 (Demo-Wow)
+**Effort:** 8h
+**Why P0:** 10× Leap über Eightify in Demo-Eindruck.
+
+### 8.3 🚨 FSRS statt SuperMemo-2 — KRITISCHE STACK-KORREKTUR
+
+Anki + RemNote sind 2025-26 von SM-2 zu FSRS migriert (ML-personalized scheduling).
+Unsere Docs sagen SM-2 = bereits legacy. Ts-fsrs Open-Source-Library integrieren.
+
+**Effort:** 4-8h
+**Why P0:** Anti-Legacy-Signaling für die SRS-Hardcore-Community (r/anki, r/spacedrepetition).
+**Action:** Korrektur in VISION.md + worker/src/rating.ts/srs.ts (wenn vorhanden) + Marketing-Copy.
+
+### 8.4 🤔 CONTRARIAN: SKIP AI-Tutor-Chat für Launch
+
+Companion (Killer-Feature #2) war für Monat 1 geplant. **Push auf Monat 2-3.**
+
+Reason: „Everyone in 2026 thinks you need 'chat with the video' (YouLearn, NoteGPT,
+Recall all have it). Chat-Retention ist TERRIBLE — most users open once. It dilutes
+the hero. Lead with the artifact. Conversation can come in week 6."
+
+**Strategy:** Differenzierung über *artifact quality* (Lenses + Citations + Cross-Lingual),
+NICHT über *chat fluency*. Konkurrenten zu kopieren = uns angleichen statt transcenden.
+
+### 8.5 🎁 Account-less First Pack (Lovable Growth-Hack)
+
+User darf ERSTEN Pack ohne Signup. Wall erst bei Pack #2. **Lovable's Growth war zu 60%
+darauf zurückzuführen.**
+
+**Effort:** 8h
+**Why P0:** Aktiviert Free→Paid-Funnel massiv. Direkter Conversion-Hebel.
+
+### 8.6 Weitere Erkenntnisse (Tier-B / Tier-C)
+
+**ELL-Voice-Share via ElevenLabs** (60s Audio-Recap für WhatsApp/iMessage):
+- Audio Shares beat Text Shares 3:1 in LatAm + India + Indonesia
+- Perfect für unsere ES/PT-Audience-Expansion
+- **Effort:** 3 Tage. Tier B (Woche 1-2).
+
+**Mascot-Pattern (Duolingo Owl):**
+- „Voz" als Parrot-Mascot
+- Trauert wenn Streak bricht (Loss-Aversion-Meme)
+- Linear-Pattern für Brand-Personality
+- Wrapped 2025 hatte 200M user day-one wegen multiplayer comparison feature
+
+**NoteGPT Multi-Output (markmap.js Mind-Map):**
+- Notes + Mind-Map + Slides + Podcast
+- Wir haben Notes + Flashcards
+- Mind-Map via markmap.js (free) = 2 Tage
+- Tier B (Woche 1-2)
+
+**Mochi Keyboard-First Flashcard-Editor:**
+- `**bold**`, `{{cloze}}`, `[image]`, Tab → next field, ⌘↵ save
+- Don't ship clunky form
+- 2 Tage
+- Tier B
+
+**No Video-Length-Cap Free:**
+- Eightify cappt bei 30min Free
+- Wir machen 90min Free (chunked processing)
+- r/anki + r/learnGerman Talking Point
+- Config-Change, kein Code
+
+**Speed als Marketing-Hook:**
+- „60-min Huberman summary in 12 Sekunden" = shareable Stat
+- Pack-Generation muss <15s sein für 60-min Video
+- Streaming first paragraph in <2s
+- Effort: Optimization-Sprint, 1-2 Tage
+
+### 8.7 REVIDIERTE P0-LISTE — Final für 6-Tage-Sprint
+
+**Tier S (30h core — MUST):**
+1. Inline Timestamp-Citations (8h)
+2. FSRS-Migration (4h)
+3. Pack-Share-URL + OG-Preview (6h)
+4. Account-less First Pack (4h)
+5. Streaming-Generation visible (4h)
+6. /pricing Page (4h)
+
+**Tier A (36h — sollten, Cut-Optionen wenn Zeit knapp):**
+7. **VozClara Lenses (16h)** — Borderline für Launch, Sa+So-Sprint möglich
+8. Chrome-Extension MVP (8h)
+9. Onboarding-Tour (4h)
+10. Cmd+K Palette (8h)
+
+**Tier B (post-Launch Woche 1-2):**
+- Public Pack Library (8h)
+- Streak-Counter (6h)
+- JSON-Export (1h)
+- URL-Schema (1h)
+- Mind-Map Output markmap.js (12h)
+- Mochi-Style Keyboard Flashcard-Editor (16h)
+- Animation Polish (2h)
+- 60s Voice-Share via ElevenLabs (24h)
+
+**Tier C (Monat 1-2 — Killer-Features, UPDATE):**
+- VozClara Brain (unchanged, Monat 1)
+- Cross-Lingual Generation (unchanged, Monat 1)
+- Pack-Remix-Marketplace (unchanged, Monat 2-3)
+- F1 Anki Add-on (unchanged, Monat 2)
+- 💬 **Companion (RAG)** — **MOVED to Monat 2-3** (was Monat 1)
+
+### 8.8 Decision-Heuristic-Update
+
+Zum bestehenden 5-Punkte-Heuristic-Set (siehe §7) wird hinzugefügt:
+
+6. **Macht das Feature Konkurrenz redundant oder kopiert es sie?** Wenn kopieren → lieber lassen. Wenn redundant machen → bauen.
+7. **Ist es Demo-Wow oder Daily-Use?** Demo-Wow gehört auf /pricing + Landing. Daily-Use gehört in App-Core.
+8. **Welches Word-of-Mouth-Meme entsteht daraus?** (Lenses = „guck mal wie das gleiche Video 7 unterschiedliche Outputs wird"; Mascot = „Voz hat geweint")
+

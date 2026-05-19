@@ -399,25 +399,25 @@ interface ToolkitFeature { title: string; body: string }
 function toolkitFeatures(locale: string): ToolkitFeature[] {
   if (locale.startsWith('es')) return [
     { title: 'Exporta a Anki', body: 'Cada lista de vocabulario se descarga como mazo .apkg con un clic. Tarjetas bilaterales, contexto y fuente incluidos. Ningún otro lector de YouTube exporta directo a Anki.' },
-    { title: 'Repetición espaciada nativa', body: 'Las tarjetas vencen, las repasas, el algoritmo SM-2 calcula el próximo intervalo. Racha visible. Sin salir de la app.' },
+    { title: 'Repetición espaciada nativa', body: 'Las tarjetas vencen, las repasas, el algoritmo adaptativo calcula el próximo intervalo. Racha visible. Sin salir de la app.' },
     { title: 'Shadowing con voz', body: 'Escucha la frase, repítela en voz alta, recibe una puntuación de pronunciación. Web Speech API — la grabación nunca sale del dispositivo.' },
     { title: 'Tutor IA sobre tu Pack', body: 'Habla con un compañero nativo sobre el vídeo que acabas de ver — corrige con suavidad, hace preguntas, usa el vocabulario del Pack.' },
   ];
   if (locale.startsWith('pt')) return [
     { title: 'Exporta para Anki', body: 'Cada lista de vocabulário descarrega como baralho .apkg num clique. Cartões bilaterais, contexto e fonte incluídos. Nenhum outro leitor de YouTube exporta direto para Anki.' },
-    { title: 'Repetição espaçada nativa', body: 'Os cartões vencem, tu revês, o algoritmo SM-2 calcula o próximo intervalo. Sequência visível. Sem sair da app.' },
+    { title: 'Repetição espaçada nativa', body: 'Os cartões vencem, tu revês, o algoritmo adaptativo calcula o próximo intervalo. Sequência visível. Sem sair da app.' },
     { title: 'Shadowing com voz', body: 'Ouve a frase, repete em voz alta, recebe uma pontuação de pronúncia. Web Speech API — a gravação nunca sai do dispositivo.' },
     { title: 'Tutor IA sobre o teu Pack', body: 'Conversa com um parceiro nativo sobre o vídeo que acabaste de ver — corrige com suavidade, faz perguntas, usa o vocabulário do Pack.' },
   ];
   if (locale.startsWith('de')) return [
     { title: 'Anki-Export in einem Klick', body: 'Jede Vokabel-Liste lädt sich als .apkg-Deck herunter. Beidseitige Karten, Kontext und Quelle inklusive. Kein anderes YouTube-Tool exportiert direkt nach Anki.' },
-    { title: 'Native Spaced Repetition', body: 'Karten werden fällig, du wiederholst, der SM-2-Algorithmus berechnet das nächste Intervall. Sichtbarer Streak. Ohne die App zu verlassen.' },
+    { title: 'Native Spaced Repetition', body: 'Karten werden fällig, du wiederholst, ein adaptiver Algorithmus berechnet das nächste Intervall. Sichtbarer Streak. Ohne die App zu verlassen.' },
     { title: 'Shadowing mit Stimme', body: 'Hör den Satz, sprich ihn nach, bekomm einen Aussprache-Score. Web Speech API — die Aufnahme verlässt nie dein Gerät.' },
     { title: 'KI-Tutor zu deinem Pack', body: 'Sprich mit einem Native-Speaker-Tutor über das Video das du gerade gesehen hast — sanfte Korrekturen, Rückfragen, nutzt das Pack-Vokabular.' },
   ];
   return [
     { title: 'Export to Anki in one click', body: 'Every vocabulary list downloads as a real .apkg deck. Two-sided cards, context and source included. No other YouTube tool exports directly to Anki.' },
-    { title: 'Native spaced repetition', body: 'Cards come due, you review, the SM-2 algorithm sets the next interval. Visible streak. Without leaving the app.' },
+    { title: 'Native spaced repetition', body: 'Cards come due, you review, an adaptive algorithm sets the next interval. Visible streak. Without leaving the app.' },
     { title: 'Voice shadowing', body: 'Hear the sentence, repeat it out loud, get a pronunciation score. Web Speech API — the recording never leaves your device.' },
     { title: 'AI tutor on your Pack', body: 'Talk to a native-speaker tutor about the video you just watched — gentle corrections, follow-up questions, uses the Pack vocabulary.' },
   ];
