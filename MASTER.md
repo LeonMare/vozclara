@@ -56,7 +56,7 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 | **TTS** | OpenAI `tts-1` (current) |
 | **Transcripts** | Supadata (Merchant-of-Record, legally clean) |
 | **MCP Stack** | Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` |
-| **Payments** | Polar.sh (Merchant-of-Record for EU VAT, US sales tax, fraud + chargebacks). Locked Di 19.5. abends — Stripe-Fallback gestrichen. Migration der existierenden Founder-Deal-Payment-Link auf Polar in Phase 1 Mi-Shallow. |
+| **Payments** | Paddle (Merchant-of-Record for EU VAT, US sales tax, fraud + chargebacks). Pivoted Mi 20.5. after Polar's auto-review rejected the YouTube-adjacent use case. Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure. Submitted Mi 20.5. nachmittags, in review (24-72h typical). Stripe Founder Payment Link remains active as Plan B until Paddle approves + new Founder-Checkout-URL is wired. |
 | **Email** | Resend (from `noreply@leonmare.de` due to domain verification) |
 | **Auth** | Magic-link via Resend |
 | **Analytics** | Cloudflare Web Analytics (cookieless, no banner needed) |
@@ -94,7 +94,7 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 ### Phase 1 — Foundation (Week 1)
 1. 💎 **MCP Server** (Smithery-published) — distribution moat
 2. ⚖️ **Compliance Bundle** (AI Disclosure + Watermark + DSGVO + Sentry-Drop)
-3. 💰 **Polar.sh OR Stripe Tax** — EU VAT solution
+3. 💰 **Paddle Merchant-of-Record** — EU VAT solution (in review, submitted Mi 20.5.)
 4. ⚡ **Inline Timestamp-Citations** — 10× leap over Eightify
 5. 🚨 **Account-less First Pack** — Lovable growth-hack
 6. 🔥 **Streaming Pack-Gen + Agent-Thinking-Stream** — Manus + Granola pattern
@@ -368,7 +368,7 @@ Implementation in Task #22 (Citations) erweitert um 1.5 Tage.
 ### 4-Week Sprint Map (realistic, not 25-day-15h fantasy)
 
 **Week 1 — Foundation (Mi 20.5. - Di 26.5.)**
-- Compliance Bundle + MCP Server + Polar/Stripe Tax decision
+- Compliance Bundle + MCP Server + Paddle approval-watch (Stripe Founder Link as Plan B)
 - Citations + Account-less + Streaming + Agent-Thinking
 - /pricing Page + AI Watermark
 

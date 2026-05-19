@@ -24,7 +24,7 @@
 | Quotas: Pro Plus capped 40 standard + 2 Season Packs/mo, overage $0.10/pack | ✅ |
 | MCP Stack: Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` | ✅ |
 | Transcript Provider: Supadata (legally clean) | ✅ |
-| Payments: **Polar.sh** (Merchant-of-Record). Decision Di 19.5. abends nach Pricing-Vergleich: 4 % + €0.40 vs. Stripe 1.4 % + Tax Basic 0.5 %. Polar trägt EU-VAT-Audit-Risiko, spart Steuerberater (~€500-2k/Jahr) + 0 Min monatliches Filing. Break-even ab ~50 Pro-Subs. Stripe-Fallback gestrichen. | ✅ |
+| Payments: **Paddle** (Merchant-of-Record). Pivot Mi 20.5. nach Polar-Rejection ("YouTube content-processing-adjacent"). Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure (Stripe-acquired Lemon Squeezy ruled out for post-acquisition uncertainty). MoR trägt EU-VAT-Audit-Risiko, spart Steuerberater (~€500-2k/Jahr) + 0 Min monatliches Filing. Submitted Mi 20.5. nachmittags, in review. Stripe Founder Payment Link aktiv als Plan B bis Approval. | 🟡 in review |
 | Launch-Date: WHEN-READY, nicht fixed 25.5. | ✅ |
 | Polish > Speed | ✅ |
 
@@ -366,7 +366,7 @@ Pre-Launch-Rest. Walk. Family. Last-Minute-Decisions vermeiden.
 
 **Deep Block 1 (10-13):** Last P0 Bugs + Polish-Last-Mile
 - Final Lighthouse Targets validieren
-- Stripe/Polar Live-Mode-Test
+- Paddle Live-Mode-Test (post-approval) + Stripe Founder Link verification
 
 **Deep Block 2 (14-17):** Launch-Day Pre-Production
 - HN/PH/Uneed-Posts draften (final copy)
@@ -518,7 +518,7 @@ Pre-Launch-Rest. Walk. Family. Last-Minute-Decisions vermeiden.
 **Investment:** 
 - ~€500 Font-Lizenzen (optional, sonst free Plex)
 - Anthropic API credit $50-200 (Pro Plus features) 
-- Polar/Stripe Account setup
+- Paddle/Stripe Account setup
 - **Claude Max $199** (Sprint duration)
 - Founder-Time + Catering-Revenue als Backup
 

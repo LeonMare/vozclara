@@ -569,7 +569,7 @@ Aus dem Sweep für Backlog persistiert:
 | Heptabase Pack-Canvas (Drag Cards Whiteboard, draw connections) | Heptabase $2M ARR | 5+ Tage | Monat 3 |
 | Finch „Knowledge Garden" (Plant grows, wilkt bei Skip) | Finch #1 Wellness | 4 Tage | Monat 4 |
 | Dia „Skill Recipes" (User-saved Lens+Citation+Format-Combos sharable URLs) | Dia Browser | 2 Tage | Monat 2 |
-| Polar.sh vs Stripe Evaluation (Merchant-of-Record removes EU VAT pain) | Polar.sh seed funded | 1 Tag Eval | **Diese Woche** |
+| Merchant-of-Record decision: Paddle (Polar rejected, LS Stripe-acquired) | Paddle | DONE Mi 20.5. (submitted, in review) | ✅ Done |
 | PostHog Session-Replay (Day 1 activate) | PostHog | 30min | **Pre-Launch** |
 | Cal.com „Founder Office Hours" Embed (free, signals founder-led) | Cal.com | 30min | Pre-Launch |
 | Resend für transactional Email (haben wir bereits) | Resend | done | done |
@@ -663,15 +663,17 @@ Drei konkrete Items:
 
 **/privacy Update (30min):** Subprocessors explizit nennen (Anthropic, Cloudflare, Supadata), „No Training on Your Data" Statement, DPAs als PDFs in Privacy-Folder.
 
-### 10.4 💰 Polar.sh vs Stripe Tax — Entscheidung
+### 10.4 💰 Merchant-of-Record — Entscheidung
 
-Stripe ohne Tax = 27 EU-Länder VAT MOSS-Filings. Mit Solo-Founder absurd.
+> **UPDATE Mi 20.5.2026:** Decision = **Paddle**. Polar.sh auto-review rejected VozClara Di 19.5. ("YouTube content-processing-adjacent product, falls within disallowed category for third-party content downloaders"). Pivot zu Paddle Mi 20.5. submitted, in review (24-72h). Stripe Founder Link bleibt aktiv als Plan B. Originale Polar vs Stripe Analyse bleibt unten als Decision-Log.
 
-**Polar.sh:** 4% + €0.40, Merchant-of-Record (sie filen VAT), Developer-first API, Stripe-backed seed funded.
+**Paddle (chosen):** 5% + €0.50 all-in, MoR, mature tax infrastructure (100+ Jurisdiktionen), refunded customer + eats fee, indie-friendly aber pragmatischer als Polar bei AI/content tools. Solo-founder time-savings > 1% fee delta.
 
-**Lemon Squeezy:** war MoR, Stripe acquired 2024, Quality slipped 2026 (Screen Studio Mass-Cancellation-Incident). VERMEIDEN.
+**Polar.sh (rejected us):** 4% + €0.40 base (effektiv ~6% international wg. Stripe pass-through 1.5%), Merchant-of-Record, Developer-first API. Auto-review zu konservativ für YouTube-adjacent.
 
-**Decision-Tree:**
+**Lemon Squeezy:** war MoR, Stripe acquired Juli 2024, Approval-Times von Tagen → Wochen, fold in Stripe Managed Payments. Zu instabil pre-launch.
+
+**Decision-Tree (historical, pre-Polar-rejection):**
 - Wenn Stripe-Integration nicht zu tief → switch zu Polar pre-launch (3-4h)
 - Wenn zu tief → launch mit Stripe + Stripe Tax, migrate zu Polar Monat 2
 
@@ -721,7 +723,7 @@ NEW P0 (ergänzt zu existing Liste):
 - Drop browser Sentry (1h)
 - /privacy DSGVO-Update (30min)
 - Claude Skills Bundle (2h)
-- Polar.sh ODER Stripe Tax (3-4h)
+- Paddle MoR submission (DONE Mi 20.5., in review)
 - RUNBOOK.md (90min)
 
 DROPPED aus P0:
