@@ -1005,14 +1005,15 @@ BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. 
 #### Marketing-Spend-Hierarchie (mit Cashflow nach Founder Deal)
 
 **Tier S — gratis erst (insgesamt ~1h Aufwand):**
-- ❌ Futurepedia — **2026 komplett paid** ($247 Sold Out / $497 Verified). Selbe Logik wie BetaList: skip pre-revenue, reconsider post-launch wenn Cashflow stimmt. Update Di 19.5. 15:02 (Laptop-Session).
-- ⏳ TAAFT (theresanaiforthat.com/submit) — Free-Tier verifizieren beim Submit, Paid wenn nicht
-- ⏳ futuretools.io, toolify.ai — quick wins (free directories)
+- ❌ Futurepedia — **2026 komplett paid** ($247 Sold Out / $497 Verified). Skip pre-revenue, reconsider post-launch wenn Cashflow stimmt. Update Di 19.5. 15:02.
+- ❌ TAAFT — **auch komplett paid**, aber unterer Tier ist tatsächlich interessant. Siehe TAAFT-Eintrag in Tier-A unten. Update Di 19.5. 15:38.
+- ⏳ futuretools.io, toolify.ai — als nächstes prüfen (vermutlich noch free)
 - Product Hunt Setup (Mi nach Launch) — bisher nicht angefasst
 
 **Lesson learned (Di 19.5.):** 2026er AI-Tool-Directory-Landschaft hat sich
-in 12 Monaten komplett paywalled. Vor dem Submit immer kurz Pricing-Page
-checken. Gratis bleibt nur was unmittelbar nach dem Auth-Wall liegt.
+in 12 Monaten komplett paywalled. Aber: nicht alle Paywall-Tiers sind
+gleich teuer — TAAFT $49 Website-Only ist günstiger als BetaList Lite $39
+bei 80× größerer Reichweite. Vor dem Reflex-Skip pricing genau lesen.
 
 **Tier-A Reach-Spend — sequenzielle Roadmap mit Cashflow-Trigger**
 
@@ -1024,8 +1025,10 @@ Eyeball-€:
 |---|---|---|---|
 | Woche 1 post-Launch | €0 | Reddit + HN + Discord-Aktivität | Founder-Deal-Pitch trägt |
 | Woche 2 | €0 | **Product Hunt Launch** vorbereitet | Bestes Free-Launch-Venue, US/EU-Eyeballs |
+| Woche 2 (nach Reddit-Daten) | $49 | **TAAFT Website Only** | Permanent-Listing in 80M-Visitor-Directory + $100 PPC-Credit = effektiv gratis wenn PPC voll genutzt. Erst NACH Reddit-Daten weil wir dann wissen welche Headlines konvertieren |
 | Woche 3 (≥30 Founder ≈ €3k) | $99 | **BetaList Standard** | Newsletter-Blast inkludiert, Indie-Audience kauft eher Lifetime |
 | Woche 4 | $350-500 | **TLDR AI Newsletter** | 200k AI-curious Devs, direktes Audience-Match, beste €/Conversion |
+| Monat 2 (wenn TAAFT konvertiert) | $347 | **TAAFT Maximum Exposure** | Upgrade auf das Newsletter-Tier nur wenn $49-Tier Daten geliefert hat dass die Audience konvertiert. 2,5M Newsletter-Subscribers + 10× mehr Traffic |
 | Monat 2 | $247 | **Futurepedia Basic** *(wenn Sold-In)* | Reines SEO-Investment, DR 70 Backlink, payoff Monat 4+ |
 | Monat 3 | $300 | **Indie Hackers Newsletter** | Cross-Promotion + Word-of-Mouth |
 | Monat 3 | $200 | **Google Search Ads Test** | „youtube to anki", „study from youtube", „youtube transcript" Keywords |
