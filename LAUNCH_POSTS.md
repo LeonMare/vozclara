@@ -84,6 +84,17 @@ bait. Different tool for a different job. If you're a student or a
 language learner who actually wants to retain what they watched,
 this is built for that.
 
+And the "what about YouTube's new Ask feature?" question — also fair.
+YouTube Ask is great for one-off questions inside YouTube Premium:
+single video, English-only, the answer lives for two minutes and is
+gone. VozClara is for the knowledge that *outlives* the watch session.
+Your packs persist in IndexedDB, the library searches across hundreds
+of videos via vector embeddings, output gets generated natively in
+your language (not translated), and the SRS / Anki / shadowing layer
+exists so you actually retain what you watched. Plus the MCP server
+ships your library into Claude / Cursor / ChatGPT — YouTube Ask is
+locked to the YouTube tab.
+
 If you want to poke without signing up: the study-mode pack on
 Veritasium's "Most Misunderstood Concept in Physics" lives at
 https://vozclara.app/pack/sample-study (24-min lecture → 7 chapters
@@ -120,6 +131,14 @@ Anticipating the recurring questions:
   trackers, no marketing cookies. Privacy-friendly Cloudflare Web
   Analytics + Sentry for crash reports, both EU-hosted, no PII.
   /privacy spells it out.
+
+— vs YouTube Ask (Premium feature)? YouTube Ask: single video,
+  English, answer gone in two minutes, locked behind Premium.
+  VozClara: persistent library across hundreds of videos, native
+  multilingual generation (not translation), cross-pack vector
+  search ("what did Lex say about LLMs in the last 5 podcasts I
+  saved?"), and the SRS / Anki layer YouTube will never build.
+  Different value: YouTube tells you, VozClara remembers.
 ```
 
 ---

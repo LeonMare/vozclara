@@ -222,7 +222,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     askEyebrow: 'PREGUNTAS · BIBLIOTECA · IA',
     askTitle: 'Pregúntale a tu biblioteca.',
-    askSub: 'Habla con tu propio archivo de conocimiento:',
+    askSub: 'A través de cientos de vídeos guardados, en tu idioma, con citas a timestamps exactos:',
     askExamples: [
       '¿Qué dijeron mis vídeos guardados sobre ventas?',
       'Resume todo lo que guardé sobre IA, en español.',
@@ -393,7 +393,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     askEyebrow: 'PERGUNTAS · BIBLIOTECA · IA',
     askTitle: 'Pergunta à tua biblioteca.',
-    askSub: 'Fala com o teu próprio arquivo de conhecimento:',
+    askSub: 'Através de centenas de vídeos guardados, na tua língua, com citações a timestamps exatos:',
     askExamples: [
       'O que disseram os meus vídeos guardados sobre vendas?',
       'Resume tudo o que guardei sobre IA, em português.',
@@ -553,7 +553,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     askEyebrow: 'FRAGEN · BIBLIOTHEK · KI',
     askTitle: 'Frag deine Bibliothek.',
-    askSub: 'Sprich mit deinem eigenen Wissensarchiv:',
+    askSub: 'Über hunderte gespeicherte Videos, in deiner Sprache, mit Zitaten auf exakte Timestamps:',
     askExamples: [
       'Was haben meine gespeicherten Videos über Vertrieb gesagt?',
       'Fasse alles zusammen was ich über KI gespeichert habe, auf Deutsch.',
@@ -713,7 +713,7 @@ export const STRINGS: Record<Locale, Strings> = {
 
     askEyebrow: 'QUESTIONS · LIBRARY · AI',
     askTitle: 'Ask your library.',
-    askSub: 'Talk to your own knowledge archive:',
+    askSub: 'Across hundreds of saved videos, in your language, with citations to exact timestamps:',
     askExamples: [
       'What did my saved videos say about sales?',
       'Summarise everything I saved about AI, in English.',
