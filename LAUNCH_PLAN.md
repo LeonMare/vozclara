@@ -1014,18 +1014,52 @@ BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. 
 in 12 Monaten komplett paywalled. Vor dem Submit immer kurz Pricing-Page
 checken. Gratis bleibt nur was unmittelbar nach dem Auth-Wall liegt.
 
-**Tier A — €500-1000 Spend (post-Launch, datengetrieben):**
-- TLDR AI Newsletter Sponsorship $350-500 (200k+ tech-savvy)
-- The Sample Newsletter $100-300
-- Indie Hackers Newsletter $300
-- Google Search Ads Test $200 (Keywords: „youtube to anki", „youtube transcript", „study from youtube")
+**Tier-A Reach-Spend — sequenzielle Roadmap mit Cashflow-Trigger**
 
-**Tier B — €1000-3000+ (wenn Pro-MRR > €2k):**
-- YouTube Influencer Integration (Sprach-Channels wie „Easy German") $500-2000
+Aktualisiert Di 19.5. — Direkt-Vergleich BetaList vs Futurepedia
+durchgeführt. Klare Hierarchie pro Conversion-€, nicht pro
+Eyeball-€:
+
+| Wann | Spend | Was | Warum |
+|---|---|---|---|
+| Woche 1 post-Launch | €0 | Reddit + HN + Discord-Aktivität | Founder-Deal-Pitch trägt |
+| Woche 2 | €0 | **Product Hunt Launch** vorbereitet | Bestes Free-Launch-Venue, US/EU-Eyeballs |
+| Woche 3 (≥30 Founder ≈ €3k) | $99 | **BetaList Standard** | Newsletter-Blast inkludiert, Indie-Audience kauft eher Lifetime |
+| Woche 4 | $350-500 | **TLDR AI Newsletter** | 200k AI-curious Devs, direktes Audience-Match, beste €/Conversion |
+| Monat 2 | $247 | **Futurepedia Basic** *(wenn Sold-In)* | Reines SEO-Investment, DR 70 Backlink, payoff Monat 4+ |
+| Monat 3 | $300 | **Indie Hackers Newsletter** | Cross-Promotion + Word-of-Mouth |
+| Monat 3 | $200 | **Google Search Ads Test** | „youtube to anki", „study from youtube", „youtube transcript" Keywords |
+
+**Tier-B Scale-Spend (wenn Pro-MRR ≥ €2k):**
+- YouTube Influencer Integration (Easy German, Easy Spanish, Easy German Slow etc.) $500-2000 pro Channel
 - Reddit Promoted Posts $300-500 in r/languagelearning + r/getstudying
-- BetaList Standard $99 als Launch-Day-Boost
+- TLDR-Sponsorship monatlich rotieren ($350 × 3 = ~$1.000)
 
-**Skip durchgängig:** Meta-Ads, YouTube Pre-Roll, BetaList Premium $299
+**Explicit-Skip-Liste (nicht reflexartig wieder probieren):**
+- ❌ **Futurepedia $497 Verified** — Delta zu $247 Basic ist nicht 2× wert
+- ❌ **BetaList Premium $299** — Delta zu $99 Standard ist nicht 3× wert
+- ❌ **AppSumo Lifetime-Deal Marketplace** — kannibalisiert €9/Mo Pro-MRR. Founder-Deal ist schon der einzige Lifetime-Hook
+- ❌ **Meta / Instagram / TikTok Ads** — falsches Audience-Match für editoriale Brand
+- ❌ **LinkedIn Ads** — CPC > €5, miserabler ROI
+- ❌ **Lifetime-Deals auf Stacksocial / DealMirror** — Brand-Schaden, Discount-Hunter-Audience
+
+**Direkt-Vergleich BetaList vs Futurepedia (warum BetaList gewinnt
+bei nur einem Pick):**
+
+| | Futurepedia $247-497 | BetaList Standard $99 |
+|---|---|---|
+| Audience | 400k AI-Tool-Hunter | 1M+ Indie-Hacker + Early-Adopters |
+| SEO-Authority | DR ~70 | DR ~65 |
+| Was du bekommst | Listing | Listing + Newsletter-Blast |
+| Sign-up-Konversion | Niedrig (Window-Shopper) | Mittel-Hoch (Launch-Hungrige) |
+| €/Conversion | $$$ | $ |
+
+BetaList gewinnt wegen Newsletter-Blast (direkt zu Eyeballs, nicht
+erst „nach SEO-Ranking warten") + Indie-Hacker-Audience (kauft eher
+€99 Founder-Deal wegen Tribe-Loyalität) + 5× billiger.
+
+Futurepedia macht erst Sinn Monat 3+ als reines SEO-Investment, nicht
+als Akquise-Kanal.
 
 #### Investoren — jetzt nicht, später bewusst
 
