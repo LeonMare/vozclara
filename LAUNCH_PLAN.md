@@ -1159,4 +1159,253 @@ Free tier covers most use. Pro plan €9/mo unlocks premium AI models (Claude So
 
 — PC-Session-Ende Di 19.5. Mittag. Switching to Laptop. Sprint weiter im Plan.
 
+---
 
+## §30 — Market Sweep & MRR-Reach-Strategie (Di 19.5. 16:30)
+
+**Trigger:** User explicit request „mach eine komplette effektive Suche
+für Marketing-Spending und Launch-Hilfe für VozClara mit maximalem ROI
+für Monthly Recurring Users". Zwei aufeinanderfolgende Research-Sweeps
+durchgeführt (1. allgemeine Reach-Landscape, 2. MRR-fokussiert + Pro-
+Tier-Pricing-Benchmarks).
+
+### 🎯 Die 4 strategischen Entscheidungen die alles ändern
+
+#### 1. Pro Tier €9/mo — **bestätigt durch Marktdaten**
+
+Schon in §29-Submission-Texten verwendet, jetzt durch 2026er-Markt-
+Benchmarks validiert: Eightify $9.99, NoteGPT $9.99, Mindgrasp $9.99,
+RemNote $8-10, LingQ $10, Brainscape $9.99. Median-Cluster bei
+$9-10/mo.
+
+**Feature-Gate-Entscheidung (sauber, einfach, defensible):**
+- **Free**: 3 Videos/Woche, Summary + Transcript only
+- **Pro €9/mo (€72/Jahr = €6 effektiv)**: Unlimited Videos, alle 4
+  Reading Modes (learn/brief/study/creator), **SRS Flashcards + Anki
+  Export**, Multi-Language Pack, Premium AI Models (Claude Sonnet),
+  MP3/MP4 Upload
+- **Founder Deal €99 Lifetime (cap 100)**: alles aus Pro, lifetime,
+  einmalige Charge
+
+**Der Moat:** SRS + Anki-Export ist die einzige Feature-Kombi die
+NotebookLM (free, kein YouTube-first, kein SRS), Eightify (kein SRS),
+NoteGPT (kein Anki-Export), YouLearn (kein YouTube-Fokus) nicht haben.
+Das ist die „warum €9 statt free NotebookLM"-Antwort die in ALLE
+Marketing-Copy gehört.
+
+**Implementation-Blocker:** Stripe Payment Link für €9/mo Subscription
+muss erstellt werden, /pricing-Page muss Pro Tier zeigen, Worker-Side
+Pro-Quota-Check muss eingebaut werden. → Task #10.
+
+#### 2. Affiliate-Stack > Flat Sponsorship — die Reach-Math kippt
+
+**Alt:** $600 für EINE TLDR-Newsletter-Slot
+**Neu:** $600 split auf 3 Creator × $200 + 30% Recurring Affiliate 12mo
+
+Bei realistisch 10 konvertierten Pro-Usern pro Creator-Mention:
+- 3 × 10 × €9/mo × 12 Monate = **€3.240 ARR aus $600 Initial-Spend**
+- Pro Pro-User-Affiliate-Cost: €2.70/mo an Creator = nachhaltig
+  motiviert über 12 Monate (Evergreen-Mentions, nicht One-Shot)
+
+**Restruktur:** ALLE Creator-Outreach läuft jetzt als
+$150-250 Flat + 30% Recurring 12mo. Niemand wird Flat-Sponsor-gepaid.
+
+#### 3. Anki Add-on bauen = höchst-ROI-Build in Backlog
+
+**3M+ Anki User · Add-on Store hat kaum Monetization-Noise · 2 Wochen
+Dev · $0 Marketing-Spend.**
+
+Funnel: Free Add-on „VozClara YouTube Import" → braucht VozClara-
+Account → 5 Imports/Woche Free → Pro-Gate für mehr. Strukturell
+schwer für Konkurrenz zu kopieren — Eightify/NoteGPT/YouLearn haben
+keine Anki-Pipeline.
+
+**Optional:** Obsidian Community Plugin mit demselben Funnel (4M+
+User, 120M Plugin-Downloads). Selber Code recycelbar.
+
+→ Task #12, Sprint Woche 2-3 nach Launch.
+
+#### 4. Programmatic SEO JETZT seeden — Creator-spezifische Pages
+
+Cluster-Ranking nach MRR-Conversion-Potential:
+
+| Rank | Cluster | Beispiel-Title |
+|---|---|---|
+| 1 | „youtube to anki" Variants | „Turn YouTube into Anki cards", „YouTube to Anki workflow 2026" |
+| 2 | **Creator-spezifische Notes-Pages** | „Huberman Lab Episode X — Notes + Flashcards", „Veritasium [video] summary + Anki Deck" |
+| 3 | „[language] podcast/lecture transcription" | „Best Spanish podcast notes tool" |
+| 4 | „NotebookLM alternative" Variants | „NotebookLM alternative for language learners" |
+| 5 | „Anki tool comparisons" | „VozClara vs AnkiHub" |
+
+**Cluster 2 ist Zapier-Pattern:** Tausende Long-Tail-Pages
+programmatisch aus User-Packs in KV. **Eigene App generiert den
+Content** — meta-credibility, zero marginal cost. 12 Wochen bis
+Ranking — fällt genau zusammen mit dem Punkt wenn Paid Acquisition
+Budget durch ist.
+
+→ Task #13, Sprint Woche 1 nach Launch.
+
+### 🔄 Reversals aus dem ersten §29-Sweep
+
+**TAAFT $49 NICHT mehr Woche 2 unconditional.** Neuer Gate: Pro-
+Upgrade-Funnel muss >3% konvertieren (PostHog/Plausible
+instrumentiert, Task #11). Sonst verbrennen wir die Bullet weil
+Directory-Traffic broad-intent landet auf einer Pricing-Page die das
+SRS-Gate nicht klar signalisiert. Reihenfolge: erst Funnel
+instrumentieren + optimieren, DANN TAAFT.
+
+**AppSumo erneut betrachtet (war im §29-Skip):** Lifetime-Deal-
+Marketplace bleibt skip. ABER: 1-Jahr-Pro-Deal-Variante ist
+interessant — 200 Codes × $49 = $9.800 Cash-Injection + Audience
++ Reviews + forced Renewal-Cliff bei Monat 12 (vs Lifetime-Cliff =
+nie). Verhandlungsoption für **Monat 4 post-launch**, NICHT jetzt.
+AppSumo Review-Cycle ist 8-12 Wochen, also passt timing.
+
+### 💰 Spend-Allocation (frische €3k Catering-Cash)
+
+**Wenn $1.000 verfügbar:**
+| Channel | Spend | Rationale |
+|---|---|---|
+| 3 Mid-Tier Creator Affiliate-Deals | **$600** | $150-250 flat + 30% recurring 12mo, Evergreen-Mentions |
+| TLDR AI Newsletter (Woche 4) | **$350** | bleibt im Plan, AI-curious Devs konvertieren ~3-5% bei klarem Upgrade-Hook |
+| Programmatic SEO Tooling (Ahrefs Lite o.ä.) | **$50** | 1mo Lizenz für Keyword-Validation der Creator-Notes-Cluster |
+
+**Wenn $1.500 verfügbar — Add-ons:**
+- +$350 zweites Newsletter staggered (Mindstream / Free Language /
+  PKM Weekly), 10-14d nach TLDR
+- +$50 Reddit Ads Test ($5/d × 10d) in r/languagelearning + r/Anki
+  für Creative-A/B (NICHT als Primary Reach)
+
+**KEIN sofortiges Spending vor:** (a) Pro-Tier in Stripe live, (b)
+Conversion-Tracking läuft, (c) Reddit-/HN-Launch-Daten als Baseline.
+
+### 📋 Named Creator-Targets für Outreach (aus Research-Sweep #2)
+
+**Language-Learning (sortiert nach Outreach-Wahrscheinlichkeit):**
+
+| Creator | Subs | Channel | Angle |
+|---|---|---|---|
+| Days & Words (Robin) | 80k | @DaysandWords | Refold/Immersion, polyglot-friendly |
+| Easy Portuguese | 120k | @EasyPortuguese | Underbooked Sponsor-wise, rare PT-Niche |
+| Portuguese with Leo | 390k | @PortugueseWithLeo | EU-PT, rare Niche |
+| Dreaming Spanish (Pablo) | 700k | @DreamingSpanish | CI-Audience LIEBT Tools, höchst Affiliate-Yield |
+| Days & Words → Justin Sung etc. (Study-Tubers) | siehe Reseach | — | Stack mit Language-Tubers |
+| Luca Lampariello | 150k | @LucaLampariello | Polyglot OG, features oft Tools |
+| Deutsch für Euch (Katja) | 270k | @DeutschFuerEuch | DE-DE Learners, Sponsor-Unterbooked |
+| Spanish with Vicente | 400k | @spanishwithvicente | EU-Spanish |
+| Speaking Brazilian (Virginia) | 450k | @SpeakingBrazilianLanguageSchool | PT-BR |
+| Lindie Botes | 470k | @LindieBotes | Multi-Language Polyglot |
+
+**Study-Tubers:**
+| Justin Sung (iCanStudy) | 750k | @JustinSung | Active Sponsor Program ~$3-5k Integration |
+| Elizabeth Filips | 700k | @ElizabethFilips | Med-Student Anki-Crowd |
+| Curtis Gee | 700k | @curtisjgee | Study-Vlog |
+| Archer Newton | 120k | @ArcherNewton | Learning Coach |
+| Mike Dee | 150k | @MikeAndIkey | Obsidian-Crossover |
+| Linking Your Thinking (Nick Milo) | 110k | @LinkingYourThinking | PKM hardcore, $500-2k Sponsor |
+| Odysseas | 150k | @OdysseasD | Med-Student, Anki-native |
+
+**Erwartung:** ~30% antworten auf Cold-Email. Bei 25 Pitches = 7-8
+Antworten = 3-4 Deals realistic. Outreach-Block ~4h.
+
+### 🌍 EU-Polyglot-Channels (VozClara only, kein CaterSmart-Crossover)
+
+- **Discord „German Learning and Discussion"** — 224k Mitglieder,
+  größter DE-Learning-Server, hat `#tools`-Channel, community-friendly
+- **Discord „Deutsch lernen!"** — 24k Mitglieder, Resources-Mentions
+  erlaubt
+- **r/Spanish** (~700k) · **r/learnspanish** (~550k) · **r/Idiomas**
+  (~30k Spanish-language polyglot meta)
+- **r/learnportuguese** (~85k) · **r/portugal** für EU-PT
+- **r/de** (~1M, native-side word-of-mouth) · **r/austria** ·
+  **r/Switzerland**
+- **r/Anki_DE** (klein, engaged) · **r/medizinstudium** (DE/AT
+  Med-Students = High Anki-Intent)
+- **Easy Languages Patreon-Discord** — gesponsorte Mention $200-500
+
+Skip: FB-Polyglot-Groups (Engagement tot), TikTok ohne Native-Content-
+Commitment.
+
+### 🚫 Reinforced Skip-Liste (nach 2 Research-Sweeps)
+
+- **AppSumo Lifetime** — kannibalisiert MRR (1-Jahr-Pro-Variante
+  Monat 4 evaluieren, aber Default-Skip)
+- **PitchGround / SaaSZombie / Dealify** — 2026 inaktiv geworden
+- **Lenny's Newsletter** — B2B-PM-Audience, falsches ICP
+- **Ben's Bites / Superhuman AI / Rundown AI Premium** — $1-3k/Send
+  out of range pre-€10k-MRR
+- **Heise / Golem / Lenny** Display-Ads — Enterprise/PM, nicht Learner
+- **Hashnode / Dev.to Paid** — Distribution tot
+- **Medium Partner / Hackernoon Paid** — Nofollow, low Conversion
+- **Spray-Backlink-Farms <DR25** — Google ignoriert seit 2024
+- **TikTok Ads ohne Native Content** — 0.2-0.5% Paid-Conversion
+- **The Linguist / Steve Kaufmann Paid Placement** — LingQ-direkter-
+  Konkurrent, nur Guest-Content statt Sponsor
+
+### 🎯 Strategische Insights (was die Strategie ÄNDERT, nicht „Channel #X")
+
+1. **Reddit organic > alles andere für Niche-Fit-SaaS in 2026.** 40%
+   Conversion aus echten Replies vs 0% aus $500 Ads. Eine r/language-
+   learning-Chance pro Monat → Build-Story Woche 2, NICHT Launch-Day.
+
+2. **Polyglot-Niche ist underexploited** — alle AI-Tool-Founder
+   gehen TLDR/Futurepedia/TAAFT. Niemand pitcht Free Language
+   Newsletter, Refold Discord, Langpreneur Podcast. Diese Audience
+   zahlt schon $10/mo bei LingQ/Migaku — €9 Lifetime ist ein No-Brainer.
+
+3. **Product Hunt ist Backlink-Event, nicht Launch-Event.** ~5
+   Conversions per 100 Upvotes für Niche-Products. DR-80 Backlink +
+   Social Proof Trophy. Eine Woche Prep, nicht drei.
+
+4. **15 Directories compound, 300 Directories sind tot.** Google
+   ignoriert DR<25. Fokus auf die named DR-30+ Liste die wir haben.
+
+5. **€99 Founder Deal IST Marketing-Currency.** 10-15 Codes als
+   Free-Inventory für YouTuber-Affiliate-Stack. Steht in keinem
+   Directory. Höchste ROI-Conversion von Catering-Cash-zu-Reichweite.
+
+6. **Recurring Affiliate ≫ Flat Sponsorship** für solo founder.
+   $1k flat = 1 Slot. $1k split auf 3 × $200 + 30% recurring =
+   3 Slots × 12mo Evergreen-Mentions. Standardrestruktur ab jetzt.
+
+7. **SRS+Anki-Export ist der Moat — IN JEDE COPY.** Jede Directory-
+   Description, jede Creator-Pitch-Mail, jede SEO-Page führt mit
+   dieser Diff. Kein anderes 2026er Tool hat das.
+
+### ⏭ Was AB JETZT die Reihenfolge ist
+
+**Pre-Launch (diese Woche):**
+1. Task #10 — Pro Tier €9/mo in Stripe + /pricing-Page live (🔥
+   Blocker für alles, frische Energie morgen früh)
+2. Task #11 — Conversion-Tracking installieren (PostHog/Plausible
+   Goals)
+3. Task #13 — 50 Creator-Notes-Pages programmatisch (SEO-Seed)
+4. Task #7 — Reddit-Karma Mi/Do/Fr
+5. Task #4 — 8 Free Directories (~3h Block parallel)
+
+**Launch-Woche (Mo 25.5. / Di 26.5.):**
+6. Task #5 — Uneed Skip-Line $30
+7. Show HN + Product Hunt
+8. r/languagelearning Build-Story (NICHT Day-1, sondern Woche 2)
+
+**Woche 2-4:**
+9. Task #6 — 3 Creator Affiliate-Deals (Pro-Funnel muss >3% sein
+   bevor wir pitchen)
+10. Task #8 — TLDR AI booken + 2. Newsletter staggern
+11. Task #12 — Anki Add-on Sprint starten
+
+### 📌 Persistent-Notes für nächste Session
+
+- **Pro-Tier-Price ist gesetzt: €9/mo, €72/Jahr.** Nicht erneut
+  diskutieren, nur implementieren.
+- **SRS+Anki-Export ist DER Moat.** Hauptkommunikations-Hook.
+- **3 Creator × $200 + 30% recurring 12mo = $600** = die neue Reach-
+  Math. Niemand mehr Flat-Sponsor pre-Launch.
+- **Anki Add-on = Sprint nach Launch**, 2 Wochen, höchst-ROI-Build im
+  ganzen Backlog.
+- **Cluster #2 SEO (Creator-Notes Programmatic) ist der 12-Wochen-
+  Compound** der Paid-Acquisition ersetzt wenn Budget durch ist.
+
+— Session-Ende Di 19.5. 16:30. Tomorrow morning fresh: Task #10
+(Stripe €9/mo Pro Setup), dann #11, dann #13. Don't burn energy on
+docs/tests today — preserved here for resume.
