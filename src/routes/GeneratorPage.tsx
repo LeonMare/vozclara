@@ -13,6 +13,7 @@ import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode
 import { nanoid } from '../lib/nanoid';
 import { indexPack } from '../lib/packIndex';
 import { audienceDefaultMode } from '../lib/audience';
+import { AIDisclosureBanner } from '../components/AIDisclosureBanner';
 
 /**
  * /new — the generator flow.
@@ -272,6 +273,8 @@ export function GeneratorPage() {
         <div className="mb-8 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
           § {t.newPageTitle}
         </div>
+
+        <AIDisclosureBanner />
 
         {!videoId && (
           <section>
