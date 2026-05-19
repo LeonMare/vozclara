@@ -56,7 +56,7 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 | **TTS** | OpenAI `tts-1` (current) |
 | **Transcripts** | Supadata (Merchant-of-Record, legally clean) |
 | **MCP Stack** | Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` |
-| **Payments** | Polar.sh (Merchant-of-Record for EU VAT) — fallback: Stripe + Stripe Tax |
+| **Payments** | Polar.sh (Merchant-of-Record for EU VAT, US sales tax, fraud + chargebacks). Locked Di 19.5. abends — Stripe-Fallback gestrichen. Migration der existierenden Founder-Deal-Payment-Link auf Polar in Phase 1 Mi-Shallow. |
 | **Email** | Resend (from `noreply@leonmare.de` due to domain verification) |
 | **Auth** | Magic-link via Resend |
 | **Analytics** | Cloudflare Web Analytics (cookieless, no banner needed) |

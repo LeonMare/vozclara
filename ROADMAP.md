@@ -24,7 +24,7 @@
 | Quotas: Pro Plus capped 40 standard + 2 Season Packs/mo, overage $0.10/pack | ✅ |
 | MCP Stack: Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` | ✅ |
 | Transcript Provider: Supadata (legally clean) | ✅ |
-| Payments: TBD Polar.sh ODER Stripe + Tax | ⏳ Mi |
+| Payments: **Polar.sh** (Merchant-of-Record). Decision Di 19.5. abends nach Pricing-Vergleich: 4 % + €0.40 vs. Stripe 1.4 % + Tax Basic 0.5 %. Polar trägt EU-VAT-Audit-Risiko, spart Steuerberater (~€500-2k/Jahr) + 0 Min monatliches Filing. Break-even ab ~50 Pro-Subs. Stripe-Fallback gestrichen. | ✅ |
 | Launch-Date: WHEN-READY, nicht fixed 25.5. | ✅ |
 | Polish > Speed | ✅ |
 
