@@ -968,4 +968,148 @@ Nicht vergessen: **DPMA + Domains** als Reminder für Tag 1 post-launch — soba
 
 — PC-Session-Ende Mo 18.5. spätabends. Sprint weiter 3+ Tage voraus. Gute Pause.
 
+---
+
+## 29 · Sprint-Status — Di 19.5. Vormittag (PC → Laptop)
+
+> **Bei Laptop-Start zuerst dieses §29 lesen.** §27 + §28 sind die
+> historischen Übergaben. Hier der aktuelle Stand zur Mittagszeit
+> Di 19.5.
+
+### Stand: Di 19.5.2026 Mittag — **T-6/7 Tage zum Launch**
+
+Kurze PC-Session heute morgen, primär strategisch (kein neuer Code).
+Reddit-Karma-Tag 2 läuft. BetaList-Decision getroffen. Marketing +
+Investor-Strategie geklärt.
+
+### ✅ Heute Vormittag erledigt
+
+| Was | Status |
+|---|---|
+| **r/Spanish Karma-Comment** | ✅ gepostet ("Déjame"-Frage mit Heritage-Authority-Antwort, Venezolaner-Hintergrund) |
+| **r/languagelearning Inbox-Check** | ✅ keine Antworten seit gestern Nacht (normal, viele Threads sind Drive-by-Lesen) |
+| **BetaList Submission** | ⏸️ angefangen, bei Paywall ($39 Lite / $99 Standard / $299 Premium) bewusst abgebrochen |
+| **Marketing-Strategie geklärt** | ✅ siehe unten — Spend-Hierarchie definiert |
+| **Investor-Strategie geklärt** | ✅ siehe unten — jetzt nicht, post-launch Indie-VC |
+
+### 🟢 Entschieden
+
+#### BetaList — Skip jetzt, eventuell post-launch nochmal
+BetaList hat **kein gratis tier mehr**. Lite $39 / Standard $99 / Premium $299. Pre-Launch nicht lohnenswert weil:
+- Gleichen SEO-Backlink-Wert kriegen wir gratis von Futurepedia (DR ~70) und HN (DR 90) — falls letzteres Front-Page geht
+- BetaList-Audience ist gemischt (Founder + Tool-Hunter), nicht direkte Conversion-Quelle
+- Sunk-cost-30-min-Submission ist verloren, aber Lehrgeld
+
+**Reminder für post-launch (Woche 2-3):** Wenn Founder Deal Geld reinkommt, BetaList Lite $39 als evergreen SEO-Backlink-Investment in Erwägung ziehen. Aber nicht Priority.
+
+#### Marketing-Spend-Hierarchie (mit Cashflow nach Founder Deal)
+
+**Tier S — gratis erst (insgesamt ~1h Aufwand):**
+- ⏳ Futurepedia Submission (https://www.futurepedia.io/submit-tool) — Texte schon definiert in der Chat-Historie
+- ⏳ TAAFT (theresanaiforthat.com/submit) — gleiche Texte
+- ⏳ futuretools.io, toolify.ai — quick wins
+- Product Hunt Setup (Mi nach Launch) — bisher nicht angefasst
+
+**Tier A — €500-1000 Spend (post-Launch, datengetrieben):**
+- TLDR AI Newsletter Sponsorship $350-500 (200k+ tech-savvy)
+- The Sample Newsletter $100-300
+- Indie Hackers Newsletter $300
+- Google Search Ads Test $200 (Keywords: „youtube to anki", „youtube transcript", „study from youtube")
+
+**Tier B — €1000-3000+ (wenn Pro-MRR > €2k):**
+- YouTube Influencer Integration (Sprach-Channels wie „Easy German") $500-2000
+- Reddit Promoted Posts $300-500 in r/languagelearning + r/getstudying
+- BetaList Standard $99 als Launch-Day-Boost
+
+**Skip durchgängig:** Meta-Ads, YouTube Pre-Roll, BetaList Premium $299
+
+#### Investoren — jetzt nicht, später bewusst
+
+**Pre-Launch / Launch:** keine Investor-Konversationen initiieren. Founder Deal Cashflow ist die Strategy, Brand-Story-Konsistenz mit „avoiding VC" Pitch.
+
+**Falls Investor proaktiv anschreibt:** höflich + zurückhaltend antworten — „Thanks, not raising right now, happy to stay in touch post-launch."
+
+**Monat 3-6 post-launch (wenn €5-10k MRR):** Indie-VC-Funds ansprechen, NICHT traditional VC. Konkrete Targets:
+- Earnest Capital (Shared Earnings Agreement, keine Equity)
+- Calm Company Fund
+- TinySeed ($120k+ für 12-15% Equity, plus 1-Jahr Mentoring)
+- Plus: Angel-Investoren mit Indie-SaaS-Erfahrung (Adam Wathan, Pieter Levels, Damon Chen, Tony Dinh — Twitter/Indie-Hackers-DM)
+
+**Traditional VC (a16z, YC, Atomico)**: erst wenn €100M+ Outcome explicit angepeilt wird. Für VozClara aktuell nicht der richtige Match — eher Mid-Size-SaaS-Trajectory ($10-20M ARR Cap).
+
+### 🟡 Verbleibende Pre-Launch-Tasks am Laptop
+
+#### Heute Di 19.5. abends (~1h)
+- [ ] **Futurepedia Submission** — Texte aus Chat-Historie kopieren, 15 Min
+- [ ] **TAAFT Submission** — gleicher Workflow, 10 Min
+- [ ] **futuretools.io + toolify.ai** — quick subs, 15 Min
+- [ ] (Optional) Reddit Karma weiterverteilen — r/anki ist morgen Mi geplant, nicht heute
+
+#### Rest der Woche (laut §28 Plan)
+- **Mi 20.5.** r/anki Karma-Comment + Product Hunt Setup (Hunter finden, Maker-Profile)
+- **Do 21.5.** r/Notion oder r/PersonalKnowledgeMgmt Karma + LAUNCH_POSTS persönlicher Pass
+- **Fr 22.5.** r/learnGerman Karma + Buffer
+- **Sa 23.5.** Mock-QA echtes iPhone (FINAL_QA.md durchgehen)
+- **So 24.5.** Pre-Launch-Check (Sentry, CF Analytics, Stripe Live-Mode)
+- **Mo 25.5. / Di 26.5.** ⭐ LAUNCH
+
+### 📋 Wo der Stand am Laptop liegt
+
+**Repo:** alles auf `main`, latest commit `ed12b09` (/changelog Route). `git pull` reicht.
+
+**Live:** vozclara.app fully deployed. Founder-Flow End-to-End klickbar inklusive Welcome-Banner nach Stripe-Success.
+
+**Reddit:**
+- r/languagelearning Comment (gestern Nacht) — `https://www.reddit.com/r/languagelearning/comments/1tgb242/tl_personal_rules_i_use_to_become_fluent/`
+- r/Spanish Comment (heute Vormittag) — Thread `1tgb242` Heritage-Authority-Antwort zur „déjame"-Frage
+
+**Discord:** `https://discord.gg/z93CKmUSv6` live, 3 Channels, Roles, Pinned-Posts
+
+**Stripe:** Founder Deal Payment Link live, Success-URL auf `/founder?welcome=1` gesetzt, Public-Name = „VozClara"
+
+### 🎯 Erste 30 Min am Laptop (Vorschlag)
+
+1. `git pull` (sollte clean sein)
+2. Reddit-Inbox-Check beider Subs — wenn Antworten reagieren binnen 12h
+3. **Futurepedia Submission** mit den Texten aus Chat-Historie (15 Min)
+4. Wenn Energie da: TAAFT + futuretools.io
+
+Texte für Futurepedia (kopier-fertig):
+
+**Tagline:**
+```
+Turn YouTube into structured knowledge — packs with vocab, quiz, citations.
+```
+
+**Description (Futurepedia bevorzugt Bullets, 150-200 Wörter):**
+```
+VozClara turns any YouTube video into a structured Knowledge Pack you can study, search, and share.
+
+Key features:
+• TL;DR + chapter summaries with rewind-on-tap timestamps
+• Vocabulary tuned to your CEFR level (A1 → C1)
+• Comprehension quiz (recall + application questions)
+• Key quotes with speaker, timestamp, translation
+• AI tutor that knows your pack's content
+• Voice shadowing with pronunciation scoring
+• Anki .apkg export, one tap
+• SRS (spaced repetition) for daily review
+• Michelin-style community quality ratings
+
+Four output modes: Briefing (decision-makers), Study (students), Learn (language learners), Creator (content repurposers).
+
+Four languages: German, Spanish, English, Portuguese.
+
+Local-first: your library lives in your browser (IndexedDB). No account required to start. Sign-in only unlocks cross-device sync.
+
+Free tier covers most use. Pro plan €9/mo unlocks premium AI models (Claude Sonnet / GPT-5), unlimited packs, and MP3/MP4 uploads.
+```
+
+**Pricing:** Free + €9/mo Pro + €99 Lifetime (Founder, capped at 100)
+**Categories:** Productivity · Education · Language Learning · Video · Summarization · AI Tools
+**Logo:** `public/brand-mark-512.png`
+**Screenshot:** `og-image.png` ODER deine zwei Submission-Screenshots von BetaList (auf Desktop liegend)
+
+— PC-Session-Ende Di 19.5. Mittag. Switching to Laptop. Sprint weiter im Plan.
+
 
