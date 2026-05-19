@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Marketing entry point -->
   <url>
-    <loc>https://vozclara.pages.dev/</loc>
+    <loc>https://vozclara.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Pricing — standalone route for external linking -->
   <url>
-    <loc>https://vozclara.pages.dev/pricing</loc>
+    <loc>https://vozclara.app/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
-    <loc>https://vozclara.pages.dev/discover</loc>
+    <loc>https://vozclara.app/discover</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -24,7 +24,7 @@
   <!-- Founder Deal — launch cashflow page. Critical at launch, less
        relevant after the 100 seats sell out. -->
   <url>
-    <loc>https://vozclara.pages.dev/founder</loc>
+    <loc>https://vozclara.app/founder</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -32,55 +32,55 @@
   <!-- Changelog — public update surface for non-Founder visitors.
        Crawled regularly because every shipped feature lands here. -->
   <url>
-    <loc>https://vozclara.pages.dev/changelog</loc>
+    <loc>https://vozclara.app/changelog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- About — founder story + roadmap -->
   <url>
-    <loc>https://vozclara.pages.dev/about</loc>
+    <loc>https://vozclara.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Public sample packs — full sales-demo content, deep-linkable -->
   <url>
-    <loc>https://vozclara.pages.dev/pack/sample</loc>
+    <loc>https://vozclara.app/pack/sample</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://vozclara.pages.dev/pack/sample-learn</loc>
+    <loc>https://vozclara.app/pack/sample-learn</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://vozclara.pages.dev/pack/sample-creator</loc>
+    <loc>https://vozclara.app/pack/sample-creator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Legal — required for launch transparency, low priority for search -->
   <url>
-    <loc>https://vozclara.pages.dev/privacy</loc>
+    <loc>https://vozclara.app/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://vozclara.pages.dev/terms</loc>
+    <loc>https://vozclara.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <!-- App routes — leave for navigation but lower priority -->
   <url>
-    <loc>https://vozclara.pages.dev/new</loc>
+    <loc>https://vozclara.app/new</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://vozclara.pages.dev/library</loc>
+    <loc>https://vozclara.app/library</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

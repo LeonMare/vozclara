@@ -9,4 +9,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vozclara.pages.dev/sitemap.xml
+Sitemap: https://vozclara.app/sitemap.xml
