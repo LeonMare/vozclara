@@ -76,7 +76,12 @@ export class ErrorBoundary extends Component<Props, State> {
 function isStaleChunkError(err: Error): boolean {
   const msg = err.message ?? '';
   if (err.name === 'ChunkLoadError') return true;
-  return /loading (chunk|dynamically imported module)|Failed to fetch dynamically imported module|importing a module script failed/i.test(
+  // The MIME-type variant fires when Cloudflare Pages serves the SPA
+  // fallback index.html in response to a stale chunk request — the
+  // browser's ESM loader rejects HTML where it expected JS. Sentry
+  // logged this exact phrase on Di 19.5. 21:23 after the /changelog
+  // deploy: a user with stale index.html requested an old chunk hash.
+  return /loading (chunk|dynamically imported module)|Failed to fetch dynamically imported module|importing a module script failed|is not a valid JavaScript MIME type|expected a JavaScript-or-Wasm module script/i.test(
     msg,
   );
 }
