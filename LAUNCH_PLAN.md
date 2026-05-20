@@ -523,16 +523,18 @@ effektiv Mo+Di+Mi+Do+halb-Fr durchgezogen. 12 Commits, ~3000 Zeilen.
 
 ### 🟡 Offen — Reihenfolge nach Wichtigkeit
 
-#### 1. Resend API-Key rotieren — KRITISCH
-Der Key `re_2EsmBs3o_QJbMibnQSbTzxi9igTqq5me4` wurde Sonntag im
-Chat geteilt. Nicht mehr vertraulich.
+#### 1. Resend API-Key rotieren — ✅ DONE
+Ein älterer Resend-Key wurde am Sonntag im Chat geteilt. Verified
+Do 21.5. im Resend-Dashboard: der Key existiert dort nicht mehr
+(bereits revoked oder nie aktiv gewesen). Aktuelle Keys im Account:
+`vozclara-worker-2026-05-18` (production) + `leon-mare-production`.
+Worker hat den aktuellen Key bereits als `RESEND_API_KEY` Secret.
 
 ```bash
-# 1. https://resend.com/api-keys → revoke alten Key → neuen erstellen
-# 2. Im Worker setzen:
+# Falls jemals wieder Rotation nötig:
 cd worker
 npx wrangler secret put RESEND_API_KEY
-# → neuen Key einfügen
+# → neuen Key aus https://resend.com/api-keys einfügen
 npx wrangler deploy
 ```
 
