@@ -250,6 +250,16 @@ export function GeneratorPage() {
           createdAt: Date.now(),
           updatedAt: Date.now(),
           transcriptKey,
+          // EU AI Act Art. 50(2) — stamp every fresh pack with its
+          // generator's identity so exports, MCP responses and any
+          // future lens-aware UI can attribute the output.
+          // The model string mirrors the worker constant; lensId stays
+          // undefined until the 18-Lens system ships (CLAUDE.md §1.2).
+          provenance: {
+            model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+            watermark: 'vozclara.app',
+            generatedAt: Date.now(),
+          },
         };
         await savePack(pack);
         void indexPack(pack);
