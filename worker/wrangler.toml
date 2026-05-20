@@ -53,6 +53,15 @@ id = "cfd42230e80345ed9cba587136e8919d"
 binding = "AUTH"
 id = "32113624ca574c16867b434f453b3237"
 
+# KV — OAuth 2.1 provider storage. Required by
+# `@cloudflare/workers-oauth-provider` to persist registered clients,
+# authorization codes, access tokens, and refresh tokens. Provisioned
+# 2026-05-20 via `wrangler kv namespace create OAUTH_KV`. The library
+# stores only hashes of secrets, not the raw values.
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id = "42d926deae1047c89461be6e793ff552"
+
 # Durable Object — VozClara MCP server (CLAUDE.md §1.5).
 # The `agents` SDK builds McpAgent on top of Durable Objects to persist
 # per-session state across the Streamable-HTTP and SSE transports. The

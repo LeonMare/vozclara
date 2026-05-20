@@ -16,6 +16,7 @@
  * client-side in IndexedDB since they're user-specific.
  */
 
+import { OAuthProvider, type OAuthHelpers } from '@cloudflare/workers-oauth-provider';
 import { sendPush, type PushSubscriptionData } from './webpush';
 import { captureWorkerError } from './sentry';
 import {
@@ -41,6 +42,7 @@ import {
   handleFounderSet,
 } from './founder';
 import { VozClaraMcpAgent } from './mcp/agent';
+import oauthConsentApp from './oauth/handler';
 
 // Re-export the MCP agent class so wrangler picks it up as a Durable
 // Object class. The DO binding is declared in wrangler.toml and the
@@ -131,6 +133,28 @@ interface Env {
   AUTH_FROM_ADDRESS?: string;
   /** Public site origin, used to construct verify-link URLs. */
   SITE_URL?: string;
+  /**
+   * Durable Object binding for the MCP agent. The class is exported
+   * from this file (line 52) and the binding is declared in
+   * wrangler.toml `[[durable_objects.bindings]]`. The `agents` SDK
+   * uses this DO namespace to persist per-session MCP state.
+   */
+  MCP_AGENT?: DurableObjectNamespace;
+  /**
+   * Injected by `@cloudflare/workers-oauth-provider` when this worker
+   * is wrapped as its `defaultHandler`. Gives the consent UI access
+   * to `parseAuthRequest()` and `completeAuthorization()` without
+   * importing the OAuthProvider instance directly.
+   */
+  OAUTH_PROVIDER?: OAuthHelpers;
+  /**
+   * Plain-text Cloudflare AI Gateway routing identifiers used to
+   * build the Anthropic baseURL for the Pro Plus tier. Defined in
+   * `wrangler.toml [vars]` — non-secret, but worker code reads them
+   * the same way it reads secrets.
+   */
+  CF_ACCOUNT_ID?: string;
+  CF_AI_GATEWAY_ID?: string;
 }
 
 const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
@@ -198,10 +222,41 @@ const LLM_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 // brainpower to pick one of seven categories.
 const GENRE_MODEL = '@cf/meta/llama-3.1-8b-instruct';
 
-export default {
+/**
+ * The "default" worker behaviour, wrapped below by `OAuthProvider`.
+ *
+ * This handler owns:
+ *   • all /api/* routes (auth, transcript, insights, founder, rating, …)
+ *   • /api/mcp + /api/sse — anonymous Phase 1 MCP transports (Smithery
+ *     listing keeps working; OAuth is opt-in via /api/mcp/pro instead)
+ *   • /oauth/authorize — delegated to the Hono consent UI in
+ *     worker/src/oauth/handler.ts which uses env.OAUTH_PROVIDER
+ *     (injected by the wrapping OAuthProvider below) to validate the
+ *     auth request and complete the grant after user consent.
+ *
+ * It does NOT own:
+ *   • /oauth/token, /oauth/register, /.well-known/oauth-*  →
+ *     handled by OAuthProvider directly.
+ *   • /api/mcp/pro + /api/sse/pro → routed by OAuthProvider as
+ *     protected `apiHandlers` (require valid Bearer token).
+ */
+const apiWorker: ExportedHandler<Env> = {
   async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (req.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
+    }
+
+    // /oauth/authorize is the only route OAuthProvider explicitly
+    // delegates back to the host worker. Anything starting with
+    // /oauth/authorize (the bare path or any sub-path) goes to the
+    // Hono consent app, which renders the screen on GET and calls
+    // env.OAUTH_PROVIDER.completeAuthorization() on POST.
+    const earlyUrl = new URL(req.url);
+    if (
+      earlyUrl.pathname === '/oauth/authorize' ||
+      earlyUrl.pathname.startsWith('/oauth/authorize/')
+    ) {
+      return oauthConsentApp.fetch(req, env, ctx);
     }
 
     try {
@@ -224,7 +279,7 @@ export default {
     }
   },
 
-  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+  async scheduled(event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
     // Two crons fire this handler. Dispatch by the cron expression so
     // each tick only runs its job:
     //   "0 * * * *"     → push notifications (hourly)
@@ -244,27 +299,114 @@ export default {
   },
 };
 
+/**
+ * CORS bundle shared between Phase 1 (anonymous) and Phase 2 (OAuth)
+ * MCP transports. The `agents` SDK serve() wraps responses but does
+ * not set CORS headers by default — without these, browser-based
+ * clients (MCP Inspector, web playgrounds) get blocked even though
+ * the worker replied. Mcp-Session-Id + Last-Event-ID + Authorization
+ * are required headers per the MCP spec for session continuity, SSE
+ * resumability, and bearer-token transport.
+ */
+const MCP_CORS = {
+  origin: '*',
+  methods: 'GET, POST, OPTIONS',
+  headers: 'Content-Type, Mcp-Session-Id, Last-Event-ID, Authorization',
+  exposeHeaders: 'Mcp-Session-Id',
+};
+
+/**
+ * Pre-build the Phase 2 protected handlers ONCE at module load so
+ * they keep stable identity across requests. Each call to
+ * `.serve()` / `.serveSSE()` returns a fresh ExportedHandler; if we
+ * construct them inside the OAuthProvider config object we leak a
+ * new object every cold start, and TS infers them as `any`.
+ *
+ * Routes:
+ *   • /api/mcp/pro  → Streamable HTTP, OAuth-required
+ *   • /api/sse/pro  → SSE, OAuth-required
+ *
+ * The same VozClaraMcpAgent class backs both Phase 1 and Phase 2 —
+ * the tools themselves consult `this.props` to decide whether the
+ * caller is authenticated and what brainId / tier they hold. Phase 1
+ * anonymous routes mount the agent without OAuth (this.props is
+ * undefined), Phase 2 routes mount it under OAuthProvider (this.props
+ * is populated from the grant).
+ */
+const mcpProHandler = VozClaraMcpAgent.serve('/api/mcp/pro', {
+  binding: 'MCP_AGENT',
+  corsOptions: MCP_CORS,
+});
+const ssePromHandler = VozClaraMcpAgent.serveSSE('/api/sse/pro', {
+  binding: 'MCP_AGENT',
+  corsOptions: MCP_CORS,
+});
+
+/**
+ * `OAuthProvider` instance — wraps `apiWorker` and adds the OAuth
+ * dance on top:
+ *
+ *   • GET /.well-known/oauth-authorization-server     → metadata
+ *   • GET /.well-known/oauth-protected-resource       → resource hint
+ *   • POST /oauth/token                                → issue tokens
+ *   • POST /oauth/register                             → RFC-7591 DCR
+ *   • /api/mcp/pro, /api/sse/pro                       → Bearer-token
+ *                                                         required, then
+ *                                                         dispatched
+ *
+ * Anything else falls through to `apiWorker`, including the original
+ * anonymous /api/mcp + /api/sse Phase-1 transports.
+ *
+ * Note on the `Cloudflare.Env` cast: OAuthProvider's generics default
+ * to that global type, but our `Env` interface above is the source of
+ * truth for this worker. The cast lets us reuse `apiWorker` directly
+ * without duplicating the env definition.
+ */
+const oauthProvider = new OAuthProvider({
+  apiHandlers: {
+    '/api/mcp/pro': mcpProHandler,
+    '/api/sse/pro': ssePromHandler,
+  },
+  defaultHandler: apiWorker as unknown as ExportedHandler<Cloudflare.Env>,
+  authorizeEndpoint: '/oauth/authorize',
+  tokenEndpoint: '/oauth/token',
+  clientRegistrationEndpoint: '/oauth/register',
+  // OAuth 2.1 best practices — no implicit flow, S256-only PKCE.
+  allowImplicitFlow: false,
+  allowPlainPKCE: false,
+  // Scopes advertised in metadata. Tools consult `this.props.tier`
+  // at invocation time for actual gating; scopes are coarse hints
+  // for the consent screen + client capability declaration.
+  scopesSupported: ['library:read', 'library:write', 'profile'],
+  // 1h access tokens, 30-day refresh tokens — matches Granola /
+  // Linear MCP server norms. Short access + long refresh keeps the
+  // blast radius of a leaked access token small while avoiding the
+  // re-consent prompt every hour.
+  accessTokenTTL: 3600,
+  refreshTokenTTL: 60 * 60 * 24 * 30,
+});
+
+/**
+ * Worker entrypoint. `OAuthProvider` only ships a `fetch` handler;
+ * we wrap it in a thin object so the existing `scheduled` cron flow
+ * stays intact. All HTTP traffic goes through OAuth routing first;
+ * everything that isn't an OAuth endpoint or a protected API route
+ * falls through to `apiWorker`.
+ */
+export default {
+  fetch: (req: Request, env: Env, ctx: ExecutionContext): Promise<Response> =>
+    oauthProvider.fetch(req, env as unknown as Cloudflare.Env, ctx),
+  scheduled: apiWorker.scheduled!,
+} satisfies ExportedHandler<Env>;
+
 async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url);
 
-    // MCP server routing (Phase 1 — anonymous, free-tier-only).
-    // Mounted under /api/mcp to avoid an extra wrangler routes block;
-    // we'll consider promoting to /mcp at root before Smithery listing.
-    //   • /api/mcp          → Streamable HTTP transport (preferred by
-    //                         Cursor, Claude Code, newer MCP clients)
-    //   • /api/sse          → SSE transport (Claude Desktop)
+    // Phase 1 MCP transports — anonymous, free-tier-only.
+    // /api/mcp/pro + /api/sse/pro are routed by OAuthProvider above
+    // before we ever get here, so we can't accidentally double-serve
+    // them. `MCP_CORS` lives at module scope so both tiers share it.
     //
-    // CORS: the agents SDK serve() wraps responses but does not set CORS
-    // headers by default — without these, browser-based clients (MCP
-    // Inspector in Direct mode) get blocked even though the worker
-    // replied. Mcp-Session-Id and Last-Event-ID are MCP-spec required
-    // request headers for session continuity and SSE resumability.
-    const MCP_CORS = {
-      origin: '*',
-      methods: 'GET, POST, OPTIONS',
-      headers: 'Content-Type, Mcp-Session-Id, Last-Event-ID, Authorization',
-      exposeHeaders: 'Mcp-Session-Id',
-    };
     // `binding: 'MCP_AGENT'` is required — the agents SDK defaults to
     // looking for a DO binding named MCP_OBJECT; ours is MCP_AGENT
     // per wrangler.toml. Without this we get a 500 with
