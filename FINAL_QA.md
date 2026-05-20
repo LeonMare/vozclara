@@ -13,11 +13,12 @@
 ## Setup
 
 - [ ] Incognito / Private window open
-- [ ] Stripe test mode OFF (live mode active)
+- [ ] Paddle environment = **production** (not sandbox) — verify `VITE_PADDLE_ENV` in `.env.production` (or absent = defaults to production)
 - [ ] Tab open on https://vozclara.app
 - [ ] Resend dashboard open (to confirm magic-link mail arrives)
-- [ ] Sentry dashboard open in another tab (watch for new events)
+- [ ] Sentry **worker** dashboard open (browser SDK removed Mi 20.5. — server-side only)
 - [ ] Cloudflare Analytics open
+- [ ] Paddle dashboard open (transactions tab) — to confirm test sale appears
 
 ---
 
@@ -104,18 +105,18 @@
 
 ## Block G · Founder Deal Flow
 
-- [ ] /founder loads — Counter shows 0/100
-- [ ] Click „Founder werden" / „Become a Founder" → opens new tab
-      with Stripe Checkout
-- [ ] Stripe page shows:
-  - [ ] Merchant name: **VozClara** (after Stripe public-name fix)
+- [ ] /founder loads — Counter shows correct n/100 (matches Paddle dashboard)
+- [ ] Click „Founder werden" / „Become a Founder" → **embedded Paddle.js overlay opens in-page** (no new tab — overlay since Mi 20.5.)
+- [ ] Paddle overlay shows:
+  - [ ] Merchant of Record: **Paddle.com Market Ltd** (footer disclosure)
+  - [ ] Seller: **VozClara** (LEON MARÉ)
   - [ ] Product: „VozClara Founder · Lifetime Pro"
-  - [ ] Lighthouse brand image
-  - [ ] Price: 99,00 €
-  - [ ] Payment methods: Apple Pay, Link, Card, Klarna, MB WAY, eps
-  - [ ] Success URL (in Stripe link config): redirects to
-        /founder?welcome=1
-- [ ] DO NOT actually pay — close the Stripe tab
+  - [ ] Price: **99,00 €** with VAT breakdown (e.g. „inkl. 15,81 € MwSt." for DE addresses)
+  - [ ] Payment methods: PayPal, Card (Apple Pay/Google Pay surface on mobile)
+  - [ ] Country/VAT selector updates the breakdown live
+  - [ ] Success URL on completion: `/founder?welcome=1` (configured in `worker/src/founder.ts`)
+- [ ] DO NOT actually pay — close the Paddle overlay (X top-right) and verify the page is unchanged
+- [ ] After the dry-run: verify nothing landed in Paddle dashboard → Transactions (otherwise idempotency on the webhook needs fixing)
 
 ## Block H · Citation Copy
 
@@ -142,13 +143,13 @@
 - [ ] Safari (latest macOS) — Landing + Auth + one Pack open
 - [ ] Chrome — same
 - [ ] Firefox — same (often the source of edge-case bugs)
-- [ ] Mobile Safari on real iPhone — Founder Stripe-tap works
-- [ ] Mobile Chrome on real Android — same
+- [ ] Mobile Safari on real iPhone — Founder Paddle overlay opens in-page (no Safari pop-up blocker prompt)
+- [ ] Mobile Chrome on real Android — same; check Paddle overlay scrolls within viewport
 
-## Block K · Sentry Smoke
+## Block K · Sentry Smoke (worker-side only)
 
-- [ ] During the whole walkthrough, Sentry stays mostly quiet
-- [ ] If new events surface → triage:
+- [ ] During the whole walkthrough, **worker** Sentry stays mostly quiet (browser SDK removed Mi 20.5. — there are no browser events to expect)
+- [ ] If new worker events surface → triage:
   - [ ] Real bug → fix before launch
   - [ ] User error → suppress filter
 
@@ -172,9 +173,12 @@
 
 - [ ] All blocker-severity defects resolved
 - [ ] Resend mail delivery confirmed in last 24 h
-- [ ] Stripe Checkout end-to-end (incognito) works
-- [ ] No Sentry P1 in last 24 h
+- [ ] Paddle checkout overlay opens, displays correct VAT, success URL fires (do not actually pay during the dry-run)
+- [ ] Paddle `transaction.completed` webhook either wired and signature-verified, OR documented manual-counter procedure for first 100 sales
+- [ ] No Sentry **worker** P1 in last 24 h (browser SDK removed)
 - [ ] Domain DNS healthy (vozclara.app resolves, valid TLS)
+- [ ] MCP server smoke: `curl -sI https://vozclara.app/api/mcp` returns 200/method-allowed; `/api/mcp/pro` returns 401 with WWW-Authenticate Bearer + resource_metadata
+- [ ] Smithery listing still public + Score ≥ 80 (https://smithery.ai/server/salvador7eon/vozclara)
 - [ ] LAUNCH_POSTS.md final read-through done
 
 **→ Go signal:** all green = ship.
