@@ -253,11 +253,33 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
     //   • /api/mcp          → Streamable HTTP transport (preferred by
     //                         Cursor, Claude Code, newer MCP clients)
     //   • /api/sse          → SSE transport (Claude Desktop)
+    //
+    // CORS: the agents SDK serve() wraps responses but does not set CORS
+    // headers by default — without these, browser-based clients (MCP
+    // Inspector in Direct mode) get blocked even though the worker
+    // replied. Mcp-Session-Id and Last-Event-ID are MCP-spec required
+    // request headers for session continuity and SSE resumability.
+    const MCP_CORS = {
+      origin: '*',
+      methods: 'GET, POST, OPTIONS',
+      headers: 'Content-Type, Mcp-Session-Id, Last-Event-ID, Authorization',
+      exposeHeaders: 'Mcp-Session-Id',
+    };
+    // `binding: 'MCP_AGENT'` is required — the agents SDK defaults to
+    // looking for a DO binding named MCP_OBJECT; ours is MCP_AGENT
+    // per wrangler.toml. Without this we get a 500 with
+    // "Could not find McpAgent binding for MCP_OBJECT" at request time.
     if (url.pathname === '/api/mcp' || url.pathname.startsWith('/api/mcp/')) {
-      return VozClaraMcpAgent.serve('/api/mcp').fetch(req, env, ctx);
+      return VozClaraMcpAgent.serve('/api/mcp', {
+        binding: 'MCP_AGENT',
+        corsOptions: MCP_CORS,
+      }).fetch(req, env, ctx);
     }
     if (url.pathname === '/api/sse' || url.pathname.startsWith('/api/sse/')) {
-      return VozClaraMcpAgent.serveSSE('/api/sse').fetch(req, env, ctx);
+      return VozClaraMcpAgent.serveSSE('/api/sse', {
+        binding: 'MCP_AGENT',
+        corsOptions: MCP_CORS,
+      }).fetch(req, env, ctx);
     }
 
     if (url.pathname === '/' || url.pathname === '/health') {
