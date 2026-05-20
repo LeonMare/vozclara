@@ -76,7 +76,7 @@ const app = new Hono<{ Bindings: OAuthHandlerEnv }>();
  * render the consent screen for an unauthenticated user — that would
  * leak the existence of the OAuth dance to anyone with the link.
  */
-app.get('/authorize', async (c) => {
+app.get('/oauth/authorize', async (c) => {
   let authRequest: AuthRequest;
   try {
     authRequest = await c.env.OAUTH_PROVIDER.parseAuthRequest(c.req.raw);
@@ -90,7 +90,7 @@ app.get('/authorize', async (c) => {
     // /sign-in renders our existing magic-link page. The `oauth=1` hint
     // lets the page swap its post-verify redirect target without
     // touching the rest of the auth surface.
-    return c.redirect(`/sign-in?oauth=1&next=${next}`, 302);
+    return c.redirect(`/sign-in?oauth=1&next=${next}`);
   }
 
   const brainId = pickBrainId(user);
@@ -117,7 +117,7 @@ app.get('/authorize', async (c) => {
  * user from the cookie (don't trust form-supplied identity) and feed
  * everything to `completeAuthorization`.
  */
-app.post('/authorize', async (c) => {
+app.post('/oauth/authorize', async (c) => {
   const form = await c.req.parseBody();
   const action = String(form.action ?? '');
   let request: AuthRequest;

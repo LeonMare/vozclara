@@ -99,6 +99,23 @@ crons = ["0 * * * *", "30 19 * * *"]
 pattern = "vozclara.app/api/*"
 zone_name = "vozclara.app"
 
+# OAuth provider endpoints. Without these routes Cloudflare Pages
+# catches the paths and returns the SPA HTML instead of the OAuth
+# JSON/UI. Discovered Mi 20.5.2026 during the Phase 2 smoke test —
+# `/.well-known/oauth-authorization-server` was returning index.html.
+#
+#   /oauth/authorize       → Hono consent UI (worker/src/oauth/handler.ts)
+#   /oauth/token           → OAuthProvider native handler
+#   /oauth/register        → RFC-7591 dynamic client registration
+#   /.well-known/oauth-*   → RFC-8414 metadata discovery
+[[routes]]
+pattern = "vozclara.app/oauth/*"
+zone_name = "vozclara.app"
+
+[[routes]]
+pattern = "vozclara.app/.well-known/*"
+zone_name = "vozclara.app"
+
 [observability]
 enabled = true
 
