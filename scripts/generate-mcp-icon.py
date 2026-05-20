@@ -59,9 +59,8 @@ def main() -> None:
     img = Image.new("RGB", (SIZE, SIZE), NAVY)
     draw = ImageDraw.Draw(img)
 
-    # Thin gold inner frame — pulls the editorial poster discipline into
-    # the icon without looking busy. 6 px stroke, 36 px inset. Same
-    # gesture as every editorial section rule in the app.
+    # Thin gold inner frame — editorial poster discipline at icon scale.
+    # Same gesture as every section rule in the app.
     inset = 36
     for i in range(6):
         draw.rectangle(
@@ -69,28 +68,37 @@ def main() -> None:
             outline=GOLD_DEEP if i < 2 else GOLD,
         )
 
-    # Monogram "V" — large serif, creme on navy. Bigger than v1 because
-    # there is no wordmark stealing vertical space; the glyph fills
-    # roughly 70 % of the inner safe area so it still reads at 32×32.
-    font = find_serif_font(440)
-    text = "V"
-    bbox = draw.textbbox((0, 0), text, font=font)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    tx = (SIZE - tw) // 2 - bbox[0]
-    ty = (SIZE - th) // 2 - bbox[1] - 12  # tiny optical nudge so the V sits centred
-    draw.text((tx, ty), text, fill=CREME, font=font)
+    # Classic two-letter monogram VC — V (creme) in front, C (gold)
+    # behind, both centred on the same baseline with deliberate overlap.
+    # Layered drawing order matters: C first, then V on top.
+    #
+    # Font size 300 (was 380): leaves breathing room between glyphs and
+    # the editorial frame; tighter than that and at 32 px the mark
+    # bleeds into the border line.
+    font_size = 300
+    font = find_serif_font(font_size)
 
-    # Single gold accent dot above the V — a quiet diacritic that
-    # references "voz" (voice) without going literal with a sound-wave
-    # cliché. 12 px circle, gold, vertically tucked just above the V's
-    # crown. Stays visible at small sizes as a single gold pixel cluster.
-    accent_r = 11
-    cx = SIZE // 2
-    cy = inset + 38
-    draw.ellipse(
-        [cx - accent_r, cy - accent_r, cx + accent_r, cy + accent_r],
-        fill=GOLD,
-    )
+    # Measure both glyphs so we can interlock them precisely.
+    bbox_v = draw.textbbox((0, 0), "V", font=font)
+    bbox_c = draw.textbbox((0, 0), "C", font=font)
+    vw, vh = bbox_v[2] - bbox_v[0], bbox_v[3] - bbox_v[1]
+    cw, ch = bbox_c[2] - bbox_c[0], bbox_c[3] - bbox_c[1]
+
+    # Overlap ratio: how much horizontal space the two letters share.
+    # 0.30 means the right side of V overlaps the left side of C by 30 %.
+    # Tuned by eye — bigger overlap muddies at small sizes, smaller
+    # overlap looks like two separate letters rather than one mark.
+    overlap = 0.30
+    combined_w = vw + cw - int(min(vw, cw) * overlap)
+    baseline_y = (SIZE - vh) // 2 - bbox_v[1] - 18
+
+    # C goes down first (gold, behind), offset to the right.
+    cx_start = (SIZE - combined_w) // 2 + (vw - int(min(vw, cw) * overlap)) - bbox_c[0]
+    draw.text((cx_start, baseline_y - bbox_c[1] + bbox_v[1]), "C", fill=GOLD, font=font)
+
+    # V goes down second (creme, in front), offset to the left.
+    vx_start = (SIZE - combined_w) // 2 - bbox_v[0]
+    draw.text((vx_start, baseline_y), "V", fill=CREME, font=font)
 
     out = Path("public/mcp-icon.png")
     out.parent.mkdir(parents=True, exist_ok=True)
