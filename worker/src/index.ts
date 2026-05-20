@@ -40,6 +40,14 @@ import {
   handleFounderIncrement,
   handleFounderSet,
 } from './founder';
+import { VozClaraMcpAgent } from './mcp/agent';
+
+// Re-export the MCP agent class so wrangler picks it up as a Durable
+// Object class. The DO binding is declared in wrangler.toml and the
+// `agents` SDK uses it to persist McpAgent state across SSE/HTTP
+// transport sessions. Without this re-export the migration would fail
+// at deploy time with "Class VozClaraMcpAgent not found".
+export { VozClaraMcpAgent };
 
 interface Env {
   SUPADATA_API_KEY?: string;
@@ -197,7 +205,7 @@ export default {
     }
 
     try {
-      return await routeRequest(req, env);
+      return await routeRequest(req, env, ctx);
     } catch (err) {
       // Capture every uncaught handler error in Sentry tagged
       // environment=worker. Fire-and-forget via waitUntil so the
@@ -236,8 +244,21 @@ export default {
   },
 };
 
-async function routeRequest(req: Request, env: Env): Promise<Response> {
+async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url);
+
+    // MCP server routing (Phase 1 — anonymous, free-tier-only).
+    // Mounted under /api/mcp to avoid an extra wrangler routes block;
+    // we'll consider promoting to /mcp at root before Smithery listing.
+    //   • /api/mcp          → Streamable HTTP transport (preferred by
+    //                         Cursor, Claude Code, newer MCP clients)
+    //   • /api/sse          → SSE transport (Claude Desktop)
+    if (url.pathname === '/api/mcp' || url.pathname.startsWith('/api/mcp/')) {
+      return VozClaraMcpAgent.serve('/api/mcp').fetch(req, env, ctx);
+    }
+    if (url.pathname === '/api/sse' || url.pathname.startsWith('/api/sse/')) {
+      return VozClaraMcpAgent.serveSSE('/api/sse').fetch(req, env, ctx);
+    }
 
     if (url.pathname === '/' || url.pathname === '/health') {
       return json({

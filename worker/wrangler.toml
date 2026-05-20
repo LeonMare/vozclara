@@ -53,6 +53,23 @@ id = "cfd42230e80345ed9cba587136e8919d"
 binding = "AUTH"
 id = "32113624ca574c16867b434f453b3237"
 
+# Durable Object — VozClara MCP server (CLAUDE.md §1.5).
+# The `agents` SDK builds McpAgent on top of Durable Objects to persist
+# per-session state across the Streamable-HTTP and SSE transports. The
+# class itself lives in worker/src/mcp/agent.ts and is re-exported from
+# worker/src/index.ts so wrangler can resolve it.
+[[durable_objects.bindings]]
+name = "MCP_AGENT"
+class_name = "VozClaraMcpAgent"
+
+# DO migration registering the SQLite-backed McpAgent class. SQLite is
+# the default for new DO classes (post-Sept-2025 compat dates) — using
+# `new_sqlite_classes` ensures the platform creates a SQLite-backed DO
+# rather than the legacy KV-style storage.
+[[migrations]]
+tag = "v1-mcp"
+new_sqlite_classes = ["VozClaraMcpAgent"]
+
 # Crons:
 #   • Hourly tick → push notifications when (localHour == reminderHour
 #     AND nextDueAt <= now AND lastNotifiedYmd != today)
