@@ -92,9 +92,9 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 ## 3. The Killer Features (in build order)
 
 ### Phase 1 — Foundation (Week 1)
-1. 💎 **MCP Server** (Smithery-published) — distribution moat
-2. ⚖️ **Compliance Bundle** (AI Disclosure + Watermark + DSGVO + Sentry-Drop)
-3. 💰 **Paddle Merchant-of-Record** — EU VAT solution (in review, submitted Mi 20.5.)
+1. ✅ **MCP Server** (Smithery-published) — distribution moat. Phase 1 LIVE Mi 20.5. mittags. `vozclara_generate_pack` tool. Smithery listing public as `salvador7eon/vozclara` (Score 84/100, VC monogram icon). Phase 2 tools (search_library / ask_video / export_anki) need OAuth — deferred.
+2. ✅ **Compliance Bundle** (Mi 20.5.) — /privacy Subprocessor-Liste (Anthropic / CF / Supadata / Paddle / Resend / OpenAI), AI-Disclosure-Banner auf /new (EU AI Act Art 50(1)), AI-Watermark in Markdown/Text/Anki Exports (EU AI Act Art 50(2)), /refund Page mit 14-Tage-Garantie. Browser-Sentry-Drop noch offen.
+3. 🟡 **Paddle Merchant-of-Record** — submitted Mi 20.5. ~14:30, in review (~22h done von 24-72h Window). Stripe Founder Payment Link aktiv als Plan B.
 4. ⚡ **Inline Timestamp-Citations** — 10× leap over Eightify
 5. 🚨 **Account-less First Pack** — Lovable growth-hack
 6. 🔥 **Streaming Pack-Gen + Agent-Thinking-Stream** — Manus + Granola pattern

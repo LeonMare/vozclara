@@ -8,6 +8,61 @@
 
 ---
 
+## Session Handoff — Mi 20.5.2026 12:30 (PC → Laptop)
+
+**Pause am PC. Laptop nimmt nach Pause auf.**
+
+### Heute Vormittag fertig (PC-Session Mi 20.5.)
+- ✅ Paddle MoR submitted (~14:30 Di 19.5. → ich glaub das war Mi morgens, ~22h in 24-72h Window). Email-Watch läuft.
+- ✅ `/refund` Route + Footer-Link + Sitemap-Entry (4 Locales). Refund-Policy tightened (kein EU-Art-16(m)-Waiver mehr, "substantial use" caveat, `finance@leonmare.de` Kontakt).
+- ✅ Polar → Paddle Doc-Pivot across CLAUDE/MASTER/ROADMAP/IDEAS.
+- ✅ Compliance Bundle: /privacy Subprocessor-Block (4 Locales), AI-Disclosure-Banner auf /new (EU AI Act Art. 50(1)), AI-Watermark in Markdown/Text/Anki Exports (Art. 50(2)).
+- ✅ **MCP Server Phase 1 LIVE** — `worker/src/mcp/agent.ts` mit `vozclara_generate_pack` tool. Endpoints `vozclara.app/api/mcp` (Streamable HTTP) + `vozclara.app/api/sse` (SSE). End-to-end verified mit echtem YouTube-Video (RickRoll, English → German).
+- ✅ **Smithery published** — `salvador7eon/vozclara` Public, Score 84/100, VC-Monogram-Icon (navy + gold, Cambria, double-rule frame), Description + Homepage + Repo gesetzt.
+- ✅ Claude Desktop config (`%APPDATA%\Claude\claude_desktop_config.json`) hat `vozclara` MCP server eingetragen, working.
+- ✅ README rewrite mit Smithery-Badge + MCP-Integration-Sektion + aktuellem Stack.
+
+### Pending Items (sortiert nach Priorität)
+
+1. **Paddle approval** — Email-Watch. Bei Approval: Products anlegen (Founder €99 / Pro €9/mo / Pro Plus €19/mo), Founder-Checkout-URL als `?welcome=1` Success-Redirect, dann `VITE_FOUNDER_CHECKOUT_URL` updaten + `worker/src/founder.ts` Kommentar + Stripe Founder Link archivieren. Bei Rejection: Lemon Squeezy als Plan B (war wegen Stripe-Acquisition-Uncertainty zweite Wahl, aber acceptable).
+2. **Build-in-Public-Post** — draft 3 Tonalitäten (X/LinkedIn/Reddit) für den ersten richtigen Launch-Beat. Inhalt: "VozClara now MCP-callable, one-click install via Smithery". Erst-Veröffentlichung wenn Paddle approved oder Paddle-rejection-resolved.
+3. **Source-language fix in MCP** — Supadata gibt aktuell oft `de` als sourceLanguage zurück auch bei englischen Videos (defaults zur Worker-Location). Funktional egal weil Llama Cross-Lingual macht, aber für Pack-Schema-Korrektheit fixen. Edit in `worker/src/mcp/agent.ts` `fetchSupadataTranscript()`.
+4. **Browser-Sentry SDK drop** — Cookie-Banner-Compliance final-check. ~30 min.
+5. **Phase 2 MCP Tools** — `vozclara_search_my_library`, `vozclara_ask_video`, `vozclara_export_anki`. Brauchen OAuth via `workers-oauth-provider` weil sie brainId benötigen. ~3-4h sprint.
+6. **Per-pack provenance field** auf KnowledgePack-Schema (CLAUDE.md §1.1) — `{ model, lens_id, watermark }`. Sub-launch nice-to-have.
+7. **Reddit Karma**: r/Notion oder r/PersonalKnowledgeMgmt (Mi-Do), r/learnGerman (Do).
+
+### Files mit lokalem State (NICHT auf Laptop synced via Git)
+- `worker/.dev.vars` — enthält `SUPADATA_API_KEY=sd_...`. Auf Laptop wahlweise neu anlegen ODER weiter direkt gegen production curlen.
+- `node_modules/` — Standard, `npm install` auf Laptop nötig.
+
+### Letzte 10 Commits (alle pushed)
+```
+b044a15  docs: rewrite README — current stack, Smithery badge, MCP integration
+cd1286c  brand: polish VC monogram icon (Cambria + double-rule frame)
+6487853  brand: switch MCP icon to VC monogram (V creme + C gold interlocked)
+7ca9f5c  brand: add MCP server icon (512x512 navy/gold serif V)
+e4bfa78  mcp: fix CORS + binding for production MCP transports
+56a73b6  mcp: scaffold MCP server with generate_pack composite tool (Phase 1)
+682a12b  compliance: AI-generated watermark in Markdown/Text/Anki exports
+0763acb  compliance: AI disclosure banner on /new (EU AI Act Art. 50 prep)
+d979f35  compliance: add Subprocessors + Paid-Tier section to /privacy (4 locales)
+f7b2bca  docs: pivot Polar -> Paddle across CLAUDE/MASTER/ROADMAP/IDEAS
+```
+
+### Laptop-First-Move
+```bash
+cd ~/Documents/vozclara   # or wherever the repo lives on the laptop
+git pull
+npm install               # in case package-lock.json moved
+npm --prefix worker install
+# Optional if want to test MCP locally: create worker/.dev.vars with SUPADATA_API_KEY
+```
+
+Dann CLAUDE.md + MASTER.md + ROADMAP.md (= dieser Block) lesen, ein Kaffee, los geht's.
+
+---
+
 ## Phase 0 — Decisions LOCKED (Stand Di 19.5.2026)
 
 | Decision | Lock |

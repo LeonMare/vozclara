@@ -1,7 +1,7 @@
 # CLAUDE.md — VozClara AI Pair-Programming Contract
 
 > Karpathy-style invariants document. Read this at the START of every Claude Code session.
-> Updated: Di 19.5.2026, 21:15
+> Updated: Mi 20.5.2026, 12:30
 
 ---
 
@@ -58,8 +58,8 @@ interface Lens {
 - TTS: `tts-1` via OpenAI
 - Transcripts: Supadata (NOT yt-dlp, NOT youtube-transcript-api)
 - Embeddings: `@cf/baai/bge-base-en-v1.5`
-- Payments: Paddle (Merchant-of-Record) — Polar's auto-review rejected our YouTube-adjacent use case Di 19.5., pivoted to Paddle Mi 20.5. (submitted, in review 24-72h). Stripe Founder Payment Link remains active as Plan B.
-- MCP Stack: `agents` SDK + `McpAgent` + `workers-oauth-provider` (NOT raw MCP SDK)
+- Payments: Paddle (Merchant-of-Record) — Polar's auto-review rejected our YouTube-adjacent use case Di 19.5., pivoted to Paddle Mi 20.5. **Submitted Mi 20.5. ~14:30, in review (~22h done, ~50h Window remaining). Stripe Founder Payment Link remains active as Plan B.**
+- MCP Stack: `agents` SDK + `McpAgent` + `workers-oauth-provider` (NOT raw MCP SDK). **Phase 1 LIVE Mi 20.5. — `vozclara_generate_pack` tool deployed at `vozclara.app/api/mcp` + `/api/sse`. Smithery-published as `salvador7eon/vozclara` (Public, Score 84/100). Phase 2 (OAuth + paid-tier tools) deferred.**
 
 ---
 
