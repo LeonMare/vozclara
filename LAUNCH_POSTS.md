@@ -432,6 +432,174 @@ this is it.
 
 ---
 
+## MCP Beat — VozClara on Smithery (publishable once Paddle is approved)
+
+> A separate distribution wave around the **MCP-callable** moment.
+> Different audience than the Day-1 launch: agent-builders, Claude
+> Code users, indie devs experimenting with MCP. We ship these only
+> after Paddle approves and the Founder checkout is wired against the
+> new MoR — running these against an offline payment link would burn
+> a hot top-of-funnel moment.
+>
+> Three drafts below — pick all three (different audiences, no
+> overlap risk):
+>   1. X / Twitter thread (4 tweets)
+>   2. LinkedIn long-form founder post
+>   3. Reddit r/ClaudeAI (technical, builders-to-builders)
+>
+> Posting rules: stagger 24–48 h between the three. Do **not** also
+> post to r/mcp or r/Anthropic in the same week (the MCP/Claude
+> subreddits read each other; coordinated pushes get noticed). HN is
+> off-limits for the MCP beat because we want that Show HN slot for
+> the full-product launch later — a second "Show HN" within the same
+> month gets flagged.
+
+### Post 5 — X / Twitter thread (MCP Beat)
+
+**Tweet 1 — the hook:**
+```
+Just shipped: VozClara is now MCP-callable.
+
+Tell Claude, Cursor, or Windsurf to summarize a YouTube video, and
+they call VozClara behind the scenes — full structured Knowledge
+Pack, four output languages, no copy-paste.
+
+One-click install on Smithery 🪶
+https://smithery.ai/server/@salvador7eon/vozclara
+```
+
+**Tweet 2 — what it does in agent mode:**
+```
+You say:
+"Read this Huberman episode and give me the key claims as
+flashcards in German."
+
+Your agent calls `vozclara_generate_pack(url, "de", "deep")` and
+hands back: summary, 5–7 key ideas, 6–10 glossary terms, 5 Q/A
+flashcards. Cross-lingual: it works on any video, any output
+language.
+```
+
+**Tweet 3 — the technical reveal:**
+```
+Stack note for the curious:
+
+— Cloudflare `agents` SDK + McpAgent + Durable Objects for session
+  state across Streamable-HTTP and SSE transports
+— Supadata for the YouTube transcript layer (residential egress,
+  MoR for licensing)
+— Llama 3.3 70B on Workers AI for the generation pass — Pro Plus
+  tier upgrades to Sonnet 4.5 via Cloudflare AI Gateway
+
+Built solo. Edited in public. https://github.com/LeonMare/vozclara
+```
+
+**Tweet 4 — what's missing (honesty hook):**
+```
+What's NOT in v1:
+— Only `generate_pack` is exposed; OAuth gate for paid-tier tools
+  (search_my_library / ask_video / export_anki) comes next
+— No Sonnet-tier yet behind MCP — Llama path only until the
+  Pro-Plus product wire-up
+
+If you want to break it: install via Smithery, point it at
+something weird, ping me.
+
+→ https://smithery.ai/server/@salvador7eon/vozclara
+```
+
+### Post 6 — LinkedIn long-form (MCP Beat)
+
+```
+A small win that took a year of reading to set up correctly.
+
+VozClara — the multilingual knowledge-pack tool I've been building
+under the LEON MARÉ brand — is now natively callable from any
+MCP-compatible AI client: Claude, Cursor, Windsurf, Lovable, the
+whole emerging stack. One-click install on Smithery. Zero glue code
+required on the user's side.
+
+Why this mattered enough to ship before the main public launch:
+
+Distribution for indie SaaS is rarely a feature problem; it's an
+access problem. Most multilingual-YouTube tools live behind their
+own URL — you have to remember they exist, paste a link, and copy
+the output to wherever you're already working. MCP collapses that
+loop: the AI assistant you already work with reaches out and gets
+the structured Knowledge Pack, in the language you asked for,
+without you switching context.
+
+The technical bet was on Cloudflare's `agents` SDK over rolling our
+own transport. Streamable-HTTP plus SSE with Durable-Object-backed
+session state, OAuth provider on the same edge, everything in
+TypeScript. It made the whole MCP layer a one-week build instead of
+a one-month one.
+
+Phase one is shipped: the `generate_pack` tool is public on
+Smithery as `salvador7eon/vozclara`, scoring 84/100 in their
+automated audit. Phase two — library search, ask-the-video,
+direct-to-Anki export — needs OAuth and a paid-tier wire-up; it's
+the next sprint.
+
+If you're building anything with Claude Code or running an MCP
+stack inside your team, I'd love your feedback on what's clunky.
+
+→ https://vozclara.app
+→ https://smithery.ai/server/@salvador7eon/vozclara
+```
+
+### Post 7 — Reddit r/ClaudeAI (MCP Beat)
+
+**Title:** `Built an MCP server for YouTube → multilingual study packs (Claude/Cursor/Windsurf compatible)`
+
+**Body:**
+```
+Hey r/ClaudeAI — solo founder posting honestly, hoping for
+feedback from people actually using MCP in anger.
+
+I run VozClara, a tool that turns YouTube videos into structured
+Knowledge Packs (summary + key ideas + glossary + quiz, in four
+output languages). I shipped the MCP server a couple of days ago
+and want to share what worked and what didn't.
+
+**What works today**
+- `vozclara_generate_pack(url, language, depth)` is live and
+  one-click-installable via Smithery — `salvador7eon/vozclara`
+- Cross-lingual out of the box: paste a Spanish video, ask for a
+  German pack at `deep` depth, get back glossary + quiz in German
+- Cloudflare `agents` SDK + Durable-Object-backed sessions handle
+  the Streamable-HTTP + SSE transports
+
+**What I deferred**
+- OAuth isn't in v1. The three follow-on tools that need a
+  per-user brain (`search_my_library`, `ask_video`, `export_anki`)
+  are scaffolded but not exposed yet. Adding `workers-oauth-provider`
+  is the next sprint — should be ~3-4 h of work.
+- Free tier only behind MCP for now (Llama 3.3 70B on Workers AI).
+  The Pro Plus path to Sonnet 4.5 via Cloudflare AI Gateway exists
+  in the worker but isn't gated through MCP yet.
+
+**The honest trade-off**
+Supadata's `data.lang` came back as `de` on English videos because
+their EU-edge defaults override their detection. Llama happens to
+be cross-lingual enough that the output was correct, but the
+sourceLanguage field on the Pack schema lied. Fixed with a
+stop-word heuristic on the transcript text itself — five minutes
+of work, but I would have caught it sooner if I had paid attention
+to the first eval log.
+
+If anyone here uses MCP servers inside Claude Code in their daily
+flow, I'd love to know: which UX patterns make a tool feel
+"native" vs feel like an external thing you remember exists? My
+current bet is composite tools with depth/lang as parameters, not
+five atomic tools, but I'd take counter-arguments.
+
+— install link: https://smithery.ai/server/@salvador7eon/vozclara
+— code: https://github.com/LeonMare/vozclara
+```
+
+---
+
 ## Post-launch dashboard checklist
 
 Watch on Day 1:
