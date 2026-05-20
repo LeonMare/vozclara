@@ -2,11 +2,13 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { initSentry } from './lib/sentry';
 
-// Initialise error reporting before React mounts so render-phase
-// exceptions are captured. No-op when VITE_SENTRY_DSN is unset.
-initSentry();
+// Browser-side error reporting intentionally OFF: Sentry's browser SDK
+// sets cookies which would force a DSGVO cookie banner. We instead
+// rely on (a) Worker-side Sentry for server errors, (b) the
+// ErrorBoundary's console.error + visual fallback for render errors,
+// and (c) cookieless Cloudflare Web Analytics for product metrics.
+// See CLAUDE.md §1.4 / MASTER.md §1.2.
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

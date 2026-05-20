@@ -5,8 +5,12 @@ import { useLocale } from '../lib/i18n';
  * Top-level error boundary. Without this, an uncaught render error
  * blanks the whole document — the user sees a white screen and we
  * never know it happened. With this, we show a brand-coloured
- * fallback with a reload action, log the error to console, and (if
- * configured) ship it to Sentry via the global hook below.
+ * fallback with a reload action and log the error to console.
+ *
+ * No browser-side error-reporting SDK is wired (cookie-banner-free
+ * by design — see CLAUDE.md §1.4). The optional `__VOZCLARA_ERROR_HOOK`
+ * hook below is left as a future-use seam for a cookieless reporter
+ * (e.g. a custom Worker-side endpoint) without touching this file.
  *
  * Per React's API the boundary itself has to be a class component;
  * the rendered fallback is a separate function so it can subscribe
@@ -30,8 +34,10 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, info: { componentStack?: string }): void {
     // Always console-log so we see it in dev + via remote-log relays.
     console.error('[VozClara] Uncaught render error:', error, info.componentStack);
-    // Hand off to Sentry / generic error reporter if one was wired
-    // onto window.__VOZCLARA_ERROR_HOOK before mount.
+    // Future-use seam: a cookieless error reporter can wire itself
+    // onto window.__VOZCLARA_ERROR_HOOK before mount and receive
+    // every render error without touching this file. No reporter is
+    // wired in v1 (we kept Sentry server-side only — see main.tsx).
     const hook = (window as unknown as { __VOZCLARA_ERROR_HOOK?: (e: Error, info: unknown) => void }).__VOZCLARA_ERROR_HOOK;
     hook?.(error, info);
 
