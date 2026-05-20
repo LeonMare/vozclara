@@ -11,31 +11,56 @@
  * Storage layout (AUTH KV — shared with the rest of the account
  * state, keeps namespace count down on the Cloudflare plan):
  *
- *   founder:counter  → integer, 0..100
- *   founder:claims   → JSON array of { ts, source? } — audit trail
+ *   founder:counter                       → integer, 0..100
+ *   founder:claims                        → JSON array of { ts, source? }
+ *   founder:webhook:processed:${eventId}  → "1" with 7d TTL (idempotency)
  *
- * No Paddle webhook yet — by design. LAUNCH_PLAN §17: "nur Payment-
- * Link für Founder Deal jetzt" (originally Stripe, replaced by
- * Paddle 20 May 2026 after Polar's auto-review rejected our YouTube-
- * adjacent use case). When a sale arrives, Paddle emails Christian;
- * he triggers the admin increment manually until we wire the
- * `transaction.completed` webhook through here post-launch.
+ * Three counter-write paths:
+ *   1. handleFounderWebhook   — Paddle pushes `transaction.completed`
+ *      with our Founder price-id. Signature-verified, replay-protected,
+ *      idempotent per Paddle event_id. **Primary path post-Mi-21.5.**
+ *   2. handleFounderIncrement — manual admin bump (ADMIN_TOKEN gated).
+ *      Fallback if the webhook is misconfigured or the secret is rotated.
+ *   3. handleFounderSet       — admin set-exact for backfills + tests.
  *
- * The admin endpoint requires the existing ADMIN_TOKEN secret —
- * same one already used by /api/curated/refresh, so no new secrets
- * to provision.
+ * The webhook endpoint requires PADDLE_WEBHOOK_SECRET to be set via
+ *   wrangler secret put PADDLE_WEBHOOK_SECRET
+ * The secret is generated in the Paddle dashboard under
+ *   Developer Tools → Notifications → (your destination) → Secret key.
+ * Without it, /api/founder/webhook returns 503 webhook_disabled so we
+ * fail loud rather than silently swallowing real sales.
  */
 
 import type { AuthEnv } from './auth';
 
 interface FounderEnv extends AuthEnv {
-  /** Shared admin token gating the increment endpoint. */
+  /** Shared admin token gating the manual increment + set endpoints. */
   ADMIN_TOKEN?: string;
+  /**
+   * Paddle webhook signing secret (Developer Tools → Notifications →
+   * destination → Secret key). HMAC-SHA256 over `${ts}:${rawBody}`.
+   * When absent, /api/founder/webhook returns 503 webhook_disabled.
+   */
+  PADDLE_WEBHOOK_SECRET?: string;
 }
 
 const FOUNDER_MAX = 100;
 const COUNTER_KEY = 'founder:counter';
 const CLAIMS_KEY = 'founder:claims';
+
+/**
+ * Our Founder Deal price-id in Paddle. The webhook ignores transactions
+ * that don't include this price so an unrelated product purchase never
+ * bumps the seat counter. Update via wrangler.toml [vars] if we ever
+ * mint a new price (e.g. price-tier change post-launch).
+ */
+const FOUNDER_PRICE_ID = 'pri_01ks30tgbj097qbtjhebzqyf2z';
+
+/** Idempotency dedupe window — Paddle rarely retries past 24h, 7d is a comfortable buffer. */
+const WEBHOOK_DEDUPE_TTL = 60 * 60 * 24 * 7;
+
+/** Replay-protection window. Paddle docs recommend ≤ 5 minutes. */
+const SIGNATURE_MAX_AGE_SEC = 300;
 
 interface ClaimEntry {
   ts: number;
@@ -159,4 +184,165 @@ export async function handleFounderSet(req: Request, env: FounderEnv): Promise<R
   }
   await writeCounter(env, n);
   return json({ ok: true, claimed: n, max: FOUNDER_MAX, available: n < FOUNDER_MAX });
+}
+
+/* ─── Paddle webhook ────────────────────────────────────────────────────── */
+
+/** Minimal shape of a Paddle Billing v2 webhook event we care about. */
+interface PaddleWebhookEvent {
+  event_id?: string;
+  event_type?: string;
+  occurred_at?: string;
+  data?: {
+    id?: string;
+    items?: Array<{
+      price?: { id?: string };
+    }>;
+  };
+}
+
+/**
+ * POST /api/founder/webhook   header: Paddle-Signature: ts=…;h1=…
+ *
+ * Receives Paddle Billing v2 notifications. We only act on
+ * `transaction.completed` events that contain our Founder price-id;
+ * everything else is acknowledged with 200 + ignored=<reason> so Paddle
+ * does not retry indefinitely.
+ *
+ * Verification chain (any failure → 401, no state mutation):
+ *   1. PADDLE_WEBHOOK_SECRET configured (else 503 webhook_disabled)
+ *   2. Paddle-Signature header present + parseable as ts=…;h1=…
+ *   3. Timestamp within ±SIGNATURE_MAX_AGE_SEC (replay protection)
+ *   4. HMAC-SHA256(`${ts}:${rawBody}`, secret) === h1 (constant-time)
+ *
+ * Idempotency: dedupe by `event_id` in AUTH KV with a 7-day TTL.
+ * Paddle retries failed deliveries with the same event_id; without
+ * dedupe, a slow downstream call could double-bump the counter.
+ */
+export async function handleFounderWebhook(req: Request, env: FounderEnv): Promise<Response> {
+  if (!env.PADDLE_WEBHOOK_SECRET) {
+    return json({ error: 'webhook_disabled' }, 503);
+  }
+
+  const sigHeader = req.headers.get('Paddle-Signature') ?? '';
+  if (!sigHeader) return json({ error: 'no_signature' }, 401);
+
+  // Parse "ts=1234567890;h1=hexhmac". Tolerate spaces around the
+  // separators because some intermediaries normalise the header.
+  const sigParts: Record<string, string> = {};
+  for (const segment of sigHeader.split(';')) {
+    const [k, v] = segment.split('=');
+    if (k && v) sigParts[k.trim()] = v.trim();
+  }
+  const ts = sigParts.ts;
+  const h1 = sigParts.h1;
+  if (!ts || !h1) return json({ error: 'bad_signature_format' }, 401);
+
+  const nowSec = Math.floor(Date.now() / 1000);
+  const tsNum = parseInt(ts, 10);
+  if (!Number.isFinite(tsNum) || Math.abs(nowSec - tsNum) > SIGNATURE_MAX_AGE_SEC) {
+    return json({ error: 'stale_signature' }, 401);
+  }
+
+  // Read raw body BEFORE parsing — HMAC must be computed over the
+  // exact bytes Paddle signed, not a re-serialised JSON object.
+  const rawBody = await req.text();
+
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(env.PADDLE_WEBHOOK_SECRET),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const sigBytes = await crypto.subtle.sign('HMAC', key, enc.encode(`${ts}:${rawBody}`));
+  const computed = Array.from(new Uint8Array(sigBytes))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  if (!timingSafeEqualHex(computed, h1)) {
+    return json({ error: 'bad_signature' }, 401);
+  }
+
+  let event: PaddleWebhookEvent;
+  try {
+    event = JSON.parse(rawBody) as PaddleWebhookEvent;
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  // Acknowledge non-target events with 200 so Paddle stops retrying.
+  // We subscribe to transaction.completed only, but Paddle dashboards
+  // sometimes broadcast extras during testing.
+  if (event.event_type !== 'transaction.completed') {
+    return json({ ok: true, ignored: event.event_type ?? 'unknown_event' });
+  }
+
+  const eventId = event.event_id;
+  if (!eventId) return json({ error: 'no_event_id' }, 400);
+
+  // Only count transactions that include our Founder price. Anything
+  // else (Pro/Pro Plus subs once we wire them, gift purchases, refunds)
+  // is acknowledged-and-ignored.
+  const isFounderTx = event.data?.items?.some(
+    (it) => it.price?.id === FOUNDER_PRICE_ID,
+  );
+  if (!isFounderTx) {
+    return json({ ok: true, ignored: 'not_founder_price' });
+  }
+
+  // Idempotency check. Paddle retries failed deliveries with the same
+  // event_id, so we must not bump the counter twice for one sale.
+  const dedupKey = `founder:webhook:processed:${eventId}`;
+  if (env.AUTH) {
+    const seen = await env.AUTH.get(dedupKey);
+    if (seen) {
+      return json({ ok: true, idempotent: true, event_id: eventId });
+    }
+  }
+
+  const before = await readCounter(env);
+  if (before >= FOUNDER_MAX) {
+    // Mark processed so Paddle doesn't retry, but flag the overflow.
+    // (In practice Paddle's inventory cap should prevent the 101st
+    // sale; this is a safety net for race conditions.)
+    if (env.AUTH) {
+      await env.AUTH.put(dedupKey, '1', { expirationTtl: WEBHOOK_DEDUPE_TTL });
+    }
+    return json({ ok: true, sold_out: true, claimed: before, event_id: eventId });
+  }
+
+  const after = before + 1;
+  await Promise.all([
+    writeCounter(env, after),
+    appendClaim(env, {
+      ts: Date.now(),
+      source: `paddle_webhook:${event.data?.id ?? 'unknown'}`,
+    }),
+    env.AUTH
+      ? env.AUTH.put(dedupKey, '1', { expirationTtl: WEBHOOK_DEDUPE_TTL })
+      : Promise.resolve(),
+  ]);
+
+  return json({
+    ok: true,
+    claimed: after,
+    max: FOUNDER_MAX,
+    available: after < FOUNDER_MAX,
+    event_id: eventId,
+  });
+}
+
+/**
+ * Constant-time comparison of two hex strings. Standard timing-safe
+ * compare; we cannot use Node's crypto.timingSafeEqual in a Worker.
+ */
+function timingSafeEqualHex(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
 }

@@ -40,6 +40,7 @@ import {
   handleFounderStatus,
   handleFounderIncrement,
   handleFounderSet,
+  handleFounderWebhook,
 } from './founder';
 import { VozClaraMcpAgent } from './mcp/agent';
 import oauthConsentApp from './oauth/handler';
@@ -113,6 +114,16 @@ interface Env {
    * Absent = those endpoints respond 503 and stay unreachable.
    */
   ADMIN_TOKEN?: string;
+  /**
+   * Paddle webhook signing secret. Used by /api/founder/webhook to
+   * verify the HMAC-SHA256 signature on incoming Paddle Billing v2
+   * notifications. Generated in the Paddle dashboard under
+   * Developer Tools → Notifications → destination → Secret key.
+   * Set via `wrangler secret put PADDLE_WEBHOOK_SECRET`. Absent =
+   * the webhook endpoint responds 503 webhook_disabled and we fall
+   * back to manual counter increments.
+   */
+  PADDLE_WEBHOOK_SECRET?: string;
   /**
    * Sentry DSN for worker-side error capture. Same project as the
    * frontend; events get tagged environment=worker so the two
@@ -629,6 +640,12 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
     }
     if (url.pathname === '/api/founder/admin/set' && req.method === 'POST') {
       return handleFounderSet(req, env);
+    }
+    if (url.pathname === '/api/founder/webhook' && req.method === 'POST') {
+      // Paddle pushes transaction.completed here. Signature-verified
+      // inside the handler — no rate-limit because Paddle's own retry
+      // policy is the rate-control and we 401 fast on bad signatures.
+      return handleFounderWebhook(req, env);
     }
 
     return json({ error: 'not_found' }, 404);
