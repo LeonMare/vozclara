@@ -265,7 +265,45 @@ async function fetchSupadataTranscript(
         ? data.content.map((s) => s.text).join(' ')
         : '';
   if (!text || text.length < 50) throw new Error('transcript_too_short');
-  return { text, lang: data.lang ?? 'unknown' };
+  // Supadata's `data.lang` is unreliable — it sometimes reflects their
+  // server-side default (EU → `de`) instead of the actual audio
+  // language. We trust our own common-word heuristic on the transcript
+  // first and only fall back to Supadata's hint when our detector
+  // can't reach a confident verdict. Functionally not critical (the
+  // Llama prompt is cross-lingual either way) but it keeps the
+  // sourceLanguage field on the Pack schema honest.
+  const detected = detectLanguageFromText(text);
+  return { text, lang: detected ?? data.lang ?? 'unknown' };
+}
+
+/**
+ * Lightweight 4-language detector based on stop-word frequency in the
+ * first ~1k chars. Returns null when no language wins by a meaningful
+ * margin so the caller can fall back to whatever the source provided.
+ * No external dep — single pass, deterministic, ~µs to run.
+ */
+function detectLanguageFromText(text: string): string | null {
+  const sample = ` ${text.toLowerCase().slice(0, 1000)} `;
+  const markers: Record<string, string[]> = {
+    // High-frequency stop words with leading + trailing spaces so we
+    // don't match substrings inside larger words.
+    en: [' the ', ' and ', ' is ', ' of ', ' to ', ' a ', ' in ', ' that ', ' it ', ' for '],
+    de: [' der ', ' die ', ' und ', ' ist ', ' ein ', ' nicht ', ' das ', ' den ', ' wir ', ' auch '],
+    es: [' el ', ' la ', ' que ', ' de ', ' en ', ' es ', ' un ', ' los ', ' por ', ' con '],
+    pt: [' o ', ' a ', ' que ', ' de ', ' não ', ' um ', ' é ', ' uma ', ' para ', ' com '],
+  };
+  const scores: Record<string, number> = {};
+  for (const [lang, words] of Object.entries(markers)) {
+    let n = 0;
+    for (const w of words) n += sample.split(w).length - 1;
+    scores[lang] = n;
+  }
+  const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const [first, second] = ranked;
+  // Require an absolute hit count and a comfortable margin over the
+  // runner-up; otherwise treat as ambiguous and let the caller decide.
+  if (first[1] >= 3 && first[1] >= second[1] * 1.5) return first[0];
+  return null;
 }
 
 /**
