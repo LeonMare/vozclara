@@ -24,7 +24,7 @@
 
 ### Pending Items (sortiert nach Priorität)
 
-1. **Paddle approval** — Email-Watch. Bei Approval: Products anlegen (Founder €99 / Pro €9/mo / Pro Plus €19/mo), Founder-Checkout-URL als `?welcome=1` Success-Redirect, dann `VITE_FOUNDER_CHECKOUT_URL` updaten + `worker/src/founder.ts` Kommentar + Stripe Founder Link archivieren. Bei Rejection: Lemon Squeezy als Plan B (war wegen Stripe-Acquisition-Uncertainty zweite Wahl, aber acceptable).
+1. ✅ **Paddle approval** — DONE Mi 20.5. ~17:15. Product `pro_01ks30gafe4te11a1ptf28pxka` + Price `pri_01ks30tgbj097qbtjhebzqyf2z` (€99 one-time, Active). Embedded Paddle.js overlay live an /founder mit `successUrl: https://vozclara.app/founder?welcome=1`. `VITE_PADDLE_CLIENT_TOKEN` + `VITE_PADDLE_FOUNDER_PRICE_ID` in `.env.production`. Stripe Founder Link archiviert. `worker/src/founder.ts` Kommentare refreshed (commit `fbdf6d5`). Open: `transaction.completed` webhook wiring → sub-launch task.
 2. **Build-in-Public-Post** — draft 3 Tonalitäten (X/LinkedIn/Reddit) für den ersten richtigen Launch-Beat. Inhalt: "VozClara now MCP-callable, one-click install via Smithery". Erst-Veröffentlichung wenn Paddle approved oder Paddle-rejection-resolved.
 3. **Source-language fix in MCP** — Supadata gibt aktuell oft `de` als sourceLanguage zurück auch bei englischen Videos (defaults zur Worker-Location). Funktional egal weil Llama Cross-Lingual macht, aber für Pack-Schema-Korrektheit fixen. Edit in `worker/src/mcp/agent.ts` `fetchSupadataTranscript()`.
 4. **Browser-Sentry SDK drop** — Cookie-Banner-Compliance final-check. ~30 min.
@@ -79,7 +79,7 @@ Dann CLAUDE.md + MASTER.md + ROADMAP.md (= dieser Block) lesen, ein Kaffee, los 
 | Quotas: Pro Plus capped 40 standard + 2 Season Packs/mo, overage $0.10/pack | ✅ |
 | MCP Stack: Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` | ✅ |
 | Transcript Provider: Supadata (legally clean) | ✅ |
-| Payments: **Paddle** (Merchant-of-Record). Pivot Mi 20.5. nach Polar-Rejection ("YouTube content-processing-adjacent"). Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure (Stripe-acquired Lemon Squeezy ruled out for post-acquisition uncertainty). MoR trägt EU-VAT-Audit-Risiko, spart Steuerberater (~€500-2k/Jahr) + 0 Min monatliches Filing. Submitted Mi 20.5. nachmittags, in review. Stripe Founder Payment Link aktiv als Plan B bis Approval. | 🟡 in review |
+| Payments: **Paddle** (Merchant-of-Record). Pivot Mi 20.5. nach Polar-Rejection ("YouTube content-processing-adjacent"). Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure (Stripe-acquired Lemon Squeezy ruled out for post-acquisition uncertainty). MoR trägt EU-VAT-Audit-Risiko, spart Steuerberater (~€500-2k/Jahr) + 0 Min monatliches Filing. Approved Mi 20.5. ~17:15. Embedded Paddle.js checkout overlay live an /founder. Stripe Founder Payment Link archived. | ✅ live |
 | Launch-Date: WHEN-READY, nicht fixed 25.5. | ✅ |
 | Polish > Speed | ✅ |
 

@@ -103,12 +103,13 @@ export async function handleFounderStatus(_req: Request, env: FounderEnv): Promi
 /**
  * POST /api/founder/admin/increment   header: X-Admin-Token: <token>
  *
- * Manual sale-confirmation. Called by Christian when a Stripe email
- * lands. Idempotency is on the caller — if you click twice, the
- * counter ticks twice. Trade-off accepted; tooling around this is
- * a post-launch concern.
+ * Manual sale-confirmation. Called by Christian when a Paddle sale
+ * email lands (until the `transaction.completed` webhook is wired,
+ * sub-launch task — see file-header docblock). Idempotency is on
+ * the caller — if you click twice, the counter ticks twice. Trade-
+ * off accepted; tooling around this is a post-launch concern.
  *
- * Body (optional): { source?: "stripe_email" | "discord" | ... }
+ * Body (optional): { source?: "paddle_email" | "discord" | ... }
  * Returns the new state so the curl invocation surfaces it.
  */
 export async function handleFounderIncrement(req: Request, env: FounderEnv): Promise<Response> {

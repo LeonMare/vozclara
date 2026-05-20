@@ -58,8 +58,8 @@ interface Lens {
 - TTS: `tts-1` via OpenAI
 - Transcripts: Supadata (NOT yt-dlp, NOT youtube-transcript-api)
 - Embeddings: `@cf/baai/bge-base-en-v1.5`
-- Payments: Paddle (Merchant-of-Record) — Polar's auto-review rejected our YouTube-adjacent use case Di 19.5., pivoted to Paddle Mi 20.5. **Submitted Mi 20.5. ~14:30, in review (~22h done, ~50h Window remaining). Stripe Founder Payment Link remains active as Plan B.**
-- MCP Stack: `agents` SDK + `McpAgent` + `workers-oauth-provider` (NOT raw MCP SDK). **Phase 1 LIVE Mi 20.5. — `vozclara_generate_pack` tool deployed at `vozclara.app/api/mcp` + `/api/sse`. Smithery-published as `salvador7eon/vozclara` (Public, Score 84/100). Phase 2 (OAuth + paid-tier tools) deferred.**
+- Payments: Paddle (Merchant-of-Record) — Polar's auto-review rejected our YouTube-adjacent use case Di 19.5., pivoted to Paddle Mi 20.5. **Approved Mi 20.5. ~17:15. Live since Mi 20.5. abends — Founder Deal embedded checkout overlay at `vozclara.app/founder`, MoR handles EU VAT + US sales tax + chargebacks. Stripe Founder Payment Link archived. Paddle `transaction.completed` webhook still to be wired; until then Christian triggers `POST /api/founder/admin/increment` manually after each Paddle sale email.**
+- MCP Stack: `agents` SDK + `McpAgent` + `workers-oauth-provider` (NOT raw MCP SDK). **Phase 1 LIVE Mi 20.5. mittags — `vozclara_generate_pack` at `vozclara.app/api/mcp` + `/api/sse` (anonymous). Phase 2 LIVE Mi 20.5. nachmittags — `vozclara_search_my_library`, `vozclara_ask_video`, `vozclara_export_anki` at `/api/mcp/pro` + `/api/sse/pro` (OAuth via `workers-oauth-provider`, scopes `library:read` / `library:write` / `profile`, PKCE S256). Smithery-published as `salvador7eon/vozclara` (Public, Score 84/100, VC monogram icon).**
 
 ---
 
@@ -100,7 +100,7 @@ vozclara/
     │   ├── index.ts       # Main fetch handler (CURRENTLY MONOLITHIC — split during refactors)
     │   ├── auth.ts        # Magic-link + Account Deletion
     │   ├── email.ts       # Resend integration
-    │   ├── founder.ts     # Stripe Founder Deal
+    │   ├── founder.ts     # Paddle Founder Deal counter + admin endpoints
     │   ├── rating.ts      # Reviews + Michelin-style ratings
     │   ├── sentry.ts      # Worker-side Sentry (NO browser SDK)
     │   ├── webpush.ts     # Push notifications

@@ -607,8 +607,9 @@ Watch on Day 1:
       Should be zero new events after the defensive-mode-key fix.
 - [ ] Cloudflare Web Analytics — RPS on /, /pack/sample, /discover.
 - [ ] /api/rating/top should start having items after ~10 ratings.
-- [ ] /api/founder/status counter — bump manually after each Stripe
-      email lands (`POST /api/founder/admin/increment`).
+- [ ] /api/founder/status counter — bump manually after each Paddle
+      sale email lands (`POST /api/founder/admin/increment`) — until
+      the `transaction.completed` webhook is wired sub-launch.
 - [ ] HN front page rank if any (zero is fine; r/languagelearning is
       the real volume driver, HN is brand polish).
 

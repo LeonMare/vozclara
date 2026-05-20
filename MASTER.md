@@ -56,7 +56,7 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 | **TTS** | OpenAI `tts-1` (current) |
 | **Transcripts** | Supadata (Merchant-of-Record, legally clean) |
 | **MCP Stack** | Cloudflare `agents` SDK + `McpAgent` + `workers-oauth-provider` |
-| **Payments** | Paddle (Merchant-of-Record for EU VAT, US sales tax, fraud + chargebacks). Pivoted Mi 20.5. after Polar's auto-review rejected the YouTube-adjacent use case. Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure. Submitted Mi 20.5. nachmittags, in review (24-72h typical). Stripe Founder Payment Link remains active as Plan B until Paddle approves + new Founder-Checkout-URL is wired. |
+| **Payments** | Paddle (Merchant-of-Record for EU VAT, US sales tax, fraud + chargebacks). Pivoted Mi 20.5. after Polar's auto-review rejected the YouTube-adjacent use case. Paddle: 5% + €0.50 all-in (no international surcharge), most mature tax infrastructure. Approved Mi 20.5. ~17:15, embedded Paddle.js checkout overlay live since Mi 20.5. abends. Stripe Founder Payment Link archived. `transaction.completed` webhook still to be wired sub-launch; counter increment manual via admin endpoint until then. |
 | **Email** | Resend (from `noreply@leonmare.de` due to domain verification) |
 | **Auth** | Magic-link via Resend |
 | **Analytics** | Cloudflare Web Analytics (cookieless, no banner needed) |
@@ -92,9 +92,9 @@ Polish > Speed. No fixed launch date. Launch when 0 P0 bugs + Lighthouse 90+ + g
 ## 3. The Killer Features (in build order)
 
 ### Phase 1 — Foundation (Week 1)
-1. ✅ **MCP Server** (Smithery-published) — distribution moat. Phase 1 LIVE Mi 20.5. mittags. `vozclara_generate_pack` tool. Smithery listing public as `salvador7eon/vozclara` (Score 84/100, VC monogram icon). Phase 2 tools (search_library / ask_video / export_anki) need OAuth — deferred.
-2. ✅ **Compliance Bundle** (Mi 20.5.) — /privacy Subprocessor-Liste (Anthropic / CF / Supadata / Paddle / Resend / OpenAI), AI-Disclosure-Banner auf /new (EU AI Act Art 50(1)), AI-Watermark in Markdown/Text/Anki Exports (EU AI Act Art 50(2)), /refund Page mit 14-Tage-Garantie. Browser-Sentry-Drop noch offen.
-3. 🟡 **Paddle Merchant-of-Record** — submitted Mi 20.5. ~14:30, in review (~22h done von 24-72h Window). Stripe Founder Payment Link aktiv als Plan B.
+1. ✅ **MCP Server** (Smithery-published) — distribution moat. Phase 1 LIVE Mi 20.5. mittags (anonymous `vozclara_generate_pack`). Phase 2 LIVE Mi 20.5. nachmittags — `search_my_library` / `ask_video` / `export_anki` via OAuth (`workers-oauth-provider`, PKCE S256, scopes `library:read` / `library:write` / `profile`). Smithery listing public as `salvador7eon/vozclara` (Score 84/100, VC monogram icon).
+2. ✅ **Compliance Bundle** (Mi 20.5.) — /privacy Subprocessor-Liste (Anthropic / CF / Supadata / Paddle / Resend / OpenAI), AI-Disclosure-Banner auf /new (EU AI Act Art 50(1)), AI-Watermark in Markdown/Text/Anki Exports (EU AI Act Art 50(2)), /refund Page mit 14-Tage-Garantie. Browser-Sentry-SDK gedroppt Mi 20.5. — cookieless-by-design final.
+3. ✅ **Paddle Merchant-of-Record** — approved Mi 20.5. ~17:15. Embedded Paddle.js checkout overlay live an /founder, MoR handles EU VAT + US sales tax + chargebacks. Stripe Founder Payment Link archived. Webhook `transaction.completed` wiring ist sub-launch task; bis dahin counter manuell via `POST /api/founder/admin/increment` nach jeder Paddle sale email.
 4. ⚡ **Inline Timestamp-Citations** — 10× leap over Eightify
 5. 🚨 **Account-less First Pack** — Lovable growth-hack
 6. 🔥 **Streaming Pack-Gen + Agent-Thinking-Stream** — Manus + Granola pattern
