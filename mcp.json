@@ -1,0 +1,46 @@
+{
+  "$schema": "https://open-plugins.com/schema/mcp.json",
+  "name": "vozclara",
+  "displayName": "VozClara",
+  "description": "Multilingual AI study tool. Paste any public video URL to get a structured Knowledge Pack (summary, key ideas, glossary, quiz, transcript with timestamps) in Spanish, Portuguese, German, or English. Ships as an MCP server with one anonymous tool plus three OAuth-protected tools.",
+  "version": "0.1.0",
+  "author": "LeonMare",
+  "homepage": "https://vozclara.app",
+  "repository": "https://github.com/LeonMare/vozclara",
+  "icon": "https://vozclara.app/mcp-icon.png",
+  "license": "UNLICENSED",
+  "tags": [
+    "mcp",
+    "mcp-server",
+    "youtube",
+    "ai",
+    "language-learning",
+    "multilingual",
+    "education",
+    "study-tools",
+    "smithery",
+    "cloudflare-workers"
+  ],
+  "servers": {
+    "vozclara": {
+      "type": "http",
+      "url": "https://vozclara.app/api/mcp",
+      "transport": "streamable-http",
+      "description": "Anonymous, free-tier. One composite tool: vozclara_generate_pack(url, language, depth)."
+    },
+    "vozclara-pro": {
+      "type": "http",
+      "url": "https://vozclara.app/api/mcp/pro",
+      "transport": "streamable-http",
+      "description": "OAuth-protected (PKCE S256). Tools: search_my_library, ask_video, export_anki. Scopes: library:read, library:write, profile.",
+      "auth": {
+        "type": "oauth2",
+        "scopes": ["library:read", "library:write", "profile"]
+      }
+    }
+  },
+  "client": {
+    "command": "npx",
+    "args": ["-y", "mcp-remote", "https://vozclara.app/api/mcp"]
+  }
+}
