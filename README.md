@@ -1,47 +1,69 @@
 # VozClara
 
-A LEON MARÉ product. Multilingual knowledge cloud for YouTube videos:
-paste a link, get a structured Knowledge Pack — summary, key ideas,
-chapters, vocabulary, quiz, quotes — in your language. Save it to your
-private library. Mobile-first, installable on iOS and Android.
+[![Smithery badge](https://smithery.ai/badge/salvador7eon/vozclara)](https://smithery.ai/server/salvador7eon/vozclara)
 
-Deployed at https://vozclara.pages.dev.
+Multilingual AI study tool. Paste any public video URL → get a structured
+Knowledge Pack (summary, key ideas, glossary, quiz, transcript with
+timestamps) in your native language: Spanish, Portuguese, German, English.
+
+Live: [**vozclara.app**](https://vozclara.app)
+MCP Server: [**smithery.ai/server/salvador7eon/vozclara**](https://smithery.ai/server/salvador7eon/vozclara)
 
 > *Klassisch in der Haltung, modern im Werkzeug.*
 
 ---
 
-## Architektur — alles gratis, keine Kreditkarte
+## MCP integration
 
-```
-[ iPhone Safari / Home-Screen-PWA ]
-        │
-        │  1. Paste a YouTube URL
-        │  2. Frontend → Cloudflare Worker
-        ▼
-[ Cloudflare Worker · /api/transcript ]
-        │  POST youtubei/v1/player with ANDROID client context
-        │  → caption tracks → fetch srv3 XML → parse <p> blocks
-        ▼
-[ Frontend ]
-        │  Translate each segment via MyMemory (DE→ES, free, no key)
-        │  Cache transcript + translation in IndexedDB
-        ▼
-[ Render ]
-        │  YouTube IFrame embed with playsinline=1 (iOS-safe)
-        │  Spanish subtitle pane synced to currentTime (4 Hz poll)
-        │  Optional TTS via Web Speech API (lang=es-ES, voice unlocked on tap)
-        │  DE → ES learning panel below the player
+VozClara exposes a Model Context Protocol (MCP) server so AI agents
+(Claude Desktop, Cursor, Claude Code, Continue, VS Code with Copilot
+Chat, etc.) can call it directly.
+
+**One-click install** via Smithery → choose your client → done.
+
+**Manual config** for Claude Desktop (`%APPDATA%\Claude\claude_desktop_config.json` on Windows,
+`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+
+```json
+{
+  "mcpServers": {
+    "vozclara": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://vozclara.app/api/mcp"]
+    }
+  }
+}
 ```
 
-| Component       | Technology                                       | Cost  |
-| --------------- | ------------------------------------------------ | ----- |
-| Frontend host   | Cloudflare Pages (custom domain, no CC)          | Free  |
-| Backend         | One Cloudflare Worker, 100 k req/day free tier   | Free  |
-| Translation     | MyMemory API (50 k chars/day with email)         | Free  |
-| Voice           | Web Speech API (browser-native)                  | Free  |
-| Cache           | IndexedDB (client only)                          | Free  |
-| Fonts           | Google Fonts: Cormorant Garamond + Inter         | Free  |
+Restart Claude Desktop and ask:
+> *"Use vozclara to summarise this video in German: https://www.youtube.com/watch?v=…"*
+
+### Available tools (Phase 1)
+
+| Tool | Inputs | Output |
+| --- | --- | --- |
+| `vozclara_generate_pack` | `url`, `language` (`es`/`pt`/`de`/`en`), `depth` (`short`/`standard`/`deep`) | Knowledge Pack text + structured metadata + deep-link to the interactive pack on vozclara.app |
+
+Phase 2 tools — `vozclara_search_my_library`, `vozclara_ask_video`,
+`vozclara_export_anki` — ship after OAuth lands.
+
+---
+
+## Stack
+
+| Layer | Technology |
+| --- | --- |
+| **Frontend** | Vite + React 18 + TypeScript + Tailwind on Cloudflare Pages |
+| **Worker** | Cloudflare Workers + Durable Objects + KV + D1 + Vectorize |
+| **LLM (free / Pro)** | Workers AI · `@cf/meta/llama-3.3-70b-instruct-fp8-fast` |
+| **LLM (Pro Plus)** | Anthropic Claude Sonnet 4.5 via Cloudflare AI Gateway |
+| **Transcripts** | Supadata (Merchant-of-Record, licensed) |
+| **Embeddings** | `@cf/baai/bge-base-en-v1.5` for semantic search |
+| **TTS** | OpenAI `tts-1` (optional, premium narration) |
+| **Auth** | Magic-link via Resend, no passwords |
+| **Payments** | Paddle (Merchant-of-Record, EU VAT + US sales tax handled) |
+| **MCP** | `agents` SDK + `McpAgent` + (Phase 2) `workers-oauth-provider` |
+| **Analytics** | Cloudflare Web Analytics (cookieless, no consent banner) |
 
 ---
 
@@ -50,93 +72,76 @@ Deployed at https://vozclara.pages.dev.
 Prerequisites: Node 20+, Git.
 
 ```sh
-# One-time install
+# Install
 npm install
 npm --prefix worker install
 
-# Two terminals — Vite dev server + Wrangler dev server
-# Terminal A:
-npm run dev               # Vite on :5173
-# Terminal B:
-npm run worker:dev        # Wrangler on :8787
-
-# Vite proxies /api/* to :8787, so http://localhost:5173 works end-to-end.
+# Two terminals — Vite dev server + Wrangler dev
+# Terminal A: Vite on :5173
+npm run dev
+# Terminal B: Wrangler on :8787
+npm run worker:dev
 ```
 
-`.env.local` (optional, recommended for normal use):
+Vite proxies `/api/*` to `:8787`, so `http://localhost:5173` works
+end-to-end.
+
+For the worker to call Supadata locally, drop a `.dev.vars` file inside
+`worker/`:
 
 ```env
-VITE_TRANSLATION_EMAIL=tu-correo@leonmare.de
+SUPADATA_API_KEY=sd_…
+# Optional — enables OpenAI TTS path
+OPENAI_API_KEY=sk-…
+# Optional — enables Sonnet 4.5 for Pro Plus tier
+ANTHROPIC_API_KEY=sk-ant-…
 ```
 
-This raises the MyMemory daily quota from 5 000 to 50 000 chars.
+The file is git-ignored. Production secrets go through
+`wrangler secret put <NAME>` instead.
 
 ---
 
 ## Deployment
 
-### Cloudflare Pages — frontend
+### Frontend → Cloudflare Pages
 
 ```sh
 npm run build
-# Push the repo to GitHub, then in Cloudflare Pages:
-#   1. Connect the GitHub repo
-#   2. Build command: npm run build
-#   3. Build output: dist
-#   4. Custom domain: vozclara.leonmare.de
+# Push to GitHub; Cloudflare Pages builds dist/ automatically.
+# Custom domain: vozclara.app
 ```
 
-Cloudflare will issue a free certificate. Google Workspace MX records on
-`leonmare.de` remain untouched.
-
-### Cloudflare Workers — transcript proxy
+### Worker → Cloudflare Workers
 
 ```sh
 cd worker
-npx wrangler login
 npx wrangler deploy
 ```
 
-This deploys to `vozclara-transcript.<your-subdomain>.workers.dev`. To put it
-on your own domain, add a route in `wrangler.toml`:
-
-```toml
-[[routes]]
-pattern = "vozclara.leonmare.de/api/*"
-custom_domain = false
-zone_name = "leonmare.de"
-```
-
-Then in production set `VITE_API_BASE=""` (same-origin) so the frontend
-hits `vozclara.leonmare.de/api/transcript` directly.
+This deploys the API + MCP server to `vozclara.app/api/*` and the
+matching Smithery URL at `https://vozclara--salvador7eon.run.tools`.
 
 ---
 
-## Why this stack
+## Compliance
 
-- **No DeepL.** DeepL Free requires a credit card to register. MyMemory does not.
-- **No Vercel.** Vercel free tier increasingly nudges credit-card verification.
-  Cloudflare's free tier does not.
-- **No Whisper service in v1.** ~90% of YouTube videos have auto-captions via
-  the Innertube/Android-client path. Videos without them get a polite message
-  in Spanish instead of a slow Whisper fallback.
-- **Client-side translation.** The Worker stays small and within free-tier
-  request budgets. Translation traffic goes browser → MyMemory directly.
-- **iOS-first.** TTS first-utterance unlock is a real button. `playsinline=1`
-  on the YouTube embed prevents fullscreen takeover. Web Share Target is not
-  wired (iOS Safari doesn't support it) — manual paste is the path.
+- **DSGVO Art. 13** — full subprocessor list at [`/privacy`](https://vozclara.app/privacy)
+- **DSGVO Art. 17** — server-side account deletion sweeps email + sessions + votes + reviews
+- **EU AI Act Art. 50(1)** — AI disclosure banner shown on first generator visit
+- **EU AI Act Art. 50(2)** — every exported pack carries an AI-generated watermark
+- **Refund policy** — 14-day money-back guarantee at [`/refund`](https://vozclara.app/refund)
 
 ---
 
 ## Brand
 
-This tool follows LEON MARÉ Brand Foundation v5, Kapitel 16 verbatim:
+LEON MARÉ Editorial:
 
-- **Colors**: Navy `#0A1A3A`, Gold `#C9A24B`, Creme `#F7F3EC`, Graphit `#1A1A1A`.
-- **Typography**: Cormorant Garamond (display) + Inter (body).
-- **Tonalität**: classical, FAZ-register Spanish; no exclamation marks, no
-  superlatives, no emoji.
+- **Colors** — Navy `#0A1A3A`, Gold `#C9A24B`, Creme `#F7F3EC`, Graphit `#1A1A1A`
+- **Typography** — Per-locale: Reforma (ES), Adelle Sans (PT), Inter (DE), Tiempos (EN)
+- **Tonalität** — classical, declarative, no exclamation marks, no emoji, no superlatives
 
 ---
 
-*VozClara · interne LEON MARÉ Anwendung · Frankfurt · Donostia · Porto*
+*VozClara · A LEON MARÉ product · Frankfurt am Main · Donostia · Porto*
