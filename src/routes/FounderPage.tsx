@@ -5,7 +5,8 @@ import { BrandMark } from '../components/BrandMark';
 import { usePageHead } from '../hooks/usePageHead';
 import {
   fetchFounderStatus,
-  founderCheckoutUrl,
+  founderCheckoutAvailable,
+  openFounderCheckout,
   FOUNDER_DISCORD_INVITE,
   type FounderStatus,
 } from '../lib/founder';
@@ -19,15 +20,29 @@ import {
  * counter is the only loud element; everything else stays calm.
  *
  * Anonymous-first: a visitor can buy without signing up first.
- * After Stripe checkout, Christian's manual flow attaches Pro to
- * the email Stripe collected. Until the activation tooling exists
- * post-launch, this is intentional — fewer moving parts at launch.
+ * Paddle's overlay collects email at checkout; Christian's manual
+ * flow then attaches Pro to that email until the Paddle webhook
+ * activation tooling lands post-launch.
  */
 export function FounderPage() {
   const { locale } = useLocale();
   const labels = founderLabels(locale);
   const [status, setStatus] = useState<FounderStatus | null>(null);
-  const checkoutUrl = founderCheckoutUrl();
+  const checkoutAvailable = founderCheckoutAvailable();
+  // Map the i18n locale to Paddle's narrow language enum. Paddle expects
+  // a 2-letter code; ours can be `de-DE`-shaped down the line, so we
+  // strip to the language sub-tag before forwarding.
+  const paddleLocale = (locale.slice(0, 2) as 'en' | 'es' | 'pt' | 'de');
+
+  const handleCheckout = (): void => {
+    // Fire-and-forget — the helper resolves once the overlay is
+    // visible, but the UI doesn't need to wait. Errors land in
+    // console + Paddle's own error overlay if domain approval is
+    // misconfigured. We deliberately do not surface a generic toast
+    // because the failure modes are infrastructure-side, not
+    // user-input-side.
+    void openFounderCheckout({ locale: paddleLocale });
+  };
 
   usePageHead({ title: labels.headTitle, description: labels.headDescription });
 
@@ -46,7 +61,7 @@ export function FounderPage() {
   const remaining = claimed === null ? null : Math.max(0, max - claimed);
   const soldOut = status ? !status.available : false;
 
-  /* Stripe success_url is wired to /founder?welcome=1 — when present
+  /* Paddle successUrl is wired to /founder?welcome=1 — when present
      we surface a prominent "welcome, founder" banner with the Discord
      invite, sitting above the regular page so the buyer's next step
      is unmissable. The query param survives a refresh too, so a buyer
@@ -127,13 +142,14 @@ export function FounderPage() {
               <div className="mt-2 rounded-card bg-graphit/10 px-5 py-3 font-sans text-sm text-graphit/70">
                 {labels.soldOut}
               </div>
-            ) : checkoutUrl ? (
-              <a
-                href={checkoutUrl}
+            ) : checkoutAvailable ? (
+              <button
+                type="button"
+                onClick={handleCheckout}
                 className="mt-2 rounded-card bg-navy px-7 py-3.5 font-sans text-base font-medium text-creme transition hover:bg-navy/90"
               >
                 {labels.cta} →
-              </a>
+              </button>
             ) : (
               <div className="mt-2 rounded-card border border-navy/15 bg-creme px-5 py-3 font-sans text-sm italic text-graphit/65">
                 {labels.comingSoon}
@@ -201,14 +217,15 @@ export function FounderPage() {
             — Christian Leon · LEON MARÉ · Frankfurt
           </p>
 
-          {!soldOut && checkoutUrl && (
+          {!soldOut && checkoutAvailable && (
             <div className="mt-10">
-              <a
-                href={checkoutUrl}
+              <button
+                type="button"
+                onClick={handleCheckout}
                 className="rounded-card bg-navy px-6 py-3 font-sans text-base font-medium text-creme transition hover:bg-navy/90"
               >
                 {labels.cta} → €99
-              </a>
+              </button>
             </div>
           )}
         </div>
@@ -291,7 +308,7 @@ function founderLabels(locale: string) {
     cta: 'Asegurar mi plaza',
     soldOut: 'Plazas agotadas. Gracias a los cien que lo hicieron posible.',
     comingSoon: 'Disponible en horas. Stripe está terminando la verificación de la cuenta.',
-    checkoutNote: 'Pago seguro con Stripe · sin tarjeta guardada · sin renovación automática',
+    checkoutNote: 'Pago seguro vía Paddle · sin tarjeta guardada · sin renovación automática · IVA incluido',
     welcomeEyebrow: 'Bienvenido, fundador',
     welcomeHeading: 'Listo. Eres parte de los cien.',
     welcomeBody: 'Tu siguiente paso es entrar al Discord — ahí pasa la conversación con los demás founders. Cuando entres, mándame un mensaje y te añado al canal #founders-only.',
@@ -333,7 +350,7 @@ function founderLabels(locale: string) {
     cta: 'Garantir o meu lugar',
     soldOut: 'Lugares esgotados. Obrigado aos cem que tornaram isto possível.',
     comingSoon: 'Disponível em horas. O Stripe está a terminar a verificação da conta.',
-    checkoutNote: 'Pagamento seguro com Stripe · sem cartão guardado · sem renovação automática',
+    checkoutNote: 'Pagamento seguro via Paddle · sem cartão guardado · sem renovação automática · IVA incluído',
     welcomeEyebrow: 'Bem-vindo, founder',
     welcomeHeading: 'Pronto. És um dos cem.',
     welcomeBody: 'O teu próximo passo é entrar no Discord — é lá que a conversa acontece. Quando entrares, manda-me uma mensagem e adiciono-te ao canal #founders-only.',
@@ -375,7 +392,7 @@ function founderLabels(locale: string) {
     cta: 'Meinen Platz sichern',
     soldOut: 'Plätze ausverkauft. Danke an die Hundert, die das möglich gemacht haben.',
     comingSoon: 'Verfügbar in Stunden. Stripe schließt gerade die Account-Verifizierung ab.',
-    checkoutNote: 'Sichere Zahlung über Stripe · keine gespeicherte Karte · keine Auto-Verlängerung',
+    checkoutNote: 'Sichere Zahlung über Paddle · keine gespeicherte Karte · keine Auto-Verlängerung · inkl. MwSt.',
     welcomeEyebrow: 'Willkommen, Founder',
     welcomeHeading: 'Erledigt. Du bist einer der Hundert.',
     welcomeBody: 'Dein nächster Schritt ist der Discord — dort findet die Conversation statt. Schreib mir kurz wenn du drin bist, dann füge ich dich dem #founders-only Kanal hinzu.',
@@ -417,7 +434,7 @@ function founderLabels(locale: string) {
     cta: 'Claim my seat',
     soldOut: 'All seats taken. Thanks to the hundred who made this possible.',
     comingSoon: 'Live in hours. Stripe is finishing account verification.',
-    checkoutNote: 'Secure Stripe checkout · no stored card · no auto-renewal',
+    checkoutNote: 'Secure Paddle checkout · no stored card · no auto-renewal · tax-inclusive',
     welcomeEyebrow: 'Welcome, founder',
     welcomeHeading: "You're one of the hundred.",
     welcomeBody: "Your next step is Discord — that's where the conversation lives. Send me a quick message when you're in and I'll add you to the #founders-only channel.",

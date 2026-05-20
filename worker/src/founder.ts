@@ -2,9 +2,11 @@
  * Founder Deal — the launch cashflow hook.
  *
  * §7 of LAUNCH_PLAN: €99 one-time, limited to the first 100 founding
- * members. Stripe Payment Link handles the actual transaction; this
- * module only persists how many seats have been claimed so the
- * landing page can show live urgency ("23 of 100 claimed").
+ * members. Paddle (Merchant of Record, approved 20 May 2026) handles
+ * the actual transaction via the embedded checkout overlay rendered
+ * on /founder by src/lib/founder.ts; this module only persists how
+ * many seats have been claimed so the landing page can show live
+ * urgency ("23 of 100 claimed").
  *
  * Storage layout (AUTH KV — shared with the rest of the account
  * state, keeps namespace count down on the Cloudflare plan):
@@ -12,11 +14,12 @@
  *   founder:counter  → integer, 0..100
  *   founder:claims   → JSON array of { ts, source? } — audit trail
  *
- * No Stripe webhook yet — by design. LAUNCH_PLAN §17: "Stripe-
- * Subscriptions — nur Payment-Link für Founder Deal jetzt." When a
- * sale arrives, Stripe emails Christian; he triggers the admin
- * increment manually (or, when we wire webhooks post-launch, the
- * worker increments on `checkout.session.completed`).
+ * No Paddle webhook yet — by design. LAUNCH_PLAN §17: "nur Payment-
+ * Link für Founder Deal jetzt" (originally Stripe, replaced by
+ * Paddle 20 May 2026 after Polar's auto-review rejected our YouTube-
+ * adjacent use case). When a sale arrives, Paddle emails Christian;
+ * he triggers the admin increment manually until we wire the
+ * `transaction.completed` webhook through here post-launch.
  *
  * The admin endpoint requires the existing ADMIN_TOKEN secret —
  * same one already used by /api/curated/refresh, so no new secrets

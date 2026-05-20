@@ -16,6 +16,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@paddle/paddle-js": "^1.6.4",
     "idb-keyval": "^6.2.1",
     "jszip": "^3.10.1",
     "react": "^18.3.1",
