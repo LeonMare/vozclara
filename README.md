@@ -38,14 +38,37 @@ Chat, etc.) can call it directly.
 Restart Claude Desktop and ask:
 > *"Use vozclara to summarise this video in German: https://www.youtube.com/watch?v=…"*
 
-### Available tools (Phase 1)
+### Available tools
 
-| Tool | Inputs | Output |
-| --- | --- | --- |
-| `vozclara_generate_pack` | `url`, `language` (`es`/`pt`/`de`/`en`), `depth` (`short`/`standard`/`deep`) | Knowledge Pack text + structured metadata + deep-link to the interactive pack on vozclara.app |
+The anonymous endpoint (`/api/mcp`) exposes one tool that works without
+sign-in. The OAuth-protected endpoint (`/api/mcp/pro`) adds three tools
+that operate on the user's own VozClara library.
 
-Phase 2 tools — `vozclara_search_my_library`, `vozclara_ask_video`,
-`vozclara_export_anki` — ship after OAuth lands.
+| Tool | Endpoint | Inputs | Output |
+| --- | --- | --- | --- |
+| `vozclara_generate_pack` | `/api/mcp` (anonymous) | `url`, `language` (`es`/`pt`/`de`/`en`), `depth` (`short`/`standard`/`deep`) | Knowledge Pack text + structured metadata + deep-link to the interactive pack on vozclara.app |
+| `vozclara_search_my_library` | `/api/mcp/pro` (OAuth) | `query`, optional `limit` (1-10) | Semantic-search hits across the authenticated user's packs, each linked to vozclara.app |
+| `vozclara_ask_video` | `/api/mcp/pro` (OAuth) | `pack_id`, `question` | RAG-grounded answer with inline citations, strictly from that one pack |
+| `vozclara_export_anki` | `/api/mcp/pro` (OAuth) | `pack_id` | Deep-link URL the user opens to download the `.apkg` deck |
+
+**Authenticated config** (Claude Desktop, paid-tier tools — adds the three
+library-scoped tools above):
+
+```json
+{
+  "mcpServers": {
+    "vozclara-pro": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://vozclara.app/api/mcp/pro"]
+    }
+  }
+}
+```
+
+On first call `mcp-remote` opens the browser, you sign in with the
+magic-link, approve the scopes (`library:read`, `library:write`,
+`profile`), and the refresh-token is cached locally — same flow as
+GitHub's MCP server.
 
 ---
 
