@@ -565,9 +565,9 @@ export const STRINGS: Record<Locale, Strings> = {
     langSoon: 'Bald: Portugiesisch · Französisch',
 
     pricingTitle: 'Kostenlos starten. Wachsen wenn nötig.',
-    pricingSub: 'Keine Kreditkarte zum Start.',
+    pricingSub: 'Sofort und gratis.',
     tiers: [
-      { name: 'Free · heute verfügbar', price: '0 €', period: '', blurb: 'Alles was schon funktioniert — keine Kreditkarte, kein Konto.', features: ['Unbegrenzte Knowledge Packs', 'Alle vier Modi: Learn · Briefing · Studieren · Creator', 'Vier Sprachen: ES · PT · DE · EN', 'Spaced Repetition mit Tages-Streak', 'Shadowing mit Aussprache-Bewertung', 'KI-Tutor pro Pack', 'Anki-Export (.apkg)', 'Ask My Knowledge — Q&A über deine Bibliothek', 'Lokale Bibliothek im Browser'], cta: 'Starten' },
+      { name: 'Free · heute verfügbar', price: '0 €', period: '', blurb: 'Alles was schon funktioniert — frei nutzbar, ohne Konto.', features: ['Unbegrenzte Knowledge Packs', 'Alle vier Modi: Learn · Briefing · Studieren · Creator', 'Vier Sprachen: ES · PT · DE · EN', 'Spaced Repetition mit Tages-Streak', 'Shadowing mit Aussprache-Bewertung', 'KI-Tutor pro Pack', 'Anki-Export (.apkg)', 'Ask My Knowledge — Q&A über deine Bibliothek', 'Lokale Bibliothek im Browser'], cta: 'Starten' },
       { name: 'Pro · in Kürze', price: '9 €', period: '/ Monat', blurb: 'Wenn es kommt: was der Free-Plan nicht leisten kann.', features: ['Geräte-Sync', 'Premium-Stimme für Text-to-Speech', 'Export nach PDF und Notion', 'Quote-Cards mit deinem Branding', 'Priority-Support'], cta: 'Auf Warteliste' },
     ],
 

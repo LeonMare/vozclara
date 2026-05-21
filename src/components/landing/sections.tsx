@@ -310,7 +310,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Auf Warteliste eintragen',
       requestAccess: 'Zugang anfragen',
       waitlistConfirm: 'Danke! Eingetragen. Wir melden uns wenn es verfügbar ist.',
-      disclaimer: 'Bezahlte Pläne kommen wenn die App reif ist. Bis dahin alles kostenlos ohne Karte.',
+      disclaimer: 'Bezahlte Pläne kommen, wenn die App reif ist. Bis dahin: alles gratis, ohne Anmeldung.',
     };
   }
   return {

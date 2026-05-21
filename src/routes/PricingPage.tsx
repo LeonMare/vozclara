@@ -114,7 +114,7 @@ function pricingHeadTitle(locale: string): string {
 function pricingHeadDescription(locale: string): string {
   if (locale.startsWith('es')) return 'Empieza gratis. Planes para usuarios avanzados y creadores cuando los necesites — sin tarjeta hasta entonces.';
   if (locale.startsWith('pt')) return 'Começa grátis. Planos para utilizadores avançados e criadores quando precisares — sem cartão até lá.';
-  if (locale.startsWith('de')) return 'Kostenlos starten. Pläne für Power-User und Creator wenn du sie brauchst — keine Karte bis dahin.';
+  if (locale.startsWith('de')) return 'Kostenlos starten. Pläne für Power-User und Creator wenn du sie brauchst — bis dahin alles ohne Anmeldung.';
   return 'Start free. Plans for power users and creators when you need them — no card required until then.';
 }
 
@@ -143,9 +143,9 @@ function pricingPageLabels(locale: string) {
     backHome: 'Zurück zur Startseite',
     eyebrow: 'PREISE',
     heroTitle: 'Kostenlos starten. Plan wechseln wenn nötig.',
-    heroLead: 'Alles was schon funktioniert ist gratis. Bezahlpläne kommen wenn die App reif ist und echte Nachfrage besteht — bis dahin keine Karte.',
+    heroLead: 'Alles was schon funktioniert ist gratis. Bezahlpläne kommen, wenn die App reif ist und echte Nachfrage besteht — bis dahin alles ohne Anmeldung.',
     ctaHeading: 'Starte mit dem kostenlosen Plan.',
-    ctaBody: 'Keine Kreditkarte. Erstelle deinen ersten Knowledge Pack und entscheide dann, ob du auf einen größeren Plan wechseln willst.',
+    ctaBody: 'Sofort starten. Erstelle deinen ersten Knowledge Pack und entscheide dann, ob du auf einen größeren Plan wechseln willst.',
     primaryCta: 'Kostenlos starten',
     secondaryCta: 'Beispiel-Pack ansehen',
   };

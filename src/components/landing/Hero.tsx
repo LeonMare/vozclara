@@ -196,6 +196,6 @@ export function Hero() {
 function trustNote(locale: string): string {
   if (locale.startsWith('es')) return 'Gratis para probar. Sin registro. Sin tarjeta de crédito.';
   if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem registo. Sem cartão de crédito.';
-  if (locale.startsWith('de')) return 'Kostenlos testen. Keine Anmeldung. Keine Kreditkarte.';
+  if (locale.startsWith('de')) return 'Kostenlos testen. Ohne Anmeldung. Sofort startklar.';
   return 'Free to try. No signup. No credit card.';
 }
