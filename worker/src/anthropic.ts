@@ -36,6 +36,22 @@ export interface AnthropicEnv {
   CF_AI_GATEWAY_ID?: string;
   /** Anthropic API key — BYOK passthrough via Gateway. Set via secret. */
   ANTHROPIC_API_KEY?: string;
+  /**
+   * Cloudflare AI Gateway authentication token. Required when the
+   * Gateway is configured as "Authenticated" (defense-in-depth on top
+   * of BYOK — even if ANTHROPIC_API_KEY leaks, the Gateway also blocks
+   * requests without this token).
+   *
+   * Generated in: Cloudflare Dashboard → AI Gateway → vozclara-prod
+   *               → Settings → "Create authentication token"
+   *               with permission Account / AI Gateway / Run.
+   *
+   * Set via: `wrangler secret put CF_AIG_AUTH_TOKEN`
+   *
+   * When absent, requests still build but the Gateway returns
+   * HTTP 401 with internal code 2009 (AiGatewayError "Unauthorized").
+   */
+  CF_AIG_AUTH_TOKEN?: string;
 }
 
 /** Cache TTL values Anthropic supports on `cache_control`. */
@@ -184,18 +200,29 @@ export async function callAnthropic(
 
   const body = buildRequestBody(options);
 
+  // Build headers. The Gateway authentication token is layered on
+  // top of the Anthropic BYOK key — both must validate for the
+  // request to reach Anthropic. The token is only sent when present;
+  // when absent and the Gateway is in Authenticated mode, the request
+  // still goes out and Cloudflare returns HTTP 401 internalCode 2009
+  // (handled by classifyHttpError as auth_failed).
+  const headers: Record<string, string> = {
+    'x-api-key': env.ANTHROPIC_API_KEY,
+    'anthropic-version': '2023-06-01',
+    'Content-Type': 'application/json',
+    // Tells the Gateway + Anthropic to stream when set; harmless
+    // when stream=false because we still POST JSON.
+    Accept: options.stream ? 'text/event-stream' : 'application/json',
+  };
+  if (env.CF_AIG_AUTH_TOKEN) {
+    headers['cf-aig-authorization'] = `Bearer ${env.CF_AIG_AUTH_TOKEN}`;
+  }
+
   let res: Response;
   try {
     res = await fetch(url, {
       method: 'POST',
-      headers: {
-        'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-        // Tells the Gateway + Anthropic to stream when set; harmless
-        // when stream=false because we still POST JSON.
-        Accept: options.stream ? 'text/event-stream' : 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
       signal: options.signal,
     });

@@ -126,6 +126,25 @@ interface Env {
    */
   PADDLE_WEBHOOK_SECRET?: string;
   /**
+   * Anthropic API key — BYOK passthrough via Cloudflare AI Gateway
+   * for the Pro Plus LLM path (Sonnet 4.5). Generated at
+   * console.anthropic.com → API Keys → "Create Key". Workspace =
+   * VozClara. Set via `wrangler secret put ANTHROPIC_API_KEY`.
+   * When absent, callLLM with tier 'pro_plus' soft-falls-back to
+   * the Llama branch.
+   */
+  ANTHROPIC_API_KEY?: string;
+  /**
+   * Cloudflare AI Gateway authentication token. Required because
+   * vozclara-prod is configured as an Authenticated Gateway —
+   * defense-in-depth on top of the Anthropic key so a leaked
+   * provider key alone can't burn our Anthropic credits.
+   * Generated in Cloudflare Dashboard → AI Gateway → vozclara-prod
+   * → "Create authentication token" with Account / AI Gateway / Run
+   * permission. Set via `wrangler secret put CF_AIG_AUTH_TOKEN`.
+   */
+  CF_AIG_AUTH_TOKEN?: string;
+  /**
    * Sentry DSN for worker-side error capture. Same project as the
    * frontend; events get tagged environment=worker so the two
    * sources are filterable in the dashboard.
