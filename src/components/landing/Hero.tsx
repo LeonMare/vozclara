@@ -5,6 +5,7 @@ import { useLocale } from '../../lib/i18n';
 import { useMagneticHover } from '../../hooks/useMagneticHover';
 import { HeroPackPreview } from './HeroPackPreview';
 import { BrandMark } from '../BrandMark';
+import { track, Events } from '../../lib/analytics';
 
 /**
  * Hero — the entry point. Tightened above-the-fold so the headline,
@@ -35,6 +36,9 @@ export function Hero() {
       setError(t.invalidUrl);
       return;
     }
+    // Funnel: visitor pasted a valid YouTube URL on the Hero CTA.
+    // Top-of-funnel — no auth, no user context, just intent.
+    track(Events.PASTE_URL, { locale, source: 'hero' });
     navigate(`/new?v=${id}`);
   }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { track, Events } from '../lib/analytics';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
@@ -35,6 +36,11 @@ export function FounderPage() {
   const paddleLocale = (locale.slice(0, 2) as 'en' | 'es' | 'pt' | 'de');
 
   const handleCheckout = (): void => {
+    // Funnel: deepest pre-purchase signal. Track on intent (click)
+    // rather than on overlay-success because Paddle's resolution is
+    // best-effort + can be dropped by some adblockers; the click
+    // itself is the user signal we care about for funnel analysis.
+    track(Events.FOUNDER_CHECKOUT_OPENED, { locale: paddleLocale });
     // Fire-and-forget — the helper resolves once the overlay is
     // visible, but the UI doesn't need to wait. Errors land in
     // console + Paddle's own error overlay if domain approval is
@@ -47,6 +53,9 @@ export function FounderPage() {
   usePageHead({ title: labels.headTitle, description: labels.headDescription });
 
   useEffect(() => {
+    // Funnel: /founder route mounted — interest signal one step
+    // above the checkout click.
+    track(Events.VIEWED_FOUNDER, { locale: paddleLocale });
     let cancelled = false;
     void fetchFounderStatus().then((s) => {
       if (!cancelled) setStatus(s);
@@ -54,7 +63,7 @@ export function FounderPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [paddleLocale]);
 
   const claimed = status?.claimed ?? null;
   const max = status?.max ?? 100;

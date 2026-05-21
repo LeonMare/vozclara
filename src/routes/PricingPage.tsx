@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { PricingPreview, TrustSection } from '../components/landing/sections';
 import { usePageHead } from '../hooks/usePageHead';
+import { track, Events } from '../lib/analytics';
 
 /**
  * /pricing — standalone pricing page for external linking.
@@ -23,6 +25,14 @@ export function PricingPage() {
     title: pricingHeadTitle(locale),
     description: pricingHeadDescription(locale),
   });
+
+  // Funnel: /pricing route mounted — mid-funnel interest signal
+  // between the value moment (pack_generated) and the close-to-
+  // conversion click (founder_checkout_opened). Cookieless, no
+  // user identifier.
+  useEffect(() => {
+    track(Events.VIEWED_PRICING, { locale });
+  }, [locale]);
 
   return (
     <main id="main" className="bg-creme paper">

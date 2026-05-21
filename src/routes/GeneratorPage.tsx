@@ -10,6 +10,7 @@ import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
 import { fetchInsights, joinForLLM } from '../lib/insights';
 import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
+import { track, Events } from '../lib/analytics';
 import { nanoid } from '../lib/nanoid';
 import { indexPack } from '../lib/packIndex';
 import { audienceDefaultMode } from '../lib/audience';
@@ -264,6 +265,16 @@ export function GeneratorPage() {
         await savePack(pack);
         void indexPack(pack);
         targetPackId = id;
+        // Funnel: pack persisted to IndexedDB → the visitor has
+        // crossed the value moment. Includes mode + output language
+        // + genre as low-cardinality dimensions for Plausible's
+        // filter sidebar (avoids any user identifier).
+        track(Events.PACK_GENERATED, {
+          locale,
+          mode,
+          language: outputLang,
+          genre: pack.genre,
+        });
       }
 
       navigate(`/pack/${targetPackId}`);
