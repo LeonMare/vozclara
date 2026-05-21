@@ -494,14 +494,15 @@ Stack note for the curious:
 Built solo. Edited in public. https://github.com/LeonMare/vozclara
 ```
 
-**Tweet 4 — full surface + honest gaps:**
+**Tweet 4 — full surface, tier-aware:**
 ```
 Phase 2 also shipped: OAuth-protected /api/mcp/pro endpoint adds
 three library-scoped tools — search_my_library, ask_video,
 export_anki. PKCE S256, scopes library:read/write + profile.
 
-Still missing: Sonnet-tier behind MCP. Llama path only until the
-Pro-Plus wire-up — that's next.
+Tier routing: Free/Pro hit Llama 3.3 70B on Workers AI. Pro Plus
+upgrades to Sonnet 4.5 via Cloudflare AI Gateway — with an
+extended-thinking reasoning surface streamed back live.
 
 → https://smithery.ai/server/salvador7eon/vozclara
 ```
@@ -538,9 +539,10 @@ public on Smithery as `salvador7eon/vozclara`, scoring 84/100 in
 their automated audit. The OAuth-protected pro endpoint adds three
 library-scoped tools — search across saved packs, ask a specific
 video, export an Anki deck — gated on PKCE S256 + magic-link auth
-behind the scenes. What's left for the next sprint is the Sonnet
-4.5 path behind MCP for Pro Plus subscribers; Llama 3.3 70B on
-Workers AI is the current default.
+behind the scenes. Tier-aware routing is wired end-to-end: Free and
+Pro hit Llama 3.3 70B on Workers AI, while Pro Plus upgrades to
+Claude Sonnet 4.5 via Cloudflare AI Gateway, with the extended-
+thinking trace streamed back live as a separate reasoning surface.
 
 If you're building anything with Claude Code or running an MCP
 stack inside your team, I'd love your feedback on what's clunky.
@@ -576,14 +578,19 @@ and want to share what worked and what didn't.
   `library:write` / `profile`, refresh-token cached locally by
   `mcp-remote` after first browser auth
 
+**What's wired end-to-end now**
+- Tier routing reaches MCP. Free / Pro hit Llama 3.3 70B on Workers
+  AI; Pro Plus upgrades to Claude Sonnet 4.5 via the Cloudflare AI
+  Gateway path. Extended-thinking is enabled for Pro Plus with a
+  4096-token budget, and the thinking_delta stream surfaces as its
+  own region in the UI — a Manus-style reasoning trace before the
+  prose answer.
+
 **What I deferred**
-- Sonnet 4.5 isn't behind MCP yet. The Anthropic-via-AI-Gateway
-  client exists in the worker for the web `/api/insights` path; the
-  MCP route still uses Llama 3.3 70B on Workers AI. Tier-aware
-  routing is the next sprint.
-- Inline citations / timestamp hover-replay aren't in any tool
-  output yet — that's a signature feature in flight for the main
-  product launch, not the MCP layer.
+- Inline `[mm:ss]` citation chips with click-to-seek and hover
+  transcript preview exist on the web pack-view, but the MCP tool
+  output still returns plain prose. Threading the citations through
+  the MCP schema is the next sprint.
 
 **The honest trade-off**
 Supadata's `data.lang` came back as `de` on English videos because
