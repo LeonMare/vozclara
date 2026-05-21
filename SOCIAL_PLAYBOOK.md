@@ -1,214 +1,474 @@
-# SOCIAL PLAYBOOK — VozClara MCP Beat + Full Launch
+# SOCIAL PLAYBOOK — VozClara × LEON MARÉ
 
-> Updated: Do 21.5.2026, frischer Stand am Spätnachmittag.
+> Updated: Do 21.5.2026, Spätabend (4-Plattform-Vorbereitung).
 >
-> Posting Tactics + Pre-Flight Checklist + Cadence Map.
-> Drafts leben in `LAUNCH_POSTS.md`; dieses Dokument ist der
-> Operating Layer rundherum. Nichts hier posten ohne den Pre-Flight.
+> Operating Layer rundum `LAUNCH_POSTS.md`. Account-Setup,
+> Plattform-Strategie, Cadence, Pre-Flight. Nichts posten ohne §4.
+>
+> **Bestehende Accounts:** Discord, Reddit (Christian-Karma).
+> **Vorzubereiten:** Instagram, LinkedIn, X / Twitter, YouTube.
 
 ---
 
-## 1 · Account Setup (β — must happen BEFORE any post)
+## 1 · Account Setup — die 4 vorzubereitenden Plattformen
 
-Setup-Reihenfolge wenn LEON MARÉ noch keine Accounts hat:
+### Reihenfolge (1 Tag, ~3 Stunden gesamt)
 
-1. **X / Twitter** — Handle: `@leonmare_studio` (oder `@vozclara_app`,
-   was verfügbar ist). Bio max 160 chars, see template below.
-2. **LinkedIn** — Persönlicher Account von Christian + Company Page
-   "LEON MARÉ Studio". Company Page first, dann post.
-3. **Reddit** — Use existing Christian-Reddit-Karma-Account (#7).
-   Kein "vozclara_official" — Reddit detects shill instantly.
+1. **X / Twitter** — schnellster Setup, sofort posting-fähig
+2. **LinkedIn Company Page** (LEON MARÉ Studio) — danach das persönliche Profil von Christian darauf ausrichten
+3. **Instagram Business Account** — kann sofort eingerichtet, Inhalt kommt schrittweise
+4. **YouTube Channel** (LEON MARÉ) — Banner + Profilbild + Description; erstes Video kann später kommen
 
-### Bio Templates
+### Konsistenz über alle 4 Plattformen
 
-**X (160-char hard cap):**
+| Element | Wert |
+|---|---|
+| Handle (priorisiert) | `@leonmare.studio` → fallback `@vozclara.app` |
+| Profilbild | Lighthouse-Glyph (BrandMark aus repo: `public/brand-mark.svg`), navy auf creme |
+| Cover / Banner | „LEON MARÉ — knowledge layer over every video you watch" in Cormorant Garamond, navy/gold/creme |
+| Primärfarbe | navy `#0E1B33` |
+| Akzentfarbe | gold `#B89546` |
+| Hintergrund | creme `#F5EFE3` |
+| Schrift Display | Cormorant Garamond (italic für taglines) |
+| Schrift Body | Inter |
+| Link in Bio | `https://vozclara.app` |
+| Kontakt | `vozclara@leonmare.de` (legal) · `hola@vozclara.app` (product) |
+
+---
+
+### A · X / Twitter
+
+**Handle:** `@leonmare_studio` (priority) → `@vozclara_app` (fallback)
+
+**Bio (160-char hard cap):**
 ```
-Studio. Knowledge-layer over every video you watch. Built in public.
-VozClara → vozclara.app  ·  Smithery → @smithery_dev
+LEON MARÉ — studio building VozClara · knowledge layer over every
+video you watch · ES PT DE EN · Frankfurt · vozclara.app
 ```
 
-**LinkedIn Company Page (2200-char):**
+Bei knapp 160 chars Variante kürzen auf:
+```
+Studio. Knowledge layer over every video you watch.
+ES · PT · DE · EN · vozclara.app
+```
+
+**Location:** Frankfurt
+**Website:** `https://vozclara.app`
+**Header-Image (1500×500 px):** Cormorant Garamond Wordmark „LEON MARÉ" navy auf creme paper-grain, gold dot ornament, kein Stockfoto, kein Gradient. Asset-Path im Repo: `public/og-image.png` als Basis adaptieren (oder neu in 1500×500).
+
+**Pinned Tweet:**
+Der MCP-Beat-Thread (Post 5 aus `LAUNCH_POSTS.md`). Pinned bis Show-HN Tag, dann tausch gegen den HN-Thread.
+
+**Erste 7 Tage Setup-Posts:**
+- Tag 0 (Setup): Account aktiv, Pinned-Tweet noch leer → 1 Sentence-Post „studio just opened a small door here. more soon.", ohne Link.
+- Tag 1: VozClara Sample-Pack Screenshot mit 1 Sentence Caption „a knowledge pack, designed."
+- Tag 2: Editorial Quote-Card aus VozClara (downloadbar via `/api/quote-card`) als Image-Tweet mit 1-line Caption
+- Tag 3-7: MCP-Beat-Thread (siehe §3)
+
+---
+
+### B · LinkedIn
+
+**Setup-Reihenfolge:**
+1. Company Page „LEON MARÉ Studio" zuerst erstellen
+2. Christians persönliches Profil aktualisieren (Headline + About + Featured + Experience)
+3. Posts laufen aus dem persönlichen Profil mit @LEON MARÉ Studio Tag
+
+#### B.1 Company Page
+
+**Name:** LEON MARÉ Studio
+**Tagline (220 chars):**
+```
+Studio building tools at the intersection of language, memory, and
+the videos we watch. First product: VozClara.
+```
+**Industry:** Software Development
+**Company size:** 1 employee
+**Founded:** 2025
+**Specialties:** AI, Knowledge Management, Language Learning, MCP, Editorial Design
+**Website:** `https://vozclara.app`
+**Headquarters:** Frankfurt, Germany
+
+**About (2200-char):**
 ```
 LEON MARÉ is a studio building tools at the intersection of language,
 memory, and the videos we watch.
 
-Our first product, VozClara, turns any YouTube video into a
-structured Knowledge Pack — summary, key ideas, glossary, quiz —
-across English, Spanish, German, and Portuguese. The pack is yours;
-the source is one click away. The kind of artefact a magazine editor
-would produce, except generated in 30 seconds and re-readable in 90.
+Our first product, VozClara, turns any YouTube video into a structured
+Knowledge Pack — summary, key ideas, glossary, quiz — across English,
+Spanish, German, and Portuguese. The pack is yours; the source is one
+click away. The kind of artefact a magazine editor would produce,
+except generated in 30 seconds and re-readable in 90.
 
 We work editorial-first. The brand DNA — navy, gold, creme paper —
 is borrowed from twentieth-century European publishing, because the
 problem we're solving (how to retain the ideas from things you
 watched once) is older than the internet.
 
-Built solo, in public, by Christian Gulm in Frankfurt.
+What's shipped today:
+· Multilingual Knowledge Packs across ES / PT / DE / EN
+· An MCP-callable server on Smithery (anonymous + OAuth-protected)
+· FSRS-scheduled Anki export
+· Inline timestamp citations with click-to-seek
+· Editorial pack covers, designed per genre and language
 
-vozclara.app  ·  github.com/LeonMare/vozclara  ·  hello@leonmare.de
+Built solo, in public, by Christian José Gulm in Frankfurt.
+
+vozclara.app  ·  github.com/LeonMare/vozclara  ·  leonmare.de
 ```
 
+**Logo (300×300 px):** Lighthouse-Glyph navy auf creme
+**Cover Image (1128×191 px):** Wordmark + Tagline, gleiche Editorial-Linie wie X-Header
+**Custom URL:** `linkedin.com/company/leonmare-studio`
+
+#### B.2 Christian's persönliches Profil
+
+**Headline:**
+```
+Studio founder · Building VozClara at LEON MARÉ · Frankfurt
+```
+
+**About (2600-char):**
+```
+Solo founder building tools at the intersection of language, memory,
+and the videos we watch.
+
+Currently shipping VozClara — multilingual YouTube → Knowledge Packs
+across Spanish, Portuguese, German, English. Built editorial-first
+under the LEON MARÉ brand from Frankfurt.
+
+What I'm working on right now (Mai 2026):
+
+· Multilingual Knowledge Packs from any YouTube URL — paste,
+  generate, re-read in 90 seconds
+· Anki / Obsidian / Notion-friendly exports, cookieless analytics,
+  EU-AI-Act-compliant by design
+· MCP-callable from Claude / Cursor / Windsurf via Smithery
+· Pro Plus tier on Anthropic Sonnet 4.5 with extended-thinking
+  reasoning surfaced as a separate live region in the UI
+
+Working out loud. Code on GitHub, weekly studio notes on the
+website, and the rare honest postmortem when something breaks in
+production.
+
+If you build with Claude Code or run an MCP stack inside your team,
+I'd love your feedback on the tool. Reach out — vozclara@leonmare.de.
+
+→ vozclara.app
+→ github.com/LeonMare/vozclara
+```
+
+**Featured-Section (in dieser Reihenfolge):**
+1. `vozclara.app` link mit OG-Preview
+2. `smithery.ai/server/salvador7eon/vozclara` MCP-Server-Link
+3. `github.com/LeonMare/vozclara` Repo-Link
+4. Best-performing LinkedIn-post nach 30 days re-pin
+
+**Experience-Eintrag:**
+- Role: Founder
+- Company: LEON MARÉ Studio (verlinkt zu Company Page)
+- Start: Januar 2025 (oder passendes Datum)
+- Description: 3 Sätze, gleicher Tone wie About
+
 ---
 
-## 2 · Posting Cadence (MCP Beat — 7-day arc)
+### C · Instagram
 
-The MCP Beat is a **distribution wave**, not a launch. The full
-Show-HN moment is reserved for Woche 3 after content + 50-pack
-seeding lands.
+**Handle:** `@leonmare.studio` (priority) → `@vozclara.app` (fallback)
+**Account-Type:** Business Account (nicht Creator) — gibt dir Insights + Link-in-Bio-Tools
 
-| Day | Slot | Platform | Post | Notes |
+**Bio (150-char hard cap):**
+```
+LEON MARÉ — studio in Frankfurt
+Knowledge layer over every video you watch
+ES · PT · DE · EN
+↓ vozclara.app
+```
+
+**Category:** Software Company
+**Profilbild:** Lighthouse-Glyph navy auf creme (gleich wie LinkedIn)
+**Link in Bio:** `https://vozclara.app`
+**Story-Highlights (zu erstellen, Reihenfolge):**
+1. „What is it?" — 3-frame story, screenshots vom Sample-Pack
+2. „How it works" — 4-frame story, paste-to-pack flow
+3. „MCP" — 2-frame story, claude calling vozclara
+4. „Press" — 3-frame story, mention-from-others (wenn da sind)
+
+#### Content-Säulen Instagram (3 Pillars, 60/30/10)
+
+**60% — Pack-Reveals (Reels, 15-30 s)**
+Format: Editorial typewriter-caret-animation auf creme paper, ein Knowledge-Pack-Excerpt langsam reveal. Audio: ambient piano oder silence. No-faces. Brand-consistent.
+
+Caption-Template:
+```
+A pack on [Title] · [Creator]
+
+[1-Sentence Takeaway, italic in Cormorant feel]
+
+Generate yours from the same video → vozclara.app
+
+#KnowledgePack #VozClara #LanguageLearning
+```
+
+**30% — Quote-Cards (Carousels, 6-8 slides)**
+Format: editorial pull-quotes aus generierten Packs. Genau das was `/api/quote-card` raus gibt, in 1080×1080 PNG. Carousel: 1 hero-slide + 4-6 quote-slides + 1 CTA-slide.
+
+**10% — Studio-Process (Reels, 20-40 s)**
+Format: timelapse von Code-/Design-Sessions, terminal-tape, editorial design moments. Niemals face-to-camera (LEON MARÉ ist studio, nicht personal brand).
+
+**Frequency:** 2-3 Posts/Woche. Niemals täglich (overuse killt editorial register).
+
+**Hashtags:** Pro Post max 12, mix aus broad (#LanguageLearning #StudyWithMe #Anki) + niche (#KnowledgeManagement #LearnGerman #LearnSpanish) + brand (#VozClara #LeonMareStudio). Hashtags GEHÖREN in den ersten Kommentar, NICHT in die Caption (cleaner editorial look).
+
+---
+
+### D · YouTube
+
+**Channel Name:** LEON MARÉ Studio
+**Handle:** `@leonmare.studio` → fallback `@vozclara`
+**Channel-Type:** Brand-Channel (nicht personal — connectable to Google Workspace later)
+
+**Channel Description (1000 char):**
+```
+LEON MARÉ is a studio building tools at the intersection of language,
+memory, and the videos we watch.
+
+Our first product, VozClara, turns any YouTube video into a structured
+Knowledge Pack — summary, key ideas, glossary, quiz — across English,
+Spanish, German, and Portuguese. The pack is yours; the source is
+one click away.
+
+This channel is the studio's quiet companion. Behind-the-scenes notes
+on what we build, occasional pack-revealing demos, and the rare
+editorial essay on the videos worth re-reading.
+
+→ Try VozClara: vozclara.app
+→ MCP server: smithery.ai/server/salvador7eon/vozclara
+→ Open source: github.com/LeonMare/vozclara
+→ Contact: hola@vozclara.app
+```
+
+**Channel Art / Banner (2560×1440 px, safe-zone 1546×423):**
+Wordmark „LEON MARÉ" auf creme paper-grain, gold dot, „studio · Frankfurt" als kleiner sub-claim. Gleiche Editorial-Familie wie LinkedIn + X Header.
+
+**Profilbild:** Lighthouse-Glyph (gleich wie überall)
+
+**About-Tab → Links-Section (5 max):**
+1. VozClara — vozclara.app
+2. MCP Server (Smithery)
+3. GitHub
+4. X / Twitter
+5. LinkedIn (Company Page)
+
+#### Initial-Setup (vor erstem Video)
+
+- [ ] Channel-Trailer hochladen (kann später kommen, NICHT blocker)
+- [ ] 3 Playlists erstellen (leer ok):
+  1. **„Demos"** — Demo-Videos der Pack-Generation (Task #29)
+  2. **„Reading Notes"** — Video-Versionen der `/notes/`-Essays (Task #13)
+  3. **„Studio Notes"** — Build-in-public-Updates
+- [ ] „Featured Channels" leer lassen (kommt später wenn Partnerships)
+- [ ] Branding-Section: Watermark hochladen (Lighthouse-Glyph 150×150 px transparent PNG)
+- [ ] Notification settings: erlauben, dass Subs notification kriegen
+
+#### Content-Strategie (Phase 1)
+
+**Pillar 1 — Pack-Generation-Demos** (Task #29, 3 Videos):
+- Spanisch → Deutsch Pack walkthrough (4-5 min)
+- Englisch → Portugiesisch Quiz-Demo (3-4 min)
+- Lex-Fridman-Episode → Anki-Export (5-6 min)
+
+**Pillar 2 — Reading Notes als Video-Essays** (~6-8 min):
+Voice-over auf editorial typography animation. 1 video pro `/notes/`-Page. Skript-Basis ist der Essay-Text aus `src/data/creatorNotes.ts`. Faceless, voice-over auf typewriter visuals.
+
+**Pillar 3 — Studio Notes** (~3-5 min):
+Build-in-public update — was wurde diese Woche gebaut, was ist gelernt worden, was kommt nächste Woche. Faceless, screen-recording + voice-over.
+
+**Frequency Phase 1:** 1 Video/Woche. Monat 2-3: 2/Woche wenn Reading-Notes-Cluster wächst.
+
+**SEO-Optimierung pro Video:**
+- Title: konkret + 60 chars („How VozClara turns Huberman's sleep episode into a 90-second pack")
+- Description: erste 2 Zeilen = USP + Link zum betroffenen `/notes/`-Page
+- Tags: 8-12, niche-first (vozclara, knowledge pack, FSRS, Anki, multilingual learning)
+- Custom Thumbnail: editorial typography auf creme paper, KEIN „arrow + face + shocked-expression"-Template
+- End Screen: card zu vozclara.app + Subscribe-CTA
+
+---
+
+## 2 · Posting-Strategie pro Plattform
+
+Eine Plattform hat einen primären Job. Das Playbook drüber zu legen verhindert „post the same thing everywhere"-Falle.
+
+| Plattform | Primärer Job | Sekundärer Job | Audience |
+|---|---|---|---|
+| **X / Twitter** | AI-Builder-Distribution (MCP, Claude Code, Anthropic Community) | Daily presence + thought-leadership | Tech / agent-builder |
+| **LinkedIn** | Studio-Authority (LEON MARÉ als ernsthafter Player) | B2B / Partnership-Reach | Founder + edtech + enterprise |
+| **Instagram** | Visual-Brand-Building + Consumer-Acquisition | Editorial DNA showcase | Language-learners + students |
+| **YouTube** | SEO-Authority + Long-Form-Education | Demo-Repository | Search-intent visitors |
+| Reddit (existing) | Deep-conversation + Community-Trust | — | Niche power-users |
+| Discord (existing) | Community + Support | — | Active users |
+
+**Cross-Posting-Regel:** Nie wortwörtlich dupizieren. Format pro Plattform.
+Ein Pack-Reveal-Reel auf Instagram wird auf X als 2-Tweet-Thread mit Screenshot, auf LinkedIn als Carousel mit 4 Slides, auf YouTube als 30-Sekunden-Short.
+
+---
+
+## 3 · Cadence Map
+
+### 3.1 MCP Beat (Woche 1 — der jetzige Distribution-Push)
+
+Zwei Posts, 48-72h gap. Andere Plattformen laufen parallel als brand-build (siehe §3.3).
+
+| Tag | Slot | Plattform | Was | Quelle |
 |---|---|---|---|---|
-| **Tag 0** (Mo) | 14:00 UTC | X / Twitter | Post 5 (Thread) | Hook → 2 → 3 → 4. Pin tweet 1. |
-| **Tag 0** (Mo) | 14:30 UTC | Smithery | Re-share own page | Quick QT of tweet 1. |
-| **Tag 1** (Di) | 17:00 UTC | LinkedIn | Post 6 (Long-form) | From personal account, tag Company Page. |
-| **Tag 3** (Do) | 18:00 UTC | r/ClaudeAI | Post 7 (Reddit) | Mid-week, Thursday is the highest-engagement day. |
-| **Tag 7** (Mo+1) | — | Echo | LinkedIn dropdown to "What I learned" follow-up | Reply-thread on first LinkedIn post. |
+| Tag 0 (Mo) 14:00 UTC | Primary | X / Twitter | MCP-Beat-Thread | LAUNCH_POSTS Post 5 |
+| Tag 0 (Mo) 14:30 UTC | Echo | X (Smithery RT) | quote-tweet smithery announcement | inline |
+| Tag 3 (Do) 18:00 UTC | Primary | Reddit r/ClaudeAI | MCP-Beat-Post (technical builders-to-builders) | LAUNCH_POSTS Post 7 |
 
-**Forbidden combos this week:**
-- ❌ r/mcp + r/Anthropic (same audience, coordinated push reads as
-  shill — pick ONE and pick r/ClaudeAI instead, it's the highest-
-  signal of the three).
-- ❌ Show HN slot (reserve für Woche 3 full launch — second Show HN
-  inside a month gets the post flagged).
+LinkedIn-Long-Form (Post 6) → verschoben auf Woche 3 (siehe §3.2).
+Instagram + YouTube → laufen als Brand-Build-Drumbeat (§3.3).
 
----
+### 3.2 Full Launch (Woche 3 — Show HN + voll public)
 
-## 3 · Pre-Flight Checklist (run BEFORE every post)
+Die volle Distribution-Welle. Zeitplan ist relativ zum Show-HN-Tag.
 
-Run all five every time. Five minutes total. Saves the launch.
+| Tag | Slot | Plattform | Was |
+|---|---|---|---|
+| Tag 0 09:00 UTC | Primary | Hacker News (Show HN) | volle Produkt-Story |
+| Tag 0 14:00 UTC | Echo | X / Twitter | HN-Thread quote-tweeted + neuer launch-thread |
+| Tag 0 17:00 UTC | Primary | Product Hunt | volle PH-Launch (Trigger ~Mitternacht PT) |
+| Tag 1 09:00 UTC | Primary | LinkedIn | Long-form Studio-Milestone-Post (Post 6) |
+| Tag 1 14:00 UTC | Primary | r/anki | Anki-Export-Fokus, technical builders-to-builders |
+| Tag 2 17:00 UTC | Primary | r/languagelearning | Multilingual-Fokus, consumer-tone |
+| Tag 3 18:00 UTC | Primary | YouTube | Demo-Video #1 wird public + LinkedIn/X-shared |
+| Tag 4 14:00 UTC | Primary | Instagram | Pack-Reveal-Reel zum Launch + Carousel mit Top-3-Features |
+| Tag 7 | Echo | X | „one week in" reflection thread |
 
-1. **[ ] Read the post aloud once.** German cadence vs English
-   cadence — wenn beim Lesen ein Komma fehlt, fehlt es auch beim
-   Leser.
-2. **[ ] Verify every URL.** Click each link in the draft → confirm
-   it loads → confirm the destination is the one you meant.
-3. **[ ] Test the Smithery link with the actual MCP client.**
-   Open Claude Code → install via Smithery → call
-   `vozclara_generate_pack(url, "de", "shallow")` → confirm a pack
-   comes back. If it doesn't, do not post.
-4. **[ ] Check vozclara.app is up.** A 30-second `curl -I
-   https://vozclara.app/api/health` before posting catches any
-   silent regression.
-5. **[ ] Pre-emptive reply queued.** Have 2–3 likely-question replies
-   ready in a draft doc — "What's your stack?", "How does pricing
-   work?", "Is the source open?". First-hour engagement is when
-   the algorithm decides.
+### 3.3 Brand-Build-Drumbeat (laufend, ab heute)
+
+Unabhängig vom MCP-Beat / Full-Launch. Hält die Plattformen lebendig.
+
+| Plattform | Frequenz | Format |
+|---|---|---|
+| X / Twitter | 1× / Tag (light) + 1× / Woche thread | screenshot · short observation · feature note |
+| LinkedIn | 1-2× / Woche micro-post + 1× / Monat long-form | build-in-public learning · studio-process insight |
+| Instagram | 2-3× / Woche | reel (pack-reveal) + carousel (quote-cards) + still (studio-process) |
+| YouTube | 1× / Woche ab Tag des Channel-Setups | demo · reading note · studio note |
 
 ---
 
-## 4 · Engagement Playbook (first 4 hours after posting)
+## 4 · Pre-Flight Checklist (vor JEDEM Post)
 
-Algorithms reward early signal. Time-box this aggressively.
+5 Punkte. Fünf Minuten. Saves the launch.
 
-### X / Twitter (Tag 0)
-- 0:00 — Post the thread, pin tweet 1.
-- 0:05 — Reply to tweet 1 with the Smithery install link as a
-  quote-tweet of @smithery_dev's most recent pin (if exists).
-- 0:30 — Check replies, answer top 3 questions with substance.
-- 1:00 — DM 3 people from the agent-builder community asking for
-  technical feedback (NOT for shares).
-- 2:00 — If engagement is alive, post a fifth "bonus" tweet with
-  one screenshot of the thinking-trace stream in action.
-- 4:00 — Stop refreshing. Algorithm has made its decision.
-
-### LinkedIn (Tag 1)
-- 0:00 — Post.
-- 0:05 — Comment on your own post with the "tagged you because" 3
-  most-relevant connections (peer founders, Anthropic alumni if
-  any).
-- 0:30 — Reply to every comment in the first hour with one
-  question back (drives reply-depth, which LinkedIn rewards).
-- 2:00 — Re-share to LEON MARÉ Studio Company Page.
-- 24:00 — Comment on 5 adjacent LinkedIn posts in the same
-  topic-cluster (not promotional — substantive).
-
-### Reddit (Tag 3)
-- 0:00 — Post.
-- 0:05 — DO NOT upvote your own post (Reddit detects and shadow-
-  bans).
-- 0:30 — Reply to every comment with at least 3 sentences. Never
-  one-line acks.
-- 2:00 — If a question is asked you can't answer, say "I don't
-  know yet — I'll dig and come back." Then actually come back.
-- 24:00 — Cross-post permission: r/SideProject is safe IF the post
-  has positive net-karma after Tag 3+24h. r/programming is risky;
-  needs higher karma threshold.
+1. **[ ] Read the post aloud once.** Deutsche und englische Kadenz unterscheiden sich — wenn beim Lesen ein Komma fehlt, fehlt es auch beim Leser.
+2. **[ ] Verify every URL.** Jeden Link klicken → Ziel laden → bestätigen.
+3. **[ ] Test the Smithery link mit echtem MCP-Client.** Claude Code → install via Smithery → `vozclara_generate_pack(url, "de", "shallow")` → confirm pack kommt zurück. Wenn nicht, nicht posten.
+4. **[ ] vozclara.app health-check.** `curl -I https://vozclara.app/api/health` → 200. 30 Sekunden.
+5. **[ ] 2-3 wahrscheinliche Antwort-Drafts queued.** „What's your stack?", „How does pricing work?", „Is it open source?". First-hour engagement entscheidet.
 
 ---
 
-## 5 · Hashtag + @-Mention Strategy
+## 5 · Engagement-Playbook (erste 4 Stunden pro Plattform)
 
-### X
-- **Mentions (Tweet 1):** `@smithery_dev` (cross-promotion path)
-- **Mentions (Tweet 3, technical reveal):** `@cloudflaredev`
-  `@AnthropicAI` (rate-limited — only mention if real reach)
-- **Hashtags:** None on tweet 1 (lowers initial-tweet reach in
-  current algorithm). Light use on tweet 3: `#MCP` only.
+Algorithmen belohnen frühes Signal. Time-box aggressiv.
+
+### X / Twitter
+- 0:00 — Thread post + tweet 1 pinnen
+- 0:05 — quote-tweet @smithery_dev recent pin (wenn vorhanden)
+- 0:30 — Top-3-Replies mit Substanz beantworten
+- 1:00 — 3 DMs an Agent-Builder-Community asking for technical feedback (NICHT for shares)
+- 2:00 — Wenn engaged: bonus tweet 5 mit screenshot der thinking-trace
+- 4:00 — Stop refreshing. Algorithm hat entschieden.
 
 ### LinkedIn
-- **No hashtags above the fold.** Move them to a single line at the
-  bottom: `#AI #BuildInPublic #LanguageLearning #Anthropic`
-- **@-mention LEON MARÉ Studio Company Page** so it cross-posts.
+- 0:00 — Post
+- 0:05 — Eigener Kommentar mit 3 relevant tagged connections
+- 0:30 — Jedem Reply in erster Stunde mit Question-back antworten (LinkedIn rewards reply-depth)
+- 2:00 — Re-share auf LEON MARÉ Company Page
+- 24:00 — 5 adjacent posts kommentieren (substantive, nicht promo)
 
-### Reddit r/ClaudeAI
-- **No flair gaming.** Use "Question" or "Discussion" flair as
-  appropriate. Self-promotional flair gets removed.
-- **No hashtags. No @-mentions.** Reddit doesn't index either.
+### Instagram
+- 0:00 — Post
+- 0:05 — Story re-share mit „new post" sticker
+- 0:30 — Jeden Comment in erster Stunde beantworten (drives reach)
+- 2:00 — DMs erlauben + reply to follower-DMs
+- 24:00 — Re-share into a Highlight wenn passt
 
----
+### YouTube
+- 0:00 — Video live + heart pinned comment with link in bio
+- 0:05 — Cross-post zu X + LinkedIn + Discord
+- 1:00 — Jeden Comment in erster Stunde beantworten
+- 24:00 — Update End-Screen wenn nötig
 
-## 6 · Failure-State Replies (have these ready)
-
-Pre-drafted replies for the three most-likely critical comments.
-Each is one paragraph, calm, no defensiveness.
-
-### "This is just a YouTube transcript tool with a coat of paint."
-```
-Fair pushback. The transcript layer is one of about twelve moving
-parts — what makes a Knowledge Pack different from a transcript is
-the structure (mode-specific outputs: Learn / Brief / Study /
-Creator), the cross-lingual generation (Spanish source → German
-glossary + quiz), the citation chips with click-to-seek, and the
-Anki export. Transcripts are a commodity; the editorial layer on
-top is where the work lives. Try the sample pack at
-vozclara.app/pack/sample and see if you still think coat of paint.
-```
-
-### "Why not just use [Notion AI / Reader / NotebookLM]?"
-```
-Honest answer: for single-source linear reading, NotebookLM is
-genuinely strong and free. VozClara's bet is on the bits NotebookLM
-doesn't do — multilingual generation (paste an English video, get a
-German pack), the Anki export with proper FSRS scheduling, the
-inline timestamp citations that link back to the exact source
-moment, and the MCP layer so your existing agent stack can call it.
-If you mainly want to chat with one PDF, NotebookLM wins. If you
-want a library of multilingual study packs that lives outside
-Google's ecosystem, that's the gap I'm trying to fill.
-```
-
-### "Privacy / GDPR concerns?"
-```
-Reasonable to ask. The full subprocessor list is at
-vozclara.app/privacy. Short version: Cloudflare hosts the infra,
-Supadata pulls the public YouTube transcript, Anthropic processes
-the prompt (no training on inputs, contractual), Resend sends the
-transactional emails, Paddle handles the payment as Merchant-of-
-Record. Cookieless analytics via Plausible. Account deletion sweeps
-sessions + votes + reviews per GDPR Art 17 — this is enforced in
-the worker, not just documented. EU AI Act Art 50 disclosure
-appears on first pack-generate.
-```
+### Reddit (existing)
+- 0:00 — Post
+- 0:05 — NICHT eigenen Post upvoten (Reddit detected → shadowban)
+- 0:30 — Jeden Comment mit min 3 Sätzen beantworten, nie one-liner
+- 2:00 — Wenn Frage nicht beantwortbar: „Don't know yet, will dig and come back." Dann tatsächlich zurückkommen.
 
 ---
 
-## 7 · Post-Posting Tracking
+## 6 · Hashtag + @-Mention Strategie pro Plattform
 
-After each post, fill this into `LAUNCH_PLAN.md §32` (create section
-if missing):
+| Plattform | Hashtags | Mentions |
+|---|---|---|
+| **X** | Tweet 1: keine (kills initial reach). Tweet 3: `#MCP` only | `@smithery_dev` (cross-promo), `@cloudflaredev`, `@AnthropicAI` sparsam |
+| **LinkedIn** | Above fold: keine. Footer: `#AI #BuildInPublic #LanguageLearning #Anthropic` | Tag eigene Company Page „LEON MARÉ Studio" |
+| **Instagram** | Im ersten Kommentar (nicht caption), max 12. Mix: `#LanguageLearning #Anki #KnowledgeManagement #StudyTok #VozClara #LeonMareStudio` | `@anthropic` (sparsam), `@claudeai` (Lex Fridman / Huberman wenn note über sie geht) |
+| **YouTube** | Tags-field: 8-12. Im Description erste Zeile: `#VozClara #KnowledgePack` | None in title, @-mentions im Description-Body wenn relevant |
+
+---
+
+## 7 · Failure-State Replies (pre-drafted, bereit halten)
+
+Drei häufigste kritische Comments, jeweils ein Absatz, ruhig, keine Defensiveness.
+
+### „This is just a YouTube transcript tool with a coat of paint."
+```
+Fair pushback. Der Transkript-Layer ist ein von zwölf Bewegteilen — was
+einen Knowledge Pack vom Transkript unterscheidet ist die Struktur
+(mode-specific outputs: Learn / Brief / Study / Creator), die
+cross-lingual Generation (Spanisches Video → Deutsches Glossar + Quiz),
+die Citation-Chips mit Click-to-Seek und der Anki-Export. Transkripte
+sind Commodity; der editorial Layer darauf ist wo die Arbeit liegt.
+Probier den Sample-Pack auf vozclara.app/pack/sample und schau ob du
+es immer noch als coat-of-paint siehst.
+```
+
+### „Why not just use [Notion AI / Reader / NotebookLM]?"
+```
+Ehrliche Antwort: für single-source linear reading ist NotebookLM
+wirklich gut und kostenlos. VozClara's Bet liegt auf den Bits, die
+NotebookLM nicht macht — multilinguale Generation (paste englisches
+Video, get a German pack), Anki-Export mit FSRS-Scheduling, die inline
+timestamp citations die back zum exact source-moment linken, und der
+MCP-Layer, sodass dein existing agent stack es callen kann. Wenn du
+hauptsächlich mit einem PDF chatten willst, gewinnt NotebookLM.
+Wenn du eine Library von multilingualen study packs willst, die
+außerhalb des Google-Ökosystems lebt, ist das die Lücke die ich fülle.
+```
+
+### „Privacy / DSGVO concerns?"
+```
+Reasonable Frage. Full subprocessor-Liste auf vozclara.app/privacy.
+Short version: Cloudflare hostet die Infra, Supadata zieht das public
+YouTube-Transkript, Anthropic prozessiert den Prompt (kein Training auf
+Inputs, contractual), Resend sendet die transactional Emails, Paddle
+handhabt den Payment als Merchant-of-Record. Cookieless analytics via
+Plausible. Account-Deletion sweeps sessions + votes + reviews per
+DSGVO Art 17 — das ist im Worker enforced, nicht nur dokumentiert.
+EU AI Act Art 50 disclosure erscheint bei first pack-generate.
+```
+
+---
+
+## 8 · Post-Posting Tracking
+
+Nach jedem Post in `LAUNCH_PLAN.md §32` (Sektion erstellen wenn fehlt):
 
 ```
-Post: <number + platform>
+Post: <Nummer + Plattform>
 Posted: <ISO timestamp>
 Engagement (24 h):
   - Impressions: …
@@ -216,30 +476,42 @@ Engagement (24 h):
   - Shares / RTs: …
   - Net karma (Reddit only): …
   - Clicks to vozclara.app (Plausible): …
-Top question asked: <one line>
+Top question asked: <eine Zeile>
 Sentiment: positive / mixed / negative
-Lesson for next post: <one line>
+Lesson for next post: <eine Zeile>
 ```
 
-Three datapoints across the MCP Beat are enough to calibrate the
-Show-HN tone three weeks later.
+Drei Datapoints aus dem MCP-Beat reichen, um den Show-HN-Tone drei Wochen später zu kalibrieren.
 
 ---
 
-## 8 · The Brand-Voice Guardrail
+## 9 · Brand-Voice-Guardrail
 
-Re-read this paragraph before EVERY post. It is the LEON MARÉ
-register — drift catches up faster than you'd think.
+Re-read VOR jedem Post:
 
-> We write like a Sunday-magazine editor, not a startup founder.
-> Short sentences. One claim per paragraph. Specifics over
-> superlatives. Numbers when we have them, "I don't know" when we
-> don't. No emojis except the brand wordmark glyph. Never
-> "revolutionary", "game-changing", "AI-powered". The product is
-> the proof; the voice is the studio.
+> Wir schreiben wie ein Sunday-Magazine-Editor, nicht wie ein Startup-Founder.
+> Kurze Sätze. Eine Behauptung pro Absatz. Spezifika über Superlative.
+> Zahlen wenn wir sie haben, „weiß ich noch nicht" wenn nicht. Keine
+> Emojis außer dem Brand-Wordmark-Glyph. Nie „revolutionary",
+> „game-changing", „AI-powered". Das Produkt ist der Beweis; die
+> Stimme ist das Studio.
 
 ---
 
-*This playbook lives in the repo so it travels with the launch.
-Update §2 (cadence) as posts land; rotate stale templates in §6
-every quarter. The pre-flight in §3 is non-negotiable.*
+## 10 · Daily-Check-Routine (10 Minuten morgens)
+
+Wenn alle 4 Plattformen aktiv sind, jeden Morgen:
+
+1. **[ ] X notifications**: 2 Min — auf @-mentions reagieren, DMs nur wenn relevant
+2. **[ ] LinkedIn notifications**: 2 Min — Post-Comments + Connection-Requests
+3. **[ ] Instagram DMs + Comments**: 2 Min — last 24h Comments + DMs
+4. **[ ] YouTube Comments**: 2 Min — last 24h Comments auf jeden Video
+5. **[ ] Plausible Dashboard**: 2 Min — gestern's traffic + welcher channel hat gebracht
+
+10 Minuten Wartung. Wenn länger als 15 Min: Routine kaputt, recalibrate.
+
+---
+
+*Dieses Playbook lebt im Repo so es mit dem Launch reist. §3 (Cadence)
+updaten as posts land. §6 (Failure-States) rotieren quarterly. §4
+(Pre-Flight) ist non-negotiable.*
