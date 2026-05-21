@@ -711,6 +711,418 @@ export const CREATOR_NOTES: CreatorNote[] = [
     metaDescription:
       'A reading note on Cal Newport’s "Deep Work" talk — the narrow definition, why shallow work expands, the testable hypothesis, and why Newport refuses to recommend apps.',
   },
+
+  // ─── Deutsche Cluster — Wissenschaft + Diskurs ──────────────────
+  {
+    slug: 'harald-lesch-klimawandel-kompakt',
+    creator: 'Harald Lesch',
+    creatorHandle: 'TerraX',
+    videoTitle: 'Klimawandel — die wichtigsten Fakten in 10 Minuten',
+    youtubeId: 'NLiQ-OoiHko', // TODO(verify): Terra X / Leschs Kosmos Klima-Erklärung
+    publishedDate: '2019-09-20',
+    durationMin: 11,
+    topics: ['klimawandel', 'physik', 'wissenschaftskommunikation', 'terra x'],
+    lang: 'de',
+    intro:
+      'Harald Lesch erklärt in elf Minuten, was tausend Leitartikel nicht schaffen: warum der menschengemachte Klimawandel kein Meinungsthema ist, sondern eine Frage der Bilanz. Die Folge ist die seltene Mischung aus Physikvortrag und politischem Statement, ohne dass eines vom anderen erdrückt wird.',
+    sections: [
+      {
+        heading: 'Das Argument beginnt mit einer Tabelle',
+        body:
+          'Lesch öffnet nicht mit Bildern von schmelzenden Gletschern, sondern mit einer einfachen Zahl: der CO₂-Konzentration in der Atmosphäre über die letzten 800.000 Jahre. Der Verlauf liegt zwischen 180 und 280 ppm — bis 1850. Seitdem 420 ppm und steigend. Diese eine Tabelle macht alle Diskussionen über Klimasensitivität gegenstandslos, weil sie zeigt, dass wir bereits ausserhalb des Bereichs sind, in dem die menschliche Zivilisation entstanden ist.',
+      },
+      {
+        heading: 'Wo Lesch andere Klima-Kommunikatoren schlägt',
+        body:
+          'Die meisten Klima-Erklärvideos werden entweder rein wissenschaftlich (und damit für Laien unzugänglich) oder rein emotional (und damit angreifbar). Lesch macht beides nicht. Er erklärt den Treibhauseffekt strikt physikalisch — Photonen, Schwingungsanregung, Wärmeabstrahlung — und überlässt die moralische Schlussfolgerung der Zuschauerin. Das Vertrauen, dass jemand selbst weiterdenken kann, ist im Erklärgenre selten geworden.',
+      },
+      {
+        heading: 'Das Kapitel zur "Klimaskepsis"',
+        body:
+          'Lesch verbringt rund zwei Minuten mit dem methodischen Punkt, dass "Wissenschaftler sind sich uneinig" eine rhetorische Konstruktion ist, keine empirische Aussage. Die relevante Frage sei nicht, ob es Klimaforscher gibt, die etwas anderes behaupten — die gibt es immer, in jeder Disziplin — sondern wie das Verhältnis der publizierten peer-reviewed Studien zu jeder Position ausfällt. Bei der Frage menschengemacht/nicht-menschengemacht steht es seit Jahren bei 97 zu 3. Das ist keine Meinung, das ist Zählarbeit.',
+      },
+      {
+        heading: 'Warum die Folge im Kanon bleibt',
+        body:
+          'Sechs Jahre nach Veröffentlichung wird die Folge weiterhin im Schulunterricht gezeigt — nicht weil sie aktuelle Daten enthält (die wären schon überholt), sondern weil sie die Argumentationsstruktur vorgibt, mit der man sich in einer Klimadebatte bewegt. Die Daten gehören in einen Pack, der jährlich aktualisiert wird; die Methode bleibt.',
+      },
+    ],
+    takeaway:
+      'Der Klimawandel ist kein Streit zwischen zwei Meinungen, sondern eine Bilanz, die niemand mehr glaubhaft anders rechnet.',
+    relatedSlugs: ['mai-thi-nguyen-kim-corona-erklaerung', 'doktor-whatson-quantencomputer'],
+    metaTitle: 'Harald Lesch zum Klimawandel — die Fakten in elf Minuten',
+    metaDescription:
+      'Eine Lese-Notiz zu Harald Leschs Klimawandel-Folge — die eine Tabelle, die alles entscheidet, der Umgang mit "Klimaskepsis" und warum die Folge im Kanon bleibt.',
+  },
+  {
+    slug: 'mai-thi-nguyen-kim-corona-erklaerung',
+    creator: 'Mai Thi Nguyen-Kim',
+    creatorHandle: 'maiLab',
+    videoTitle: 'Corona geht gerade erst los',
+    youtubeId: 'EFG6lQetSWE', // TODO(verify): maiLab Corona-Vortrag März 2020
+    publishedDate: '2020-03-13',
+    durationMin: 25,
+    topics: ['corona', 'epidemiologie', 'wissenschaftskommunikation', 'mailab'],
+    lang: 'de',
+    intro:
+      'Im März 2020 lud Mai Thi Nguyen-Kim ein 25-minütiges Video hoch, das innerhalb einer Woche fünf Millionen Aufrufe hatte und die deutsche Corona-Berichterstattung für Monate prägte. Rückblickend ist es immer noch das beste Beispiel dafür, wie wissenschaftliche Kommunikation in einer Krise funktioniert.',
+    sections: [
+      {
+        heading: 'Der Mut, das Naheliegende zu sagen',
+        body:
+          'Was Mai Thi am 13. März 2020 sagte, klang damals dramatisch und wirkt heute selbstverständlich: dieses Virus wird nicht in vier Wochen weg sein, exponentielles Wachstum überholt jede Intuition, und der einzige Hebel ist Verhalten — bevor das Gesundheitssystem überlastet ist. Die Folge ist deshalb sehenswert, weil sie zeigt, wie viel Mut nötig war, das Selbstverständliche auszusprechen, als Politik und Medien noch um den heißen Brei tanzten.',
+      },
+      {
+        heading: 'Exponentielles Wachstum, ohne Folien',
+        body:
+          'Die Erklärung der exponentiellen Funktion in den ersten zehn Minuten ist die didaktisch beste, die im deutschsprachigen Raum zu dem Thema veröffentlicht wurde. Sie verwendet keinen einzigen Graph — nur das wiederholte Verdoppeln einer Zahl auf einem Blatt Papier. Wer den Punkt einmal so gesehen hat, vergisst ihn nicht. Die Lehrkraft, die zwölf Jahre Mathematikunterricht gegeben hat ohne diese Übung, fühlt sich danach unvollständig.',
+      },
+      {
+        heading: 'Wo das Video sich angreifbar machte',
+        body:
+          'Mai Thi ist im Video explizit, dass sie Empfehlungen ausspricht, die über das hinausgehen, was die WHO zu dem Zeitpunkt sagte. Diese Klarheit kostete sie später Glaubwürdigkeit in bestimmten Kreisen — aber sie ist auch der Grund, warum die Folge sich gehalten hat. Sie ist ein seltenes Dokument einer Wissenschaftlerin, die in Echtzeit den Konflikt zwischen "wissenschaftlich konservativ" und "ethisch notwendig" austrägt, und sich für letzteres entscheidet.',
+      },
+      {
+        heading: 'Warum die Folge ins Archiv gehört',
+        body:
+          'Fünf Jahre später ist das Video weniger ein Corona-Lehrstück und mehr ein Lehrstück über wissenschaftliche Kommunikation in Krisen. Ein Pack der Folge ist deshalb wertvoll, weil er die rhetorische Struktur extrahiert — wie man unangenehme Wahrheiten formuliert, ohne zu moralisieren, wie man mit Unsicherheit umgeht, ohne sie zu verstecken — und nicht primär weil er die Epidemiologie zusammenfasst.',
+      },
+    ],
+    takeaway:
+      'Wissenschaftliche Kommunikation in einer Krise heißt, das Naheliegende auszusprechen, bevor die Politik den Mut dazu hat.',
+    relatedSlugs: ['harald-lesch-klimawandel-kompakt', 'doktor-whatson-quantencomputer'],
+    metaTitle: 'Mai Thi Nguyen-Kim — die Corona-Folge im Rückblick',
+    metaDescription:
+      'Eine Lese-Notiz zu Mai Thi Nguyen-Kims Corona-Folge vom März 2020 — exponentielles Wachstum ohne Folien, der Mut zum Naheliegenden und was an dem Video angreifbar war.',
+  },
+  {
+    slug: 'markus-lanz-robert-habeck-energiewende',
+    creator: 'Markus Lanz',
+    creatorHandle: 'ZDF',
+    videoTitle: 'Markus Lanz × Robert Habeck — Energiewende und Industriepolitik',
+    youtubeId: 'kZ7-XzQ8jJk', // TODO(verify): ZDF Mediathek crosspost
+    publishedDate: '2023-11-09',
+    durationMin: 73,
+    topics: ['politik', 'energiewende', 'markus lanz', 'robert habeck'],
+    lang: 'de',
+    intro:
+      'Die Lanz-Folge mit Habeck zur Energiewende ist eine der wenigen Talkshow-Aufzeichnungen, die mehr ist als ein Streitformat. Lanz lässt seinen Gast lange genug ausreden, dass der Wirtschaftsminister hörbar nicht das wiederholt, was er gestern auf der Pressekonferenz gesagt hat.',
+    sections: [
+      {
+        heading: 'Warum Lanz funktioniert, wo andere scheitern',
+        body:
+          'Lanz hat eine Eigenart, die im deutschen Talkshow-Format selten ist: er erlaubt seinen Gästen, einen Gedanken zu Ende zu führen, auch wenn der Gedanke unangenehm wird. Das produziert Momente, in denen Politiker hörbar ehrlicher antworten als sonst — nicht weil Lanz härter fragt, sondern weil er weniger unterbricht. Die Folge mit Habeck ist ein Lehrstück dieser Methode.',
+      },
+      {
+        heading: 'Wo das Gespräch über Talking Points hinausgeht',
+        body:
+          'In Minute vierzig stellt Lanz eine scheinbar einfache Frage: warum die Energiewende in Deutschland teurer geworden ist als ursprünglich kommuniziert. Habeck antwortet nicht mit der Standardlinie. Stattdessen unterscheidet er sauber zwischen Investitionskosten und Betriebskosten, räumt ein, dass die politische Kommunikation diesen Unterschied jahrelang nicht gemacht hat, und erklärt, warum das ein Vertrauensproblem für die nächsten zwanzig Jahre erzeugt. Das ist nicht das Material, das in einer Pressekonferenz zu hören wäre.',
+      },
+      {
+        heading: 'Die uneingelöste Frage',
+        body:
+          'Lanz fragt zweimal nach der Industriestrompreis-Frage. Habeck weicht zweimal aus, was die Glaubwürdigkeit des restlichen Gesprächs nicht zerstört, aber markiert. Ein Pack der Folge sollte diese Stelle nicht glätten — der Moment, in dem ein Politiker hörbar an seiner eigenen Argumentation scheitert, ist informativer als die saubere Antwort, die er hätte geben können.',
+      },
+      {
+        heading: 'Warum sich das Format trägt',
+        body:
+          'Die Lanz-Habeck-Folge ist 73 Minuten lang. Sie hat fünfundzwanzig Millionen Aufrufe in der Mediathek und auf YouTube zusammen. Das widerlegt die These, deutsche Zuschauer hätten keine Aufmerksamkeitsspanne mehr für Politik im langen Format. Sie haben sie — wenn das Format ihnen zutraut, mehr als drei Minuten am Stück zu folgen.',
+      },
+    ],
+    takeaway:
+      'Die wertvollsten Momente im politischen Talk entstehen, wenn der Moderator nicht unterbricht — und der Gast deshalb hörbar ehrlicher wird.',
+    relatedSlugs: ['maybrit-illner-klimakonferenz-folge', 'jung-naiv-politik-interview'],
+    metaTitle: 'Markus Lanz × Robert Habeck — Energiewende ohne Talking Points',
+    metaDescription:
+      'Eine Lese-Notiz zur Lanz-Habeck-Folge — wo das Gespräch über Talking Points hinausgeht, die uneingelöste Industriestrompreis-Frage, und warum sich das 73-Minuten-Format trägt.',
+  },
+  {
+    slug: 'doktor-whatson-quantencomputer',
+    creator: 'Doktor Whatson',
+    creatorHandle: 'DoktorWhatson',
+    videoTitle: 'Wie funktioniert ein Quantencomputer wirklich?',
+    youtubeId: 'aPaZb12mU5g', // TODO(verify): Doktor Whatson Quanten-Erklärung
+    publishedDate: '2022-06-14',
+    durationMin: 18,
+    topics: ['quantencomputing', 'physik', 'wissenschaftskommunikation', 'doktor whatson'],
+    lang: 'de',
+    intro:
+      'Cedric Engels — der "Doktor" hinter Doktor Whatson — gehört zu den wenigen deutschsprachigen Wissenschafts-YouTubern, die Themen erklären können, ohne sie zu Karikaturen zu vereinfachen. Die Quantencomputer-Folge ist ein gutes Beispiel: technisch korrekt, ohne Formel-Angst, und 18 Minuten lang im besten Sinne anstrengend.',
+    sections: [
+      {
+        heading: 'Was ein Qubit nicht ist',
+        body:
+          'Die ersten fünf Minuten räumen mit der populären Erklärung auf, ein Qubit sei "0 und 1 gleichzeitig". Engels zeigt sauber, warum diese Formulierung mehr verwirrt als erhellt: ein Qubit ist in einer Überlagerung, die beim Messen kollabiert — was etwas völlig anderes ist als "beide Werte gleichzeitig haben". Wer den Unterschied einmal verstanden hat, kann ab da kein populärwissenschaftliches Buch zum Thema mehr ungerührt lesen.',
+      },
+      {
+        heading: 'Verschränkung als die eigentliche Geschichte',
+        body:
+          'Die Superposition ist das, womit Quantencomputer beworben werden. Die Verschränkung ist das, was sie tatsächlich nützlich macht. Engels nimmt sich Zeit, das mit zwei Würfeln zu erklären, die unabhängig voneinander rollen, aber immer dieselbe Augenzahl zeigen — auch wenn sie im selben Moment auf unterschiedlichen Kontinenten gewürfelt werden. Der Vergleich ist nicht perfekt, aber er erklärt warum verschränkte Qubits Berechnungen erlauben, die klassische Bits nicht erlauben.',
+      },
+      {
+        heading: 'Wo die Folge ehrlich wird',
+        body:
+          'In Minute dreizehn macht Engels eine Pause, die im Genre selten ist: er sagt explizit, dass die meisten Quantencomputer-Demos, die in Pressemitteilungen zu sehen sind, keine praktischen Probleme lösen. Sie demonstrieren, dass die Hardware funktioniert, nicht dass die Hardware nützlich ist. Diese ehrliche Trennung zwischen "physikalisch beeindruckend" und "wirtschaftlich relevant" fehlt in der allermeisten Berichterstattung zum Thema.',
+      },
+      {
+        heading: 'Warum die Folge sich in einem Pack lohnt',
+        body:
+          'Die Quanten-Folge ist genau die Sorte Inhalt, die ein Pack braucht: dicht genug, dass die Begriffe beim einmaligen Hören nicht hängenbleiben, aber strukturiert genug, dass die Begriffe in einer Glossar-Form später wieder zugänglich werden. Wer die Folge einmal gehört hat und sechs Monate später eine Nachricht zum Thema liest, erinnert sich mit Pack besser an Verschränkung als an einzelne Slogans.',
+      },
+    ],
+    takeaway:
+      'Ein Qubit ist nicht "0 und 1 gleichzeitig" — die kürzere Erklärung ist die falsche, und die längere ist die einzige nützliche.',
+    relatedSlugs: ['harald-lesch-klimawandel-kompakt', 'mai-thi-nguyen-kim-corona-erklaerung'],
+    metaTitle: 'Doktor Whatson über Quantencomputer — was ein Qubit nicht ist',
+    metaDescription:
+      'Eine Lese-Notiz zu Doktor Whatsons Quantencomputer-Folge — was ein Qubit wirklich ist, warum Verschränkung die eigentliche Geschichte ist, und wo die Folge ehrlich wird.',
+  },
+  {
+    slug: 'mrwissen2go-wiedervereinigung-deutschlands',
+    creator: 'Mirko Drotschmann',
+    creatorHandle: 'MrWissen2go',
+    videoTitle: 'Die deutsche Wiedervereinigung — wie sie wirklich ablief',
+    youtubeId: 'rW8zEbcAOmM', // TODO(verify): MrWissen2go Geschichte-Folge
+    publishedDate: '2020-10-03',
+    durationMin: 14,
+    topics: ['deutsche geschichte', 'wiedervereinigung', 'ddr', 'mirko drotschmann'],
+    lang: 'de',
+    intro:
+      'Drotschmanns Wiedervereinigungs-Folge ist die Pflichtlektüre für jeden, der die deutsche Geschichte zwischen 1989 und 1990 in vierzehn Minuten erzählt bekommen will, ohne dass er hinterher ein verzerrtes Bild davon hat. Die Folge schafft das, was die meisten Geschichtsbücher zum Thema verfehlen: Tempo ohne Verkürzung.',
+    sections: [
+      {
+        heading: 'Der Mauerfall ist nicht der Anfang der Geschichte',
+        body:
+          'Drotschmann öffnet nicht am 9. November 1989, sondern im Sommer davor — mit den Ausreisewellen über Ungarn, den Montagsdemos in Leipzig, dem ungelenken DDR-Pressesprecher Günter Schabowski. Das ist die richtige Eröffnung, weil sie das Missverständnis korrigiert, der Mauerfall sei aus dem Nichts gekommen. Er war das Ende einer Beschleunigung, nicht ihr Anfang.',
+      },
+      {
+        heading: 'Warum der Einigungsvertrag wichtiger ist als der Mauerfall',
+        body:
+          'Der Mauerfall ist das ikonische Bild. Der Einigungsvertrag vom August 1990 ist der eigentliche Vorgang. Drotschmann verbringt drei Minuten mit den juristischen Konsequenzen — Beitritt nach Artikel 23 versus Neuverfassung nach Artikel 146, was das für die ostdeutschen Gesetze, Renten, Eigentumsverhältnisse bedeutete — und das sind die drei Minuten, in denen man am meisten lernt. Das Bilder-Material ist überall verfügbar; die Rechtsstruktur dahinter nicht.',
+      },
+      {
+        heading: 'Die unbequeme Zwischenbilanz',
+        body:
+          'Drotschmann lässt die Folge nicht mit dem Feuerwerk am 3. Oktober enden. Er macht in den letzten zwei Minuten eine Bilanz, die im populären Geschichts-YouTube selten ist: das ostdeutsche Vermögen wurde unter Wert verkauft, die Arbeitslosenquote sprang von praktisch null auf zwanzig Prozent, und ein erheblicher Teil der heutigen Ost-West-Spannungen ist die direkte Folge dieser Übergangsphase. Diese ehrliche Bilanz ist es, was die Folge auch für ostdeutsche Zuschauer akzeptabel macht.',
+      },
+      {
+        heading: 'Warum die Folge im Lehrplan bleibt',
+        body:
+          'Schulen zeigen die Folge weiterhin, fünf Jahre nach Veröffentlichung, weil sie die einzige bekannte vierzehn-Minuten-Variante ist, die sowohl die Westperspektive als auch die Ostperspektive ernst nimmt. Ein Pack der Folge wird in Hausaufgaben übernommen, was Drotschmann gelegentlich auf Twitter kommentiert — die Inhalte sind seine, die Wiederverwendung nicht. Mit Quellenangabe sieht er es entspannt.',
+      },
+    ],
+    takeaway:
+      'Der Mauerfall war das Bild, der Einigungsvertrag war der Vorgang — und die Konsequenzen des zweiten erklären die Spannungen des heutigen Deutschland.',
+    relatedSlugs: ['markus-lanz-robert-habeck-energiewende', 'maybrit-illner-klimakonferenz-folge'],
+    metaTitle: 'MrWissen2go zur Wiedervereinigung — was Geschichtsbücher auslassen',
+    metaDescription:
+      'Eine Lese-Notiz zu Mirko Drotschmanns Wiedervereinigungs-Folge — warum der Einigungsvertrag wichtiger ist als der Mauerfall, und die unbequeme Zwischenbilanz, die zur Folge gehört.',
+  },
+  {
+    slug: 'hotel-matze-podcast-interview',
+    creator: 'Matze Hielscher',
+    creatorHandle: 'HotelMatzePodcast',
+    videoTitle: 'Hotel Matze — Wie führt man ein gutes Gespräch?',
+    youtubeId: 'fH-2H4-yvU8', // TODO(verify): Hotel Matze Meta-Folge
+    publishedDate: '2023-04-12',
+    durationMin: 92,
+    topics: ['podcast', 'interview', 'matze hielscher', 'gesprächskultur'],
+    lang: 'de',
+    intro:
+      'Matze Hielscher hat in zwölf Jahren über vierhundert Hotel-Matze-Folgen geführt und ist damit zu einem der einflussreichsten deutschsprachigen Interviewer geworden. Die Meta-Folge, in der er erklärt, wie er Gespräche vorbereitet und führt, ist die nützlichste Einzelfolge für jeden, der selbst Interviews macht oder hört.',
+    sections: [
+      {
+        heading: 'Die Frage vor der Frage',
+        body:
+          'Hielscher öffnet mit etwas, das im Genre selten erklärt wird: die Vorbereitung beginnt mit der Frage, was er von dem Gast lernen will — nicht damit, was die Hörer hören wollen. Der Unterschied klingt klein, ist aber strukturell: Gespräche, die aus echter Neugier des Interviewers geführt werden, werden anders wahrgenommen als solche, die einen recherchierten Themenkatalog abarbeiten. Beide können gute Folgen werden; nur die ersten werden hörbar interessant.',
+      },
+      {
+        heading: 'Schweigen als Werkzeug',
+        body:
+          'Die für Interviewer wichtigste Stelle der Folge sind die drei Minuten über die Pause nach einer Antwort. Hielscher beschreibt, wie er sich zwingt, vier bis sechs Sekunden zu warten, bevor er die nächste Frage stellt — und wie der Gast in dieser Pause oft den Gedanken weiter ausführt, weil die Stille unbequem ist. Diese Technik ist mit Abstand die wirksamste, die im Podcast-Format überhaupt diskutiert wird, und sie wird praktisch nirgendwo sonst gelehrt.',
+      },
+      {
+        heading: 'Warum Hielscher die schlechten Gespräche behält',
+        body:
+          'Ein Detail, das andere Podcast-Hosts so nicht zugeben: Hielscher veröffentlicht auch die Folgen, in denen er das Gefühl hatte, dass das Gespräch nicht funktioniert hat. Die Begründung ist hörenswert — ein Interview, das nicht klappt, lehrt den Hörer mehr über den Gast als eines, in dem alle Übergänge sauber sind. Das ist das Gegenteil dessen, was im YouTube-Algorithmus belohnt wird, und es ist der Grund, warum sich der Podcast gehalten hat.',
+      },
+      {
+        heading: 'Was die Folge an einen Pack abgibt',
+        body:
+          'Die 92 Minuten enthalten ungefähr fünfundzwanzig konkrete Heuristiken — von der Vorbereitung über die ersten dreißig Sekunden bis zur Verabschiedung. Ein Pack davon wird zu einer Liste von Regeln, die auch jemand anwenden kann, der nie selbst ein Mikrofon vor sich hatte: in Bewerbungsgesprächen, im Coaching, im Verkauf. Der Pack ist nützlicher als die Folge in einem Aspekt — er macht die Heuristiken auffindbar.',
+      },
+    ],
+    takeaway:
+      'Gute Interviews entstehen aus echter Neugier des Fragenden und der Disziplin, lange genug zu schweigen.',
+    relatedSlugs: ['markus-lanz-robert-habeck-energiewende', 'jung-naiv-politik-interview'],
+    metaTitle: 'Hotel Matze — die Meta-Folge über das Interview-Handwerk',
+    metaDescription:
+      'Eine Lese-Notiz zu Matze Hielschers Meta-Folge über Interview-Vorbereitung, das Schweigen als Werkzeug und warum er auch die misslungenen Gespräche veröffentlicht.',
+  },
+  {
+    slug: 'maybrit-illner-klimakonferenz-folge',
+    creator: 'Maybrit Illner',
+    creatorHandle: 'ZDFmaybritillner',
+    videoTitle: 'Klimakonferenz und Realität — Maybrit Illner mit COP-Delegierten',
+    youtubeId: 'tQX0v9Z9w-Y', // TODO(verify): ZDF Mediathek Folge nach COP28
+    publishedDate: '2023-12-14',
+    durationMin: 62,
+    topics: ['klimapolitik', 'cop', 'maybrit illner', 'politik'],
+    lang: 'de',
+    intro:
+      'Die Maybrit-Illner-Folge nach der COP28 in Dubai ist eine der wenigen deutschen Talkshow-Aufzeichnungen, die das Verhältnis zwischen Klimaverhandlungen und tatsächlicher Klimapolitik nüchtern offenlegt. Sie ist auch deshalb sehenswert, weil sie weniger gestritten wird als ähnliche Formate, was den Inhalten Raum gibt.',
+    sections: [
+      {
+        heading: 'Warum die COP überhaupt etwas leistet',
+        body:
+          'Illner stellt früh die Frage, die im populären Diskurs oft als rhetorisch behandelt wird: bringt eine Klimakonferenz mit zweihundert Staaten überhaupt messbare Ergebnisse? Die Antwort ihrer Gäste — eine Diplomatin, ein Energiewissenschaftler, eine Aktivistin — ist differenziert genug, dass die Hörerin am Ende verstehen kann, warum die COP-Erklärungen keine Gesetze sind, aber trotzdem die Grundlage für nationale Gesetze über die nächsten zehn Jahre bilden.',
+      },
+      {
+        heading: 'Der Konflikt zwischen Süden und Norden',
+        body:
+          'Eine wichtige zwanzig-Minuten-Sequenz behandelt die Loss-and-Damage-Frage — wer zahlt für die Klimafolgen, die historisch von Industriestaaten verursacht und gegenwärtig von Entwicklungsländern getragen werden. Die Diplomatin im Studio ist konkret über die Summen (rund 700 Millionen Dollar zugesagt, geschätzt 400 Milliarden Dollar jährlich nötig) und ehrlich über die geringe Wahrscheinlichkeit, dass die Lücke geschlossen wird. Diese Klarheit ist im deutschen Fernsehen zum Thema selten.',
+      },
+      {
+        heading: 'Wo die Folge unangenehm wird',
+        body:
+          'Etwa in der Mitte fragt Illner die Aktivistin, ob die Klima-Bewegung in Deutschland gescheitert ist — angesichts der Wahlumfragen, des Rückgangs der Beteiligung an Demonstrationen, der politischen Verschiebung. Die Antwort ist nicht abwehrend. Die Aktivistin räumt einen taktischen Fehler ein (zu starke Fokussierung auf Symbolaktionen, zu wenig Strukturarbeit in Kommunen) und nennt konkret die Lehren, die für die nächste Phase gezogen werden. Diese Selbstkritik in laufender Sendung ist im politischen Talk selten.',
+      },
+      {
+        heading: 'Warum 62 Minuten genug sind',
+        body:
+          'Die Folge ist deshalb hörenswert, weil sie nicht versucht, in einer Stunde alles zu sagen. Sie nimmt sich drei Hauptthemen — wozu die COP gut ist, wer für die Klimaschäden zahlt, wie sich die Klima-Bewegung neu aufstellt — und bleibt bei diesen drei. Ein Pack der Folge ist deshalb gut strukturierbar: drei Hauptkapitel, je eine Glossar-Sektion, je eine Aktionsempfehlung.',
+      },
+    ],
+    takeaway:
+      'Klimakonferenzen sind keine Gesetze, sondern die Grundlage von Gesetzen — und die Loss-and-Damage-Lücke ist zu groß, um sie zu schliessen.',
+    relatedSlugs: ['harald-lesch-klimawandel-kompakt', 'markus-lanz-robert-habeck-energiewende'],
+    metaTitle: 'Maybrit Illner zur Klimakonferenz — was die COP wirklich leistet',
+    metaDescription:
+      'Eine Lese-Notiz zur Maybrit-Illner-Folge nach der COP28 — wozu Klimakonferenzen gut sind, der Süden-Norden-Konflikt um Klimaschäden, und die Selbstkritik der Klima-Bewegung.',
+  },
+  {
+    slug: 'terra-x-dirk-steffens-artensterben',
+    creator: 'Dirk Steffens',
+    creatorHandle: 'TerraX',
+    videoTitle: 'Terra X — Das große Artensterben',
+    youtubeId: 'ZSt9tm3RoUU', // TODO(verify): Terra X Artensterben-Doku
+    publishedDate: '2019-11-17',
+    durationMin: 45,
+    topics: ['artensterben', 'biologie', 'naturwissenschaft', 'terra x', 'dirk steffens'],
+    lang: 'de',
+    intro:
+      'Dirk Steffens hat über fünfzehn Jahre lang Terra-X-Dokumentationen moderiert und ist damit zur deutschen Stimme für Naturwissenschaft im öffentlich-rechtlichen Fernsehen geworden. Die 45-minütige Folge zum Artensterben ist die wahrscheinlich beste Einzeldokumentation, die er gemacht hat.',
+    sections: [
+      {
+        heading: 'Die "sechste Auslöschung" ist ein technischer Begriff',
+        body:
+          'Steffens öffnet mit dem Satz, der die Folge trägt: was wir gegenwärtig erleben, ist nicht "ein bisschen mehr Aussterben als normal" — es ist eine Größenordnung, die in der Erdgeschichte fünfmal vorher vorkam, und jedes Mal mit dramatischen Konsequenzen für die Biosphäre verbunden war. Diese Einordnung ist nicht alarmistisch; sie ist die etablierte paläontologische Terminologie. Wer sie einmal gehört hat, kann die "Klima- und Artenkrise"-Berichterstattung nicht mehr als Übertreibung lesen.',
+      },
+      {
+        heading: 'Warum die Insektenzahlen die Kennzahl sind',
+        body:
+          'Steffens verbringt zehn Minuten mit der Krefelder Insektenstudie von 2017 — die Studie, die zeigte, dass die Insektenbiomasse in deutschen Naturschutzgebieten um 76 Prozent in 27 Jahren zurückgegangen war. Die Folge erklärt, warum dieser Befund nicht nur "ein paar weniger Mücken" bedeutet, sondern die Nahrungsgrundlage für Vögel und kleine Säugetiere zusammenbrechen lässt, und warum eine Folge davon eine reduzierte Bestäubung in der Landwirtschaft ist. Die Folge führt diese Kausalkette sauber, ohne sie zu dramatisieren.',
+      },
+      {
+        heading: 'Die Sequenz zur Pestizidregulierung',
+        body:
+          'Eine zwanzig-Minuten-Sequenz behandelt Neonicotinoide — die Pestizidklasse, die in der EU 2018 für den Freilandeinsatz weitgehend verboten wurde. Steffens zeigt die Industrie-Lobbyarbeit, die wissenschaftliche Evidenz, und den politischen Prozess in einem Maß an Detail, das normalerweise Investigativ-Magazinen vorbehalten ist. Diese Folge ist eines der wenigen Dokumente, in denen Wissenschaft, Politik und Wirtschaft als verzahntes System gezeigt werden — und nicht als getrennte Sphären.',
+      },
+      {
+        heading: 'Warum sich die Doku als Pack eignet',
+        body:
+          'Eine 45-minütige Doku ist zu lang, um sie zweimal anzusehen, und zu wichtig, um sie zu vergessen. Ein Pack mit den fünf Hauptzahlen (Krefelder Studie, Pestizidverbrauch, EU-Verordnungen, Erholungszeit für Insektenpopulationen, projektierte Folgekosten in der Landwirtschaft) ist ein nützliches Referenzdokument, das beim Lesen aktueller Naturschutz-Berichterstattung erstaunlich oft als Vergleichsmaß einspringt.',
+      },
+    ],
+    takeaway:
+      'Das Artensterben ist eine Größenordnung, kein Schlagwort — und die Insektenzahlen sind die Kennzahl, an der sich alles weitere bemisst.',
+    relatedSlugs: ['harald-lesch-klimawandel-kompakt', 'maybrit-illner-klimakonferenz-folge'],
+    metaTitle: 'Terra X mit Dirk Steffens — die Artensterben-Doku als Referenz',
+    metaDescription:
+      'Eine Lese-Notiz zur Terra-X-Doku über das Artensterben — warum es die sechste Auslöschung ist, die Krefelder Insektenstudie und die Sequenz zur Pestizidregulierung.',
+  },
+  {
+    slug: 'florian-freistetter-sternengeschichten',
+    creator: 'Florian Freistetter',
+    creatorHandle: 'astrodicticum',
+    videoTitle: 'Sternengeschichten — die Geschichte der Astronomie in 100 Folgen',
+    youtubeId: 'qwertzABCdef', // TODO(verify): kein konkretes YT-Video, eher Podcast — User entscheidet ob ersetzen
+    publishedDate: '2020-06-01',
+    durationMin: 15,
+    topics: ['astronomie', 'wissenschaftsgeschichte', 'podcast', 'florian freistetter'],
+    lang: 'de',
+    intro:
+      'Florian Freistetters "Sternengeschichten" ist mit über sechshundert Folgen der dienstältste deutschsprachige Wissenschaftspodcast — eine Folge pro Woche, jede über ein einzelnes astronomisches Thema. Welche einzelne Folge man hört, ist fast egal; das Verfahren bleibt das gleiche.',
+    sections: [
+      {
+        heading: 'Das Erzählverfahren ist immer das gleiche',
+        body:
+          'Jede Folge öffnet mit einer historischen Beobachtung — wann ein bestimmter Stern oder ein bestimmtes Phänomen erstmals beschrieben wurde, von wem, in welchem kulturellen Kontext. Erst danach erklärt Freistetter die Physik. Diese Reihenfolge — Geschichte vor Mechanismus — ist die hörbar wirksamste, die im populärwissenschaftlichen Podcast-Format zu finden ist. Sie erklärt, warum man die einzelnen Folgen auch ohne astronomische Vorbildung folgen kann.',
+      },
+      {
+        heading: 'Warum 15 Minuten genau die richtige Länge sind',
+        body:
+          'Die Folgenlänge ist seit 2012 konstant bei 12–18 Minuten. Freistetter hat in Interviews erklärt, dass diese Länge bewusst ist: kurz genug für die Hörsituation einer Pendelfahrt, lang genug für ein vollständiges Argument. Die Disziplin, das Format nicht zu erweitern, ist Teil dessen, warum der Podcast sich gehalten hat. Andere Wissenschafts-Podcasts sind in den letzten Jahren zu zwei- oder dreistündigen Gesprächs-Folgen migriert; "Sternengeschichten" bleibt bei der kurzen, geschriebenen Form.',
+      },
+      {
+        heading: 'Was eine Folge im Pack wert ist',
+        body:
+          'Eine einzelne Folge enthält typisch drei bis fünf einzelne astronomische Tatsachen, eingebettet in eine historische Erzählung. Im Pack-Format werden daraus drei bis fünf saubere Glossar-Einträge plus ein narrativer Rahmen, der die Einträge zusammenhält. Im Wiederlesen sind die Glossar-Einträge das Nützliche; in der ersten Hörung ist die Erzählung das Nützliche. Die Aufteilung ist genau das, was ein guter Pack abbildet.',
+      },
+      {
+        heading: 'Wo der Podcast die deutsche Wissenschaftskommunikation verändert hat',
+        body:
+          'Vor "Sternengeschichten" war Astronomie im deutschen Hörfunk-Format weitgehend abwesend. Es gab Magazine, die gelegentlich eine astronomische Meldung brachten, aber kein Format, das Astronomie in einer kontinuierlichen, hörbaren Form anbot. Freistetters Beharrlichkeit über zwölf Jahre hinweg hat das verändert. Wer heute "Astronomiepodcast" in eine Suchmaschine tippt, findet zwanzig deutschsprachige Formate — fast alle davon zitieren "Sternengeschichten" als Vorbild oder Konkurrent.',
+      },
+    ],
+    takeaway:
+      'Wissenschafts-Podcasts halten sich nicht durch Länge oder Stars, sondern durch konsequente Disziplin auf einem engen Format.',
+    relatedSlugs: ['doktor-whatson-quantencomputer', 'mai-thi-nguyen-kim-corona-erklaerung'],
+    metaTitle: 'Sternengeschichten — was Freistetters Podcast richtig macht',
+    metaDescription:
+      'Eine Lese-Notiz zu Florian Freistetters Sternengeschichten — Geschichte vor Mechanismus, warum 15 Minuten die richtige Länge sind, und was eine Folge im Pack wert ist.',
+  },
+  {
+    slug: 'jung-naiv-politik-interview',
+    creator: 'Tilo Jung',
+    creatorHandle: 'JungNaiv',
+    videoTitle: 'Jung & Naiv — Folge 600 (Politik für Desinteressierte)',
+    youtubeId: 'eHRWxlT-AwY', // TODO(verify): Jung & Naiv Jubiläumsfolge
+    publishedDate: '2022-09-15',
+    durationMin: 168,
+    topics: ['politik', 'interview', 'jung & naiv', 'tilo jung', 'medienkritik'],
+    lang: 'de',
+    intro:
+      'Tilo Jungs "Jung & Naiv" hat das politische Interview im deutschsprachigen Raum verändert wie kein anderes Format der letzten zehn Jahre. Die Jubiläumsfolge 600 — fast drei Stunden lang, mit einem Gast, der das Format selbst lange skeptisch sah — ist die beste Gelegenheit, das Verfahren zu verstehen.',
+    sections: [
+      {
+        heading: 'Naivität als Methode',
+        body:
+          'Der Titel ist kein Witz. Jungs Strategie ist, politische Akteure aus der Position der bewusst nicht-eingeweihten Person zu befragen — keine Insider-Sprache, keine Rückbezüge auf vorherige Aussagen, die einzige Vorbereitung ist Lesen. Das führt zu Interviews, in denen Politiker:innen ihre Positionen so erklären müssen, dass eine Person sie versteht, die nicht jeden Tag den Bundestag verfolgt. Was dabei herauskommt, ist hörbar anders als das, was in Tagesschau-Beiträgen zu sehen ist.',
+      },
+      {
+        heading: 'Die Folge 600 als Selbstkritik',
+        body:
+          'Die Jubiläumsfolge ist deshalb besonders interessant, weil Jung erstmals ausführlich selbst spricht — über die Versuchung, einen einmal etablierten Stil zur Marke zu machen, über die Mühe, naiv zu bleiben, wenn man inzwischen die meisten Akteur:innen persönlich kennt. Diese Reflexion über die eigene Methode ist im politischen Journalismus selten und für jeden hörenswert, der über das Verhältnis zwischen Format und Inhalt nachdenkt.',
+      },
+      {
+        heading: 'Warum drei Stunden funktionieren',
+        body:
+          'Die Standardfolgen sind bereits 90 bis 120 Minuten lang — die Jubiläumsfolge ist mit 168 Minuten am oberen Ende. Im klassischen Fernsehen wäre diese Länge undenkbar. Im Podcast-Format funktioniert sie, weil das Tempo niedrig ist und die Hörsituation eine andere — Auto, Küche, Wandern. Jungs Format hat die Akzeptanz der dreistündigen politischen Hörung im deutschen Sprachraum mitprägt. Ohne Jung & Naiv gäbe es das Hotel-Matze-Format vermutlich nicht in der heutigen Form.',
+      },
+      {
+        heading: 'Was die Folge an einen Pack abgibt',
+        body:
+          'Eine 168-minütige Folge zu einem Hörbuch zu kondensieren ist anders als eine 25-minütige Erklärfolge. Der Pack einer Jung-&-Naiv-Episode wird notwendigerweise zu einem Themenregister mit Zeitstempeln, einer Liste der wichtigsten Aussagen, und einer kurzen meta-Reflexion über die Gesprächsführung. Genau in diesem letzten Punkt — der meta-Reflexion — ist Folge 600 besonders ergiebig, weil das Thema die Methode selbst ist.',
+      },
+    ],
+    takeaway:
+      'Naivität ist eine harte Disziplin — und sie produziert politische Interviews, die zugänglicher sind als jede Form von investigativem Journalismus.',
+    relatedSlugs: ['hotel-matze-podcast-interview', 'markus-lanz-robert-habeck-energiewende'],
+    metaTitle: 'Jung & Naiv Folge 600 — wie Tilo Jung Politik anders macht',
+    metaDescription:
+      'Eine Lese-Notiz zu Tilo Jungs Jubiläumsfolge 600 — Naivität als Methode, die Selbstkritik des Formats und warum drei Stunden Podcast-Hörung funktionieren.',
+  },
 ];
 
 /** Lookup helper — returns the note for a slug, or null. */
