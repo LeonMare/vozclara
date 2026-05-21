@@ -42,6 +42,7 @@ import {
   handleFounderSet,
   handleFounderWebhook,
 } from './founder';
+import { callLLM } from './llm-router';
 import { VozClaraMcpAgent } from './mcp/agent';
 import oauthConsentApp from './oauth/handler';
 
@@ -1030,27 +1031,31 @@ async function generateInsights(
 Transcript:
 ${bounded}`;
 
-  const out = await env.AI.run(LLM_MODEL, {
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userPrompt },
-    ],
-    // 70B + expanded schema = larger output. 5000 tokens covers Learn
-    // mode (heaviest: 18 vocab + 10 quiz + 8 insights + ...). Costs more
-    // neurons but delivers editorial-grade volume.
-    max_tokens: 5000,
-    temperature: 0.35,
-  });
+  // Routed through callLLM rather than env.AI.run directly so this
+  // path becomes tier-aware the moment we plumb user-tier extraction
+  // into the route handler. For now `tier: 'free'` keeps the existing
+  // behaviour (Llama 3.3 70B); flipping to 'pro_plus' will swap in
+  // Sonnet 4.5 via Cloudflare AI Gateway with prompt caching honoured
+  // (CLAUDE.md §1.3 + §7).
+  //
+  // TODO(auth): pull tier from session once handleInsights extracts
+  // the authenticated user — Phase 2 of #40 / once Paddle subscription
+  // status is persisted per user.
+  const result = await callLLM(
+    {
+      tier: 'free',
+      systemPrompt,
+      userContent: userPrompt,
+      // 70B + expanded schema = larger output. 5000 tokens covers Learn
+      // mode (heaviest: 18 vocab + 10 quiz + 8 insights + ...). Costs
+      // more neurons but delivers editorial-grade volume.
+      maxTokens: 5000,
+      temperature: 0.35,
+    },
+    env,
+  );
 
-  // Defensive coercion: 70B model sometimes returns a non-string response
-  // depending on output_schema. Stringify whatever it gives us.
-  let raw: string;
-  if (typeof out === 'string') raw = out;
-  else if (out && typeof out.response === 'string') raw = out.response;
-  else if (out && out.response != null) raw = JSON.stringify(out.response);
-  else raw = JSON.stringify(out);
-
-  return parseInsightsJson(raw.trim());
+  return parseInsightsJson(result.text.trim());
 }
 
 function parseInsightsJson(raw: string): InsightsOutput {

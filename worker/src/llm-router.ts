@@ -186,13 +186,31 @@ async function callViaLlama(
   }
   messages.push({ role: 'user', content: options.userContent });
 
-  const raw = await env.AI.run(LLAMA_MODEL, {
+  const raw = (await env.AI.run(LLAMA_MODEL, {
     messages,
     max_tokens: options.maxTokens,
     temperature: options.temperature ?? 0.4,
-  });
+  })) as unknown;
 
-  const text = typeof raw.response === 'string' ? raw.response : String(raw.response ?? '');
+  // Defensive coercion. The 70B model is known to return
+  //   • { response: '...' }                — common path
+  //   • { response: { ...structured... } } — when an output_schema is
+  //                                          attached upstream
+  //   • a bare string                      — older binding versions
+  // We stringify so JSON-parsing callers (parseInsightsJson and
+  // friends) always see a parseable surface, and plain-text callers
+  // never get a "[object Object]" surprise from String(obj).
+  let text: string;
+  if (typeof raw === 'string') {
+    text = raw;
+  } else if (raw && typeof raw === 'object') {
+    const r = (raw as { response?: unknown }).response;
+    if (typeof r === 'string') text = r;
+    else if (r != null) text = JSON.stringify(r);
+    else text = JSON.stringify(raw);
+  } else {
+    text = String(raw ?? '');
+  }
 
   return {
     text,
