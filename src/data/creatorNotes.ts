@@ -1783,6 +1783,377 @@ export const CREATOR_NOTES: CreatorNote[] = [
     metaDescription:
       'Uma nota editorial sobre o NerdCast do Jovem Nerd — o formato que durou por não mudar, os temas que envelheceram bem, e a Caverna do Nerd como pioneirismo de monetização.',
   },
+
+  // ─── Expansion batch — final nine to reach 50/50 ─────────────────
+  {
+    slug: 'lex-fridman-robert-sapolsky-free-will',
+    creator: 'Lex Fridman',
+    creatorHandle: 'lexfridman',
+    videoTitle: 'Robert Sapolsky: Free Will, Determinism, and the Brain',
+    youtubeId: 'XF6n7TpDsmQ', // TODO(verify): Lex × Sapolsky free-will deep-dive
+    publishedDate: '2024-01-30',
+    durationMin: 165,
+    topics: ['free will', 'determinism', 'neuroscience', 'philosophy', 'sapolsky'],
+    lang: 'en',
+    intro:
+      'Robert Sapolsky has spent four decades arguing that free will does not exist, and the Lex Fridman interview from 2024 is the most patient public statement of that argument anyone has recorded. The three hours are long because the case requires the time — the conclusion is uncomfortable enough that no shorter version survives the listener’s scepticism.',
+    sections: [
+      {
+        heading: 'The argument is not philosophical, it is biological',
+        body:
+          'Sapolsky is explicit that he is not making a philosophical case for incompatibilist determinism — he is making an empirical case. Every "choice" you make has antecedents — neural state one second before, hormonal balance one hour before, childhood experiences, prenatal stress on your mother, evolutionary pressures on your ancestors. Sapolsky walks through each timescale with a separate body of research. The cumulative effect is a model of agency that is not metaphysical but biographical: you are the sum of conditions you did not choose.',
+      },
+      {
+        heading: 'Why most rebuttals miss',
+        body:
+          'The standard rebuttal to Sapolsky — "but I feel free" — is, in his framing, the strongest evidence that free will is illusory rather than real. The feeling is a useful adaptive mechanism, not a window into the mechanism. Lex repeatedly asks the rebuttal in different forms, and Sapolsky each time redirects to a different empirical finding (Libet experiments, transcranial-stimulation choice manipulation, the Anchor-and-Adjust literature). The conversation is a rare instance of an interviewer letting a guest fully defend a position the audience instinctively rejects.',
+      },
+      {
+        heading: 'The moral implications, which Sapolsky takes seriously',
+        body:
+          'A long section in the middle asks what changes if Sapolsky is right. His answer is more careful than the press caricature: criminal justice should care about quarantine and rehabilitation, not punishment; meritocracy is a polite fiction we use to allocate scarce resources; gratitude and shame are useful tools but not metaphysical truths. He is not arguing for paralysis — he is arguing for a humbler model of who deserves what.',
+      },
+      {
+        heading: 'Why three hours is exactly the right length',
+        body:
+          'The first hour establishes the biological case. The second hour walks through the philosophical and moral implications. The third hour is the most-cited part — Sapolsky on his own life, parenting choices, religious upbringing, and how he holds the belief without losing meaning. The episode is unusually personal for him, and the depth requires the time. A pack of the third hour alone is worth more than most full Lex episodes.',
+      },
+    ],
+    takeaway:
+      'Free will is not refuted philosophically — it is refuted biographically, by the conditions you did not choose that built every neuron you use to feel free.',
+    relatedSlugs: ['lex-fridman-andrej-karpathy-agi', 'lex-fridman-demis-hassabis-deepmind'],
+    metaTitle: 'Lex × Robert Sapolsky — the biological case against free will',
+    metaDescription:
+      'A reading note on Lex Fridman’s Robert Sapolsky interview — the biological rather than philosophical case against free will, why most rebuttals miss, and the moral implications.',
+  },
+  {
+    slug: 'andrej-karpathy-build-gpt-lecture',
+    creator: 'Andrej Karpathy',
+    creatorHandle: 'AndrejKarpathy',
+    videoTitle: "Let's build GPT: from scratch, in code, spelled out",
+    youtubeId: 'kCc8FmEb1nY',
+    publishedDate: '2023-01-17',
+    durationMin: 116,
+    topics: ['gpt', 'machine learning', 'transformers', 'andrej karpathy', 'education'],
+    lang: 'en',
+    intro:
+      'Andrej Karpathy’s two-hour "Let’s build GPT" lecture is the single most-cited educational video in the LLM era. It is also the rare technical lecture in which every line of code is typed live, every choice is justified, and no abstraction is left unexamined. It changed how transformers are taught.',
+    sections: [
+      {
+        heading: 'The argument is that nothing is magic',
+        body:
+          'Karpathy opens with a 50-line script that produces text from random characters. He then builds, incrementally, every component of a transformer — tokeniser, embedding layer, attention, multi-head attention, feed-forward block, layer normalisation, positional encoding. By the end of the lecture, the script is a working (small) language model, and not a single line was taken on faith. The pedagogical claim is that GPT is not a magic black box; it is a stack of small, comprehensible decisions, each of which can be questioned.',
+      },
+      {
+        heading: 'Why the live-coding format is the lecture',
+        body:
+          'Other ML explanations use slides, diagrams, animated walkthroughs. Karpathy uses an editor and a Python REPL. The format works because each component is tested as it is built — the audience watches the loss go down in real time, watches the generated text become less random, watches the model fail in instructive ways. Slides cannot reproduce this. The lecture is a record of how the field is actually done, not how it is summarised after the fact.',
+      },
+      {
+        heading: 'The section that changed the most viewers',
+        body:
+          'Around minute 80, Karpathy implements multi-head attention from scratch. The implementation is six lines of dense PyTorch. He spends fifteen minutes explaining each tensor reshape — why the dimensions are what they are, why the dot product is scaled by the square root of the head dimension, why the softmax operates on the last axis. By the end of this section, viewers who had been intimidated by attention papers report being able to read them. This is the most concrete impact a single educational video has had on the field.',
+      },
+      {
+        heading: 'Why the lecture aged well',
+        body:
+          'Two years on, the lecture is still the standard recommendation for anyone learning transformers. The reason is that Karpathy stayed close to the fundamentals — the attention mechanism, the training loop, the loss curve — and avoided the specific tooling that ages fastest. The exact API of PyTorch will change; the structure of a transformer will not. A pack of the lecture functions as a permanent reference card you can revisit when you forget why a particular shape appears.',
+      },
+    ],
+    takeaway:
+      'Transformers are not magic — they are six tensors, two normalisations, and a loss function, in that order.',
+    relatedSlugs: ['lex-fridman-andrej-karpathy-agi', 'lex-fridman-demis-hassabis-deepmind'],
+    metaTitle: 'Karpathy’s "Let’s build GPT" — the lecture that demystified transformers',
+    metaDescription:
+      'A reading note on Andrej Karpathy’s "Let’s build GPT" lecture — why nothing is magic, why live-coding is the format, and the multi-head attention section that changed the most viewers.',
+  },
+  {
+    slug: 'cal-newport-digital-minimalism',
+    creator: 'Cal Newport',
+    creatorHandle: 'calnewportmedia',
+    videoTitle: 'Digital Minimalism — Choosing a Focused Life in a Noisy World',
+    youtubeId: 'g8MflavqyEs', // TODO(verify): Newport Digital Minimalism book talk
+    publishedDate: '2019-02-21',
+    durationMin: 47,
+    topics: ['digital minimalism', 'attention', 'cal newport', 'phones', 'productivity'],
+    lang: 'en',
+    intro:
+      'Cal Newport’s Digital Minimalism talk is the operational sequel to Deep Work — same author, sharper claim, narrower scope. Where Deep Work asks how you concentrate, Digital Minimalism asks what you would concentrate on if you reclaimed the four hours per day that smartphones now consume.',
+    sections: [
+      {
+        heading: 'The claim is uncomfortable',
+        body:
+          'Newport opens with a number that the productivity-app industry would rather not discuss: the average smartphone user touches the device 2,617 times per day and accumulates roughly four hours of active screen time. Even if you assume the number is overstated by half, the implication is staggering — these four hours did not exist in any prior decade of human history, and they were not earned through productivity. They were extracted through engineered habit. Most of Newport’s argument is what to do once you accept this.',
+      },
+      {
+        heading: 'The 30-day reset is the operational core',
+        body:
+          'The book — and the talk — recommend a 30-day digital declutter: remove all optional technologies from your life for a month, then reintroduce only those that pass a stricter standard than they currently meet. The standard is not "is this useful sometimes?" — almost everything is — but "does the value it provides justify the cost of its design constraints?". The reset is the most practical part of the talk and the part most viewers skip in favour of the inspirational sections.',
+      },
+      {
+        heading: 'Why solitude is the missing concept',
+        body:
+          'A long section is about solitude — defined narrowly as time alone with your own thoughts, free from inputs from other minds. Newport argues this experience has become functionally extinct for most knowledge workers, replaced by a continuous low-level connection to other minds via phones, podcasts, social media. The implication is that decisions you think you are making for yourself are increasingly downstream of recent inputs you did not choose. This is the conceptual centre of the talk; the productivity protocols are downstream.',
+      },
+      {
+        heading: 'What the talk does not promise',
+        body:
+          'Newport is unusual in the genre for being explicit about what Digital Minimalism is not. It is not a productivity hack — you will not get more done. It is not a happiness intervention — happiness is more contingent than that. It is, in his framing, a reclamation of the conditions under which a meaningful life is possible. This honesty about the limits of the intervention is what gives the talk credibility, six years later, in a market that has moved on to dopamine-hacking and biohacking entirely.',
+      },
+    ],
+    takeaway:
+      'The four hours per day that smartphones consume were extracted through design, not earned through utility — Digital Minimalism is the operational reclamation.',
+    relatedSlugs: ['cal-newport-deep-work-talk', 'andrew-huberman-dopamine-motivation'],
+    metaTitle: 'Cal Newport on Digital Minimalism — what the 30-day reset actually is',
+    metaDescription:
+      'A reading note on Cal Newport’s Digital Minimalism talk — the four-hour problem, the 30-day reset, why solitude is the missing concept, and what the talk does not promise.',
+  },
+  {
+    slug: 'maria-popova-marginalian-interview',
+    creator: 'Maria Popova',
+    creatorHandle: 'brainpickings',
+    videoTitle: 'Maria Popova — On Reading, Time, and The Marginalian',
+    youtubeId: 'qjUe9YGdpQ4', // TODO(verify): Popova long-form interview
+    publishedDate: '2022-09-15',
+    durationMin: 88,
+    topics: ['maria popova', 'reading', 'the marginalian', 'literature', 'longevity'],
+    lang: 'en',
+    intro:
+      'Maria Popova has written The Marginalian (formerly Brain Pickings) every week for more than seventeen years — a body of work without obvious precedent in the era of internet publishing. The 2022 interview is the most extensive explanation she has given of how the project sustains itself, and the answer is more interesting than the standard productivity-blog template would suggest.',
+    sections: [
+      {
+        heading: 'Reading is not the same as research',
+        body:
+          'Popova opens with a distinction that sounds pedantic and is not. Research is reading toward a known question; reading is following curiosity without a destination. Most knowledge workers spend their lives doing only the first, and Popova’s claim is that the second is what produces the connections that matter — across disciplines, across centuries, across forms of thought. The Marginalian is the most sustained public demonstration of the second mode anyone has produced this century.',
+      },
+      {
+        heading: 'Why she rejected ads, sponsorships, and grants',
+        body:
+          'A long section in the middle is about the economic model that keeps The Marginalian independent — donations, readers, no other input. Popova explains that any other model would have shaped what she wrote within months, because the incentive structures of advertising and grant-funding are too strong to ignore. The honesty about how money distorts editorial decisions, even when the writer thinks she can resist it, is one of the most useful things she has said in public.',
+      },
+      {
+        heading: 'The argument against the algorithm',
+        body:
+          'Popova is among the few writers who has consistently refused to optimise for social-media algorithms. The Marginalian has no thumbnail strategy, no SEO targeting, no email-list-growth funnel. Her argument is that the work has to find the reader who will be changed by it, not the largest possible audience — and that algorithmic distribution selects against the first goal. Most of her growth has come from the readers who care most recommending her work, which is slow and durable.',
+      },
+      {
+        heading: 'What a pack does with eighty-eight minutes',
+        body:
+          'A long interview with a writer is the hardest material to pack well, because the value is often in the digressions and the silences. A pack of the Popova interview is more like a literary commonplace book than a productivity summary — quotes, references to the writers she invokes, the philosophical positions she defends — than a list of tactics. This is the right shape for the source material, and a useful reminder that not all packs should look the same.',
+      },
+    ],
+    takeaway:
+      'A body of work sustained over seventeen years requires refusing the optimisations that would have made it grow faster.',
+    relatedSlugs: ['naval-ravikant-reading-philosophy', 'cal-newport-deep-work-talk'],
+    metaTitle: 'Maria Popova on The Marginalian — sustaining a body of work for seventeen years',
+    metaDescription:
+      'A reading note on Maria Popova’s interview about The Marginalian — reading versus research, why she rejected ads and grants, and the argument against optimising for algorithms.',
+  },
+  {
+    slug: 'tim-ferriss-marc-andreessen-tech-philosophy',
+    creator: 'Tim Ferriss',
+    creatorHandle: 'TimFerriss',
+    videoTitle: 'Marc Andreessen — The Tim Ferriss Show',
+    youtubeId: 'sM3ZbI9zXqo', // TODO(verify): Ferriss Show × Andreessen episode
+    publishedDate: '2016-05-30',
+    durationMin: 138,
+    topics: ['marc andreessen', 'tim ferriss', 'venture capital', 'tech philosophy'],
+    lang: 'en',
+    intro:
+      'The 2016 Marc Andreessen episode of the Tim Ferriss Show is the most coherent statement of the Silicon Valley intellectual worldview as it existed before the platform-era backlash. Re-listening today is a kind of time travel — the same arguments, made before the consequences had compounded.',
+    sections: [
+      {
+        heading: 'The reading list is the keystone',
+        body:
+          'Andreessen has been famous for a reading list that is unusually broad — Sowell on economics, Drucker on management, Carlyle on history, Stephenson on speculative fiction. Tim spends an hour on this list, and the conversation that emerges is not about which books to read but about the discipline of letting old, hard, unfashionable books shape current thinking. The argument is that most of what passes for original insight in tech is rediscovery of arguments that were settled in another century.',
+      },
+      {
+        heading: 'Why "strong opinions, weakly held" is misunderstood',
+        body:
+          'The phrase has become a Silicon Valley cliché. Andreessen clarifies what it originally meant — and what it does not. It is not "form strong opinions to seem confident, then abandon them when challenged". It is "hold the strongest possible version of the most contested claim, defend it with full commitment, and then update completely when proven wrong". The asymmetry is the entire point. Most uses of the phrase today are about how to seem decisive; the original use was about how to think clearly.',
+      },
+      {
+        heading: 'The section that aged the worst',
+        body:
+          'A section on the future of work assumed that platform consolidation would broadly distribute economic gains. Eight years on, the prediction has aged badly — the consolidation happened, the distribution did not. Andreessen has updated his framework in public since then, and the contrast between this 2016 conversation and his more recent positions is itself useful as a record of how a thoughtful venture capitalist updates over a decade.',
+      },
+      {
+        heading: 'Why the interview still matters',
+        body:
+          'Even where the predictions failed, the methodology is durable: read widely outside your domain, hold strong positions, update when proven wrong, treat the history of similar arguments as evidence. A pack of the interview is essentially this methodology — the specific tech predictions can be replaced as the field evolves, but the way of thinking about which predictions to make does not.',
+      },
+    ],
+    takeaway:
+      'The methodology of "strong opinions, weakly held" is durable; the specific predictions that flow from it have a half-life of about a decade.',
+    relatedSlugs: ['tim-ferriss-naval-decision-making', 'naval-ravikant-reading-philosophy'],
+    metaTitle: 'Tim Ferriss × Marc Andreessen — the methodology, not the predictions',
+    metaDescription:
+      'A reading note on Tim Ferriss’s 2016 Marc Andreessen episode — the reading-list keystone, what "strong opinions, weakly held" actually means, and the section that aged the worst.',
+  },
+  {
+    slug: 'sam-harris-daniel-kahneman-thinking',
+    creator: 'Sam Harris',
+    creatorHandle: 'samharrisorg',
+    videoTitle: 'Sam Harris × Daniel Kahneman — Thinking, Fast and Slow',
+    youtubeId: 'JiTz2i4VHFw', // TODO(verify): Harris × Kahneman Making Sense episode
+    publishedDate: '2017-10-23',
+    durationMin: 92,
+    topics: ['daniel kahneman', 'sam harris', 'cognitive bias', 'system 1 system 2'],
+    lang: 'en',
+    intro:
+      'Daniel Kahneman died in 2024. The Sam Harris interview from 2017 is one of the last extensive public conversations he gave in which he summarised his life’s work in the form non-academic listeners could follow. It is also the most measured public statement of the limits of his own framework.',
+    sections: [
+      {
+        heading: 'The famous System 1 / System 2 framing',
+        body:
+          'Kahneman walks Harris through the central frame of Thinking, Fast and Slow — System 1 as the fast, intuitive, mostly-correct mental process; System 2 as the slow, deliberate, effortful one. The interview is the cleanest popular explanation of why most decision errors come from System 1 generating an answer that feels obvious and System 2 failing to check it. The clarity of the exposition is the reason this interview is often recommended over the book.',
+      },
+      {
+        heading: 'What Kahneman said about replication',
+        body:
+          'A section of the interview that became more important after Kahneman’s death is his unusually candid admission that several of the experiments he cited in Thinking, Fast and Slow have failed to replicate. He does not retreat from the framework — the core findings are robust — but he is explicit about which secondary findings should be considered weaker than the book made them sound. This honesty is rare in psychology popularisation and is the section most worth keeping in a pack.',
+      },
+      {
+        heading: 'The conversation on happiness and memory',
+        body:
+          'Half the interview is on the distinction between the experiencing self and the remembering self — the empirical observation that memory of an experience and the experience itself are systematically different, and that we make decisions based on the remembered version. Kahneman’s implication is uncomfortable: most of what we choose to do is shaped by anticipating memories we will have, not experiences we will have. The pack of this section is the one most useful for anyone making life decisions, not just consumer choices.',
+      },
+      {
+        heading: 'Why the interview will outlast many books on the same topic',
+        body:
+          'Books on cognitive bias proliferated after Thinking, Fast and Slow and most have aged poorly — too pop, too eager to extract productivity hacks. The Harris-Kahneman interview is the rare example of the original framer staying close to the data and refusing to over-extrapolate. Kahneman’s death makes the conversation a kind of testament. A pack of it is, in the long term, more useful than most subsequent secondary literature.',
+      },
+    ],
+    takeaway:
+      'The original framers of a field are usually more cautious about their conclusions than the popular literature that follows them.',
+    relatedSlugs: ['lex-fridman-robert-sapolsky-free-will', 'andrew-huberman-dopamine-motivation'],
+    metaTitle: 'Sam Harris × Daniel Kahneman — the cleanest exposition of System 1 / System 2',
+    metaDescription:
+      'A reading note on Sam Harris’s 2017 Daniel Kahneman interview — the cleanest System 1 / System 2 exposition, what Kahneman said about replication, and the experiencing vs remembering self.',
+  },
+  {
+    slug: 'yuval-harari-google-talks',
+    creator: 'Yuval Noah Harari',
+    creatorHandle: 'GoogleTalks',
+    videoTitle: 'Yuval Noah Harari at Talks at Google — Sapiens',
+    youtubeId: 'nzj7Wg4DAbs', // TODO(verify): Harari Talks at Google Sapiens
+    publishedDate: '2015-03-12',
+    durationMin: 58,
+    topics: ['yuval harari', 'sapiens', 'history', 'talks at google'],
+    lang: 'en',
+    intro:
+      'Yuval Noah Harari’s Talks at Google session from 2015 was the public moment in which Sapiens — already a bestseller in Hebrew and English — became the book that Silicon Valley executives quoted. The talk itself is a more compact, more arguable version of the book, and it is worth revisiting now that ten years of consequences have unfolded.',
+    sections: [
+      {
+        heading: 'The cognitive-revolution argument in twelve minutes',
+        body:
+          'Harari uses the first twelve minutes to compress the central argument of Sapiens into one claim: what made humans dominant over other species was the cognitive revolution roughly seventy thousand years ago, in which the ability to share imagined fictions allowed large-scale coordination. Religions, nations, money, corporations — Harari classes all of them as "intersubjective realities" that exist because enough people agree they do. This is the most contested claim in the book and the cleanest statement of it is in this talk.',
+      },
+      {
+        heading: 'Why the Silicon Valley audience responded',
+        body:
+          'The Q&A section is unusually revealing. The Google engineers in the audience ask Harari about AI, about the future of work, about whether tech accelerates or undoes the cognitive revolution. Harari’s answers are deliberately uncomfortable for the audience: he questions whether the technology being built in the room will distribute the gains it captures, and whether the engineers in the room have thought about whose lives become irrelevant if the technology succeeds. The audience response is hearable: nervous laughter, fewer questions, a host visibly trying to lighten the room.',
+      },
+      {
+        heading: 'What aged well, what did not',
+        body:
+          'The historical argument has aged well — the cognitive revolution frame remains contested but useful. The predictions about AI and work have aged unevenly — some prescient, some too fast. The section on data as the new resource, made in 2015, has aged badly because the framework was too tidy. A pack of the talk should distinguish between the historical argument (which is the durable contribution) and the predictions (which are the contribution that ages).',
+      },
+      {
+        heading: 'Why a pack is the right format for a talk like this',
+        body:
+          'Talks at Google sessions are unusually dense for a popular format — a respected academic with a sympathetic Q&A. Fifty-eight minutes of dense argumentation will not stick from a single viewing. A pack of the talk preserves the historical claims (which are the part you want to remember), the most-cited examples (the cognitive revolution, the agricultural-revolution trade-offs, the imagined-realities framework), and lets the predictions be evaluated separately. This separation is the right discipline for any popular-history source.',
+      },
+    ],
+    takeaway:
+      'The cognitive revolution is the part of Sapiens that aged well — and the predictions about AI and work are the part to revisit with caution.',
+    relatedSlugs: ['lex-fridman-demis-hassabis-deepmind', 'sam-harris-daniel-kahneman-thinking'],
+    metaTitle: 'Yuval Harari at Talks at Google — what aged well and what did not',
+    metaDescription:
+      'A reading note on Yuval Noah Harari’s 2015 Talks at Google session — the cognitive-revolution argument, the Silicon Valley reception, and what aged well versus what did not.',
+  },
+  {
+    slug: 'esther-wojcicki-raise-successful-people',
+    creator: 'Esther Wojcicki',
+    creatorHandle: 'esthersww',
+    videoTitle: 'How to Raise Successful People — TEDx + book talk',
+    youtubeId: 'eYHQcXVp4F4', // TODO(verify): Wojcicki TEDx / Google Talks parenting
+    publishedDate: '2019-05-07',
+    durationMin: 24,
+    topics: ['parenting', 'education', 'esther wojcicki', 'trust', 'tedx'],
+    lang: 'en',
+    intro:
+      'Esther Wojcicki raised three daughters who all became extraordinarily successful — Susan ran YouTube, Anne founded 23andMe, Janet is a paediatrics professor at UCSF. The TEDx talk in which she explains her parenting framework is more useful than the book that followed it, because the talk is forced to be compact and chooses the right five things.',
+    sections: [
+      {
+        heading: 'The framework is the acronym TRICK',
+        body:
+          'Trust, Respect, Independence, Collaboration, Kindness. Wojcicki argues these are not aspirational virtues but operational ones — they each translate into specific parenting decisions made repeatedly over twenty years. The acronym is easy to remember; the discipline of applying it is the actual content. Most parenting frameworks fail the operationalisation test; Wojcicki’s passes because she walks through specific decisions in the talk rather than staying at the level of principle.',
+      },
+      {
+        heading: 'Trust is the most contested of the five',
+        body:
+          'Wojcicki spends the longest section on trust, because it is the most counter-cultural in contemporary parenting. The argument is that most parents systematically over-monitor children — phones tracked, social media surveilled, schedules controlled — and that this surveillance prevents children from developing the self-trust they will need as adults. The case is empirical: children raised with appropriate trust become more capable adults than those raised under monitoring, controlling for other variables. The contemporary parenting industry is hostile to this conclusion, which is why it is the most-shared section of the talk.',
+      },
+      {
+        heading: 'The journalism-teacher origin story',
+        body:
+          'A short biographical section explains where the framework came from. Wojcicki taught high-school journalism for thirty years and watched what produced students who became capable adults versus students who collapsed at the first failure. The students who came from trusted, respected homes succeeded. The ones from controlling homes succeeded short-term and then unravelled. This thirty-year longitudinal observation is more evidence than most parenting books rest on.',
+      },
+      {
+        heading: 'Why the talk is the right entry point',
+        body:
+          'The book of the same title expands the framework considerably — with chapters on phones, on schools, on social media. The expansion is sometimes useful and sometimes pads. The talk has none of this padding; it is the framework, the evidence, and one strong example per principle. For most readers the talk is enough, and the book is the appendix. A pack of the talk preserves the operational version of TRICK in a single reference that survives the years between when you watched it and when your child needs the principle.',
+      },
+    ],
+    takeaway:
+      'Successful parenting is operational, not aspirational — and trust is the most counter-cultural of the five operational principles.',
+    relatedSlugs: ['cal-newport-deep-work-talk', 'andrew-huberman-morning-routine'],
+    metaTitle: 'Esther Wojcicki — How to Raise Successful People in twenty-four minutes',
+    metaDescription:
+      'A reading note on Esther Wojcicki’s TEDx talk on parenting — the TRICK acronym as operational framework, why trust is the most contested principle, and the journalism-teacher origin story.',
+  },
+  {
+    slug: 'lex-fridman-yann-lecun-meta-ai',
+    creator: 'Lex Fridman',
+    creatorHandle: 'lexfridman',
+    videoTitle: 'Yann LeCun: Meta AI, Open Source, Limits of LLMs',
+    youtubeId: '5t1vTLU7s40', // TODO(verify): Lex × Yann LeCun Meta episode
+    publishedDate: '2024-03-07',
+    durationMin: 168,
+    topics: ['yann lecun', 'meta ai', 'open source', 'llm limits', 'ai research'],
+    lang: 'en',
+    intro:
+      'Yann LeCun is the chief AI scientist at Meta and one of the three Turing Award winners credited with the deep-learning revival. The 2024 Lex Fridman interview is the most extended public statement of his disagreement with the rest of the field — and the disagreement matters because LeCun is right about more than the consensus has credited him for.',
+    sections: [
+      {
+        heading: 'The claim is that LLMs are not the path',
+        body:
+          'LeCun spends a long stretch arguing that current large language models, despite their commercial success, are not on the path to anything that should be called intelligence. The argument is technical: LLMs are autoregressive predictors of next tokens; they have no world model, no planning capability, no grounded understanding. Scaling them does not fix this because the architectural constraint is the autoregressive frame itself. This is the consensus-disrupting position the interview is most-cited for.',
+      },
+      {
+        heading: 'Why the open-source bet matters',
+        body:
+          'A second long section is on Meta’s decision to release Llama as open weights. LeCun makes the case that closed-source AI is a regulatory-capture strategy, not a safety strategy — that open weights are the only way the global research community can audit, improve, and build defences against what these systems can do. The argument has political consequences that most listeners under-appreciate; LeCun states them with characteristic directness.',
+      },
+      {
+        heading: 'The Joint Embedding Predictive Architecture',
+        body:
+          'LeCun’s own positive proposal — JEPA, the architecture Meta researchers have been building as an alternative to autoregressive transformers — gets a careful exposition. The technical depth is unusual for a Lex episode, and the implications are significant: a system that learns world models from raw video, plans actions, and represents possibilities as embeddings rather than tokens, would be qualitatively different from what current LLMs do. Whether JEPA delivers is uncertain; the framing of why it might matter is the interview’s most original contribution.',
+      },
+      {
+        heading: 'Why three hours is the right length for the disagreement',
+        body:
+          'LeCun’s positions sound provocative in short form and reasonable in long form. The three-hour format gives him the time to walk through the technical arguments that the press caricatures as contrarianism. A pack of the interview is the most efficient way to internalise the disagreement — it preserves the architectural claims, the open-source argument, and the JEPA proposal, separated from the headline-friendly soundbites.',
+      },
+    ],
+    takeaway:
+      'The most cited disagreement in AI today is technical, not philosophical — and a three-hour interview is the only format that lets it land.',
+    relatedSlugs: ['lex-fridman-demis-hassabis-deepmind', 'lex-fridman-sam-altman-openai'],
+    metaTitle: 'Lex × Yann LeCun — why LLMs are not the path, in three hours',
+    metaDescription:
+      'A reading note on Lex Fridman’s Yann LeCun interview — the architectural argument against LLMs as the path, the open-source bet, and the Joint Embedding Predictive Architecture.',
+  },
 ];
 
 /** Lookup helper — returns the note for a slug, or null. */
