@@ -70,10 +70,18 @@ export function GenerationProgress({ active, meta, mergeMode }: Props) {
     <div
       role="status"
       aria-live="polite"
-      className="flex min-h-[45vh] flex-col items-center justify-center px-5 py-12 text-center sm:px-8"
+      className="paper flex min-h-[45vh] flex-col items-center justify-center px-5 py-12 text-center sm:px-8"
     >
-      <span className="slow-glow inline-block">
-        <BrandMark variant="monogram" size="xl" tone="gold" decorative />
+      {/* Lighthouse mark with two ambient effects stacked:
+            • slow-glow  — opacity pulse (was already shipping)
+            • beacon-sweep — rotating gold-light conic gradient that
+              looks like the lighthouse beam actually sweeping
+          The pair makes the loading state feel alive without ever
+          crossing into "spinner" territory. */}
+      <span className="beacon-sweep inline-block">
+        <span className="slow-glow relative z-10 inline-block">
+          <BrandMark variant="monogram" size="xl" tone="gold" decorative />
+        </span>
       </span>
 
       <div className="mt-10 flex min-h-[160px] flex-col items-center gap-3">
@@ -93,6 +101,16 @@ export function GenerationProgress({ active, meta, mergeMode }: Props) {
               }}
             >
               {renderLineWithCountUp(line, isCurrent)}
+              {/* Typewriter caret on the active line — blinks at a
+                  mechanical step rate so the loading state feels like
+                  a typesetter is actively composing, not a generic
+                  spinner. Decorative only; aria-hidden. */}
+              {isCurrent && (
+                <span
+                  aria-hidden
+                  className="cursor-blink ml-1.5 inline-block h-[0.9em] w-[2px] translate-y-[0.06em] bg-gold/75 align-baseline"
+                />
+              )}
             </p>
           );
         })}

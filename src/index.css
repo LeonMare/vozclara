@@ -173,6 +173,53 @@ button,
   animation: slow-glow 4.5s ease-in-out infinite;
 }
 
+/* Beacon sweep — rotating conic gradient on top of the lighthouse
+   monogram during pack generation. Looks like the lighthouse light
+   actually sweeping. Designed to be SUBTLE: only ~12% gold alpha at
+   peak, blurred edges so it reads as ambient illumination rather
+   than a literal cone-of-light cartoon. Pairs with `slow-glow` on
+   the same element — slow-glow handles opacity pulse, beacon-sweep
+   handles rotational presence. */
+@keyframes beacon-sweep {
+  to { transform: rotate(360deg); }
+}
+.beacon-sweep {
+  position: relative;
+}
+.beacon-sweep::after {
+  content: '';
+  position: absolute;
+  inset: -22%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(201, 162, 75, 0.04) 12deg,
+    rgba(201, 162, 75, 0.14) 28deg,
+    rgba(201, 162, 75, 0.04) 44deg,
+    transparent 56deg,
+    transparent 360deg
+  );
+  animation: beacon-sweep 10s linear infinite;
+  pointer-events: none;
+  /* Filter blur softens the edges so the sweep never looks "drawn".
+     The 14% peak alpha already keeps it under the brand-mark gold
+     stroke weight, so the lighthouse stays the focal point. */
+  filter: blur(6px);
+  z-index: 0;
+}
+
+/* Caret blink — typewriter cursor at the end of the currently
+   active line in GenerationProgress. Steps (no ease) to feel
+   mechanical, not breathy. */
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: cursor-blink 1.1s steps(1, end) infinite;
+}
+
 /* ─── High-end editorial polish ───────────────────────────────────────
 
    Six layers that ladder the brand from "tasteful" to "premium-publication"
