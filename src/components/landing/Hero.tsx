@@ -162,13 +162,18 @@ export function Hero() {
   );
 }
 
-// "Free to try. No credit card." — localised under the paste input so the
-// trust signal arrives at the moment of hesitation. Takes locale from
-// useLocale's reactive state, never from DOM (DOM reads are not React-
-// reactive and caused mixed-language UI when the user switched picker).
+// "Free to try. No signup. No card." — localised under the paste input so
+// the trust signal arrives at the moment of hesitation. The added
+// "no signup" is the most-asked unspoken question for a visitor about
+// to paste a URL into a tool they've never used; surfacing it
+// pre-emptively closes the Lovable-style growth-hack loop (deliver
+// value first, signup only when the user wants to back it up).
+// Takes locale from useLocale's reactive state, never from DOM (DOM
+// reads are not React-reactive and caused mixed-language UI when the
+// user switched picker).
 function trustNote(locale: string): string {
-  if (locale.startsWith('es')) return 'Gratis para probar. Sin tarjeta de crédito.';
-  if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem cartão de crédito.';
-  if (locale.startsWith('de')) return 'Kostenlos testen. Keine Kreditkarte.';
-  return 'Free to try. No credit card.';
+  if (locale.startsWith('es')) return 'Gratis para probar. Sin registro. Sin tarjeta de crédito.';
+  if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem registo. Sem cartão de crédito.';
+  if (locale.startsWith('de')) return 'Kostenlos testen. Keine Anmeldung. Keine Kreditkarte.';
+  return 'Free to try. No signup. No credit card.';
 }

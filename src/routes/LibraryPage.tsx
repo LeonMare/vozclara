@@ -212,6 +212,18 @@ export function LibraryPage() {
           <AccountSyncBanner email={user.email} brainIds={user.brainIds} locale={locale} />
         )}
 
+        {/* Anonymous-library banner — the conversion lever for the
+            Lovable growth-hack pattern. Only renders when the visitor
+            HAS packs (so a value moment has already happened) AND is
+            NOT signed in (otherwise AccountSyncBanner above covers
+            them). Sits quietly above the stats row. Not pushy — links
+            to /signin with a clear "your data stays on this device
+            unless you sign in" reassurance so the visitor understands
+            what signup actually unlocks (sync, not feature access). */}
+        {!user && !selectMode && packs.length > 0 && (
+          <AnonymousLibraryBanner locale={locale} packCount={packs.length} />
+        )}
+
         {/* Review banner — surfaces SRS due-today count and routes to
             the daily review session. Hidden when nothing is due. */}
         {!selectMode && reviewBannerCount > 0 && (
@@ -777,6 +789,89 @@ function RatingBadge({ agg }: { agg: RatingAggregate | undefined }) {
  *                     LAUNCH_PLAN §7 deliberately keeps that one in
  *                     the Pro tier and we don't want to over-commit.
  */
+
+/**
+ * Anonymous-library banner — the soft conversion moment for the
+ * Lovable growth-hack. The visitor has already produced value (≥ 1
+ * pack saved locally); now we offer the cross-device sync benefit
+ * without ever framing signup as "required to use VozClara". Copy
+ * leads with reassurance ("your library is on this device, nothing
+ * is lost") then names the trade-off ("sign in to keep it across
+ * devices and back it up") — calm, not desperate.
+ *
+ * Visual rhythm matches AccountSyncBanner so the two states (signed-
+ * in / anonymous) read as siblings rather than separate UIs.
+ */
+function AnonymousLibraryBanner({
+  locale,
+  packCount,
+}: {
+  locale: string;
+  packCount: number;
+}) {
+  const labels = anonymousBannerLabels(locale);
+  return (
+    <div className="mb-6 flex flex-wrap items-center gap-3 rounded-card border border-navy/10 bg-white px-4 py-3 sm:px-5">
+      <span
+        className="inline-flex h-2 w-2 shrink-0 rounded-full bg-gold/60"
+        aria-hidden
+      />
+      <div className="min-w-0 flex-1">
+        <p className="font-sans text-[13px] leading-snug text-navy">
+          {labels.localTitle(packCount)}
+        </p>
+        <p className="mt-0.5 font-sans text-[12px] leading-snug italic text-graphit/65">
+          {labels.localHint}
+        </p>
+      </div>
+      <Link
+        to={`/signin?next=${encodeURIComponent(window.location.pathname)}`}
+        className="shrink-0 rounded-card border border-gold/60 bg-gold/10 px-3 py-1.5 font-sans text-xs font-medium text-navy transition hover:bg-gold/20"
+      >
+        {labels.signInCta}
+      </Link>
+    </div>
+  );
+}
+
+function anonymousBannerLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    localTitle: (n: number) =>
+      n === 1
+        ? 'Tu primer Pack está guardado en este dispositivo.'
+        : `${n} Packs guardados en este dispositivo.`,
+    localHint:
+      'Tu biblioteca vive en este navegador. Inicia sesión cuando quieras respaldarla y sincronizarla entre dispositivos.',
+    signInCta: 'Iniciar sesión',
+  };
+  if (locale.startsWith('pt')) return {
+    localTitle: (n: number) =>
+      n === 1
+        ? 'O teu primeiro Pack está guardado neste dispositivo.'
+        : `${n} Packs guardados neste dispositivo.`,
+    localHint:
+      'A tua biblioteca vive neste navegador. Inicia sessão quando quiseres fazer cópia de segurança e sincronizar entre dispositivos.',
+    signInCta: 'Iniciar sessão',
+  };
+  if (locale.startsWith('de')) return {
+    localTitle: (n: number) =>
+      n === 1
+        ? 'Dein erstes Pack ist auf diesem Gerät gespeichert.'
+        : `${n} Packs auf diesem Gerät gespeichert.`,
+    localHint:
+      'Deine Bibliothek lebt in diesem Browser. Melde dich an wenn du sie sichern + auf weiteren Geräten synchronisieren möchtest.',
+    signInCta: 'Anmelden',
+  };
+  return {
+    localTitle: (n: number) =>
+      n === 1
+        ? 'Your first Pack is saved on this device.'
+        : `${n} Packs saved on this device.`,
+    localHint:
+      'Your library lives in this browser. Sign in whenever you want to back it up and sync across devices.',
+    signInCta: 'Sign in',
+  };
+}
 
 function AccountSyncBanner({
   email,
