@@ -46,6 +46,7 @@ import {
 } from './founder';
 import { callLLM, callLLMStream } from './llm-router';
 import { anthropicSSEResponse } from './anthropic-stream';
+import { generateSeasonPack, type SeasonOutputLang } from './season-pack';
 import { VozClaraMcpAgent } from './mcp/agent';
 import oauthConsentApp from './oauth/handler';
 
@@ -715,6 +716,32 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
       return handleLlmSmoke(req, env);
     }
 
+    /* ─── /api/admin/season-smoke — Season Pack pipeline smoke ────── *
+     *
+     * POST with X-Admin-Token header.
+     * Body: { videoIds: string[], outputLang: 'en'|'es'|'pt'|'de' }
+     * Returns: { ok, pack: SeasonPackResult, latency_ms }
+     *
+     * Exercises the full summarise-then-synthesise pipeline from
+     * worker/src/season-pack.ts:generateSeasonPack — fetches all
+     * transcripts via Supadata in parallel, Llama-summarises each,
+     * Sonnet 4.5 cross-synthesises. Lets us validate the pipeline +
+     * prompt + JSON output shape before the UI integration lands.
+     *
+     * Same admin gate as /api/admin/llm-smoke. Pro Plus tier is
+     * implicit (the synthesis call inside generateSeasonPack hard-
+     * codes tier='pro_plus'); we don't check the caller's tier
+     * because this endpoint is for testing the pipeline, not for
+     * user-facing access.
+     */
+    if (url.pathname === '/api/admin/season-smoke' && req.method === 'POST') {
+      if (!env.ADMIN_TOKEN) return json({ error: 'admin_disabled' }, 503);
+      if (req.headers.get('X-Admin-Token') !== env.ADMIN_TOKEN) {
+        return json({ error: 'unauthorized' }, 401);
+      }
+      return handleSeasonSmoke(req, env);
+    }
+
     return json({ error: 'not_found' }, 404);
 }
 
@@ -992,6 +1019,83 @@ async function handleLlmSmoke(req: Request, env: Env): Promise<Response> {
       {
         ok: false,
         tier_requested: tier,
+        error: err instanceof Error ? err.message : String(err),
+        latency_ms: Date.now() - start,
+      },
+      502,
+    );
+  }
+}
+
+/* ─── /api/admin/season-smoke ───────────────────────────────────────────── *
+ *
+ * Season Pack pipeline smoke — exercises generateSeasonPack
+ * end-to-end so we can validate the summarise-then-synthesise
+ * architecture + JSON output shape before the UI lands.
+ *
+ * Curl shape:
+ *   curl -X POST 'https://vozclara.app/api/admin/season-smoke' \
+ *     -H "X-Admin-Token: $ADMIN_TOKEN" \
+ *     -H 'Content-Type: application/json' \
+ *     -d '{"videoIds":["abc123","def456","ghi789"],"outputLang":"en"}'
+ *
+ * Start with 3-5 short videos for the first smoke — the pipeline
+ * is sized for 40+ episodes but the cost + latency scale linearly
+ * with episode count.
+ */
+async function handleSeasonSmoke(req: Request, env: Env): Promise<Response> {
+  let body: { videoIds?: unknown; outputLang?: unknown };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_body' }, 400);
+  }
+
+  const videoIds = Array.isArray(body.videoIds)
+    ? (body.videoIds as unknown[]).filter((v): v is string => typeof v === 'string' && ID_PATTERN.test(v))
+    : [];
+  if (videoIds.length === 0) {
+    return json({ error: 'no_valid_video_ids', detail: 'videoIds must be a non-empty array of 11-char YouTube IDs' }, 400);
+  }
+  if (videoIds.length > 50) {
+    return json({ error: 'too_many_episodes', detail: 'v1 caps Season Packs at 50 episodes' }, 400);
+  }
+
+  const outputLang = body.outputLang;
+  if (outputLang !== 'en' && outputLang !== 'es' && outputLang !== 'pt' && outputLang !== 'de') {
+    return json({ error: 'invalid_output_lang', detail: "outputLang must be 'en' | 'es' | 'pt' | 'de'" }, 400);
+  }
+
+  if (!env.SUPADATA_API_KEY) {
+    return json({ error: 'supadata_not_configured' }, 503);
+  }
+
+  const supadataKey = env.SUPADATA_API_KEY;
+  const start = Date.now();
+  try {
+    const pack = await generateSeasonPack(
+      { videoIds, outputLang: outputLang as SeasonOutputLang },
+      // EpisodeFetcher adapter — bridges generateSeasonPack to the
+      // existing fetchViaSupadata helper without exporting it. Joins
+      // segments into a single transcript paragraph and derives the
+      // duration from the last segment's end position.
+      async (videoId) => {
+        const result = await fetchViaSupadata(videoId, null, null, supadataKey);
+        const text = result.segments
+          .map((s) => s.text)
+          .filter(Boolean)
+          .join(' ');
+        const lastSeg = result.segments[result.segments.length - 1];
+        const durationSec = lastSeg ? Math.round(lastSeg.start + lastSeg.dur) : undefined;
+        return { text, durationSec, sourceLang: result.lang };
+      },
+      env,
+    );
+    return json({ ok: true, pack, latency_ms: Date.now() - start });
+  } catch (err) {
+    return json(
+      {
+        ok: false,
         error: err instanceof Error ? err.message : String(err),
         latency_ms: Date.now() - start,
       },
