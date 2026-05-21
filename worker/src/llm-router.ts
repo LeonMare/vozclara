@@ -38,6 +38,7 @@
 
 import { callAnthropic, AnthropicError } from './anthropic';
 import type { AnthropicEnv, CacheTtl } from './anthropic';
+import { workersAiToAnthropicSSE } from './workers-ai-stream';
 
 /** User tiers — CLAUDE.md §1.3 LOCKED. */
 export type Tier = 'free' | 'pro' | 'pro_plus';
@@ -107,6 +108,27 @@ export interface LlmResult {
   };
   /** Stop condition — 'end_turn' | 'max_tokens' | provider-specific. */
   stopReason?: string;
+}
+
+export interface LlmStreamResult {
+  /**
+   * Anthropic-shape SSE bytes — message_start / content_block_start /
+   * content_block_delta(*) / content_block_stop / message_delta /
+   * message_stop framed events. Works regardless of which provider
+   * actually ran; the Workers AI branch is normalised through
+   * workers-ai-stream.ts:workersAiToAnthropicSSE so the wire format
+   * stays identical across tiers.
+   *
+   * Pipe straight into anthropicSSEResponse() from anthropic-stream.ts
+   * to ship to the client. Feed into parseAnthropicStream() for the
+   * provider-agnostic usage-logging side-channel.
+   */
+  stream: ReadableStream<Uint8Array>;
+  /** Which provider actually served the request. */
+  provider: 'workers-ai' | 'anthropic';
+  /** Model id — Sonnet 4.5 alias on the Anthropic path, the canonical
+   *  Llama string on the Workers AI path. */
+  model: string;
 }
 
 /**
@@ -222,21 +244,110 @@ async function callViaLlama(
   };
 }
 
-/* ─── TODO: streaming variant ──────────────────────────────────────────────
+/* ─── streaming variant ─────────────────────────────────────────────────── */
+
+/**
+ * Streaming sibling of `callLLM`. Same tier-aware routing, same
+ * soft-fallback on Anthropic misconfig / overload, but returns an
+ * Anthropic-shape SSE `ReadableStream<Uint8Array>` instead of a
+ * resolved text result.
  *
- * `callLLMStream` will mirror `callLLM` but return a normalised
- * ReadableStream<Uint8Array> in Anthropic SSE shape regardless of
- * provider. Two pieces to add:
+ * Pro Plus → Sonnet 4.5 native SSE forwarded as-is (Anthropic's
+ * own message_start / content_block_delta / message_stop envelope).
  *
- *   1. Anthropic path is already SSE-shaped — we forward as-is via
- *      anthropic-stream.ts helpers.
- *   2. Workers AI emits its own chunk format; we need a TransformStream
- *      that wraps each chunk into a `content_block_delta` event so the
- *      frontend sees one consistent wire format.
+ * Free + Pro → Llama 3.3 70B via Workers AI, normalised through
+ * `workersAiToAnthropicSSE` so the frontend sees the exact same
+ * event taxonomy regardless of which model ran. Token-count
+ * fields are zero on the Workers AI path — see the file header of
+ * `worker/src/workers-ai-stream.ts` for the caveats.
  *
- * That work lands in the next commit alongside #24 Streaming Pack-Gen.
- * Until then, handlers that want streaming should call the underlying
- * clients directly (callAnthropic for Pro Plus, env.AI.run with
- * stream:true for free/pro) and accept that the on-wire format
- * differs between tiers.
+ * The Anthropic path's failure modes match `callLLM`:
+ *   • `gateway_misconfigured` (missing secret / vars) → falls back to
+ *     Llama streaming so the user doesn't see a 500.
+ *   • `overloaded` (Anthropic capacity event) → same fallback.
+ *   • Anything else (rate_limited, auth_failed, invalid_request,
+ *     http_error, network_error) → re-thrown for the caller to log
+ *     and surface as a 5xx / 4xx Response.
+ *
+ * The Workers AI branch never falls back further — if `env.AI.run`
+ * throws, the error propagates. There's no third LLM behind Llama.
  */
+export async function callLLMStream(
+  options: LlmCallOptions,
+  env: LlmRouterEnv,
+): Promise<LlmStreamResult> {
+  const tier: Tier = options.tier ?? 'free';
+
+  if (tier === 'pro_plus') {
+    try {
+      const stream = await callAnthropic(
+        {
+          model: SONNET_MODEL,
+          maxTokens: options.maxTokens,
+          systemPrompt: options.systemPrompt,
+          userContent: options.userContent,
+          cacheSystemPrompt: options.cacheSystemPrompt,
+          cacheTTL: options.cacheTTL,
+          temperature: options.temperature,
+          signal: options.signal,
+          stream: true,
+        },
+        env,
+      );
+      return {
+        stream,
+        provider: 'anthropic',
+        model: SONNET_MODEL,
+      };
+    } catch (err) {
+      if (
+        err instanceof AnthropicError &&
+        (err.code === 'gateway_misconfigured' || err.code === 'overloaded')
+      ) {
+        return streamViaLlama(options, env);
+      }
+      throw err;
+    }
+  }
+
+  return streamViaLlama(options, env);
+}
+
+/**
+ * Workers AI streaming branch. Wraps the binding's raw SSE body in
+ * the Anthropic-shape envelope so callers handle one event format.
+ *
+ * The cast through `unknown` is unfortunate but necessary: the
+ * `WorkersAiBinding` signature here is conservative (it only
+ * declares the non-streaming `{ response }` shape), while at
+ * runtime `env.AI.run(model, { stream: true, ... })` returns
+ * `ReadableStream<Uint8Array>`. Widening the binding type would
+ * leak the union into every existing non-streaming call-site
+ * (CLAUDE.md §4.5 — never one-shot rewrite); the localised cast
+ * stays as the contract until we eventually swap the binding
+ * declaration to the official `@cloudflare/workers-types` Ai
+ * interface.
+ */
+async function streamViaLlama(
+  options: LlmCallOptions,
+  env: LlmRouterEnv,
+): Promise<LlmStreamResult> {
+  const messages: Array<{ role: 'system' | 'user'; content: string }> = [];
+  if (options.systemPrompt) {
+    messages.push({ role: 'system', content: options.systemPrompt });
+  }
+  messages.push({ role: 'user', content: options.userContent });
+
+  const raw = (await env.AI.run(LLAMA_MODEL, {
+    messages,
+    max_tokens: options.maxTokens,
+    temperature: options.temperature ?? 0.4,
+    stream: true,
+  })) as unknown as ReadableStream<Uint8Array>;
+
+  return {
+    stream: workersAiToAnthropicSSE(raw, LLAMA_MODEL),
+    provider: 'workers-ai',
+    model: LLAMA_MODEL,
+  };
+}
