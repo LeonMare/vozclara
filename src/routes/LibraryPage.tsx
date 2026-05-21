@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
+import { PackCover } from '../components/PackCover';
 import { AskPanel } from '../components/AskPanel';
 import {
   listPacks,
@@ -416,35 +417,35 @@ export function LibraryPage() {
                   selected ? 'border-gold ring-2 ring-gold/40' : 'border-navy/10',
                 ].join(' ')}
               >
-                {/* Thumbnail */}
-                <div className="relative aspect-video w-full overflow-hidden bg-navy">
-                  {p.source.thumbnailUrl && (
-                    <img
-                      src={p.source.thumbnailUrl}
-                      alt=""
-                      loading="lazy"
-                      className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
-                    />
-                  )}
-                  {/* Mode badge overlay */}
-                  <span className="absolute left-3 top-3 rounded-full bg-navy/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest text-gold backdrop-blur-sm">
-                    {t.modes[p.mode]?.name ?? p.mode}
-                  </span>
-                  {/* Difficulty badge — only when the pack carries one */}
-                  {p.difficulty && (
-                    <span
-                      className="absolute left-3 bottom-3 rounded-full bg-creme/95 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-gold backdrop-blur-sm"
-                      title={`CEFR ${p.difficulty}`}
-                    >
-                      {p.difficulty}
+                {/* Designed cover — replaces the bare YouTube thumbnail
+                    so every Pack reads as a designed object in the
+                    Library grid. Genre + mode + language pair are now
+                    part of the cover composition rather than separate
+                    overlay badges, which keeps the visual rhythm
+                    cleaner across the column count breakpoints. */}
+                <div className="relative">
+                  <PackCover
+                    title={p.title}
+                    genre={p.genre}
+                    sourceLang={p.sourceLang}
+                    outputLang={p.outputLang}
+                    mode={p.mode}
+                    difficulty={p.difficulty}
+                  />
+                  {/* Multi-translation indicator — only when more than
+                      one output language is materialised on the pack.
+                      Sits on top of the cover at the top-right where
+                      the V·C mark already lives, with the V·C lockup
+                      slightly nudged left to make room. */}
+                  {p.outputLanguages.length > 1 && (
+                    <span className="absolute right-12 top-4 rounded-full bg-creme/95 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-graphit/70 sm:right-14 sm:top-5">
+                      +{p.outputLanguages.length - 1}
                     </span>
                   )}
-                  <span className="absolute right-3 top-3 rounded-full bg-creme/90 px-2 py-0.5 font-sans text-[9px] uppercase tracking-widest tabular-nums text-graphit/70 backdrop-blur-sm">
-                    {p.outputLanguages.length > 1
-                      ? `${p.outputLang.toUpperCase()} +${p.outputLanguages.length - 1}`
-                      : p.outputLang.toUpperCase()}
-                  </span>
-                  {/* Select-mode checkbox overlay */}
+                  {/* Select-mode checkbox overlay — kept as a separate
+                      element so it floats above the cover and stays
+                      tap-targetable even when the cover renders very
+                      large at the lg breakpoint. */}
                   {selectMode && (
                     <span
                       aria-hidden
@@ -464,25 +465,28 @@ export function LibraryPage() {
                   )}
                 </div>
 
-                {/* Body */}
+                {/* Body — the cover above already carries the title
+                    + genre + mode + language; the body adds only the
+                    supporting metadata (TLDR, key-idea count, date,
+                    rating) so we don't repeat ourselves. The title
+                    is rendered via the cover's <p> element which is
+                    screen-reader-accessible, so no a11y regression. */}
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-serif text-base leading-snug text-navy sm:text-lg">
-                    {p.title}
-                  </h3>
                   {(view.tldr || view.summary.short) && (
-                    <p className="mt-2 font-sans text-[13px] leading-snug text-graphit/65 line-clamp-2">
+                    <p className="font-serif italic text-[13px] leading-snug text-graphit/75 line-clamp-3 sm:text-sm">
                       {view.tldr ?? view.summary.short}
                     </p>
                   )}
 
                   <div className="mt-3 h-px w-6 bg-gold/50" aria-hidden />
 
-                  {/* Meta row: idea count + date + genre */}
+                  {/* Meta row: idea count + date.  Genre lives on the
+                      cover now, so the body row stays cleaner. */}
                   <div className="mt-3 flex items-baseline justify-between gap-2 font-sans text-[11px] text-graphit/65">
                     <span className="inline-flex items-baseline gap-1 tabular-nums">
                       <span className="font-medium text-navy">{view.keyIdeas.length}</span>
                       <span className="text-graphit/65">·</span>
-                      <span className="italic">{t.genreNames[p.genre] ?? p.genre}</span>
+                      <span className="italic">{view.keyIdeas.length === 1 ? 'idea' : 'ideas'}</span>
                     </span>
                     <span className="tabular-nums text-graphit/65">
                       {new Date(p.createdAt).toLocaleDateString(locale, { day: '2-digit', month: 'short' })}
