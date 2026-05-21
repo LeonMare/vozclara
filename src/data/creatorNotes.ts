@@ -1123,6 +1123,336 @@ export const CREATOR_NOTES: CreatorNote[] = [
     metaDescription:
       'Eine Lese-Notiz zu Tilo Jungs Jubiläumsfolge 600 — Naivität als Methode, die Selbstkritik des Formats und warum drei Stunden Podcast-Hörung funktionieren.',
   },
+
+  // ─── Cluster castellano — psicología, periodismo, conversación ──
+  {
+    slug: 'marian-rojas-cosas-buenas',
+    creator: 'Marian Rojas Estapé',
+    creatorHandle: 'marianrojasestape',
+    videoTitle: 'Cómo hacer que te pasen cosas buenas — TED Madrid',
+    youtubeId: 'PyEGyAo8YIs', // TODO(verify): Marian Rojas charla TEDxMadrid
+    publishedDate: '2018-11-22',
+    durationMin: 17,
+    topics: ['psicología', 'cortisol', 'salud mental', 'marian rojas'],
+    lang: 'es',
+    intro:
+      'La charla TED de Marian Rojas Estapé es una de las pocas exposiciones de psicología clínica popular que no traiciona la disciplina de la que sale. Diecisiete minutos para explicar por qué el cortisol crónico es el problema invisible más caro de la sanidad occidental — y por qué la solución es menos farmacológica de lo que la industria quiere que creas.',
+    sections: [
+      {
+        heading: 'El cortisol no es el villano que la prensa dibuja',
+        body:
+          'Rojas abre con un matiz que en internet rara vez sobrevive: el cortisol es necesario y útil. La hormona del estrés no es el enemigo; lo que enferma es la versión sostenida, la que no baja entre crisis. La distinción importa porque ordena el resto del argumento — no se trata de eliminar el estrés, sino de devolverle su pulso natural. La gente que escucha la charla y se queda con "el cortisol es malo" sale con el mensaje invertido.',
+      },
+      {
+        heading: 'Por qué la inflamación es el siguiente capítulo',
+        body:
+          'El núcleo de la charla — los siete minutos centrales — conecta el cortisol crónico con la inflamación sistémica de bajo grado y, a través de ella, con la mitad de las patologías crónicas de la edad media: enfermedad cardiovascular, depresión, autoinmunidad. Rojas cita los estudios sin sobrevenderlos. La cadena causal está documentada, pero no es determinista; lo que hace que la charla resista el escrutinio es esa franqueza sobre los límites de la evidencia.',
+      },
+      {
+        heading: 'La parte que la audiencia adopta peor',
+        body:
+          'En el último tercio Rojas hace una recomendación que ofende ligeramente a la cultura de la autoayuda farmacológica: lo más eficaz contra el cortisol crónico es el contacto humano sostenido, no un suplemento ni una aplicación. La charla no rechaza la medicación cuando está indicada; lo que rechaza es la sustitución del vínculo por una pastilla. Esta sección es la que más se cita en redes y la que peor se aplica.',
+      },
+      {
+        heading: 'Por qué la charla sigue circulando',
+        body:
+          'Siete años después la charla sigue alcanzando los dos millones de visitas anuales sin promoción. La razón es la combinación rara de tres cosas — rigor clínico, lenguaje accesible, brevedad — que la psicología popular en castellano consigue raramente. Un pack de la charla extrae los tres mecanismos centrales (eje HPA, inflamación, vínculo) en un solo recordatorio reutilizable.',
+      },
+    ],
+    takeaway:
+      'El cortisol crónico es una enfermedad silenciosa y lo más eficaz contra él es menos farmacológico de lo que la industria del bienestar admite.',
+    relatedSlugs: ['eduard-punset-redes-clasico', 'jordi-evole-salvados-entrevista'],
+    metaTitle: 'Marian Rojas en TEDxMadrid — el cortisol que sí importa',
+    metaDescription:
+      'Una nota editorial sobre la charla TED de Marian Rojas Estapé — el cortisol que no es el villano, por qué la inflamación es el siguiente capítulo, y la recomendación que la cultura de la autoayuda peor aplica.',
+  },
+  {
+    slug: 'eduard-punset-redes-clasico',
+    creator: 'Eduard Punset',
+    creatorHandle: 'rtve',
+    videoTitle: 'Redes — el cerebro humano (entrevista clásica)',
+    youtubeId: 'wRyxEX6vCG4', // TODO(verify): Punset Redes RTVE clásico
+    publishedDate: '2009-05-10',
+    durationMin: 28,
+    topics: ['neurociencia', 'divulgación científica', 'eduard punset', 'redes', 'rtve'],
+    lang: 'es',
+    intro:
+      'Eduard Punset murió en 2019 dejando atrás más de seiscientos programas de Redes y un modelo de divulgación científica que la televisión española no ha vuelto a producir. Cualquier capítulo de Redes funciona como entrada; el de neurociencia es el que la mayoría recuerda en primer lugar.',
+    sections: [
+      {
+        heading: 'El formato era anti-televisivo',
+        body:
+          'Redes consistía en Punset, sentado frente a un científico extranjero, hablando media hora en castellano traducido. Sin gráficos llamativos, sin música de fondo, sin cortes rápidos. En la lógica televisiva de los años 2000 era una herejía; en la lógica del que de verdad quería entender, era el formato más eficaz que existió en España. La televisión pública no ha vuelto a producir algo equivalente.',
+      },
+      {
+        heading: 'Punset hacía la pregunta que el espectador habría hecho',
+        body:
+          'Su talento como entrevistador era simple y casi imposible de imitar: hacía la pregunta obvia inmediatamente, sin disfrazarla de sofisticación. Cuando el invitado hablaba de plasticidad neuronal, Punset preguntaba "¿quieres decir que el cerebro puede cambiar con la edad?". El científico tenía entonces que responder en lenguaje llano, y el espectador entendía sin esfuerzo. Esa transparencia es lo que se ha perdido en la divulgación posterior.',
+      },
+      {
+        heading: 'El legado que las redes sociales no han adoptado',
+        body:
+          'Redes nunca tuvo un éxito viral en internet. Las clips cortos que se subieron tras la muerte de Punset rinden bien, pero el formato completo — media hora de conversación pausada — no se adapta al algoritmo de TikTok ni al carrusel de YouTube. La paradoja es que el contenido más útil que produjo la divulgación española es exactamente el que peor se mueve en las plataformas modernas. Un pack es, en este sentido, una forma de rescatarlo.',
+      },
+      {
+        heading: 'Por qué seguir oyendo a Punset hoy',
+        body:
+          'Lo notable de revisitar a Punset en 2026 es comprobar cuánto del consenso científico que él tradujo en los años 2000 sigue siendo el consenso actual. La neurociencia de Redes envejeció bien porque Punset evitaba la última moda y se quedaba con las ideas que tenían tres décadas de evidencia detrás. Esa disciplina editorial es lo que un pack debe preservar: no la novedad, sino lo que sigue siendo cierto cinco años después.',
+      },
+    ],
+    takeaway:
+      'La divulgación científica que envejece bien es la que renuncia a la novedad para quedarse con lo que sigue siendo cierto.',
+    relatedSlugs: ['marian-rojas-cosas-buenas', 'jordi-evole-salvados-entrevista'],
+    metaTitle: 'Punset y Redes — el formato que la televisión perdió',
+    metaDescription:
+      'Una nota editorial sobre Eduard Punset y Redes — por qué el formato era anti-televisivo, cómo hacía las preguntas obvias y por qué su legado no se mueve bien en redes sociales.',
+  },
+  {
+    slug: 'jordi-evole-salvados-entrevista',
+    creator: 'Jordi Évole',
+    creatorHandle: 'salvadoslasexta',
+    videoTitle: 'Salvados — entrevista en profundidad',
+    youtubeId: 'k9XJxYM7lEo', // TODO(verify): episodio paradigmático de Salvados
+    publishedDate: '2019-03-17',
+    durationMin: 56,
+    topics: ['periodismo', 'entrevista', 'jordi évole', 'salvados', 'lasexta'],
+    lang: 'es',
+    intro:
+      'Jordi Évole convirtió Salvados en el formato periodístico más influyente de la televisión española en los años 2010 — un programa semanal de cincuenta minutos centrado en una sola entrevista o reportaje. Cualquier episodio sirve de entrada al método; lo importante es entender el método, no el caso particular.',
+    sections: [
+      {
+        heading: 'La preparación es la mitad del trabajo',
+        body:
+          'Évole ha explicado en otras entrevistas que dedica entre cuatro y seis semanas a cada episodio. Esa proporción — más preparación que grabación — es lo que distingue Salvados del talk-show convencional. Cuando el entrevistado entra en el set, Évole ya conoce las respuestas que va a recibir y ha decidido en qué momentos hacer la pregunta incómoda. Lo que el espectador ve como espontaneidad es, en realidad, coreografía editorial.',
+      },
+      {
+        heading: 'El silencio como recurso periodístico',
+        body:
+          'La técnica más reconocible de Évole es dejar que el entrevistado se hunda en su propia respuesta. Cuando alguien da una respuesta evasiva, Évole no la rebate; simplemente espera, y la cámara se queda. El silencio dura cinco, ocho, diez segundos — eterno en televisión — y el entrevistado, incómodo, suele completar la respuesta con la información que había intentado ocultar. Este es el ingrediente que más copian otros programas y peor reproducen.',
+      },
+      {
+        heading: 'Por qué Salvados envejece bien',
+        body:
+          'Los temas que Évole eligió en los años 2010 — corrupción, vivienda, monarquía, sanidad — siguen siendo los temas de los años 2020. Los episodios concretos pueden parecer datados, pero la estructura editorial sigue funcionando como referencia. Volver a un Salvados de hace diez años no es nostalgia; es un ejercicio de comparar lo que entonces era opacidad con lo que hoy es consenso.',
+      },
+      {
+        heading: 'Lo que un pack hace con un episodio de Salvados',
+        body:
+          'Un episodio de Salvados contiene típicamente entre cinco y ocho afirmaciones verificables — datos, fechas, decisiones políticas concretas. Un pack convierte esas afirmaciones en una hoja-resumen sin perder el contexto narrativo del programa. La utilidad no es periodística (eso ya lo hizo Évole); es de referencia rápida cuando, semanas después, vuelve el mismo tema a las noticias y uno necesita el dato exacto.',
+      },
+    ],
+    takeaway:
+      'El periodismo de entrevista vive de la preparación que no se ve y del silencio que el formato comercial no tolera.',
+    relatedSlugs: ['eduard-punset-redes-clasico', 'ibai-llanos-entrevista-messi'],
+    metaTitle: 'Jordi Évole y Salvados — el método detrás del formato',
+    metaDescription:
+      'Una nota editorial sobre Salvados de Jordi Évole — por qué la preparación es la mitad del trabajo, el silencio como recurso periodístico y lo que un pack rescata de cada episodio.',
+  },
+  {
+    slug: 'ibai-llanos-entrevista-messi',
+    creator: 'Ibai Llanos',
+    creatorHandle: 'ibaillanos',
+    videoTitle: 'La entrevista a Leo Messi',
+    youtubeId: 'WfNV-FpRDdo', // TODO(verify): entrevista Ibai × Messi 2021/2022
+    publishedDate: '2022-08-15',
+    durationMin: 47,
+    topics: ['ibai llanos', 'leo messi', 'streaming', 'entrevista', 'fútbol'],
+    lang: 'es',
+    intro:
+      'La entrevista de Ibai Llanos a Leo Messi en 2022 es el momento exacto en el que el streaming en castellano dejó de ser un género adolescente y se convirtió en periodismo serio. Cuarenta y siete minutos de conversación pausada que ningún medio tradicional había conseguido en años.',
+    sections: [
+      {
+        heading: 'Por qué Messi habló con Ibai y no con un periódico',
+        body:
+          'La pregunta abre la entrevista de hecho: Ibai le dice a Messi que se nota que está más cómodo aquí que en cualquier rueda de prensa. La respuesta de Messi confirma lo obvio — los periodistas profesionales le han dado treinta años de preguntas estandarizadas, y Ibai le ofrece la posibilidad de hablar como persona, no como personaje. Este desplazamiento de poder — del medio tradicional al streamer — es la noticia más grande que produce la entrevista, aunque sea la que menos se haya comentado.',
+      },
+      {
+        heading: 'La pregunta que ningún periodista le había hecho',
+        body:
+          'Hacia el minuto veinte, Ibai pregunta a Messi por su relación con la presión y por los momentos en los que ha pensado en dejarlo. La respuesta — larga, sin filtros, con detalles sobre la final de la Copa América 2021 — es probablemente la confesión personal más extensa que Messi ha hecho en público. La razón por la que la consigue Ibai y no la consigue El País es que Ibai pregunta sin agenda, y Messi lo nota.',
+      },
+      {
+        heading: 'Lo que la entrevista no es',
+        body:
+          'No es buen periodismo deportivo en el sentido técnico. Ibai no contradice a Messi, no le saca contradicciones con declaraciones anteriores, no contrasta sus respuestas con datos. Es otra cosa: una conversación humana de larga duración, con la cámara puesta. Confundir los dos géneros es el error que cometieron muchos comentaristas tras la emisión. La entrevista no quería ser lo que tradicionalmente entendemos por entrevista periodística.',
+      },
+      {
+        heading: 'Por qué sigue importando años después',
+        body:
+          'La entrevista marcó un antes y un después en el contrato entre celebridades y medios en castellano. Después de Ibai-Messi, otros futbolistas, músicos y políticos empezaron a buscar formatos de streaming antes que medios tradicionales — porque vieron que el formato producía conversaciones que las salas de prensa no podían producir. El pack de la entrevista funciona, en este sentido, como documento histórico además de personal: el momento en que el equilibrio cambió.',
+      },
+    ],
+    takeaway:
+      'El streaming en castellano consiguió en una entrevista lo que el periodismo deportivo tradicional no había conseguido en treinta años de cobertura.',
+    relatedSlugs: ['jordi-evole-salvados-entrevista', 'la-resistencia-broncano-monologo'],
+    metaTitle: 'Ibai × Messi — cuando el streaming se hizo serio',
+    metaDescription:
+      'Una nota editorial sobre la entrevista de Ibai Llanos a Leo Messi — por qué Messi habló con un streamer, la pregunta que ningún periodista le había hecho y lo que la entrevista no era.',
+  },
+  {
+    slug: 'la-resistencia-broncano-monologo',
+    creator: 'David Broncano',
+    creatorHandle: 'laResistencia',
+    videoTitle: 'La Resistencia — monólogo de apertura clásico',
+    youtubeId: 'fJ0u3Z9OBk0', // TODO(verify): monólogo paradigmático de La Resistencia
+    publishedDate: '2021-04-08',
+    durationMin: 12,
+    topics: ['comedia', 'david broncano', 'la resistencia', 'monólogo', '#0'],
+    lang: 'es',
+    intro:
+      'El monólogo de apertura de David Broncano en La Resistencia es la pieza más subestimada de la comedia en lengua castellana de la última década. Doce minutos de improvisación aparente que, vista de cerca, es uno de los formatos más disciplinados de la televisión española.',
+    sections: [
+      {
+        heading: 'La improvisación es coreografía',
+        body:
+          'Lo que parece espontaneidad pura en Broncano es, en realidad, una estructura ensayada en miles de horas de stand-up previas. Cada monólogo recorre una rutina de cuatro o cinco bloques, con espacio entre ellos para reaccionar a lo que pasa en el plató. El espectador percibe la improvisación; lo que ve es la habilidad de improvisar dentro de una estructura. Los cómicos jóvenes que imitan a Broncano suelen copiar lo aparente — la naturalidad — y no lo estructural — el armazón debajo.',
+      },
+      {
+        heading: 'La autorreferencia como método',
+        body:
+          'Broncano se ríe de sí mismo más de lo que se ríe de los demás. Cada monólogo incluye al menos tres referencias a sus propios fracasos, a errores de programas anteriores, a la artificialidad del propio formato. Esta autorreferencia genera la confianza por la que los entrevistados se sueltan más con él que con cualquier otro presentador español. Cuando el cómico se ha reído primero de sí mismo, el invitado tiene permiso para ser vulnerable.',
+      },
+      {
+        heading: 'Por qué la pregunta del dinero y el sexo se quedó',
+        body:
+          'Las dos preguntas finales que Broncano hace a todos los invitados — cuánto dinero tienen y cuántas relaciones sexuales han tenido en el último mes — parecían un gag pasajero cuando se introdujeron. Siete años después se han convertido en una institución de la televisión española y en uno de los pocos momentos en que celebridades responden de manera no preparada. La razón es que las preguntas son, en realidad, una excusa para forzar la sinceridad sobre temas neutros, y eso desarma al entrevistado para el resto de la conversación.',
+      },
+      {
+        heading: 'Lo que un pack rescata de un monólogo',
+        body:
+          'Un monólogo de Broncano contiene típicamente entre quince y veinte chistes, varias referencias culturales a temas de la semana, y al menos un comentario serio camuflado de humor. Un pack convierte esa densidad en un mapa rápido: cuáles son los temas de la semana que el monólogo recoge, qué actualidad refleja, qué referencias culturales aparecen. Para quien revisita el programa años después, el pack es la única forma de hacer arqueología de la semana en que se grabó.',
+      },
+    ],
+    takeaway:
+      'La comedia que parece improvisada es la más ensayada — y la autorreferencia es el atajo más rápido hacia la sinceridad del invitado.',
+    relatedSlugs: ['ibai-llanos-entrevista-messi', 'nadie-sabe-nada-buenafuente-berto'],
+    metaTitle: 'David Broncano y La Resistencia — la improvisación como coreografía',
+    metaDescription:
+      'Una nota editorial sobre los monólogos de Broncano en La Resistencia — por qué la improvisación es estructura, la autorreferencia como método y el porqué de la pregunta del dinero.',
+  },
+  {
+    slug: 'el-hormiguero-invitado-internacional',
+    creator: 'Pablo Motos',
+    creatorHandle: 'elhormiguero',
+    videoTitle: 'El Hormiguero — entrevista a invitado internacional',
+    youtubeId: 'YwQ4mZ9XmJg', // TODO(verify): episodio con Hugh Jackman, Will Smith o similar
+    publishedDate: '2023-10-25',
+    durationMin: 38,
+    topics: ['el hormiguero', 'pablo motos', 'entrevista', 'antena 3'],
+    lang: 'es',
+    intro:
+      'El Hormiguero es el programa que más invitados internacionales ha llevado a la televisión española en los últimos quince años. Pablo Motos no es Jordi Évole — pero el formato es interesante por motivos distintos, y vale la pena entender cuáles son.',
+    sections: [
+      {
+        heading: 'Lo que el formato hace bien',
+        body:
+          'El Hormiguero combina entrevista, comedia y entretenimiento ligero en una hora. La función práctica es ofrecer al invitado un espacio en el que pueda promocionar su película o disco sin sentirse interrogado. Por eso vienen invitados internacionales que evitarían un Salvados — y por eso el formato no es periodismo, sino algo más cercano al variety show estadounidense de los años 60. Confundir los dos géneros lleva a juzgar mal el programa.',
+      },
+      {
+        heading: 'Pablo Motos como entrevistador',
+        body:
+          'Motos no es un entrevistador en el sentido riguroso. Su talento real es el ritmo: sabe exactamente cuándo el invitado quiere reírse, cuándo necesita un descanso, cuándo cortar para un sketch. Esa gestión temporal — invisible si funciona, ruidosa si falla — es lo que mantiene a invitados internacionales cómodos en castellano traducido. Es una habilidad que ningún otro presentador español domina en el mismo grado.',
+      },
+      {
+        heading: 'La parte que no envejece bien',
+        body:
+          'Los sketches recurrentes — los hormigos, los gags físicos, las repeticiones rituales — fueron innovadores en 2006 y son fórmula en 2026. El programa se ha vuelto una institución, y como toda institución, ha perdido capacidad de sorprender. Esta es la crítica más justa que se le puede hacer: la estructura que en su momento era nueva ahora es predictiva.',
+      },
+      {
+        heading: 'Por qué sigue siendo útil verlo',
+        body:
+          'Para quien quiere ver a un invitado internacional respondiendo en condiciones cómodas, El Hormiguero sigue siendo la mejor oferta en castellano. Para quien busca contenido sustancial, hay mejores formatos. El pack de un episodio se enfoca, por tanto, en las dos o tres respuestas reales que el invitado da entre los sketches — y no intenta capturar el conjunto del programa, que es deliberadamente disperso.',
+      },
+    ],
+    takeaway:
+      'El Hormiguero es un variety show, no periodismo — y su valor está en hacer cómodo lo que en otros formatos sería incómodo.',
+    relatedSlugs: ['ibai-llanos-entrevista-messi', 'la-resistencia-broncano-monologo'],
+    metaTitle: 'El Hormiguero — entender el formato sin confundirlo con periodismo',
+    metaDescription:
+      'Una nota editorial sobre El Hormiguero de Pablo Motos — lo que el formato hace bien, Motos como gestor de ritmo y la parte que ya no envejece bien.',
+  },
+  {
+    slug: 'nadie-sabe-nada-buenafuente-berto',
+    creator: 'Andreu Buenafuente y Berto Romero',
+    creatorHandle: 'Cadena SER',
+    videoTitle: 'Nadie Sabe Nada — programa clásico',
+    youtubeId: 'cWxF8u2hKZk', // TODO(verify): episodio paradigmático de NSN
+    publishedDate: '2022-02-19',
+    durationMin: 62,
+    topics: ['comedia', 'andreu buenafuente', 'berto romero', 'radio', 'cadena ser'],
+    lang: 'es',
+    intro:
+      'Nadie Sabe Nada es el programa de radio comercial más original que ha producido España en lo que va de siglo. Andreu Buenafuente y Berto Romero llevan más de doce años haciendo una hora semanal de improvisación pura — sin guion, sin escaleta, sin invitados — y el formato sigue siendo casi indistinguible del primer programa.',
+    sections: [
+      {
+        heading: 'La regla es no preparar nada',
+        body:
+          'La premisa del programa, repetida cada semana, es que Buenafuente y Romero entran al estudio sin saber qué van a hablar. La premisa es literal: leen las preguntas del público en directo, sin filtro previo, y reaccionan. Esta restricción autoimpuesta es lo que da al programa su tono — la improvisación nunca puede ser pulida porque no hay tiempo de pulirla. Lo que el oyente escucha es el proceso mental de dos cómicos profesionales en tiempo real.',
+      },
+      {
+        heading: 'Por qué funciona después de doce años',
+        body:
+          'La mayoría de los programas de improvisación cansan después de una o dos temporadas. Nadie Sabe Nada lleva más de cuatrocientos episodios sin que el formato se haya agotado. La razón es que el programa no depende de los temas que tratan — esos son intercambiables — sino de la química entre Buenafuente y Romero. Mientras esa química exista, el formato se sostiene; si los dos cómicos se separaran, el formato terminaría. Esa fragilidad estructural es también su mayor activo.',
+      },
+      {
+        heading: 'El público como tercer protagonista',
+        body:
+          'Las preguntas que envía el público no son solo material de comedia; son el motor del programa. Los cómicos respetan la pregunta del oyente como si fuera un texto sagrado, incluso cuando es absurda — sobre todo cuando es absurda. Este contrato silencioso entre cómicos y audiencia genera una lealtad que pocos formatos comerciales consiguen, y que se traduce en la única métrica que importa para un programa de radio: que los oyentes vuelvan cada semana sin promoción.',
+      },
+      {
+        heading: 'Lo que un pack rescata',
+        body:
+          'Un episodio de Nadie Sabe Nada típico contiene cinco o seis bromas que valdría la pena conservar y cincuenta minutos de relleno improvisado. Un pack funciona como filtro de la calidad — extrae las bromas que sí merecen revisitarse, descarta el resto sin culpa. Es la única forma decente de digerir el formato sin pasar una hora completa por episodio.',
+      },
+    ],
+    takeaway:
+      'La improvisación radiofónica solo se sostiene cuando dos cómicos profesionales tienen química y el público se vuelve cómplice del proceso.',
+    relatedSlugs: ['la-resistencia-broncano-monologo', 'el-hormiguero-invitado-internacional'],
+    metaTitle: 'Nadie Sabe Nada — la improvisación que se sostiene doce años',
+    metaDescription:
+      'Una nota editorial sobre Nadie Sabe Nada de Buenafuente y Romero — la regla de no preparar, por qué la química es el formato, y el público como tercer protagonista.',
+  },
+  {
+    slug: 'mikel-lopez-iturriaga-comidista',
+    creator: 'Mikel López Iturriaga',
+    creatorHandle: 'elcomidista',
+    videoTitle: 'El Comidista — receta clásica con divulgación',
+    youtubeId: 'aRb3K0V1Vh8', // TODO(verify): receta paradigmática de El Comidista
+    publishedDate: '2021-09-08',
+    durationMin: 9,
+    topics: ['cocina', 'mikel lópez iturriaga', 'el comidista', 'el país', 'divulgación'],
+    lang: 'es',
+    intro:
+      'El Comidista de Mikel López Iturriaga es la sección de cocina más leída de la prensa española digital. Lo que hace que destaque entre el océano de contenido culinario en YouTube es la disciplina rara de combinar receta, contexto cultural y crítica gastronómica en cada vídeo, sin caer en ninguno de los géneros por separado.',
+    sections: [
+      {
+        heading: 'La receta no es lo más importante',
+        body:
+          'Cada vídeo de El Comidista incluye una receta, pero la receta es la excusa. Lo importante es lo que rodea a la receta — la historia del plato, las variantes regionales, las críticas a las versiones turísticas, el contexto socioeconómico de cuándo se popularizó. Mikel ha hecho de la receta una hoja de ruta para hablar de cultura culinaria sin parecer didáctico. La cocina es el vehículo; el ensayo cultural es el destino.',
+      },
+      {
+        heading: 'La crítica como ingrediente',
+        body:
+          'A diferencia de la mayoría del contenido culinario en YouTube, El Comidista no celebra todo lo que cocina. Mikel es explícito cuando un plato tradicional es malo, cuando una receta moderna es pretenciosa, cuando una marca comercial usa el nombre de un plato regional sin entender lo que hace. Esta franqueza es lo que diferencia su contenido del marketing disfrazado de receta — y lo que mantiene la confianza de la audiencia durante años.',
+      },
+      {
+        heading: 'Por qué la sección sobrevivió al fin de las secciones',
+        body:
+          'La prensa digital española ha cerrado en los últimos años decenas de secciones culturales. El Comidista no solo ha sobrevivido — ha crecido. La razón es que Mikel construyó una marca personal alrededor de su sección, en lugar de depender solo del paraguas de El País. Cuando el modelo de prensa digital se contrajo, su contenido siguió siendo descargable, citable, recordable. Es una lección de supervivencia editorial que vale más allá de la cocina.',
+      },
+      {
+        heading: 'El pack como recetario filtrado',
+        body:
+          'Un vídeo de El Comidista típicamente da una receta, dos variantes y tres consejos. Un pack convierte esto en una hoja de cocina reutilizable que puedes pegar en la nevera — sin el contexto cultural, que ya lo viste una vez. Esta separación entre el contenido que se ve una vez y la información que se consulta repetidamente es exactamente lo que un pack hace bien: cuál es la receta, cuál es la versión regional, qué evitar.',
+      },
+    ],
+    takeaway:
+      'El contenido culinario que envejece bien combina receta, contexto y crítica — y la receta sin las otras dos es marketing.',
+    relatedSlugs: ['nadie-sabe-nada-buenafuente-berto', 'eduard-punset-redes-clasico'],
+    metaTitle: 'El Comidista — la receta como excusa para el ensayo cultural',
+    metaDescription:
+      'Una nota editorial sobre El Comidista de Mikel López Iturriaga — por qué la receta no es lo importante, la crítica como ingrediente, y por qué la sección sobrevivió al fin de las secciones.',
+  },
 ];
 
 /** Lookup helper — returns the note for a slug, or null. */
