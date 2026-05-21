@@ -86,7 +86,15 @@ new_sqlite_classes = ["VozClaraMcpAgent"]
 #     latest matching video from configured YouTube channels, stores a
 #     CuratedItem in KV that the /api/curated endpoint serves.
 [triggers]
-crons = ["0 * * * *", "30 19 * * *"]
+# Three crons:
+#   0 * * * *    → hourly push-notification dispatcher (worker/src/index.ts:runPushCron)
+#   30 19 * * *  → daily 19:30 UTC curated-pack auto-generation
+#   0 9 * * *    → daily 09:00 UTC retention-email sweep (Day 2/3/5/7 cadence)
+#                  See worker/src/retention.ts. Morning EU + late
+#                  evening US-Pacific is the sweet spot for the
+#                  initial sweep — both audiences see the email in
+#                  their inbox at a natural reading moment.
+crons = ["0 * * * *", "30 19 * * *", "0 9 * * *"]
 
 # Local dev runs on http://localhost:8787 — the Vite dev server in
 # /vite.config.ts proxies /api/* to that port.

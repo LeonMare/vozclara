@@ -47,6 +47,7 @@ import {
 import { callLLM, callLLMStream } from './llm-router';
 import { anthropicSSEResponse } from './anthropic-stream';
 import { generateSeasonPack, type SeasonOutputLang } from './season-pack';
+import { runRetentionSweep } from './retention';
 import { VozClaraMcpAgent } from './mcp/agent';
 import oauthConsentApp from './oauth/handler';
 
@@ -315,13 +316,26 @@ const apiWorker: ExportedHandler<Env> = {
   },
 
   async scheduled(event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    // Two crons fire this handler. Dispatch by the cron expression so
-    // each tick only runs its job:
+    // Three crons fire this handler. Dispatch by the cron expression
+    // so each tick only runs its job:
     //   "0 * * * *"     → push notifications (hourly)
     //   "30 19 * * *"   → curated-pack auto-generation (daily 19:30 UTC)
+    //   "0 9 * * *"     → retention-email sweep (daily 09:00 UTC)
     try {
       if (event.cron === '30 19 * * *') {
         ctx.waitUntil(runDailyCurated(env));
+      } else if (event.cron === '0 9 * * *') {
+        ctx.waitUntil(
+          runRetentionSweep(env).then((stats) => {
+            // Log the sweep tally so wrangler-tail surfaces it once
+            // a day without us having to count Resend dashboard
+            // rows by hand. Stays a console.log (not a Sentry
+            // breadcrumb) because the sweep is healthy by default.
+            console.log(
+              `retention_sweep scanned=${stats.scanned} dispatched=${stats.dispatched} errors=${stats.errors}`,
+            );
+          }),
+        );
       } else {
         ctx.waitUntil(runPushCron(env));
       }

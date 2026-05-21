@@ -74,6 +74,21 @@ export interface User {
    * worker/src/index.ts:handleInsights.
    */
   tier?: 'free' | 'pro' | 'pro_plus';
+  /**
+   * Retention email cadences already dispatched to this user. Each
+   * id is one of `d2` / `d3` / `d5` / `d7` (see
+   * worker/src/retention.ts:RETENTION_CADENCES). Persisted-on-User
+   * rather than a side-channel KV key because:
+   *   • the daily sweep already reads the User blob for the email
+   *     + createdAt; piggybacking on the same fetch costs no extra
+   *     round-trip,
+   *   • DSGVO Art-17 deletion already wipes the User; no separate
+   *     cleanup path needed,
+   *   • a missed sweep that re-evaluates the same user yields the
+   *     same `sentCadences` array so the dispatcher's idempotency
+   *     check stays trivial.
+   */
+  retention?: { sentCadences: string[] };
 }
 
 interface Session {

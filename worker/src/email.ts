@@ -19,7 +19,7 @@ export interface SendMailResult {
   reason?: string;
 }
 
-interface ResendEnv {
+export interface ResendEnv {
   RESEND_API_KEY?: string;
   AUTH_FROM_ADDRESS?: string;
 }
