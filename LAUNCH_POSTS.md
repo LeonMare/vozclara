@@ -465,7 +465,7 @@ they call VozClara behind the scenes — full structured Knowledge
 Pack, four output languages, no copy-paste.
 
 One-click install on Smithery 🪶
-https://smithery.ai/server/@salvador7eon/vozclara
+https://smithery.ai/server/salvador7eon/vozclara
 ```
 
 **Tweet 2 — what it does in agent mode:**
@@ -494,18 +494,16 @@ Stack note for the curious:
 Built solo. Edited in public. https://github.com/LeonMare/vozclara
 ```
 
-**Tweet 4 — what's missing (honesty hook):**
+**Tweet 4 — full surface + honest gaps:**
 ```
-What's NOT in v1:
-— Only `generate_pack` is exposed; OAuth gate for paid-tier tools
-  (search_my_library / ask_video / export_anki) comes next
-— No Sonnet-tier yet behind MCP — Llama path only until the
-  Pro-Plus product wire-up
+Phase 2 also shipped: OAuth-protected /api/mcp/pro endpoint adds
+three library-scoped tools — search_my_library, ask_video,
+export_anki. PKCE S256, scopes library:read/write + profile.
 
-If you want to break it: install via Smithery, point it at
-something weird, ping me.
+Still missing: Sonnet-tier behind MCP. Llama path only until the
+Pro-Plus wire-up — that's next.
 
-→ https://smithery.ai/server/@salvador7eon/vozclara
+→ https://smithery.ai/server/salvador7eon/vozclara
 ```
 
 ### Post 6 — LinkedIn long-form (MCP Beat)
@@ -535,17 +533,20 @@ session state, OAuth provider on the same edge, everything in
 TypeScript. It made the whole MCP layer a one-week build instead of
 a one-month one.
 
-Phase one is shipped: the `generate_pack` tool is public on
-Smithery as `salvador7eon/vozclara`, scoring 84/100 in their
-automated audit. Phase two — library search, ask-the-video,
-direct-to-Anki export — needs OAuth and a paid-tier wire-up; it's
-the next sprint.
+Both phases are shipped. The anonymous `generate_pack` tool is
+public on Smithery as `salvador7eon/vozclara`, scoring 84/100 in
+their automated audit. The OAuth-protected pro endpoint adds three
+library-scoped tools — search across saved packs, ask a specific
+video, export an Anki deck — gated on PKCE S256 + magic-link auth
+behind the scenes. What's left for the next sprint is the Sonnet
+4.5 path behind MCP for Pro Plus subscribers; Llama 3.3 70B on
+Workers AI is the current default.
 
 If you're building anything with Claude Code or running an MCP
 stack inside your team, I'd love your feedback on what's clunky.
 
 → https://vozclara.app
-→ https://smithery.ai/server/@salvador7eon/vozclara
+→ https://smithery.ai/server/salvador7eon/vozclara
 ```
 
 ### Post 7 — Reddit r/ClaudeAI (MCP Beat)
@@ -563,21 +564,26 @@ output languages). I shipped the MCP server a couple of days ago
 and want to share what worked and what didn't.
 
 **What works today**
-- `vozclara_generate_pack(url, language, depth)` is live and
+- `vozclara_generate_pack(url, language, depth)` is live anonymous,
   one-click-installable via Smithery — `salvador7eon/vozclara`
 - Cross-lingual out of the box: paste a Spanish video, ask for a
   German pack at `deep` depth, get back glossary + quiz in German
 - Cloudflare `agents` SDK + Durable-Object-backed sessions handle
   the Streamable-HTTP + SSE transports
+- Phase 2 OAuth endpoint at `/api/mcp/pro` adds three library-scoped
+  tools (`search_my_library`, `ask_video`, `export_anki`) behind
+  `workers-oauth-provider` — PKCE S256, scopes `library:read` /
+  `library:write` / `profile`, refresh-token cached locally by
+  `mcp-remote` after first browser auth
 
 **What I deferred**
-- OAuth isn't in v1. The three follow-on tools that need a
-  per-user brain (`search_my_library`, `ask_video`, `export_anki`)
-  are scaffolded but not exposed yet. Adding `workers-oauth-provider`
-  is the next sprint — should be ~3-4 h of work.
-- Free tier only behind MCP for now (Llama 3.3 70B on Workers AI).
-  The Pro Plus path to Sonnet 4.5 via Cloudflare AI Gateway exists
-  in the worker but isn't gated through MCP yet.
+- Sonnet 4.5 isn't behind MCP yet. The Anthropic-via-AI-Gateway
+  client exists in the worker for the web `/api/insights` path; the
+  MCP route still uses Llama 3.3 70B on Workers AI. Tier-aware
+  routing is the next sprint.
+- Inline citations / timestamp hover-replay aren't in any tool
+  output yet — that's a signature feature in flight for the main
+  product launch, not the MCP layer.
 
 **The honest trade-off**
 Supadata's `data.lang` came back as `de` on English videos because
@@ -594,7 +600,7 @@ flow, I'd love to know: which UX patterns make a tool feel
 current bet is composite tools with depth/lang as parameters, not
 five atomic tools, but I'd take counter-arguments.
 
-— install link: https://smithery.ai/server/@salvador7eon/vozclara
+— install link: https://smithery.ai/server/salvador7eon/vozclara
 — code: https://github.com/LeonMare/vozclara
 ```
 
