@@ -10,6 +10,42 @@
 :root {
   color-scheme: light;
   --tap-highlight: rgba(201, 162, 75, 0.15);
+  /* Display-serif foundation — Cormorant Garamond as the EN + universal
+     default. Per-locale overrides land below (#38 per-language typographic
+     identity). The variable is consumed by Tailwind's `font-serif` class
+     via tailwind.config.ts so any `<h1 className="font-serif">` swaps
+     automatically when the :lang(...) selector matches. */
+  --font-display-serif: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Per-language display serifs. Each locale gets a different historical
+   anchor — different Caslon era, different national typographic tradition —
+   so the same product feels hand-set for the reader's language rather than
+   English-with-translations.
+
+   Cormorant fallback is kept on every override so any text that loads
+   before the new family arrives still renders in the brand-consistent
+   shape. Georgia + serif as last-resort fallbacks (universal). */
+:lang(de) {
+  /* Spectral — designed by Production Type, built for serious editorial
+     and long-form reading. Holds up under sustained reading the way
+     mid-century German type catalogues did. Italic + 400/500/600 weights
+     loaded; the rest cascade to Cormorant if used. */
+  --font-display-serif: 'Spectral', 'Cormorant Garamond', Georgia, serif;
+}
+:lang(es) {
+  /* Libre Caslon Text — warmer humanist Latin, carries the Caslon
+     tradition into Spanish setting. Diacritics (á é í ó ú ñ) render
+     with proper Latin balance rather than the slight English squareness
+     Cormorant has. */
+  --font-display-serif: 'Libre Caslon Text', 'Cormorant Garamond', Georgia, serif;
+}
+:lang(pt) {
+  /* Source Serif 4 — modern clean serif by Frank Grießhammer at Adobe.
+     Holds the Brazilian + European Portuguese diacritic combinations
+     (ã ç õ â) without ascender clashes. Optical-size axis (8..60)
+     keeps tiny + display sizes both crisp. */
+  --font-display-serif: 'Source Serif 4', 'Cormorant Garamond', Georgia, serif;
 }
 
 html,

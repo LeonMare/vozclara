@@ -58,12 +58,27 @@
 
     <link rel="manifest" href="/manifest.webmanifest" />
 
-    <!-- Google Fonts: Cormorant Garamond (serif headlines), Cinzel (caps wordmark),
-         Inter (UI sans). All called out in LEON MARÉ Brand Foundation v5 Kap. 16. -->
+    <!-- Google Fonts — universal foundation + per-language display serifs.
+         All called out in LEON MARÉ Brand Foundation v5 Kap. 16.
+           • Cinzel              — caps wordmark, all locales
+           • Cormorant Garamond  — display serif, EN (default) + universal fallback
+           • Inter               — UI sans, all locales
+           • Spectral            — display serif, :lang(de) — Germanic editorial,
+                                   designed by Production Type for sustained reading
+           • Libre Caslon Text   — display serif, :lang(es) — warm humanist Latin,
+                                   bridges the Caslon tradition into Spanish setting
+           • Source Serif 4      — display serif, :lang(pt) — modern, clean, holds
+                                   the Brazilian + Portuguese diacritic combinations
+                                   without ascender clashes
+         All four serif families are free via Google Fonts (no €500 licence
+         needed for the launch budget — commercial-grade families can land
+         post-revenue if a designer wants to differentiate further).
+         font-display=swap so text renders with Georgia fallback while the
+         locale-specific face loads. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap"
       rel="stylesheet"
     />
 
