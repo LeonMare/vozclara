@@ -6,18 +6,19 @@
 > Plattform-Strategie, Cadence, Pre-Flight. Nichts posten ohne §4.
 >
 > **Bestehende Accounts:** Discord, Reddit (Christian-Karma).
-> **Vorzubereiten:** Instagram, LinkedIn, X / Twitter, YouTube.
+> **Vorzubereiten:** Instagram, LinkedIn, X / Twitter, YouTube, TikTok.
 
 ---
 
-## 1 · Account Setup — die 4 vorzubereitenden Plattformen
+## 1 · Account Setup — die 5 vorzubereitenden Plattformen
 
-### Reihenfolge (1 Tag, ~3 Stunden gesamt)
+### Reihenfolge (1 Tag, ~3.5 Stunden gesamt)
 
 1. **X / Twitter** — schnellster Setup, sofort posting-fähig
 2. **LinkedIn Company Page** (LEON MARÉ Studio) — danach das persönliche Profil von Christian darauf ausrichten
 3. **Instagram Business Account** — kann sofort eingerichtet, Inhalt kommt schrittweise
-4. **YouTube Channel** (LEON MARÉ) — Banner + Profilbild + Description; erstes Video kann später kommen
+4. **TikTok Business Account** — Setup gleichzeitig mit Instagram (gleiche Asset-Familie, doppelter Reach)
+5. **YouTube Channel** (LEON MARÉ) — Banner + Profilbild + Description; erstes Video kann später kommen
 
 ### Konsistenz über alle 4 Plattformen
 
@@ -295,6 +296,84 @@ Build-in-public update — was wurde diese Woche gebaut, was ist gelernt worden,
 
 ---
 
+### E · TikTok
+
+**Handle:** `@leonmare.studio` (priority) → `@vozclara.app` (fallback)
+**Account-Type:** Business Account (gibt Analytics + Link-in-Bio + Trending-Sounds-Access). Switch to Business: Profile → Settings → Manage Account → Switch to Business → Category „Education".
+
+**Bio (80-char hard cap — das ist die brutalste Bio-Restriction von allen Plattformen):**
+```
+Studio · Knowledge layer over every video
+ES · PT · DE · EN ↓
+```
+
+Fallback-Version wenn 80 chars sprengen:
+```
+Knowledge layer over every video
+ES · PT · DE · EN ↓
+```
+
+**Link in Bio:** `https://vozclara.app`
+**Category:** Education
+**Profilbild:** Lighthouse-Glyph navy auf creme (gleich wie alle Plattformen)
+
+#### Strategischer Frame: warum TikTok für editorial brand funktioniert
+
+TikTok hat sich seit 2024 deutlich diversifiziert. StudyTok (1.2B+ views), LanguageTok (800M+ views), BookTok (200B+ views) sind die Cluster, in die VozClara natürlich fällt. Editorial-Faceless-Content (paper-grain backdrops, typewriter-reveals, kein face-to-camera) performt dort durchgehend — siehe Accounts wie @notebookpages, @studiowithme, @paperandtype. Der Algorithmus bestraft niche editorial NICHT, er belohnt Completion-Rate. Wenn deine ersten 1.5 Sekunden hooken und der Pack-Reveal befriedigend abschließt, läuft das Ding.
+
+Was wir NICHT tun: face-to-camera, trending-dance-audio, „POV: you just discovered…", Confetti-Reveal. Das ist kein editorial-Studio mehr — das ist personal brand.
+
+#### Content-Säulen TikTok (3 Pillars, 60/30/10)
+
+**60% — Pack-Reveal-Snippets (15-30 s, vertical 1080×1920)**
+Format: das gleiche Pack-Reveal-Material wie auf Instagram-Reels, aber re-cut für TikTok-Hook-Frame:
+- Sekunde 0-1.5: ein typografischer Hook auf creme paper („A 90-second pack on Huberman's sleep talk." in Cormorant)
+- Sekunde 1.5-25: Pack-Excerpts erscheinen einzeln, typewriter-caret, audio = ambient piano oder klare Voice-over (gerne KI-Voice, geht in der TikTok-Audience durch)
+- Letzte 3 Sekunden: Hand-drawn-style gold rule + „vozclara.app" CTA
+
+Caption-Template:
+```
+A pack on [Title] · [Creator]
+↓ vozclara.app
+[5-8 hashtags, siehe §6]
+```
+
+**30% — Mikro-Essay-Reads (30-45 s)**
+Format: ein Key-Insight aus einem Pack, vorgetragen über typografisches Hintergrund-Visual. Audio: voice-over (kann ElevenLabs sein, klingt heute besser als die meisten Menschen). Inhalt:
+- Hook: „Die meiste Sleep-Advice ist Pharma. Diese hier ist nicht."
+- Body: 2-3 Sätze Key-Claim aus dem Pack
+- CTA: „90-Sekunden-Pack auf vozclara.app"
+
+**10% — Studio-Process-Snippets (15-20 s)**
+Timelapse-Code, Design-Moments, Terminal-Output, paper notebook → screen transition. Build-in-public moments. Niemals face-to-camera.
+
+#### Frequency
+
+**4-5 Posts pro Woche.** TikTok rewards Volume über Polish. Ein guter Post pro Woche reicht NICHT — der Algorithmus liest deinen Posting-Rhythmus und passt Reach an. Pillar-Mix pro Woche: 3× Pack-Reveal + 1× Mikro-Essay + 1× Studio-Process.
+
+#### Trending-Audio-Regel
+
+Trending-Audio NUTZEN ist wichtig für Reach, aber:
+- Nur Audio mit ambient / instrumental / piano feel (suche nach „aesthetic", „study", „academia")
+- NIEMALS Audio mit lyrics die clashen mit editorial register
+- NIEMALS dance / meme trending audio
+- Wenn unsicher: silence + typewriter-clack-SFX ist immer safe
+
+#### Initial Setup-Posts (erste 7 Tage)
+
+- **Tag 0**: Account aktiv, profile complete, NOCH NICHT posten — TikTok bestraft accounts die direkt am Setup-Tag posten
+- **Tag 1**: erstes Pack-Reveal-Reel (15s, höchste Quality die du hast)
+- **Tag 2**: studio-process snippet (15s, terminal recording)
+- **Tag 3**: Pack-Reveal #2 (anderes Video, andere Sprache zeigen)
+- **Tag 4**: Pause (wichtig — algorithmus mag rhythm, nicht spam)
+- **Tag 5**: Mikro-Essay (30s voice-over)
+- **Tag 6**: Pack-Reveal #3
+- **Tag 7**: Recap-Post oder Studio-Note
+
+Erste 7 Tage entscheiden ob TikTok dich als „educator" einsortiert. Wenn ja, kommt der For-You-Page-Reach.
+
+---
+
 ## 2 · Posting-Strategie pro Plattform
 
 Eine Plattform hat einen primären Job. Das Playbook drüber zu legen verhindert „post the same thing everywhere"-Falle.
@@ -304,12 +383,15 @@ Eine Plattform hat einen primären Job. Das Playbook drüber zu legen verhindert
 | **X / Twitter** | AI-Builder-Distribution (MCP, Claude Code, Anthropic Community) | Daily presence + thought-leadership | Tech / agent-builder |
 | **LinkedIn** | Studio-Authority (LEON MARÉ als ernsthafter Player) | B2B / Partnership-Reach | Founder + edtech + enterprise |
 | **Instagram** | Visual-Brand-Building + Consumer-Acquisition | Editorial DNA showcase | Language-learners + students |
+| **TikTok** | Algorithmus-Driven-Reach + StudyTok-Discovery | Consumer-Acquisition #2 (volume play) | Gen-Z + Millennial language-learners + students |
 | **YouTube** | SEO-Authority + Long-Form-Education | Demo-Repository | Search-intent visitors |
 | Reddit (existing) | Deep-conversation + Community-Trust | — | Niche power-users |
 | Discord (existing) | Community + Support | — | Active users |
 
-**Cross-Posting-Regel:** Nie wortwörtlich dupizieren. Format pro Plattform.
-Ein Pack-Reveal-Reel auf Instagram wird auf X als 2-Tweet-Thread mit Screenshot, auf LinkedIn als Carousel mit 4 Slides, auf YouTube als 30-Sekunden-Short.
+**Cross-Posting-Regel:** Nie wortwörtlich duplizieren. Format pro Plattform.
+Ein Pack-Reveal-Reel auf Instagram wird auf X als 2-Tweet-Thread mit Screenshot, auf LinkedIn als Carousel mit 4 Slides, auf YouTube als 30-Sekunden-Short, auf TikTok als 15-Sekunden-Hook-Cut mit anderem Cold-Open.
+
+**TikTok ↔ Instagram-Reel Spezialfall:** Asset kann technisch identisch sein, ABER der erste Frame muss anders sein. Instagram lädt die ersten 3 Sekunden vor — TikTok belohnt die ersten 1.5 Sekunden. Re-cut den Cold-Open, behalte den Body.
 
 ---
 
@@ -342,6 +424,7 @@ Die volle Distribution-Welle. Zeitplan ist relativ zum Show-HN-Tag.
 | Tag 2 17:00 UTC | Primary | r/languagelearning | Multilingual-Fokus, consumer-tone |
 | Tag 3 18:00 UTC | Primary | YouTube | Demo-Video #1 wird public + LinkedIn/X-shared |
 | Tag 4 14:00 UTC | Primary | Instagram | Pack-Reveal-Reel zum Launch + Carousel mit Top-3-Features |
+| Tag 4 19:00 UTC | Primary | TikTok | Re-cut des IG-Reels mit anderem Cold-Open + StudyTok-Hashtags |
 | Tag 7 | Echo | X | „one week in" reflection thread |
 
 ### 3.3 Brand-Build-Drumbeat (laufend, ab heute)
@@ -353,6 +436,7 @@ Unabhängig vom MCP-Beat / Full-Launch. Hält die Plattformen lebendig.
 | X / Twitter | 1× / Tag (light) + 1× / Woche thread | screenshot · short observation · feature note |
 | LinkedIn | 1-2× / Woche micro-post + 1× / Monat long-form | build-in-public learning · studio-process insight |
 | Instagram | 2-3× / Woche | reel (pack-reveal) + carousel (quote-cards) + still (studio-process) |
+| **TikTok** | **4-5× / Woche** | 3× pack-reveal (15-30 s) + 1× mikro-essay (30-45 s) + 1× studio-process (15-20 s) |
 | YouTube | 1× / Woche ab Tag des Channel-Setups | demo · reading note · studio note |
 
 ---
@@ -401,6 +485,14 @@ Algorithmen belohnen frühes Signal. Time-box aggressiv.
 - 1:00 — Jeden Comment in erster Stunde beantworten
 - 24:00 — Update End-Screen wenn nötig
 
+### TikTok
+- 0:00 — Post (NICHT zwischen 2-5 UTC posten — niedrige aktive Audience)
+- 0:05 — Eigene Pinned-Comment mit „vozclara.app" + Pack-Title (treibt CTR)
+- 0:30 — Erste 5 Comments mit Substanz beantworten — TikTok rewards reply-depth in der ersten Stunde
+- 1:00 — DMs der ersten interessierten Follower beantworten (TikTok-DM-Reply ist starkes Signal)
+- 2:00 — Stop refreshing. Algorithmus hat zu diesem Zeitpunkt entschieden ob er den Post in eine größere Audience-Bucket pusht
+- 24:00 — Wenn Reach >5k: re-share auf Instagram-Stories als „today on TikTok" Cross-Promo
+
 ### Reddit (existing)
 - 0:00 — Post
 - 0:05 — NICHT eigenen Post upvoten (Reddit detected → shadowban)
@@ -416,6 +508,7 @@ Algorithmen belohnen frühes Signal. Time-box aggressiv.
 | **X** | Tweet 1: keine (kills initial reach). Tweet 3: `#MCP` only | `@smithery_dev` (cross-promo), `@cloudflaredev`, `@AnthropicAI` sparsam |
 | **LinkedIn** | Above fold: keine. Footer: `#AI #BuildInPublic #LanguageLearning #Anthropic` | Tag eigene Company Page „LEON MARÉ Studio" |
 | **Instagram** | Im ersten Kommentar (nicht caption), max 12. Mix: `#LanguageLearning #Anki #KnowledgeManagement #StudyTok #VozClara #LeonMareStudio` | `@anthropic` (sparsam), `@claudeai` (Lex Fridman / Huberman wenn note über sie geht) |
+| **TikTok** | In Caption (TikTok wertet Caption + Hashtags zusammen), max 5-8. Mix mit absteigender Reach: `#StudyTok` (1.2B) → `#LanguageLearning` (8B) → `#BookTok` (200B, wenn passt) → `#Anki` (niche) → `#KnowledgePack` (brand). Niemals `#fyp` oder `#foryou` (algorithmus ignoriert sie heute) | Selten — @-mentions schwächen Reach auf TikTok eher als sie stärken. Nur bei direkter Collab |
 | **YouTube** | Tags-field: 8-12. Im Description erste Zeile: `#VozClara #KnowledgePack` | None in title, @-mentions im Description-Body wenn relevant |
 
 ---
@@ -498,17 +591,18 @@ Re-read VOR jedem Post:
 
 ---
 
-## 10 · Daily-Check-Routine (10 Minuten morgens)
+## 10 · Daily-Check-Routine (12 Minuten morgens)
 
-Wenn alle 4 Plattformen aktiv sind, jeden Morgen:
+Wenn alle 5 Plattformen aktiv sind, jeden Morgen:
 
 1. **[ ] X notifications**: 2 Min — auf @-mentions reagieren, DMs nur wenn relevant
 2. **[ ] LinkedIn notifications**: 2 Min — Post-Comments + Connection-Requests
 3. **[ ] Instagram DMs + Comments**: 2 Min — last 24h Comments + DMs
-4. **[ ] YouTube Comments**: 2 Min — last 24h Comments auf jeden Video
-5. **[ ] Plausible Dashboard**: 2 Min — gestern's traffic + welcher channel hat gebracht
+4. **[ ] TikTok DMs + Comments**: 2 Min — last 24h Comments + DMs auf alle aktiven Posts
+5. **[ ] YouTube Comments**: 2 Min — last 24h Comments auf jeden Video
+6. **[ ] Plausible Dashboard**: 2 Min — gestern's traffic + welcher channel hat gebracht
 
-10 Minuten Wartung. Wenn länger als 15 Min: Routine kaputt, recalibrate.
+12 Minuten Wartung. Wenn länger als 17 Min: Routine kaputt, recalibrate.
 
 ---
 
