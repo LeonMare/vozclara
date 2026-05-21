@@ -1,10 +1,10 @@
-# HANDOFF — Fr 22.5. Spätabend (end of full-day sprint)
+# HANDOFF — Do 21.5. (post-context resume, late-afternoon)
 
 > Read this first when picking up the session on any machine.
-> Updated: Fr 22.5.2026 ~21:30 (end of full-day sprint).
+> Updated: Do 21.5.2026 spätnachmittag (post-context-resume slice).
 >
 > If picking up on a different machine: `git pull` first, the
-> remote has the canonical state at HEAD `c02e96b`.
+> remote has the canonical state at HEAD `d37930d`.
 
 ---
 
@@ -54,6 +54,26 @@ human relationships).
 | #58 (#22 v2) | `4afe9e1` | Citation hover-replay transcript preview |
 | #57 (#42 v2) | `1c6159f` | T3 / T4 / T5 conversion triggers wired |
 | #37 | `c02e96b` + deploy | Sonnet 4.5 extended-thinking "reasoning" surface |
+
+### Post-context-resume slice (Do 21.5. late afternoon, commits `c8a4701` → `d37930d`)
+
+| # | Commit | What |
+|---|---|---|
+| #43 | `c8a4701` + deploy | PackPage welcome bookplate — quiet italic Cormorant + gold rule on fresh generation, fades after ~4.5 s, URL cleaned via history-replace |
+| #13 v1 | `341da04` + deploy | Programmatic SEO seed — `/notes` hub + `/notes/:slug` editorial reading-note route + 5 hand-written essays (Huberman ×2 / Lex × Karpathy / Veritasium / Naval) + JSON-LD Article + canonical + sitemap + footer link in 4 locales |
+| #48 / β prep | `d37930d` | LAUNCH_POSTS freshened (Sonnet-behind-MCP now true) + SOCIAL_PLAYBOOK.md (cadence, pre-flight checklist, engagement playbook per platform, failure-state replies, brand-voice guardrail) |
+
+#43 is now closed — the cumulative work covers the spec
+(beacon-sweep + typewriter caret from #53, streaming output from #24,
+thinking surface from #37, and now the post-completion bookplate).
+The two remaining items mentioned in the earlier handoff
+(pre-paste hint reveal, mobile timing tweaks) are bounded polish
+moments and not blocking.
+
+#13 ships the scaffold + 5 of 50 essays. The remaining 45 are pure
+content writing — a 3–4 hour autonomous session can complete them
+incrementally by appending to `src/data/creatorNotes.ts` and adding
+the sitemap row. Pattern is locked in; further work is iteration.
 
 External:
 - **awesome-mcp-servers#6721** — Knowledge & Memory section entry,
