@@ -649,6 +649,28 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
       return handleFounderWebhook(req, env);
     }
 
+    /* ─── /api/admin/llm-smoke — tier-aware LLM-router smoke endpoint ─── *
+     *
+     * POST with X-Admin-Token header, ?tier=free|pro|pro_plus query.
+     * Body: { systemPrompt?, userContent, maxTokens? }
+     * Returns: { ok, tier_requested, provider, model, text, usage,
+     *           stop_reason, latency_ms }
+     *
+     * Permanent admin tool — useful for validating Anthropic key after
+     * rotation, sanity-checking Gateway availability, debugging the
+     * tier-routing logic in the future. Gated on ADMIN_TOKEN (same
+     * secret as /api/founder/admin/*), so the only worry vector is
+     * someone with the token burning Anthropic credits — same
+     * blast-radius as every other admin endpoint we ship.
+     */
+    if (url.pathname === '/api/admin/llm-smoke' && req.method === 'POST') {
+      if (!env.ADMIN_TOKEN) return json({ error: 'admin_disabled' }, 503);
+      if (req.headers.get('X-Admin-Token') !== env.ADMIN_TOKEN) {
+        return json({ error: 'unauthorized' }, 401);
+      }
+      return handleLlmSmoke(req, env);
+    }
+
     return json({ error: 'not_found' }, 404);
 }
 
@@ -745,6 +767,81 @@ async function handleInsights(req: Request, env: Env): Promise<Response> {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return json({ error: 'ai_failed', detail: message.slice(0, 200) }, 502);
+  }
+}
+
+/* ─── /api/admin/llm-smoke ──────────────────────────────────────────────── *
+ *
+ * Admin-gated smoke endpoint for the LLM router. Lets us exercise the
+ * tier-aware dispatch (Llama for free/pro, Sonnet 4.5 for pro_plus)
+ * without bouncing through the full /api/insights flow. Useful after:
+ *   • ANTHROPIC_API_KEY rotation
+ *   • Cloudflare AI Gateway config changes
+ *   • Tier-routing or prompt-cache logic changes
+ *   • Gateway availability checks before a paid-tier launch beat
+ *
+ * Curl shape:
+ *   curl -X POST 'https://vozclara.app/api/admin/llm-smoke?tier=pro_plus' \
+ *     -H 'X-Admin-Token: …' \
+ *     -H 'Content-Type: application/json' \
+ *     -d '{"systemPrompt":"…","userContent":"…","maxTokens":200}'
+ */
+async function handleLlmSmoke(req: Request, env: Env): Promise<Response> {
+  const url = new URL(req.url);
+  const rawTier = url.searchParams.get('tier') ?? 'free';
+  if (rawTier !== 'free' && rawTier !== 'pro' && rawTier !== 'pro_plus') {
+    return json({ error: 'invalid_tier', detail: "tier must be 'free' | 'pro' | 'pro_plus'" }, 400);
+  }
+  const tier = rawTier as 'free' | 'pro' | 'pro_plus';
+
+  let body: { systemPrompt?: string; userContent?: string; maxTokens?: number; temperature?: number };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_body' }, 400);
+  }
+
+  if (!body.userContent || body.userContent.length < 5) {
+    return json({ error: 'missing_user_content' }, 400);
+  }
+
+  const start = Date.now();
+  try {
+    const result = await callLLM(
+      {
+        tier,
+        systemPrompt: body.systemPrompt ?? 'You are a precise assistant. Reply briefly and clearly.',
+        userContent: body.userContent,
+        maxTokens: body.maxTokens ?? 200,
+        temperature: body.temperature ?? 0.4,
+        // Exercise the prompt-cache path on the Anthropic branch so we
+        // can confirm cache_creation/cache_read counters update over
+        // repeated calls with the same system prompt.
+        cacheSystemPrompt: tier === 'pro_plus',
+        cacheTTL: '1h',
+      },
+      env,
+    );
+    return json({
+      ok: true,
+      tier_requested: tier,
+      provider: result.provider,
+      model: result.model,
+      text: result.text,
+      usage: result.usage ?? null,
+      stop_reason: result.stopReason ?? null,
+      latency_ms: Date.now() - start,
+    });
+  } catch (err) {
+    return json(
+      {
+        ok: false,
+        tier_requested: tier,
+        error: err instanceof Error ? err.message : String(err),
+        latency_ms: Date.now() - start,
+      },
+      502,
+    );
   }
 }
 
