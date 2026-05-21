@@ -2309,23 +2309,35 @@ interface QuoteCardParams {
   time?: string;
   original?: string;
   packTitle?: string;
+  /**
+   * Layout format. `square` (1080×1080) → Instagram feed; `landscape`
+   * (1200×675, 16:9) → Twitter / LinkedIn / X primary share format.
+   * Default `landscape` because the share button on the Pack page is
+   * far more commonly clicked for Twitter/LinkedIn drops than for
+   * Instagram. The square format remains opt-in via ?format=square.
+   */
+  format: 'square' | 'landscape';
 }
 
 function handleQuoteCard(url: URL): Response {
   const p = url.searchParams;
+  const formatRaw = p.get('format');
   const params: QuoteCardParams = {
     text: (p.get('text') ?? '').slice(0, 400),
     speaker: p.get('speaker')?.slice(0, 80) ?? undefined,
     time: p.get('time')?.slice(0, 12) ?? undefined,
     original: p.get('original')?.slice(0, 400) ?? undefined,
     packTitle: p.get('packTitle')?.slice(0, 120) ?? undefined,
+    format: formatRaw === 'square' ? 'square' : 'landscape',
   };
 
   if (!params.text) {
     return json({ error: 'missing_text' }, 400);
   }
 
-  const svg = renderQuoteCardSVG(params);
+  const svg = params.format === 'square'
+    ? renderQuoteCardSVG(params)
+    : renderQuoteCardLandscapeSVG(params);
   return new Response(svg, {
     status: 200,
     headers: {
@@ -2431,7 +2443,121 @@ function renderQuoteCardSVG({ text, speaker, time, original, packTitle }: QuoteC
   <!-- Pack-title attribution at the bottom -->
   ${packTitle ? `<text x="540" y="970" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="20" fill="#F7F3EC99" font-style="italic">${esc(packTitle)}</text>` : ''}
   <text x="540" y="1010" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#C9A24B">
-    VOZCLARA.PAGES.DEV
+    VOZCLARA.APP
+  </text>
+</svg>`;
+}
+
+/**
+ * 1200×675 (16:9) landscape variant — primary share format for
+ * Twitter / X / LinkedIn / Slack. Same brand language as the
+ * square card but laid out for a wider canvas: the quote runs
+ * across the centre with the brand lockup at the top-left and
+ * the speaker / timestamp / pack attribution in a baseline strip
+ * across the bottom. Designed so a square-centre crop (WhatsApp
+ * etc.) still shows the quote text + the gold rule.
+ */
+function renderQuoteCardLandscapeSVG({
+  text,
+  speaker,
+  time,
+  original,
+  packTitle,
+}: QuoteCardParams): string {
+  const esc = (s: string) =>
+    s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+  // Quote text wrapping — adaptive to length, wider line measure
+  // than the square card because the canvas is wider.
+  const cleanText = text.replace(/^["“„]+|["”„]+$/g, '');
+  const len = cleanText.length;
+  const fontSize = len < 80 ? 52 : len < 160 ? 42 : len < 240 ? 34 : 28;
+  const charsPerLine = len < 80 ? 36 : len < 160 ? 44 : 52;
+  const maxLines = len < 80 ? 3 : len < 160 ? 5 : 7;
+  const wrapped = wrapTitle(cleanText, charsPerLine, maxLines);
+  const lineHeight = Math.round(fontSize * 1.25);
+  const blockHeight = wrapped.length * lineHeight;
+  // Centre the quote in the middle band of the 675 px canvas — between
+  // the top brand strip (~120 px) and the bottom attribution (~120 px).
+  const topY = 180 + (340 - blockHeight) / 2;
+  const showOriginal = original && original !== text && original.length < 200;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A1A3A"/>
+      <stop offset="100%" stop-color="#091532"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="20%" cy="22%" r="60%">
+      <stop offset="0%" stop-color="#C9A24B" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#C9A24B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D29A"/>
+      <stop offset="50%" stop-color="#C9A24B"/>
+      <stop offset="100%" stop-color="#8C6A2A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#aura)"/>
+
+  <!-- Brand seal corner: lighthouse + wordmark, top-left -->
+  <g transform="translate(60 55) scale(0.62)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="44" stroke-width="2.6"/>
+    <circle cx="50" cy="50" r="40.7" stroke-width="2.0"/>
+    <path d="M50 16V26" stroke-width="2.0"/>
+    <path d="M33 25l10 6" stroke-width="1.8"/>
+    <path d="M67 25l-10 6" stroke-width="1.8"/>
+    <path d="M31 36l12-3" stroke-width="1.8"/>
+    <path d="M69 36l-12-3" stroke-width="1.8"/>
+    <path d="M46.5 30h7" stroke-width="1.8"/>
+    <path d="M44.4 31.2l5.6-4.1 5.6 4.1" stroke-width="2.0"/>
+    <path d="M45.6 31.4h8.8v5.7h-8.8z" stroke-width="1.7"/>
+    <path d="M47.3 31.4v5.7M50 31.4v5.7M52.7 31.4v5.7" stroke-width="1.3"/>
+    <path d="M43.8 37.1h12.4" stroke-width="2.0"/>
+    <path d="M44.7 39h10.6" stroke-width="1.4"/>
+    <path d="M45.3 39.1 42.3 73.7M54.7 39.1 57.7 73.7" stroke-width="1.9"/>
+    <path d="M46.8 48h6.4" stroke-width="1.5"/>
+    <rect x="48.6" y="50.2" width="2.8" height="5.5" rx="0.2" stroke-width="1.6"/>
+    <path d="M41.2 73.8h17.6" stroke-width="2.0"/>
+    <path d="M24.6 79.4C33.7 73.8 43 72.2 50 72.2s16.3 1.6 25.4 7.2" stroke-width="2.1"/>
+  </g>
+  <text x="135" y="105" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#F7F3EC" font-weight="500">
+    VOZ · CLARA
+  </text>
+
+  <!-- Decorative opening quote glyph, left side -->
+  <text x="60" y="320" font-family="Georgia, 'Times New Roman', serif" font-size="120" fill="#C9A24B" opacity="0.4">
+    “
+  </text>
+
+  <!-- The pull quote, multi-line, centred horizontally -->
+  ${wrapped
+    .map(
+      (line, i) =>
+        `<text x="600" y="${topY + lineHeight + i * lineHeight}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="${fontSize}" font-weight="500" fill="#F7F3EC">${esc(line)}</text>`,
+    )
+    .join('\n  ')}
+
+  <!-- Gold divider beneath the quote block -->
+  <rect x="555" y="${topY + blockHeight + 32}" width="90" height="2" fill="url(#gold)"/>
+
+  <!-- Speaker + timestamp -->
+  ${speaker || time ? `<text x="600" y="${topY + blockHeight + 78}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" letter-spacing="5" fill="#C9A24B" font-weight="500">${esc((speaker ?? '').toUpperCase())}${speaker && time ? '  ·  ' : ''}${time ? esc(time) : ''}</text>` : ''}
+
+  <!-- Optional original-language line -->
+  ${showOriginal ? `<text x="600" y="${topY + blockHeight + 112}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" fill="#F7F3EC80">${esc(original!)}</text>` : ''}
+
+  <!-- Bottom strip: pack-title + URL on one editorial baseline -->
+  ${packTitle ? `<text x="600" y="618" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#F7F3EC99" font-style="italic">${esc(packTitle)}</text>` : ''}
+  <text x="600" y="650" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" letter-spacing="4" fill="#C9A24B">
+    VOZCLARA.APP
   </text>
 </svg>`;
 }

@@ -21,6 +21,7 @@ import { PackExport } from '../components/PackExport';
 import { PackShare } from '../components/PackShare';
 import { AskPanel } from '../components/AskPanel';
 import { API_BASE } from '../lib/apiBase';
+import { downloadQuoteCardPng } from '../lib/shareQuote';
 import { SITE_URL } from '../lib/site';
 
 type TabKey = 'summary' | 'chapters' | 'insights' | 'actionPlan' | 'vocabulary' | 'quiz' | 'quotes' | 'socialAngles' | 'transcript';
@@ -800,14 +801,26 @@ function QuotesTab({
   const { locale } = useLocale();
   if (view.keyQuotes.length === 0) return <Empty />;
 
-  function quoteCardUrl(q: PackTranslation['keyQuotes'][number]): string {
-    const base = API_BASE + '/api/quote-card';
-    const params = new URLSearchParams({ text: q.text });
-    if (q.speaker) params.set('speaker', q.speaker);
-    if (q.timestampSec) params.set('time', formatTime(q.timestampSec));
-    if (q.original && q.original !== q.text) params.set('original', q.original);
-    if (packTitle) params.set('packTitle', packTitle);
-    return `${base}?${params.toString()}`;
+  /**
+   * Build the input object the worker quote-card endpoint expects.
+   * Shared between the click-to-download button + (future) right-click
+   * "Open share card in new tab" affordance, so the params stay in
+   * one place.
+   */
+  function quoteCardInput(q: PackTranslation['keyQuotes'][number]): {
+    text: string;
+    speaker?: string;
+    time?: string;
+    original?: string;
+    packTitle?: string;
+  } {
+    return {
+      text: q.text,
+      speaker: q.speaker,
+      time: q.timestampSec ? formatTime(q.timestampSec) : undefined,
+      original: q.original && q.original !== q.text ? q.original : undefined,
+      packTitle: packTitle || undefined,
+    };
   }
 
   /**
@@ -859,20 +872,10 @@ function QuotesTab({
               Both visible on hover (desktop) and always on touch. */}
           <div className="absolute right-0 top-0 flex items-center gap-1.5 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
             <CopyCitationButton text={formatCitation(q)} locale={locale} />
-            <a
-              href={quoteCardUrl(q)}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={quoteCardLabel(locale)}
-              title={quoteCardLabel(locale)}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-graphit/65 transition hover:border-gold hover:text-navy"
-            >
-              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
-                <rect x="1.5" y="2.5" width="11" height="9" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" />
-                <circle cx="5" cy="6" r="0.9" fill="currentColor" />
-                <path d="M3 10 L6 7 L8.5 9 L11 6.5 L11 11 L3 11 Z" fill="currentColor" opacity="0.5" />
-              </svg>
-            </a>
+            <DownloadQuoteCardButton
+              input={quoteCardInput(q)}
+              locale={locale}
+            />
           </div>
         </blockquote>
       ))}
@@ -945,11 +948,101 @@ function copyCitationLabel(locale: string, done: boolean): string {
   return 'Copy citation';
 }
 
-function quoteCardLabel(locale: string): string {
-  if (locale.startsWith('es')) return 'Crear imagen para compartir';
-  if (locale.startsWith('pt')) return 'Criar imagem para partilhar';
-  if (locale.startsWith('de')) return 'Bild zum Teilen erstellen';
-  return 'Create share image';
+/**
+ * Three-state download button — idle (image glyph) → working
+ * (small spinner) → done (✓ check). Mirrors CopyCitationButton's
+ * shape so the two affordances read as siblings.
+ *
+ * On click: fetches the worker's /api/quote-card SVG, rasterises it
+ * to a 1200×675 PNG client-side via canvas, and triggers a browser
+ * download. The whole flow is local once the SVG is in the CDN
+ * cache (1-year immutable) so subsequent downloads of the same
+ * quote complete in < 200 ms.
+ *
+ * Errors are logged but never surfaced as alerts — the button just
+ * settles back to idle so the user can retry. Clipboard pattern.
+ */
+function DownloadQuoteCardButton({
+  input,
+  locale,
+}: {
+  input: Parameters<typeof downloadQuoteCardPng>[0];
+  locale: string;
+}) {
+  const [state, setState] = useState<'idle' | 'working' | 'done'>('idle');
+
+  async function onClick() {
+    if (state !== 'idle') return;
+    setState('working');
+    try {
+      await downloadQuoteCardPng(input, API_BASE, 'landscape');
+      setState('done');
+      window.setTimeout(() => setState('idle'), 1600);
+    } catch (err) {
+      // Don't toast — the share button settling back is the signal
+      // the user understands. Sentry would surface a real outage.
+      console.error('quote-card download failed', err);
+      setState('idle');
+    }
+  }
+
+  const label = downloadCardLabel(locale, state);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      disabled={state === 'working'}
+      className={[
+        'inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white transition',
+        state === 'done'
+          ? 'border-gold text-gold'
+          : state === 'working'
+            ? 'border-gold/60 text-graphit/65'
+            : 'border-navy/15 text-graphit/65 hover:border-gold hover:text-navy',
+      ].join(' ')}
+    >
+      {state === 'done' ? (
+        <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+          <path d="M3 7.5 L6 10 L11 4" stroke="currentColor" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ) : state === 'working' ? (
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden className="animate-spin">
+          <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.4" fill="none" opacity="0.25" />
+          <path d="M7 1.5 A 5.5 5.5 0 0 1 12.5 7" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+        </svg>
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
+          {/* Picture-frame glyph: rectangle + tiny sun + horizon line —
+              same icon the previous <a> used, just on a button. */}
+          <rect x="1.5" y="2.5" width="11" height="9" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <circle cx="5" cy="6" r="0.9" fill="currentColor" />
+          <path d="M3 10 L6 7 L8.5 9 L11 6.5 L11 11 L3 11 Z" fill="currentColor" opacity="0.5" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+function downloadCardLabel(locale: string, state: 'idle' | 'working' | 'done'): string {
+  if (state === 'done') {
+    if (locale.startsWith('es')) return 'Descargado';
+    if (locale.startsWith('pt')) return 'Descarregado';
+    if (locale.startsWith('de')) return 'Heruntergeladen';
+    return 'Downloaded';
+  }
+  if (state === 'working') {
+    if (locale.startsWith('es')) return 'Generando…';
+    if (locale.startsWith('pt')) return 'A gerar…';
+    if (locale.startsWith('de')) return 'Wird erstellt…';
+    return 'Generating…';
+  }
+  if (locale.startsWith('es')) return 'Descargar imagen';
+  if (locale.startsWith('pt')) return 'Descarregar imagem';
+  if (locale.startsWith('de')) return 'Bild herunterladen';
+  return 'Download image';
 }
 
 function SocialAnglesTab({ view }: { view: PackTranslation }) {
