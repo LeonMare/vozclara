@@ -55,6 +55,25 @@ export interface User {
    *  during sign-up; subsequent sign-ins on new devices append. */
   brainIds: string[];
   displayName?: string;
+  /**
+   * Subscription tier. Persisted-on-User rather than computed-from-
+   * Paddle every request so the AI Gateway routing path stays
+   * single-fetch (no per-request Paddle lookup on /api/insights).
+   *
+   * Set by:
+   *   • Paddle `transaction.completed` webhook on successful payment
+   *     (worker/src/founder.ts:handleFounderWebhook does
+   *     AUTH.get(`email:${email}`) → user and bumps tier to
+   *     'pro_plus' for the Founder Deal).
+   *   • POST /api/founder/admin/grant-tier as a manual override when
+   *     the Paddle email doesn't match the VozClara account email.
+   *
+   * Absence (older accounts created before this field shipped) is
+   * treated as `'free'` by every caller — see `user.tier ?? 'free'`
+   * in oauth/handler.ts:resolveTier and the inline check in
+   * worker/src/index.ts:handleInsights.
+   */
+  tier?: 'free' | 'pro' | 'pro_plus';
 }
 
 interface Session {
@@ -149,6 +168,34 @@ async function putUser(env: AuthEnv, user: User): Promise<void> {
   if (!env.AUTH) return;
   await env.AUTH.put(`user:${user.id}`, JSON.stringify(user));
   await env.AUTH.put(`email:${user.email.toLowerCase()}`, user.id);
+}
+
+/**
+ * Look up a user by email (case-insensitive) and update their tier.
+ * Idempotent — calling with the same tier twice is a no-op write
+ * skip. Returns the userId + previous tier on success, or `null`
+ * when no account matches the email.
+ *
+ * Called from:
+ *   • worker/src/founder.ts:handleFounderWebhook on Paddle
+ *     `transaction.completed` (auto-path — only fires when the
+ *     webhook destination is configured to include customer data).
+ *   • worker/src/founder.ts:handleFounderGrantTier as the manual
+ *     admin backup when the Paddle email doesn't match the
+ *     VozClara account email.
+ */
+export async function setUserTierByEmail(
+  env: AuthEnv,
+  email: string,
+  tier: 'free' | 'pro' | 'pro_plus',
+): Promise<{ userId: string; oldTier: 'free' | 'pro' | 'pro_plus' } | null> {
+  const user = await getUserByEmail(env, email);
+  if (!user) return null;
+  const oldTier: 'free' | 'pro' | 'pro_plus' = user.tier ?? 'free';
+  if (oldTier === tier) return { userId: user.id, oldTier };
+  user.tier = tier;
+  await putUser(env, user);
+  return { userId: user.id, oldTier };
 }
 
 async function getSession(env: AuthEnv, token: string): Promise<Session | null> {

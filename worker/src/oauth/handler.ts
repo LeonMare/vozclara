@@ -45,13 +45,19 @@ export type OAuthHandlerEnv = {
 };
 
 /**
- * Tier the user is on. Mirrors MASTER.md §1.1 pricing — but right now
- * we don't persist this per-user (Paddle is in review), so we always
- * return 'free'. Once the subscription webhook is in, replace this
- * function body with a User.tier lookup.
+ * Tier the user is on. Mirrors MASTER.md §1.1 pricing. The Paddle
+ * `transaction.completed` webhook (worker/src/founder.ts:handleFounderWebhook)
+ * persists the tier directly on the User record after each
+ * successful payment, so this is a simple field lookup.
+ *
+ * Falls back to `'free'` when the field is absent — every account
+ * created before this field shipped, every account that hasn't paid,
+ * and every account whose Paddle email didn't match the VozClara
+ * email (POST /api/founder/admin/grant-tier backfills those one at
+ * a time).
  */
-function resolveTier(_user: User): 'free' | 'pro' | 'pro_plus' {
-  return 'free';
+function resolveTier(user: User): 'free' | 'pro' | 'pro_plus' {
+  return user.tier ?? 'free';
 }
 
 /**

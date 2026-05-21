@@ -31,7 +31,7 @@
  * fail loud rather than silently swallowing real sales.
  */
 
-import type { AuthEnv } from './auth';
+import { setUserTierByEmail, type AuthEnv } from './auth';
 
 interface FounderEnv extends AuthEnv {
   /** Shared admin token gating the manual increment + set endpoints. */
@@ -198,6 +198,20 @@ interface PaddleWebhookEvent {
     items?: Array<{
       price?: { id?: string };
     }>;
+    /**
+     * Customer block — only present when the Paddle dashboard's
+     * webhook destination has "Include customer" / extended data
+     * toggled on (Developer Tools → Notifications → destination →
+     * advanced settings). When the field is absent we still bump
+     * the counter and Christian uses
+     * /api/founder/admin/grant-tier as the manual backup to
+     * upgrade the user. The Paddle field is `customer.email`; if
+     * Paddle ever switches to `customer.email_address` we'll need
+     * to add an alias here.
+     */
+    customer?: {
+      email?: string;
+    };
   };
 }
 
@@ -325,12 +339,24 @@ export async function handleFounderWebhook(req: Request, env: FounderEnv): Promi
       : Promise.resolve(),
   ]);
 
+  // Tier upgrade — best-effort. If the Paddle dashboard's webhook
+  // destination has "Include customer" enabled, the email rides
+  // along on the event and we can auto-promote the user to
+  // pro_plus. If the email is missing OR doesn't match a VozClara
+  // account, the counter still bumps and Christian uses
+  // POST /api/founder/admin/grant-tier as the manual backup.
+  const customerEmail = event.data?.customer?.email;
+  const tierGranted = customerEmail
+    ? await setUserTierByEmail(env, customerEmail, 'pro_plus')
+    : null;
+
   return json({
     ok: true,
     claimed: after,
     max: FOUNDER_MAX,
     available: after < FOUNDER_MAX,
     event_id: eventId,
+    tier_granted: tierGranted,
   });
 }
 
@@ -345,4 +371,77 @@ function timingSafeEqualHex(a: string, b: string): boolean {
     result |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return result === 0;
+}
+
+/**
+ * POST /api/founder/admin/grant-tier   header: X-Admin-Token: <token>
+ *                                       body: { email, tier }
+ *
+ * Manual tier upgrade — the backup path for the Paddle webhook's
+ * auto-promotion. Use when:
+ *   • The Paddle webhook destination doesn't include customer data
+ *     (so `tier_granted: null` in the webhook response).
+ *   • The Paddle email doesn't match the VozClara account email
+ *     (user paid with foo+work@gmail.com but signed up with
+ *     foo@gmail.com).
+ *   • Backfilling pre-launch friends-and-family Pro Plus grants.
+ *
+ * Body shape:
+ *   { email: string, tier: 'free' | 'pro' | 'pro_plus' }
+ *
+ * Returns:
+ *   200 { ok: true, userId, oldTier, newTier }   on success
+ *   404 { error: 'user_not_found', email }       when no match
+ *   400 { error: 'invalid_*' }                   on bad input
+ *   401 { error: 'unauthorized' }                missing admin token
+ *   503 { error: 'admin_disabled' }              ADMIN_TOKEN not set
+ *
+ * Curl shape:
+ *   curl -X POST 'https://vozclara.app/api/founder/admin/grant-tier' \
+ *     -H 'X-Admin-Token: …' \
+ *     -H 'Content-Type: application/json' \
+ *     -d '{"email":"foo@example.com","tier":"pro_plus"}'
+ */
+export async function handleFounderGrantTier(
+  req: Request,
+  env: FounderEnv,
+): Promise<Response> {
+  if (!env.ADMIN_TOKEN) return json({ error: 'admin_disabled' }, 503);
+  const token = req.headers.get('X-Admin-Token') ?? '';
+  if (token !== env.ADMIN_TOKEN) return json({ error: 'unauthorized' }, 401);
+
+  let body: { email?: unknown; tier?: unknown };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  const email =
+    typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+  if (!email || !email.includes('@')) {
+    return json({ error: 'invalid_email' }, 400);
+  }
+
+  const tier = body.tier;
+  if (tier !== 'free' && tier !== 'pro' && tier !== 'pro_plus') {
+    return json(
+      {
+        error: 'invalid_tier',
+        detail: "tier must be 'free' | 'pro' | 'pro_plus'",
+      },
+      400,
+    );
+  }
+
+  const result = await setUserTierByEmail(env, email, tier);
+  if (!result) {
+    return json({ error: 'user_not_found', email }, 404);
+  }
+  return json({
+    ok: true,
+    userId: result.userId,
+    oldTier: result.oldTier,
+    newTier: tier,
+  });
 }

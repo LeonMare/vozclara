@@ -27,6 +27,7 @@ import {
   handleAuthAttachBrain,
   handleAuthProfile,
   handleAuthDelete,
+  getCurrentUser,
 } from './auth';
 import {
   handleRatingPost,
@@ -41,6 +42,7 @@ import {
   handleFounderIncrement,
   handleFounderSet,
   handleFounderWebhook,
+  handleFounderGrantTier,
 } from './founder';
 import { callLLM } from './llm-router';
 import { VozClaraMcpAgent } from './mcp/agent';
@@ -667,6 +669,16 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
       // policy is the rate-control and we 401 fast on bad signatures.
       return handleFounderWebhook(req, env);
     }
+    if (
+      url.pathname === '/api/founder/admin/grant-tier' &&
+      req.method === 'POST'
+    ) {
+      // Manual backup for the webhook's auto-tier-grant — used when
+      // the Paddle email doesn't match the VozClara account email,
+      // or when the webhook destination isn't configured to include
+      // customer data. See worker/src/founder.ts for the curl shape.
+      return handleFounderGrantTier(req, env);
+    }
 
     /* ─── /api/admin/llm-smoke — tier-aware LLM-router smoke endpoint ─── *
      *
@@ -777,9 +789,25 @@ async function handleInsights(req: Request, env: Env): Promise<Response> {
   }
   const mode: Mode = normaliseMode(body.mode);
 
+  // Resolve the caller's tier. Anonymous → 'free'. Logged-in user
+  // with a Paddle-attached Pro Plus subscription → 'pro_plus' (set
+  // by handleFounderWebhook on transaction.completed in
+  // worker/src/founder.ts). The field defaults to 'free' for any
+  // account created before User.tier shipped, so this never throws.
+  const user = await getCurrentUser(req, env);
+  const userTier: 'free' | 'pro' | 'pro_plus' = user?.tier ?? 'free';
+
   try {
     const genre = body.genre ?? (await detectGenre(transcript, env));
-    const insights = await generateInsights(transcript, sourceLang, targetLang, genre, mode, env);
+    const insights = await generateInsights(
+      transcript,
+      sourceLang,
+      targetLang,
+      genre,
+      mode,
+      userTier,
+      env,
+    );
     return json({ genre, mode, ...insights }, 200, {
       'Cache-Control': 'public, max-age=86400',
     });
@@ -1130,6 +1158,14 @@ async function generateInsights(
   targetLang: string,
   genre: Genre,
   mode: Mode,
+  /**
+   * Caller's subscription tier. Drives the router branch in callLLM:
+   * 'pro_plus' goes to Sonnet 4.5 via the AI Gateway, everyone else
+   * goes to Llama 3.3 70B on Workers AI. The local `tier` variable
+   * below is a different concept (output-length tier derived from
+   * transcript length) — keep them visually distinct.
+   */
+  userTier: 'free' | 'pro' | 'pro_plus',
   env: Env,
 ): Promise<InsightsOutput> {
   /* Tier from the FULL transcript length, before truncation — we want
@@ -1147,19 +1183,15 @@ async function generateInsights(
 Transcript:
 ${bounded}`;
 
-  // Routed through callLLM rather than env.AI.run directly so this
-  // path becomes tier-aware the moment we plumb user-tier extraction
-  // into the route handler. For now `tier: 'free'` keeps the existing
-  // behaviour (Llama 3.3 70B); flipping to 'pro_plus' will swap in
-  // Sonnet 4.5 via Cloudflare AI Gateway with prompt caching honoured
-  // (CLAUDE.md §1.3 + §7).
-  //
-  // TODO(auth): pull tier from session once handleInsights extracts
-  // the authenticated user — Phase 2 of #40 / once Paddle subscription
-  // status is persisted per user.
+  // Tier-aware dispatch (CLAUDE.md §1.3 LOCKED): 'pro_plus' callers
+  // get Sonnet 4.5 via Cloudflare AI Gateway with prompt caching
+  // honoured; everyone else gets Llama 3.3 70B on Workers AI. The
+  // caller (handleInsights) already loaded the user + resolved tier
+  // via getCurrentUser → `user.tier ?? 'free'`, so by the time we
+  // hit callLLM the routing decision is already made.
   const result = await callLLM(
     {
-      tier: 'free',
+      tier: userTier,
       systemPrompt,
       userContent: userPrompt,
       // 70B + expanded schema = larger output. 5000 tokens covers Learn
@@ -1167,6 +1199,12 @@ ${bounded}`;
       // more neurons but delivers editorial-grade volume.
       maxTokens: 5000,
       temperature: 0.35,
+      // Sonnet-path cache: the Mode + targetLang permutations of the
+      // system prompt are deterministic, so once a Pro Plus user has
+      // generated a Learn-mode German pack, every subsequent Learn-
+      // mode German pack hits the cache. Llama ignores the flag.
+      cacheSystemPrompt: true,
+      cacheTTL: '1h',
     },
     env,
   );
