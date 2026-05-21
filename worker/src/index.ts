@@ -1375,6 +1375,16 @@ Universal rules:
 - All field VALUES in ${lang}. Field NAMES stay in English.
 - "vocabulary[].word" stays in the source language (it's the term being learned).
 - "keyQuotes[].original" stays in the source language; "text" is the translation.
+- Inline citations: in "summary.long" and every "insights[].body", suffix each
+  concrete claim, statistic, or moment-specific assertion with a bracketed
+  timestamp [mm:ss] (or [h:mm:ss] for videos over 60 minutes) pointing to
+  the closest second in the transcript where that claim is made. One
+  citation per claim is enough; do NOT bracket every sentence. Examples:
+    • "Buffett argues compound interest is misunderstood [12:34]."
+    • "He gives the example of Coca-Cola dividends [1:14:22]."
+  Do NOT use citations in titles, captions, hooks, vocabulary, quiz
+  answers, or anywhere that needs a clean visual surface — they're for
+  inline auditing, not decoration.
 - Strict JSON. No trailing commas. No code fences. Arrays that don't fit the mode return [].`;
 }
 

@@ -6,6 +6,7 @@ import { RouteSkeleton } from '../components/RouteSkeleton';
 import { getPack, getTranscript, deletePack, savePack, activeView, listPacks, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { ConversionChip } from '../components/ConversionChip';
 import { TRIGGERS, THRESHOLDS } from '../lib/conversionTriggers';
+import { TextWithCitations } from '../components/TextWithCitations';
 import { recordView, forgetView } from '../lib/recentlyViewed';
 import { deindexPack } from '../lib/packIndex';
 import { clearChat } from '../lib/chat';
@@ -658,11 +659,11 @@ function renderTabContent(
 ): React.ReactNode {
   switch (key) {
     case 'summary':
-      return <SummaryTab view={view} />;
+      return <SummaryTab view={view} onSeek={onSeek} />;
     case 'chapters':
       return <ChaptersTab view={view} onSeek={onSeek} />;
     case 'insights':
-      return <InsightsTab view={view} />;
+      return <InsightsTab view={view} onSeek={onSeek} />;
     case 'actionPlan':
       return <ListTab items={view.actionPlan} numbered />;
     case 'vocabulary':
@@ -683,7 +684,7 @@ function renderTabContent(
 
 /* ─── Tabs ────────────────────────────────────────────────────────────── */
 
-function SummaryTab({ view }: { view: PackTranslation }) {
+function SummaryTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
   /* TL;DR shows above the summary blocks when present. It's the single
      line a knowledge-worker or student reads first to decide whether to
      keep going. Older packs won't have it — they degrade to short+long. */
@@ -709,7 +710,7 @@ function SummaryTab({ view }: { view: PackTranslation }) {
         <>
           <div className="my-6 h-px w-8 bg-gold/50" aria-hidden />
           <p className="font-sans text-base leading-relaxed text-graphit/85 sm:text-lg">
-            {view.summary.long}
+            <TextWithCitations text={view.summary.long} onSeek={onSeek} />
           </p>
         </>
       )}
@@ -717,7 +718,7 @@ function SummaryTab({ view }: { view: PackTranslation }) {
   );
 }
 
-function InsightsTab({ view }: { view: PackTranslation }) {
+function InsightsTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
   if (view.keyIdeas.length === 0) return <Empty />;
   return (
     <div className="space-y-6">
@@ -729,7 +730,9 @@ function InsightsTab({ view }: { view: PackTranslation }) {
             </span>
             <h3 className="font-serif text-xl leading-tight text-navy sm:text-2xl">{idea.title}</h3>
           </div>
-          <p className="mt-3 pl-8 font-sans text-[15px] leading-relaxed text-graphit/85">{idea.body}</p>
+          <p className="mt-3 pl-8 font-sans text-[15px] leading-relaxed text-graphit/85">
+            <TextWithCitations text={idea.body} onSeek={onSeek} />
+          </p>
         </article>
       ))}
     </div>
