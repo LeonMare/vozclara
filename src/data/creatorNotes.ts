@@ -1453,6 +1453,336 @@ export const CREATOR_NOTES: CreatorNote[] = [
     metaDescription:
       'Una nota editorial sobre El Comidista de Mikel López Iturriaga — por qué la receta no es lo importante, la crítica como ingrediente, y por qué la sección sobrevivió al fin de las secciones.',
   },
+
+  // ─── Cluster lusófono — Portugal + Brasil ───────────────────────
+  {
+    slug: '45-graus-pedro-vieira-entrevista',
+    creator: 'Pedro Vieira',
+    creatorHandle: '45graus',
+    videoTitle: '45 Graus — entrevista de fundo (episódio paradigmático)',
+    youtubeId: 'gG6QcN0wL3o', // TODO(verify): episódio típico de 45 Graus
+    publishedDate: '2023-05-04',
+    durationMin: 95,
+    topics: ['podcast', 'entrevista', 'pedro vieira', '45 graus', 'portugal'],
+    lang: 'pt',
+    intro:
+      '45 Graus é o podcast português que conseguiu o que poucos formatos lusófonos conseguiram: noventa minutos de conversa séria, semanais, sem caírem em formato académico nem em entretenimento ligeiro. Pedro Vieira encontrou um registo que funciona em Portugal e que serve de referência para o longo formato em português europeu.',
+    sections: [
+      {
+        heading: 'A pergunta do entrevistador é mais longa que o normal',
+        body:
+          'Vieira tem o hábito — raro no panorama português — de fazer perguntas longas, com contexto, antes de devolver a palavra ao convidado. Pode parecer falta de eficiência, mas é o oposto: o convidado responde com mais precisão quando o entrevistador mostrou primeiro que percebeu a complexidade da matéria. Este recurso fala-se pouco no Portugal mediático, onde a pergunta curta é a norma; em 45 Graus, a pergunta longa é o método.',
+      },
+      {
+        heading: 'A preparação como tema invisível',
+        body:
+          'Vieira lê os livros e artigos do convidado antes de cada gravação — não folheia, lê. Esta dedicação produz o efeito que mais distingue o programa: o convidado percebe nos primeiros cinco minutos que está perante alguém que não vai pedir-lhe o resumo da sua tese. Esse ajuste de registo abre conversas que rádios e televisões nunca conseguem ter com os mesmos convidados.',
+      },
+      {
+        heading: 'Onde o formato falha',
+        body:
+          'Noventa minutos de conversa em português europeu, sobre temas densos, com um entrevistador metódico — não é um formato fácil de escutar em todas as situações. Pessoas habituadas a podcasts de quinze minutos abandonam frequentemente um episódio de 45 Graus na primeira meia hora. O programa não tenta corrigir isto, e essa decisão editorial é parte do que o torna o que é: o oposto da maximização de audiência.',
+      },
+      {
+        heading: 'O que um pack faz com um episódio',
+        body:
+          'Um episódio de 45 Graus contém entre dez e quinze afirmações verificáveis — datas, números, decisões políticas, referências bibliográficas. Um pack converte isto numa folha de consulta que sobrevive ao esquecimento natural após noventa minutos. A utilidade não é substituir a audição (essa é insubstituível); é poder voltar à conversa três meses depois com a estrutura preservada.',
+      },
+    ],
+    takeaway:
+      'O longo formato em português europeu vive de uma pergunta longa e de uma preparação que se nota — sem isso, são noventa minutos perdidos.',
+    relatedSlugs: ['joana-marques-mixordia-tematicas', 'flow-podcast-igor-coelho'],
+    metaTitle: '45 Graus de Pedro Vieira — o método do longo formato em português',
+    metaDescription:
+      'Uma nota editorial sobre 45 Graus de Pedro Vieira — a pergunta longa como método, a preparação como tema invisível, e onde o formato falha.',
+  },
+  {
+    slug: 'joana-marques-mixordia-tematicas',
+    creator: 'Joana Marques',
+    creatorHandle: 'rrportugal',
+    videoTitle: 'Mixórdia de Temáticas — comentário paradigmático',
+    youtubeId: 'fBz9w0c1bL4', // TODO(verify): clip Mixórdia paradigmático
+    publishedDate: '2023-09-12',
+    durationMin: 7,
+    topics: ['comédia', 'joana marques', 'mixórdia de temáticas', 'rádio renascença'],
+    lang: 'pt',
+    intro:
+      'Joana Marques transformou a Mixórdia de Temáticas, na Rádio Renascença, no formato de sátira mais influente da rádio portuguesa contemporânea. Sete minutos por episódio, frequência diária, com uma única regra invisível: não há tabu que escape ao comentário, desde que o comentário seja honesto.',
+    sections: [
+      {
+        heading: 'A sátira que respeita o satirizado',
+        body:
+          'A diferença entre a Mixórdia e os outros formatos satíricos portugueses é o respeito subjacente pelas pessoas ridicularizadas. Marques nunca se ri da estupidez do alvo; ri-se da contradição entre o que o alvo diz e o que o alvo faz. Esta distinção parece pequena mas é estrutural: produz uma sátira que envelhece sem se tornar embaraçosa, que ridiculariza o argumento sem desumanizar quem o sustenta.',
+      },
+      {
+        heading: 'Sete minutos é o formato exacto',
+        body:
+          'O comprimento dos episódios não é acidental. Marques explicou em entrevistas que sete minutos é o que cabe num percurso de carro curto, num intervalo de café, numa fila de supermercado — situações em que o ouvinte português escuta rádio. A disciplina de manter o formato consistente durante anos é o que mais distingue o programa da sátira televisiva, que tende a inflar para meia hora e perde nitidez no caminho.',
+      },
+      {
+        heading: 'O caso Tony Carreira',
+        body:
+          'Um episódio em particular — o comentário sobre o casamento de Tony Carreira — resultou num processo judicial que Joana Marques perdeu em primeira instância e ganhou em segunda. O episódio é estudado em faculdades de comunicação como caso prático de liberdade de expressão e sátira pública em Portugal. Marques não comentou publicamente o caso para além do estritamente legal, o que é em si um exemplo de disciplina raro no panorama nacional.',
+      },
+      {
+        heading: 'O que um pack rescata',
+        body:
+          'Um episódio da Mixórdia tem duas a três referências culturais portuguesas que para um ouvinte estrangeiro precisam de contexto, mais um argumento satírico central. Um pack regista as referências (quem é o político, qual o programa parodiado, qual a frase original) e preserva o argumento. Sem o pack, o episódio fica datado em meses; com o pack, é arquivo cultural.',
+      },
+    ],
+    takeaway:
+      'A sátira que envelhece bem respeita as pessoas mesmo quando ridiculariza os seus argumentos.',
+    relatedSlugs: ['45-graus-pedro-vieira-entrevista', 'inteligencia-ltda-rogerio-vilela'],
+    metaTitle: 'Joana Marques e a Mixórdia — a sátira diária em sete minutos',
+    metaDescription:
+      'Uma nota editorial sobre a Mixórdia de Temáticas de Joana Marques — a sátira que respeita o satirizado, o formato de sete minutos, e o caso Tony Carreira.',
+  },
+  {
+    slug: 'daniel-oliveira-eixo-norte-sul',
+    creator: 'Daniel Oliveira',
+    creatorHandle: 'rtp',
+    videoTitle: 'Eixo Norte-Sul — episódio paradigmático',
+    youtubeId: 'mU3vQwL8fAg', // TODO(verify): episódio Eixo Norte-Sul RTP
+    publishedDate: '2022-11-18',
+    durationMin: 52,
+    topics: ['rtp', 'daniel oliveira', 'entrevista', 'jornalismo', 'política portuguesa'],
+    lang: 'pt',
+    intro:
+      'Daniel Oliveira passou décadas a fazer o tipo de entrevista que o jornalismo televisivo português produz pouco — pausada, longa, baseada em leitura. Eixo Norte-Sul, na RTP, é a continuação tardia desse método num formato semanal de cinquenta minutos com convidados que normalmente não dão entrevistas a este registo.',
+    sections: [
+      {
+        heading: 'O entrevistador como interlocutor, não como inquisidor',
+        body:
+          'Oliveira não persegue, não tenta apanhar em contradição, não procura o titular do dia. Posiciona-se como interlocutor — alguém que veio para tentar perceber, não para confrontar. Esta postura, no panorama televisivo português, é quase contrarian. Produz conversas em que políticos e académicos dizem coisas que noutros formatos seriam preparadas e diluídas. A diferença é audível em qualquer episódio.',
+      },
+      {
+        heading: 'A pergunta que parece simples e não é',
+        body:
+          'O recurso mais característico de Oliveira é a pergunta aparentemente simples que abre vários minutos de elaboração no convidado. "O que mudou desde a sua primeira eleição até hoje?" parece banal; respondida com seriedade, demora dez minutos e produz autoanálise política rara. Oliveira está disposto a esperar pela versão longa.',
+      },
+      {
+        heading: 'Por que a RTP é o canal certo para este formato',
+        body:
+          'Eixo Norte-Sul existe na RTP porque dificilmente existiria num canal comercial. O formato não otimiza audiência — otimiza profundidade. A televisão pública portuguesa, com todas as suas limitações orçamentais, é o último espaço editorial onde este compromisso é defensável. Quando se discute o futuro do serviço público, programas como Eixo Norte-Sul são o argumento mais sólido para a sua manutenção.',
+      },
+      {
+        heading: 'O que um pack rescata',
+        body:
+          'Um episódio típico contém entre cinco e oito teses defensáveis pelo convidado — afirmações políticas, históricas ou sociais que admitem contestação. Um pack lista estas teses, identifica quem as defendeu, e regista a refutação ou nuance que o entrevistador colocou. Para quem quer voltar à conversa meses depois numa discussão pública, o pack é o único caminho.',
+      },
+    ],
+    takeaway:
+      'A entrevista televisiva que vale a pena é a que vê o entrevistado como interlocutor — não como adversário nem como cliente.',
+    relatedSlugs: ['45-graus-pedro-vieira-entrevista', 'joana-marques-mixordia-tematicas'],
+    metaTitle: 'Daniel Oliveira em Eixo Norte-Sul — o entrevistador como interlocutor',
+    metaDescription:
+      'Uma nota editorial sobre Eixo Norte-Sul de Daniel Oliveira na RTP — o entrevistador como interlocutor, a pergunta aparentemente simples e por que a RTP é o canal certo.',
+  },
+  {
+    slug: 'flow-podcast-igor-coelho',
+    creator: 'Flow Podcast',
+    creatorHandle: 'flowpodcast',
+    videoTitle: 'Flow Podcast — entrevista marcante',
+    youtubeId: '7gK2N5x8vQE', // TODO(verify): episódio Flow paradigmático
+    publishedDate: '2023-08-22',
+    durationMin: 195,
+    topics: ['flow podcast', 'igão', 'mítico', 'podcast brasil', 'entrevista'],
+    lang: 'pt',
+    intro:
+      'O Flow Podcast tornou-se nos últimos cinco anos o maior podcast brasileiro em audiência e, simultaneamente, o mais controverso. Não há forma de discutir o conteúdo lusófono em vídeo sem passar por ele — quer se goste do formato, quer se discorde.',
+    sections: [
+      {
+        heading: 'Três horas é demais — e é por isso que funciona',
+        body:
+          'O Flow estabilizou-se em torno das três horas por episódio. Para qualquer outro formato seria suicídio editorial; no Flow é a regra. A razão é que o público-alvo — o jovem brasileiro que escuta enquanto joga, dirige, ou faz tarefas domésticas — quer comprimento, não brevidade. O formato responde a uma necessidade real de companhia auditiva longa que os meios tradicionais não satisfazem.',
+      },
+      {
+        heading: 'Onde o Flow erra repetidamente',
+        body:
+          'O programa teve mais de um momento polémico — convidados que defenderam posições inaceitáveis sem contradição, perguntas que normalizaram condutas que não deveriam ser normalizadas. Os apresentadores reconheceram alguns destes momentos e ignoraram outros. A análise honesta do Flow tem de incluir esta crítica; ignorá-la seria adoptar o discurso de quem defende o programa como acima de questionamento.',
+      },
+      {
+        heading: 'Onde o Flow acerta repetidamente',
+        body:
+          'Quando o convidado é interessante e os apresentadores conseguem manter o foco, o Flow produz conversas únicas no panorama brasileiro. Empresários, cientistas, atletas, artistas — passam três horas no Flow e dão entrevistas que nenhum outro formato consegue extrair. O equilíbrio entre os momentos polémicos e os momentos brilhantes é desigual, mas existe.',
+      },
+      {
+        heading: 'O que um pack rescata',
+        body:
+          'Três horas são impossíveis de revisitar linearmente. Um pack do Flow identifica os blocos relevantes (geralmente dois ou três num episódio), descarta o restante sem sentimento, e preserva as ideias específicas do convidado. Esta é a forma decente de consumir o programa sem ficar refém do formato.',
+      },
+    ],
+    takeaway:
+      'O podcast brasileiro de longa duração responde a uma necessidade real — e exige um pack para ser consumido sem se perder horas em material periférico.',
+    relatedSlugs: ['podpah-mitico-igao-entrevista', 'inteligencia-ltda-rogerio-vilela'],
+    metaTitle: 'Flow Podcast — três horas que exigem um pack',
+    metaDescription:
+      'Uma nota editorial sobre o Flow Podcast — por que três horas é a regra, onde o programa erra e acerta, e como um pack rescata as ideias do convidado sem refém do formato.',
+  },
+  {
+    slug: 'podpah-mitico-igao-entrevista',
+    creator: 'Podpah',
+    creatorHandle: 'podpah',
+    videoTitle: 'Podpah — entrevista com convidado relevante',
+    youtubeId: 'B5w3X1k7zRk', // TODO(verify): episódio Podpah paradigmático
+    publishedDate: '2024-02-10',
+    durationMin: 135,
+    topics: ['podpah', 'mítico', 'igão', 'podcast brasil', 'cultura urbana'],
+    lang: 'pt',
+    intro:
+      'O Podpah de Mítico e Igão tornou-se o segundo maior podcast brasileiro em poucos anos sem nunca tentar competir directamente com o Flow. O sucesso veio de optar por um registo diferente — periferia, hip-hop, futebol, gírias regionais — e de defender esse registo com consistência.',
+    sections: [
+      {
+        heading: 'A periferia como editorial',
+        body:
+          'Mítico e Igão nunca esconderam de onde vieram nem o público para quem fazem o programa. Convidam rappers, atletas de comunidades, empresários que começaram com nada — e mantêm o vocabulário da audiência que escuta. Esta autenticidade não é truque de marketing; é a condição do formato. Quando o Podpah recebe um convidado de classe alta, a conversa funciona porque a audiência percebe que o anfitrião continua a ser o anfitrião.',
+      },
+      {
+        heading: 'A entrevista que outros formatos não conseguem',
+        body:
+          'O Podpah extrai de convidados das comunidades periféricas brasileiras conversas que jornalistas tradicionais nunca conseguem. A razão é simples: o entrevistado fala num registo em que se reconhece, sem ter de traduzir-se para a classe média. Quem ouve fora desse contexto sente que está a ler antropologia em primeira mão; quem ouve dentro sente que está em casa.',
+      },
+      {
+        heading: 'As limitações são visíveis',
+        body:
+          'O Podpah não é um podcast de jornalismo de investigação. Mítico e Igão raramente contestam o convidado; aceitam a narrativa que recebem e desenvolvem-na. Para muitas conversas isto é o adequado; para outras, é limitante. A análise honesta do programa reconhece esta diferença — sem a ela, o elogio fica retórico.',
+      },
+      {
+        heading: 'O pack como tradução cultural',
+        body:
+          'Um pack de um episódio do Podpah, para um ouvinte fora do Brasil ou fora do contexto urbano carioca, é em parte um glossário — gírias, referências musicais, eventos locais que precisam de contexto. Esta função tradutora é exactamente onde a vozclara funciona melhor: identifica os termos que precisam de explicação e oferece-a sem interromper o fluxo narrativo do episódio.',
+      },
+    ],
+    takeaway:
+      'O sucesso do Podpah vem de manter o registo da audiência e de extrair conversas que nenhum jornalista tradicional consegue.',
+    relatedSlugs: ['flow-podcast-igor-coelho', 'casimiro-analise-jogo-futebol'],
+    metaTitle: 'Podpah — a periferia como editorial em formato podcast',
+    metaDescription:
+      'Uma nota editorial sobre o Podpah de Mítico e Igão — a periferia como linha editorial, a entrevista que outros formatos não conseguem, e o pack como tradução cultural.',
+  },
+  {
+    slug: 'inteligencia-ltda-rogerio-vilela',
+    creator: 'Rogério Vilela',
+    creatorHandle: 'inteligencialtda',
+    videoTitle: 'Inteligência Ltda — entrevista com convidado de destaque',
+    youtubeId: 'eY7w0wKxV2g', // TODO(verify): episódio paradigmático Inteligência Ltda
+    publishedDate: '2023-06-15',
+    durationMin: 165,
+    topics: ['inteligência ltda', 'rogério vilela', 'podcast brasil', 'entrevista'],
+    lang: 'pt',
+    intro:
+      'O Inteligência Ltda de Rogério Vilela é o terceiro grande podcast brasileiro de formato longo — e o que mais aposta na conversa pausada com convidados de áreas pouco televisivas. Cientistas, empresários, militares, religiosos. O formato é menos espalhafatoso que os concorrentes; o conteúdo é frequentemente mais denso.',
+    sections: [
+      {
+        heading: 'O entrevistador que não procura viralizar',
+        body:
+          'Vilela escolheu, deliberadamente, não fazer o tipo de pergunta que produz clips virais. O programa não corta para curtas no TikTok; cada episódio existe como peça inteira ou não existe. Esta opção custou audiência inicial e produziu retenção a longo prazo. Cinco anos depois, o Inteligência Ltda tem um público que volta semanalmente em vez de viralizar uma vez por trimestre.',
+      },
+      {
+        heading: 'A escolha dos convidados',
+        body:
+          'O que mais distingue o Inteligência Ltda é a escolha sistemática de convidados que outros formatos brasileiros raramente trazem — neurocientistas, militares reformados, executivos da indústria farmacêutica, religiosos não televangelistas. A linha editorial parece ser: pessoas com conhecimento profundo que normalmente não falam em público. O resultado é um arquivo único no podcast brasileiro.',
+      },
+      {
+        heading: 'Onde o formato resiste à crítica',
+        body:
+          'O Inteligência Ltda recebeu críticas por não confrontar suficientemente alguns dos convidados, especialmente quando estes defendem posições controversas. A crítica é justa em casos específicos, mas estrutural é injusta — o programa não foi pensado para ser jornalismo de confronto, foi pensado para extrair o pensamento do convidado tal como ele o pensa. Quem procura confrontação encontra-a em outros formatos.',
+      },
+      {
+        heading: 'O pack como índice temático',
+        body:
+          'Um episódio de duas horas e meia com um neurocientista contém facilmente vinte conceitos novos. Sem um pack, ouvir o episódio é uma experiência valiosa mas ingovernável — a maioria dos conceitos esfumam-se nas semanas seguintes. Com pack, cada episódio funciona como uma aula com índice. Para quem quer reter conteúdo técnico de podcast longo, este é o caminho mais funcional.',
+      },
+    ],
+    takeaway:
+      'O podcast brasileiro de longo formato resiste ao confronto e prefere extrair o pensamento do convidado tal como ele o pensa — um pack faz do episódio uma aula reutilizável.',
+    relatedSlugs: ['flow-podcast-igor-coelho', 'podpah-mitico-igao-entrevista'],
+    metaTitle: 'Inteligência Ltda — o podcast brasileiro que não procura viralizar',
+    metaDescription:
+      'Uma nota editorial sobre o Inteligência Ltda de Rogério Vilela — o entrevistador que recusa viralizar, a escolha dos convidados e o pack como índice temático.',
+  },
+  {
+    slug: 'casimiro-analise-jogo-futebol',
+    creator: 'Casimiro Miguel',
+    creatorHandle: 'CasimiroMiguel',
+    videoTitle: 'Casimiro — análise de jogo de futebol',
+    youtubeId: 'YbQfRz3HpKQ', // TODO(verify): análise paradigmática Casimiro
+    publishedDate: '2023-12-09',
+    durationMin: 35,
+    topics: ['casimiro', 'futebol', 'streaming', 'twitch', 'brasil'],
+    lang: 'pt',
+    intro:
+      'Casimiro Miguel transformou a reacção a jogos de futebol num formato que rivaliza com a cobertura televisiva tradicional brasileira — e que em alguns campeonatos chega a superar-a em audiência. Não é jornalismo desportivo no sentido clássico; é algo novo que ainda não tem nome.',
+    sections: [
+      {
+        heading: 'A reacção como formato editorial',
+        body:
+          'O conceito é simples: Casimiro assiste a um jogo enquanto o seu público assiste a Casimiro a assistir. O resultado, ao contrário do que parece, não é narração desportiva — é uma performance de espectador comum que confirma para o público o que ele próprio sente em casa, mas amplificado e mais articulado. Esta função de espelho é o que distingue o formato de qualquer transmissão tradicional.',
+      },
+      {
+        heading: 'Por que substitui a televisão para um segmento da audiência',
+        body:
+          'Para uma geração específica de adeptos brasileiros, especialmente entre 15 e 35 anos, ver futebol sozinho é menos interessante do que ver futebol com Casimiro. A companhia auditiva e visual passa a fazer parte da experiência desportiva, e a televisão pura — sem a camada do streamer — torna-se solitária. Esta deslocação é estrutural, não geracional passageira: muda o que significa ver um jogo.',
+      },
+      {
+        heading: 'A questão dos direitos televisivos',
+        body:
+          'Casimiro foi protagonista de uma disputa jurídica significativa com os detentores de direitos televisivos brasileiros. O caso fez evoluir a interpretação legal do "direito de cidadania televisiva" — o conceito de que o jogo de futebol é evento público cuja cobertura comentada cabe em alguma categoria de utilização legítima. O desfecho é incompleto, mas o precedente é importante para o futuro da produção de conteúdo audiovisual em torno de eventos transmitidos.',
+      },
+      {
+        heading: 'O que um pack rescata',
+        body:
+          'Uma análise de jogo de Casimiro inclui reacções emocionais, comentários técnicos pontuais, e referências a outros jogos. Para quem quer revisitar a análise técnica sem repetir trinta e cinco minutos de reacção, um pack extrai os momentos analíticos puros — o resto fica como contexto. É uma forma de reconciliar o formato com o consumo de quem quer apenas a substância.',
+      },
+    ],
+    takeaway:
+      'A reacção amplificada a um jogo é um formato novo no jornalismo desportivo brasileiro — e está a redefinir o que significa ver futebol em casa.',
+    relatedSlugs: ['podpah-mitico-igao-entrevista', 'flow-podcast-igor-coelho'],
+    metaTitle: 'Casimiro — a reacção como formato editorial no futebol brasileiro',
+    metaDescription:
+      'Uma nota editorial sobre Casimiro Miguel — a reacção como formato editorial, por que substitui a televisão para uma geração, e o pack que rescata a substância técnica.',
+  },
+  {
+    slug: 'nerdcast-jovem-nerd-bicho',
+    creator: 'Jovem Nerd',
+    creatorHandle: 'jovemnerdNERDOFFICE',
+    videoTitle: 'NerdCast — episódio histórico',
+    youtubeId: 'qK4N9pXz3vM', // TODO(verify): episódio histórico NerdCast
+    publishedDate: '2022-01-31',
+    durationMin: 105,
+    topics: ['nerdcast', 'jovem nerd', 'podcast brasil', 'cultura pop', 'longevidade'],
+    lang: 'pt',
+    intro:
+      'O NerdCast, do Jovem Nerd, é o podcast brasileiro com mais episódios e o que mais influenciou o formato como género no país. Mais de oitocentos episódios em quinze anos. Qualquer análise séria de podcast brasileiro tem de passar por aqui — é o ponto de referência involuntário do qual os outros formatos se diferenciam.',
+    sections: [
+      {
+        heading: 'O formato que durou porque não se reinventou',
+        body:
+          'O NerdCast manteve, com ajustes mínimos, a mesma estrutura desde 2006: dois ou três apresentadores, um tema cultural, hora e meia, intervalos para anúncios. Esta resistência à reinvenção foi criticada repetidamente e foi também a razão de a audiência ficar. Quando a familiaridade é parte do produto, mudar o formato custa retenção. O NerdCast escolheu deliberadamente não mudar.',
+      },
+      {
+        heading: 'Os temas que envelheceram bem e os que não',
+        body:
+          'Os episódios sobre ciência, literatura clássica, e história envelheceram melhor do que os episódios sobre tecnologia da época, política contemporânea, e cultura pop transitória. Esta diferença é instrutiva para quem cria conteúdo a longo prazo: o que perdura é o que estava ancorado em algo mais antigo que a actualidade. Os melhores episódios do NerdCast hoje são frequentemente os mais antigos.',
+      },
+      {
+        heading: 'A relação com a audiência',
+        body:
+          'Poucos podcasts brasileiros construíram uma comunidade tão leal como o NerdCast. A "Caverna do Nerd" — o grupo de assinantes pagantes — sustenta o programa há mais de uma década. Esta capacidade de monetizar directamente a audiência, antes de o modelo ser comum no Brasil, foi pioneira e merece estudo separado para quem hoje constrói negócios baseados em comunidade.',
+      },
+      {
+        heading: 'O pack como mapa de longevidade',
+        body:
+          'Para quem quer explorar o NerdCast pela primeira vez, oitocentos episódios são intransitáveis. Um pack de um episódio típico — não dos polémicos, dos representativos — funciona como apresentação do formato. Permite decidir, em dez minutos, se a estética e o tom servem ao ouvinte. Esta função de filtro é o que torna o pack útil para arquivos enormes.',
+      },
+    ],
+    takeaway:
+      'O podcast que dura quinze anos é aquele que não se reinventa — e o que envelhece melhor é o que estava ancorado em algo mais antigo que a actualidade.',
+    relatedSlugs: ['flow-podcast-igor-coelho', 'inteligencia-ltda-rogerio-vilela'],
+    metaTitle: 'NerdCast do Jovem Nerd — o formato que durou por não se reinventar',
+    metaDescription:
+      'Uma nota editorial sobre o NerdCast do Jovem Nerd — o formato que durou por não mudar, os temas que envelheceram bem, e a Caverna do Nerd como pioneirismo de monetização.',
+  },
 ];
 
 /** Lookup helper — returns the note for a slug, or null. */
