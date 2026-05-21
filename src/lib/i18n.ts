@@ -176,20 +176,20 @@ export const STRINGS: Record<Locale, Strings> = {
     navPricing: 'Planes',
     cambiarVideo: 'Cambiar vídeo',
 
-    heroEyebrow: 'VÍDEO · CONOCIMIENTO · APRENDIZAJE',
+    heroEyebrow: 'CONOCIMIENTO MULTILINGÜE DESDE VÍDEO',
     heroHeadline: 'Deja de perder lo que ves.',
-    heroSub: 'Guarda cualquier vídeo. Recibe las ideas, el vocabulario y las citas — en tu idioma.',
+    heroSub: 'Guarda cualquier vídeo. Recibe las ideas, el vocabulario, las citas — en tu idioma.',
     heroUrlInputLabel: 'Enlace de YouTube',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
-    primaryCTA: 'Empezar gratis',
+    primaryCTA: 'Crear mi primer Pack',
     seeHowCTA: 'Ver cómo funciona',
     invalidUrl: 'No se reconoce el enlace de YouTube.',
     trySamplePack: 'Ver un Knowledge Pack de ejemplo',
 
     problemTitle: 'Consumes horas de vídeo. Recuerdas apenas nada.',
-    problemBody: 'Cada día vemos YouTube, podcasts y cursos. Las ideas más valiosas desaparecen en una semana. Y lo peor: no se pueden buscar. El conocimiento queda atrapado dentro del vídeo.',
+    problemBody: 'Vemos horas de YouTube, podcasts y cursos. En una semana, las ideas más fuertes se han ido. Y no puedes buscar lo que viste — el conocimiento queda encerrado dentro del vídeo.',
 
-    solutionTitle: 'Vídeo entra. Conocimiento estructurado sale.',
+    solutionTitle: 'Del vídeo, un registro al que vuelves.',
     solutionBody: 'VozClara convierte cualquier vídeo en un Knowledge Pack — un registro estructurado, buscable y multilingüe de lo que se dijo y de lo que importa. Guárdalo, organízalo, búscalo, hazle preguntas.',
 
     howTitle: 'Cómo funciona',
@@ -347,20 +347,20 @@ export const STRINGS: Record<Locale, Strings> = {
     navPricing: 'Planos',
     cambiarVideo: 'Mudar de vídeo',
 
-    heroEyebrow: 'VÍDEO · CONHECIMENTO · APRENDIZAGEM',
+    heroEyebrow: 'CONHECIMENTO MULTILINGUE A PARTIR DE VÍDEO',
     heroHeadline: 'Para de perder o que vês.',
-    heroSub: 'Guarda qualquer vídeo. Recebe as ideias, o vocabulário e as citações — na tua língua.',
+    heroSub: 'Guarda qualquer vídeo. Recebe as ideias, o vocabulário, as citações — na tua língua.',
     heroUrlInputLabel: 'Link do YouTube',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
-    primaryCTA: 'Começar grátis',
+    primaryCTA: 'Criar o meu primeiro Pack',
     seeHowCTA: 'Ver como funciona',
     invalidUrl: 'Link do YouTube não reconhecido.',
     trySamplePack: 'Ver um Knowledge Pack de exemplo',
 
     problemTitle: 'Consomes horas de vídeo. Lembras-te de quase nada.',
-    problemBody: 'Vemos YouTube, podcasts e cursos todos os dias. As ideias mais valiosas desaparecem numa semana. Pior: não se podem pesquisar. O conhecimento fica preso dentro do vídeo.',
+    problemBody: 'Vemos horas de YouTube, podcasts e cursos. Numa semana, as ideias mais fortes desaparecem. E não podemos pesquisar o que vimos — o conhecimento fica preso dentro do vídeo.',
 
-    solutionTitle: 'Vídeo entra. Conhecimento estruturado sai.',
+    solutionTitle: 'Do vídeo, um registo ao qual voltas.',
     solutionBody: 'A VozClara transforma qualquer vídeo num Knowledge Pack — um registo estruturado, pesquisável e multilingue do que foi dito e do que importa. Guarda-o, organiza-o, pesquisa-o, faz-lhe perguntas.',
 
     howTitle: 'Como funciona',
@@ -507,20 +507,20 @@ export const STRINGS: Record<Locale, Strings> = {
     navPricing: 'Preise',
     cambiarVideo: 'Video wechseln',
 
-    heroEyebrow: 'VIDEO · WISSEN · LERNEN',
+    heroEyebrow: 'MEHRSPRACHIGES WISSEN AUS VIDEO',
     heroHeadline: 'Verlier nie wieder, was du schaust.',
-    heroSub: 'Speichere jedes Video. Bekomm die Ideen, das Vokabular und die Zitate zurück — in deiner Sprache.',
+    heroSub: 'Speichere jedes Video. Bekomm die Ideen, das Vokabular, die Zitate zurück — in deiner Sprache.',
     heroUrlInputLabel: 'YouTube-Link',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
-    primaryCTA: 'Kostenlos starten',
+    primaryCTA: 'Mein erstes Pack erstellen',
     seeHowCTA: 'So funktioniert es',
     invalidUrl: 'YouTube-Link nicht erkannt.',
     trySamplePack: 'Beispiel-Pack ansehen',
 
     problemTitle: 'Du konsumierst Stunden an Videos. Du behältst kaum etwas.',
-    problemBody: 'Wir sehen täglich YouTube, Podcasts und Kurse. Die wertvollsten Ideen verschwinden innerhalb einer Woche. Schlimmer: sie sind nicht durchsuchbar. Das Wissen bleibt im Video gefangen.',
+    problemBody: 'Wir schauen Stunden YouTube, Podcasts, Kurse. Innerhalb einer Woche sind die stärksten Ideen weg. Und wir können nicht durchsuchen, was wir gesehen haben — das Wissen bleibt im Video gefangen.',
 
-    solutionTitle: 'Video rein. Strukturiertes Wissen raus.',
+    solutionTitle: 'Aus dem Video wird etwas, zu dem du zurückkehrst.',
     solutionBody: 'VozClara verwandelt jedes Video in einen Knowledge Pack — einen strukturierten, durchsuchbaren, mehrsprachigen Datensatz dessen was gesagt wurde und was zählt. Speichern, organisieren, suchen, befragen.',
 
     howTitle: 'So funktioniert es',
@@ -667,20 +667,20 @@ export const STRINGS: Record<Locale, Strings> = {
     navPricing: 'Pricing',
     cambiarVideo: 'Change video',
 
-    heroEyebrow: 'VIDEO · KNOWLEDGE · LEARNING',
+    heroEyebrow: 'MULTILINGUAL KNOWLEDGE FROM VIDEO',
     heroHeadline: 'Stop losing what you watch.',
-    heroSub: 'Save any video. Get back the ideas, the vocabulary, and the citations — in your language.',
+    heroSub: 'Save any video. Get back the ideas, the vocabulary, the citations — in your language.',
     heroUrlInputLabel: 'YouTube link',
     heroPlaceholder: 'https://www.youtube.com/watch?v=…',
-    primaryCTA: 'Start free',
+    primaryCTA: 'Make my first Pack',
     seeHowCTA: 'See how it works',
     invalidUrl: 'YouTube link not recognised.',
     trySamplePack: 'See a sample Knowledge Pack',
 
     problemTitle: 'You consume hours of video. You remember almost none of it.',
-    problemBody: 'Every day we watch YouTube, podcasts and courses. The most valuable ideas disappear within a week. Worse — you cannot search what you watched. The knowledge stays locked inside the video.',
+    problemBody: 'We watch hours of YouTube, podcasts, and courses. Within a week, the strongest ideas are gone. And we cannot search what we watched — the knowledge stays locked inside the video.',
 
-    solutionTitle: 'Video in. Structured knowledge out.',
+    solutionTitle: 'From video, a record you can return to.',
     solutionBody: 'VozClara turns any video into a Knowledge Pack — a structured, searchable, multilingual record of what was said and what matters. Save it, organise it, search it, ask it questions.',
 
     howTitle: 'How it works',
