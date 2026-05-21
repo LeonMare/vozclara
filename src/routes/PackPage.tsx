@@ -3,7 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from '../components/BrandMark';
 import { RouteSkeleton } from '../components/RouteSkeleton';
-import { getPack, getTranscript, deletePack, savePack, activeView, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
+import { getPack, getTranscript, deletePack, savePack, activeView, listPacks, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
+import { ConversionChip } from '../components/ConversionChip';
+import { TRIGGERS, THRESHOLDS } from '../lib/conversionTriggers';
 import { recordView, forgetView } from '../lib/recentlyViewed';
 import { deindexPack } from '../lib/packIndex';
 import { clearChat } from '../lib/chat';
@@ -102,6 +104,20 @@ export function PackPage() {
     }).catch(() => { /* badge stays hidden on failure */ });
     return () => { cancelled = true; };
   }, [pack?.source.videoId]);
+
+  /* Library-wide pack count — gates the T2 conversion-chip (only
+     shows when the user's library has reached the habit-forming
+     threshold). One listPacks call per pack-page mount; cheap
+     against IndexedDB and only loads metadata, not transcripts. */
+  const [libraryPackCount, setLibraryPackCount] = useState<number>(0);
+  useEffect(() => {
+    if (!pack?.brainId) return;
+    let cancelled = false;
+    void listPacks(pack.brainId).then((packs) => {
+      if (!cancelled) setLibraryPackCount(packs.length);
+    }).catch(() => { /* count stays at 0 — chip simply doesn't appear */ });
+    return () => { cancelled = true; };
+  }, [pack?.brainId]);
 
   function toggleSection(key: TabKey) {
     setOpenSections((prev) => {
@@ -413,6 +429,23 @@ export function PackPage() {
             Lives at the tail of the content so the prompt arrives after
             the reader has actually engaged with the pack. */}
         {!isSample && <PackFeedback pack={pack} />}
+
+        {/* T2 conversion chip — "pack habit forming". Fires only on
+            real user packs (not samples), once the user's library has
+            reached the habit-forming threshold. Sits at the very tail
+            of the pack so the reader has finished engaging before
+            seeing the soft Founder Deal nudge. CLAUDE.md §5: declar-
+            ative, dismissible, persists across sessions, no count-
+            down or hard wall. */}
+        {!isSample && libraryPackCount >= THRESHOLDS.PACK_HABIT_FORMING_MIN_PACKS && (
+          <div className="mt-10">
+            <ConversionChip
+              triggerId={TRIGGERS.PACK_HABIT_FORMING}
+              locale={locale}
+              analyticsProps={{ pack_count: libraryPackCount }}
+            />
+          </div>
+        )}
       </div>
     </main>
   );
