@@ -659,11 +659,11 @@ function renderTabContent(
 ): React.ReactNode {
   switch (key) {
     case 'summary':
-      return <SummaryTab view={view} onSeek={onSeek} />;
+      return <SummaryTab view={view} onSeek={onSeek} segments={segments} />;
     case 'chapters':
       return <ChaptersTab view={view} onSeek={onSeek} />;
     case 'insights':
-      return <InsightsTab view={view} onSeek={onSeek} />;
+      return <InsightsTab view={view} onSeek={onSeek} segments={segments} />;
     case 'actionPlan':
       return <ListTab items={view.actionPlan} numbered />;
     case 'vocabulary':
@@ -684,7 +684,7 @@ function renderTabContent(
 
 /* ─── Tabs ────────────────────────────────────────────────────────────── */
 
-function SummaryTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
+function SummaryTab({ view, onSeek, segments }: { view: PackTranslation; onSeek: (sec: number) => void; segments: Segment[] }) {
   /* TL;DR shows above the summary blocks when present. It's the single
      line a knowledge-worker or student reads first to decide whether to
      keep going. Older packs won't have it — they degrade to short+long. */
@@ -710,7 +710,7 @@ function SummaryTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: num
         <>
           <div className="my-6 h-px w-8 bg-gold/50" aria-hidden />
           <p className="font-sans text-base leading-relaxed text-graphit/85 sm:text-lg">
-            <TextWithCitations text={view.summary.long} onSeek={onSeek} />
+            <TextWithCitations text={view.summary.long} onSeek={onSeek} segments={segments} />
           </p>
         </>
       )}
@@ -718,7 +718,7 @@ function SummaryTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: num
   );
 }
 
-function InsightsTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: number) => void }) {
+function InsightsTab({ view, onSeek, segments }: { view: PackTranslation; onSeek: (sec: number) => void; segments: Segment[] }) {
   if (view.keyIdeas.length === 0) return <Empty />;
   return (
     <div className="space-y-6">
@@ -731,7 +731,7 @@ function InsightsTab({ view, onSeek }: { view: PackTranslation; onSeek: (sec: nu
             <h3 className="font-serif text-xl leading-tight text-navy sm:text-2xl">{idea.title}</h3>
           </div>
           <p className="mt-3 pl-8 font-sans text-[15px] leading-relaxed text-graphit/85">
-            <TextWithCitations text={idea.body} onSeek={onSeek} />
+            <TextWithCitations text={idea.body} onSeek={onSeek} segments={segments} />
           </p>
         </article>
       ))}
