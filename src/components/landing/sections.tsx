@@ -292,7 +292,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Apuntarme a la lista',
       requestAccess: 'Solicitar acceso',
       waitlistConfirm: '¡Gracias! Apuntado. Te avisaremos cuando esté disponible.',
-      disclaimer: 'Los planes de pago llegarán cuando la app esté madura. Hasta entonces, todo es gratis sin tarjeta.',
+      disclaimer: 'Los planes de pago llegarán cuando la app esté madura. Hasta entonces, todo gratis y sin cuenta.',
     };
   }
   if (lang.startsWith('pt')) {
@@ -301,7 +301,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Inscrever-me na lista',
       requestAccess: 'Solicitar acesso',
       waitlistConfirm: 'Obrigado! Inscrito. Avisamos quando estiver disponível.',
-      disclaimer: 'Os planos pagos chegam quando a app estiver madura. Até lá, tudo grátis sem cartão.',
+      disclaimer: 'Os planos pagos chegam quando a app estiver madura. Até lá, tudo grátis e sem conta.',
     };
   }
   if (lang.startsWith('de')) {
@@ -318,7 +318,7 @@ function pricingCtaLabels(locale: string) {
     waitlist: 'Join waitlist',
     requestAccess: 'Request access',
     waitlistConfirm: 'Thanks! You\'re on the list. We\'ll let you know when it ships.',
-    disclaimer: 'Paid tiers arrive when the app is mature. Until then, everything is free without a card.',
+    disclaimer: 'Paid tiers arrive when the app is mature. Until then, everything is free — no account needed.',
   };
 }
 

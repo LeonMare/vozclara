@@ -112,8 +112,8 @@ function pricingHeadTitle(locale: string): string {
 }
 
 function pricingHeadDescription(locale: string): string {
-  if (locale.startsWith('es')) return 'Empieza gratis. Planes para usuarios avanzados y creadores cuando los necesites — sin tarjeta hasta entonces.';
-  if (locale.startsWith('pt')) return 'Começa grátis. Planos para utilizadores avançados e criadores quando precisares — sem cartão até lá.';
+  if (locale.startsWith('es')) return 'Empieza gratis. Planes para usuarios avanzados y creadores cuando los necesites — sin cuenta hasta entonces.';
+  if (locale.startsWith('pt')) return 'Começa grátis. Planos para utilizadores avançados e criadores quando precisares — sem conta até lá.';
   if (locale.startsWith('de')) return 'Kostenlos starten. Pläne für Power-User und Creator wenn du sie brauchst — bis dahin alles ohne Anmeldung.';
   return 'Start free. Plans for power users and creators when you need them — no card required until then.';
 }
@@ -123,7 +123,7 @@ function pricingPageLabels(locale: string) {
     backHome: 'Volver a la página principal',
     eyebrow: 'PRECIOS',
     heroTitle: 'Empieza gratis. Sube de plan cuando lo necesites.',
-    heroLead: 'Todo lo que ya funciona es gratuito. Los planes de pago llegan cuando la app esté madura y haya demanda real — hasta entonces, sin tarjeta.',
+    heroLead: 'Todo lo que ya funciona es gratuito. Los planes de pago llegan cuando la app esté madura y haya demanda real — hasta entonces, todo sin cuenta.',
     ctaHeading: 'Empieza con el plan gratuito.',
     ctaBody: 'Sin tarjeta de crédito. Crea tu primer Knowledge Pack y decide después si te interesa subir de plan.',
     primaryCta: 'Empezar gratis',
@@ -133,7 +133,7 @@ function pricingPageLabels(locale: string) {
     backHome: 'Voltar à página principal',
     eyebrow: 'PREÇOS',
     heroTitle: 'Começa grátis. Sobe de plano quando precisares.',
-    heroLead: 'Tudo o que já funciona é gratuito. Os planos pagos chegam quando a app estiver madura e houver procura real — até lá, sem cartão.',
+    heroLead: 'Tudo o que já funciona é gratuito. Os planos pagos chegam quando a app estiver madura e houver procura real — até lá, tudo sem conta.',
     ctaHeading: 'Começa com o plano gratuito.',
     ctaBody: 'Sem cartão de crédito. Cria o teu primeiro Knowledge Pack e decide depois se queres mudar de plano.',
     primaryCta: 'Começar grátis',
@@ -155,7 +155,7 @@ function pricingPageLabels(locale: string) {
     heroTitle: 'Start free. Upgrade when you need it.',
     heroLead: 'Everything that already works is free. Paid plans arrive once the app is mature and real demand shows up — until then, no card.',
     ctaHeading: 'Start on the free plan.',
-    ctaBody: 'No credit card. Create your first Knowledge Pack, then decide later if you want to move up.',
+    ctaBody: 'Start instantly. Create your first Knowledge Pack, then decide later if you want to move up.',
     primaryCta: 'Start free',
     secondaryCta: 'See a sample pack',
   };

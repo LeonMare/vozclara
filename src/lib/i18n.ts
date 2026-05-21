@@ -234,9 +234,9 @@ export const STRINGS: Record<Locale, Strings> = {
     langSoon: 'Pronto: Portugués · Francés',
 
     pricingTitle: 'Empieza gratis. Crece cuando lo necesites.',
-    pricingSub: 'Sin tarjeta para empezar.',
+    pricingSub: 'Al instante y gratis.',
     tiers: [
-      { name: 'Free · disponible hoy', price: '0 €', period: '', blurb: 'Todo lo que ya funciona — sin tarjeta, sin cuenta.', features: ['Knowledge Packs ilimitados', 'Los cuatro modos: Learn · Briefing · Estudio · Creator', 'Cuatro idiomas: ES · PT · DE · EN', 'Repetición espaciada con racha diaria', 'Shadowing con puntuación de pronunciación', 'Tutor IA por Pack', 'Exportación a Anki (.apkg)', 'Ask My Knowledge — Q&A sobre tu biblioteca', 'Biblioteca local en tu navegador'], cta: 'Empezar' },
+      { name: 'Free · disponible hoy', price: '0 €', period: '', blurb: 'Todo lo que ya funciona — disponible, sin cuenta.', features: ['Knowledge Packs ilimitados', 'Los cuatro modos: Learn · Briefing · Estudio · Creator', 'Cuatro idiomas: ES · PT · DE · EN', 'Repetición espaciada con racha diaria', 'Shadowing con puntuación de pronunciación', 'Tutor IA por Pack', 'Exportación a Anki (.apkg)', 'Ask My Knowledge — Q&A sobre tu biblioteca', 'Biblioteca local en tu navegador'], cta: 'Empezar' },
       { name: 'Pro · próximamente', price: '9 €', period: '/ mes', blurb: 'Cuando llegue: lo que el plan gratuito no puede dar.', features: ['Sincronización entre dispositivos', 'Voz premium para texto-a-voz', 'Exportación a PDF y Notion', 'Quote-cards con tu marca', 'Soporte prioritario'], cta: 'Apúntate' },
     ],
 
@@ -405,9 +405,9 @@ export const STRINGS: Record<Locale, Strings> = {
     langSoon: 'Em breve: Português · Francês',
 
     pricingTitle: 'Começa grátis. Cresce quando precisares.',
-    pricingSub: 'Sem cartão para começar.',
+    pricingSub: 'Num instante e grátis.',
     tiers: [
-      { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — sem cartão, sem conta.', features: ['Knowledge Packs ilimitados', 'Os quatro modos: Learn · Briefing · Estudo · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
+      { name: 'Free · disponível hoje', price: '0 €', period: '', blurb: 'Tudo o que já funciona — disponível, sem conta.', features: ['Knowledge Packs ilimitados', 'Os quatro modos: Learn · Briefing · Estudo · Creator', 'Quatro idiomas: ES · PT · DE · EN', 'Repetição espaçada com sequência diária', 'Shadowing com pontuação de pronúncia', 'Tutor IA por Pack', 'Exportação para Anki (.apkg)', 'Ask My Knowledge — Q&A sobre a tua biblioteca', 'Biblioteca local no teu navegador'], cta: 'Começar' },
       { name: 'Pro · em breve', price: '9 €', period: '/ mês', blurb: 'Quando chegar: o que o plano gratuito não pode dar.', features: ['Sincronização entre dispositivos', 'Voz premium para texto-a-voz', 'Exportação para PDF e Notion', 'Quote-cards com a tua marca', 'Suporte prioritário'], cta: 'Inscreve-te' },
     ],
 
@@ -725,7 +725,7 @@ export const STRINGS: Record<Locale, Strings> = {
     langSoon: 'Coming soon: Portuguese · French',
 
     pricingTitle: 'Start free. Grow when you need it.',
-    pricingSub: 'No card required to start.',
+    pricingSub: 'Instant and free.',
     tiers: [
       { name: 'Free · available today', price: '€0', period: '', blurb: 'Everything that already works — no card, no account.', features: ['Unlimited Knowledge Packs', 'All four modes: Learn · Briefing · Study · Creator', 'Four languages: ES · PT · DE · EN', 'Spaced repetition with daily streak', 'Voice shadowing with pronunciation score', 'AI tutor per Pack', 'Anki deck export (.apkg)', 'Ask My Knowledge — library Q&A', 'Library local in your browser'], cta: 'Start' },
       { name: 'Pro · coming soon', price: '€9', period: '/ month', blurb: 'When it ships: what the free plan can\'t offer.', features: ['Sync across devices', 'Premium voice for text-to-speech', 'PDF and Notion export', 'Brand-customised quote-cards', 'Priority support'], cta: 'Join waitlist' },

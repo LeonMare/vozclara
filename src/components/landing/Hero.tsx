@@ -184,7 +184,7 @@ export function Hero() {
   );
 }
 
-// "Free to try. No signup. No card." — localised under the paste input so
+// "Free to try. No signup. Start instantly." — localised under the paste input so
 // the trust signal arrives at the moment of hesitation. The added
 // "no signup" is the most-asked unspoken question for a visitor about
 // to paste a URL into a tool they've never used; surfacing it
@@ -194,8 +194,8 @@ export function Hero() {
 // reads are not React-reactive and caused mixed-language UI when the
 // user switched picker).
 function trustNote(locale: string): string {
-  if (locale.startsWith('es')) return 'Gratis para probar. Sin registro. Sin tarjeta de crédito.';
-  if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem registo. Sem cartão de crédito.';
+  if (locale.startsWith('es')) return 'Gratis para probar. Sin registro. Listo al instante.';
+  if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem registo. Pronto num instante.';
   if (locale.startsWith('de')) return 'Kostenlos testen. Ohne Anmeldung. Sofort startklar.';
-  return 'Free to try. No signup. No credit card.';
+  return 'Free to try. No signup. Start instantly.';
 }

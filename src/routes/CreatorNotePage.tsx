@@ -213,7 +213,7 @@ export function CreatorNotePage() {
           <p className="mt-6 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
             This page is a reading of the talk. A pack is your reading of the talk — keyed
             to your language, your mode, and the cards you’ll come back to in a week. No
-            signup, no credit card.
+            signup, no account — start instantly.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <Link
