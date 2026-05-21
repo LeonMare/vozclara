@@ -70,6 +70,24 @@ magic-link, approve the scopes (`library:read`, `library:write`,
 `profile`), and the refresh-token is cached locally — same flow as
 GitHub's MCP server.
 
+### Claude Skills bundle
+
+A higher-level companion to the raw MCP tools above. `skills/` in this
+repo holds three installable Claude Skills that route everyday video /
+knowledge / study asks through the VozClara MCP server — so Claude
+knows when to reach for `vozclara_generate_pack` vs
+`vozclara_search_my_library` vs `vozclara_ask_video` without the user
+having to remember tool names.
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R skills/vozclara-* ~/.claude/skills/
+```
+
+Restart Claude Desktop (or `/reload-skills` in Claude Code). The
+skills appear in the picker. See `skills/README.md` for the trigger
+shapes per skill + the OAuth flow for the two paid-tier ones.
+
 ---
 
 ## Stack

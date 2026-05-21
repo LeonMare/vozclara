@@ -517,14 +517,32 @@ function trustPromises(locale: string): { title: string; body: string }[] {
 /* ─── helpers ──────────────────────────────────────────────────────────── */
 
 function SectionEyebrow({ number, center = false }: { number: string; center?: boolean }) {
+  // The § glyph has a different visual weight + ascender height than
+  // numerals in most sans fonts. With heavy 0.4em letter-spacing the
+  // glyph reads as isolated and "slightly raised" against the digits.
+  // Wrap it in a span that:
+  //   • drops its own tracking so § sits closer to the number,
+  //   • nudges baseline down by 0.05em to match the cap-height of the
+  //     adjacent digits,
+  //   • shaves a touch of right-margin so the §+number reads as one
+  //     compound mark, not two separated glyphs.
+  // The numeral block keeps the 0.4em editorial tracking — that's the
+  // intended "TOC-of-a-serious-magazine" rhythm.
   return (
     <div
       className={[
-        'mb-3 font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep',
+        'mb-3 font-sans text-[10px] uppercase text-gold-deep',
         center ? 'mx-auto' : '',
       ].join(' ')}
     >
-      § {number}
+      <span
+        aria-hidden
+        className="inline-block translate-y-[0.05em] tracking-normal"
+        style={{ marginRight: '0.35em' }}
+      >
+        §
+      </span>
+      <span className="tracking-[0.4em]">{number}</span>
     </div>
   );
 }
