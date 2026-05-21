@@ -89,4 +89,39 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+
+  <!-- Reading notes — programmatic SEO cluster (#13). The hub plus
+       editorial essays on individual YouTube talks. Grows weekly
+       toward the 50-note target; each new note added to
+       src/data/creatorNotes.ts should also be appended here. -->
+  <url>
+    <loc>https://vozclara.app/notes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.app/notes/andrew-huberman-sleep-toolkit</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.app/notes/andrew-huberman-dopamine-motivation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.app/notes/lex-fridman-andrej-karpathy-agi</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.app/notes/veritasium-speed-of-light</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vozclara.app/notes/naval-ravikant-how-to-get-rich</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

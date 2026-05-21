@@ -168,7 +168,7 @@ function pricingPageLabels(locale: string) {
  * truthful. Routes to /founder for the full pitch + Stripe checkout.
  */
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { fetchFounderStatus, type FounderStatus } from '../lib/founder';
 
 function FounderBanner({ locale }: { locale: string }) {

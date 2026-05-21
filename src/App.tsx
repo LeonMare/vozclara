@@ -91,6 +91,12 @@ const ChangelogPage = lazy(() =>
 const AccountPage = lazy(() =>
   import('./routes/AccountPage').then((m) => ({ default: m.AccountPage })),
 );
+const CreatorNotesIndex = lazy(() =>
+  import('./routes/CreatorNotesIndex').then((m) => ({ default: m.CreatorNotesIndex })),
+);
+const CreatorNotePage = lazy(() =>
+  import('./routes/CreatorNotePage').then((m) => ({ default: m.CreatorNotePage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -301,6 +307,30 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <AccountPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        {/* Programmatic SEO — editorial reading notes (#13). The index
+            is a hub page; individual notes are essays about a single
+            YouTube video, each with JSON-LD Article schema and a
+            quiet generate-pack CTA. */}
+        <Route
+          path="/notes"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <CreatorNotesIndex />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/notes/:slug"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <CreatorNotePage />
               </Suspense>
             </AppShell>
           }
