@@ -8,7 +8,7 @@ import { ErrorCard } from '../components/ErrorCard';
 import { ModePicker } from '../components/ModePicker';
 import { GenerationProgress } from '../components/GenerationProgress';
 import { fetchTranscript } from '../lib/transcript';
-import { fetchInsights, joinForLLM } from '../lib/insights';
+import { fetchInsights, streamInsights, joinForLLM, type InsightsResult } from '../lib/insights';
 import { savePack, saveTranscript, getPack, getTranscript, getBrainId, type Mode, type Language, type KnowledgePack, type PackTranslation, type Genre } from '../lib/pack';
 import { track, Events } from '../lib/analytics';
 import { nanoid } from '../lib/nanoid';
@@ -75,6 +75,11 @@ export function GeneratorPage() {
   const [generating, setGenerating] = useState(false);
   const [progressMeta, setProgressMeta] = useState<{ videoMinutes?: number; sentences?: number; insights?: number; targetLang?: string }>({});
   const [error, setError] = useState<FriendlyError | null>(null);
+  // Live stream of the model's output as the pack is being composed.
+  // Surfaced under the editorial narration phases via
+  // GenerationProgress' `streamingText` prop. Cleared on every new
+  // generation so the typewriter view starts blank.
+  const [streamedText, setStreamedText] = useState<string>('');
 
   usePageHead({
     title: generatorTitle(locale),
@@ -163,15 +168,53 @@ export function GeneratorPage() {
         setProgressMeta((m) => ({ ...m, videoMinutes, sentences: transcript.segments.length }));
       }
 
-      // 2. Insights (mode-aware).
-      const result = await fetchInsights({
-        videoId,
-        transcript: joinedTranscript,
-        sourceLang,
-        targetLang: outputLang,
-        mode,
-      });
-      setProgressMeta((m) => ({ ...m, insights: result.insights.length }));
+      // 2. Insights (mode-aware) — streaming variant. Yields text
+      //    deltas as the LLM composes so the user sees the pack
+      //    coming together in real time (Manus / Granola pattern).
+      //    Falls back to the non-streaming endpoint if the stream
+      //    itself errors out (network drop, parse failure) so the
+      //    visible-tokens UX never costs us reliability.
+      setStreamedText('');
+      let result: InsightsResult | undefined;
+      let streamFailed: string | null = null;
+      try {
+        for await (const evt of streamInsights({
+          videoId,
+          transcript: joinedTranscript,
+          sourceLang,
+          targetLang: outputLang,
+          mode,
+        })) {
+          if (evt.kind === 'delta') {
+            setStreamedText(evt.accumulated);
+          } else if (evt.kind === 'done') {
+            result = evt.result;
+          } else if (evt.kind === 'error') {
+            streamFailed = evt.message;
+            break;
+          }
+          // 'meta' events are swallowed for v1 — provider + model are
+          // already echoed onto the saved pack's `provenance.model`,
+          // and the streaming UX doesn't need a separate badge yet.
+        }
+      } catch (err) {
+        streamFailed = err instanceof Error ? err.message : String(err);
+      }
+      if (!result) {
+        // Streaming path lost connection or returned an error event —
+        // retry once on the non-streaming endpoint so the user still
+        // gets their pack rather than a failed-generation card.
+        // eslint-disable-next-line no-console
+        console.warn('streamInsights fallback:', streamFailed);
+        result = await fetchInsights({
+          videoId,
+          transcript: joinedTranscript,
+          sourceLang,
+          targetLang: outputLang,
+          mode,
+        });
+      }
+      setProgressMeta((m) => ({ ...m, insights: result!.insights.length }));
       if (!recommended) setRecommended(modeForGenre(result.genre));
 
       // 3. Build the per-language translation slice from the worker
@@ -389,6 +432,7 @@ export function GeneratorPage() {
             active
             meta={progressMeta}
             mergeMode={!!mergeIntoPackId}
+            streamingText={streamedText}
           />
         )}
       </div>

@@ -81,6 +81,181 @@ export async function fetchInsights({
   return normalise(raw);
 }
 
+/* ─── Streaming variant ──────────────────────────────────────────────── */
+
+/**
+ * Streaming-side companion to `fetchInsights`. Calls the worker's
+ * `/api/insights/stream` endpoint which returns an Anthropic-shape
+ * SSE stream (workers-ai-stream.ts normalises the Llama branch into
+ * the same envelope, so the wire format is uniform regardless of
+ * which tier served the request).
+ *
+ * Yields events progressively so the GeneratorPage can render tokens
+ * as they arrive (Manus / Granola pattern):
+ *
+ *   { kind: 'delta', delta, accumulated }   — fires per text_delta
+ *   { kind: 'meta', provider, model, genre } — fires once at start
+ *   { kind: 'done', result }                — fires after message_stop
+ *                                              with the parsed
+ *                                              InsightsResult; same
+ *                                              shape fetchInsights
+ *                                              returns
+ *   { kind: 'error', code, message }         — on parse / network
+ *                                              / upstream failure
+ *
+ * On any error, the generator yields a single 'error' event and
+ * returns. Callers should `for await` and switch on `evt.kind`.
+ */
+export type StreamInsightsEvent =
+  | { kind: 'meta'; provider?: string; model?: string; genre?: Genre }
+  | { kind: 'delta'; delta: string; accumulated: string }
+  | { kind: 'done'; result: InsightsResult }
+  | {
+      kind: 'error';
+      code: InsightsError['code'] | 'parse_failed';
+      message: string;
+    };
+
+export async function* streamInsights(
+  args: FetchInsightsArgs,
+): AsyncGenerator<StreamInsightsEvent> {
+  const { videoId, transcript, sourceLang, targetLang, mode } = args;
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/api/insights/stream`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoId, transcript, sourceLang, targetLang, mode }),
+    });
+  } catch (err) {
+    yield { kind: 'error', code: 'network', message: `network error: ${String(err)}` };
+    return;
+  }
+
+  if (!res.ok) {
+    let body: { error?: string; detail?: string } = {};
+    try {
+      body = (await res.json()) as typeof body;
+    } catch {
+      /* non-JSON error body — fall through to status-based handling */
+    }
+    if (body.error === 'transcript_too_short') {
+      yield { kind: 'error', code: 'transcript_too_short', message: 'transcript too short' };
+      return;
+    }
+    if (body.error === 'unsupported_target_lang') {
+      yield { kind: 'error', code: 'unsupported_lang', message: 'unsupported language' };
+      return;
+    }
+    yield {
+      kind: 'error',
+      code: 'ai_failed',
+      message: body.detail ?? body.error ?? `HTTP ${res.status}`,
+    };
+    return;
+  }
+
+  if (!res.body) {
+    yield { kind: 'error', code: 'ai_failed', message: 'empty_stream' };
+    return;
+  }
+
+  // Surface provider / model / detected genre from response headers
+  // before the first SSE event arrives. Lets the UI render
+  // "Sonnet 4.5 · Coaching" attribution alongside the streaming text.
+  const provider = res.headers.get('X-LLM-Provider') ?? undefined;
+  const model = res.headers.get('X-LLM-Model') ?? undefined;
+  const detectedGenre = (res.headers.get('X-Genre') as Genre | null) ?? undefined;
+  yield { kind: 'meta', provider, model, genre: detectedGenre };
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let buffer = '';
+  let accumulated = '';
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      // SSE frames are separated by blank lines. Drain everything we
+      // can per read.
+      let boundary = buffer.indexOf('\n\n');
+      while (boundary !== -1) {
+        const rawEvent = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf('\n\n');
+
+        const dataLine = rawEvent
+          .split('\n')
+          .find((l) => l.startsWith('data: '));
+        if (!dataLine) continue;
+        const json = dataLine.slice(6).trim();
+        if (!json || json === '[DONE]') continue;
+
+        try {
+          const event = JSON.parse(json) as {
+            type: string;
+            delta?: { type: string; text?: string };
+          };
+          if (
+            event.type === 'content_block_delta' &&
+            event.delta?.type === 'text_delta' &&
+            typeof event.delta.text === 'string' &&
+            event.delta.text.length > 0
+          ) {
+            accumulated += event.delta.text;
+            yield { kind: 'delta', delta: event.delta.text, accumulated };
+          }
+          // message_delta + message_stop carry the stop reason +
+          // usage but we don't surface them yet — the v1 UI doesn't
+          // need them. Add a 'usage' event variant if we ever want
+          // to render token counts on the loading screen.
+        } catch {
+          // Malformed SSE frame — skip rather than abort. Anthropic
+          // occasionally interleaves comment-style keepalives.
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  // Stream complete. Parse the accumulated JSON.
+  try {
+    const parsed = parseStreamedInsights(accumulated.trim());
+    yield { kind: 'done', result: normalise(parsed) };
+  } catch (err) {
+    yield {
+      kind: 'error',
+      code: 'parse_failed',
+      message: err instanceof Error ? err.message : String(err),
+    };
+  }
+}
+
+/**
+ * Parser tolerant of fenced code blocks + leading / trailing prose,
+ * mirroring the worker-side parseInsightsJson. Streaming models
+ * occasionally hedge with a sentence before the JSON object; we
+ * trim from the first `{` to the last `}` so the JSON.parse call
+ * sees a clean payload.
+ */
+function parseStreamedInsights(raw: string): Record<string, unknown> {
+  let text = raw;
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/i.exec(text);
+  if (fenced) text = fenced[1];
+  const first = text.indexOf('{');
+  const last = text.lastIndexOf('}');
+  if (first >= 0 && last > first) text = text.slice(first, last + 1);
+  return JSON.parse(text) as Record<string, unknown>;
+}
+
+/* ─── End streaming variant ──────────────────────────────────────────── */
+
 /** Build the input transcript joined as one paragraph for the LLM. */
 export function joinForLLM(segments: Array<{ text: string; translated?: string }>): string {
   return segments

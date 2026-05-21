@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocale } from '../lib/i18n';
 import { BrandMark } from './BrandMark';
 import { CountUp } from './CountUp';
@@ -25,6 +25,20 @@ interface Props {
    * translation itself.
    */
   mergeMode?: boolean;
+  /**
+   * Live model output as the pack is being composed — passed in by
+   * GeneratorPage when `streamInsights` is yielding deltas. When
+   * present, a fixed-height typewriter scroller appears below the
+   * narration phases. Empty string / undefined → scroller hidden.
+   *
+   * The text is the raw model output (JSON-shaped during a normal
+   * /api/insights/stream run) — by design. The Manus / Granola UX
+   * insight: seeing the model "type" is the proof-of-work moment
+   * that converts loading anxiety into anticipation. Showing the
+   * structural braces + field names alongside the prose is part of
+   * that signal, not a bug to hide.
+   */
+  streamingText?: string;
 }
 
 /**
@@ -49,15 +63,26 @@ interface Props {
  * in as they become known. Falls back to generic phrases until
  * the data arrives.
  */
-export function GenerationProgress({ active, meta, mergeMode }: Props) {
+export function GenerationProgress({ active, meta, mergeMode, streamingText }: Props) {
   const { locale } = useLocale();
   const [tick, setTick] = useState(0);
+  const streamRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!active) return;
     const id = setInterval(() => setTick((p) => p + 1), 1800);
     return () => clearInterval(id);
   }, [active]);
+
+  // Auto-scroll the streaming-text scroller to the bottom every time
+  // a new delta arrives. Plain `scrollTop = scrollHeight` works
+  // because we want hard-jump-to-bottom (typewriter feel), not
+  // smooth-scroll (would lag behind fast deltas).
+  useEffect(() => {
+    if (streamRef.current) {
+      streamRef.current.scrollTop = streamRef.current.scrollHeight;
+    }
+  }, [streamingText]);
 
   if (!active) return null;
 
@@ -131,6 +156,34 @@ export function GenerationProgress({ active, meta, mergeMode }: Props) {
           />
         ))}
       </div>
+
+      {/* Streaming typewriter view — visible only when the
+          GeneratorPage feeds in live deltas from streamInsights.
+          Fixed height with auto-scroll to bottom on every update
+          so the user sees the tail of the output (most recent
+          tokens) without the scroll position fighting them. Mono-
+          space font intentionally — the model is composing JSON,
+          and the monospace + low-contrast styling makes that read
+          as "the AI is working" rather than "weird unformatted
+          text". Decorative only; aria-hidden so screen readers
+          announce the narration phases above, not the raw stream. */}
+      {streamingText && streamingText.length > 0 && (
+        <div
+          ref={streamRef}
+          aria-hidden
+          className="mt-8 w-full max-w-2xl overflow-y-auto rounded-card border border-navy/10 bg-creme/40 px-4 py-3 text-left font-mono text-[11px] leading-relaxed text-graphit/55 sm:text-xs"
+          style={{ maxHeight: '8.5rem', fontFamily: '"SF Mono", ui-monospace, "Cascadia Code", Consolas, monospace' }}
+        >
+          {streamingText}
+          {/* Trailing block-cursor that blinks at the end of the
+              latest delta — same animation as the editorial caret
+              on the active narration line. Reinforces the "live
+              typing" signal at the bottom edge of the scroller. */}
+          <span
+            className="cursor-blink ml-0.5 inline-block h-[0.85em] w-[0.45em] translate-y-[0.08em] bg-gold/55 align-baseline"
+          />
+        </div>
+      )}
     </div>
   );
 }

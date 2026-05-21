@@ -44,7 +44,8 @@ import {
   handleFounderWebhook,
   handleFounderGrantTier,
 } from './founder';
-import { callLLM } from './llm-router';
+import { callLLM, callLLMStream } from './llm-router';
+import { anthropicSSEResponse } from './anthropic-stream';
 import { VozClaraMcpAgent } from './mcp/agent';
 import oauthConsentApp from './oauth/handler';
 
@@ -477,6 +478,18 @@ async function routeRequest(req: Request, env: Env, ctx: ExecutionContext): Prom
       return handleInsights(req, env);
     }
 
+    if (url.pathname === '/api/insights/stream' && req.method === 'POST') {
+      // Streaming variant of /api/insights — same body shape, same
+      // validation, same prompt-building. Difference: returns an
+      // Anthropic-shape SSE stream so the client can render tokens
+      // as they arrive (Manus / Granola pattern). The Workers-AI
+      // path is normalised through workers-ai-stream.ts so callers
+      // see one event taxonomy regardless of tier.
+      const limit = await rateLimit(env, req, 'insights', 5);
+      if (limit) return limit;
+      return handleInsightsStream(req, env);
+    }
+
     if (url.pathname === '/api/ask' && req.method === 'POST') {
       const limit = await rateLimit(env, req, 'ask', 10);
       if (limit) return limit;
@@ -771,6 +784,101 @@ type Genre =
   | 'interview'      // expert interviews, podcasts
   | 'creator'        // vlogs, lifestyle, opinion
   | 'general';       // unclassified
+
+/**
+ * Streaming sibling of handleInsights. Same body, same validation,
+ * same prompt-building — but returns an Anthropic-shape SSE stream
+ * instead of buffering until the model finishes.
+ *
+ * The client (src/lib/streamInsights.ts) parses the SSE, accumulates
+ * the text deltas, and JSON-parses the final accumulated string
+ * once `message_stop` arrives. Means the user sees tokens arrive in
+ * real time (Manus / Granola UX) rather than a fixed-duration
+ * loading spinner, AND the eventual structured pack is identical
+ * to what /api/insights would have returned.
+ */
+async function handleInsightsStream(req: Request, env: Env): Promise<Response> {
+  let body: InsightsRequest;
+  try {
+    body = (await req.json()) as InsightsRequest;
+  } catch {
+    return json({ error: 'invalid_body' }, 400);
+  }
+
+  const { transcript, sourceLang, targetLang } = body;
+  if (!transcript || transcript.length < 50) {
+    return json({ error: 'transcript_too_short' }, 400);
+  }
+  if (!SUPPORTED_LANGS.includes(targetLang as SupportedLang)) {
+    return json({ error: 'unsupported_target_lang' }, 400);
+  }
+  const mode: Mode = normaliseMode(body.mode);
+
+  // Resolve tier the same way the non-streaming endpoint does
+  // (handleInsights above). Anonymous → 'free' → Llama path.
+  const user = await getCurrentUser(req, env);
+  const userTier: 'free' | 'pro' | 'pro_plus' = user?.tier ?? 'free';
+
+  // Detect genre lazily — if the caller didn't supply one we still
+  // need it for the prompt builder. Same precedence as
+  // handleInsights so streaming and non-streaming behave identically.
+  let genre: Genre;
+  try {
+    genre = body.genre ?? (await detectGenre(transcript, env));
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return json({ error: 'genre_detect_failed', detail: message.slice(0, 200) }, 502);
+  }
+
+  // Build the same prompt generateInsights builds — duplicating
+  // for clarity rather than extracting a helper, because the prompt
+  // construction is small + the streaming + non-streaming paths
+  // benefit from being readable side-by-side in this file.
+  const lengthTier = deriveLengthTier(transcript.length);
+  const bounded =
+    transcript.length > 12000
+      ? transcript.slice(0, 6000) + '\n\n[…truncated…]\n\n' + transcript.slice(-3000)
+      : transcript;
+  const systemPrompt =
+    modePromptVoice(mode, targetLang) +
+    '\n\n' +
+    structuredInstruction(targetLang, mode, lengthTier);
+  const userPrompt = `Source language: ${LANG_NAME[sourceLang] ?? sourceLang}. Detected genre: ${genre}. Mode: ${mode}. Length tier: ${lengthTier}.
+
+Transcript:
+${bounded}`;
+
+  let streamResult: Awaited<ReturnType<typeof callLLMStream>>;
+  try {
+    streamResult = await callLLMStream(
+      {
+        tier: userTier,
+        systemPrompt,
+        userContent: userPrompt,
+        maxTokens: 5000,
+        temperature: 0.35,
+        cacheSystemPrompt: true,
+        cacheTTL: '1h',
+      },
+      env,
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return json({ error: 'ai_failed', detail: message.slice(0, 200) }, 502);
+  }
+
+  // Echo the provider + model + detected genre on the response
+  // header so the client can show "Sonnet 4.5 · Coaching" attribution
+  // alongside the streaming text without having to peek inside the
+  // SSE event payload.
+  return anthropicSSEResponse(streamResult.stream, {
+    extraHeaders: {
+      'X-LLM-Provider': streamResult.provider,
+      'X-LLM-Model': streamResult.model,
+      'X-Genre': genre,
+    },
+  });
+}
 
 async function handleInsights(req: Request, env: Env): Promise<Response> {
   let body: InsightsRequest;
