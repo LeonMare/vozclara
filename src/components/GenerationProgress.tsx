@@ -39,6 +39,17 @@ interface Props {
    * that signal, not a bug to hide.
    */
   streamingText?: string;
+  /**
+   * Sonnet 4.5 extended-thinking trace — passed in by GeneratorPage
+   * when the worker enables thinking for the Pro Plus tier. Rendered
+   * in a distinct region ABOVE the streaming-output scroller, styled
+   * as a quieter italic "reasoning" surface so the user sees the
+   * model deliberate before the pack itself starts composing. Free +
+   * Pro tier users get empty string here (Llama has no equivalent),
+   * so the panel stays hidden for them — a paid-tier differentiator
+   * the visitor only sees once they upgrade.
+   */
+  thinkingText?: string;
 }
 
 /**
@@ -63,10 +74,11 @@ interface Props {
  * in as they become known. Falls back to generic phrases until
  * the data arrives.
  */
-export function GenerationProgress({ active, meta, mergeMode, streamingText }: Props) {
+export function GenerationProgress({ active, meta, mergeMode, streamingText, thinkingText }: Props) {
   const { locale } = useLocale();
   const [tick, setTick] = useState(0);
   const streamRef = useRef<HTMLDivElement>(null);
+  const thinkingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!active) return;
@@ -83,6 +95,17 @@ export function GenerationProgress({ active, meta, mergeMode, streamingText }: P
       streamRef.current.scrollTop = streamRef.current.scrollHeight;
     }
   }, [streamingText]);
+
+  // Same auto-scroll for the thinking-trace region above the
+  // streaming output. Tracked separately because the two regions
+  // scroll independently — thinking finishes first and then stays
+  // visible as a quieter "this is what it reasoned about" surface
+  // while the prose composes below.
+  useEffect(() => {
+    if (thinkingRef.current) {
+      thinkingRef.current.scrollTop = thinkingRef.current.scrollHeight;
+    }
+  }, [thinkingText]);
 
   if (!active) return null;
 
@@ -156,6 +179,36 @@ export function GenerationProgress({ active, meta, mergeMode, streamingText }: P
           />
         ))}
       </div>
+
+      {/* Sonnet 4.5 extended-thinking trace — visible only on the
+          Pro Plus path. The model emits a `thinking_delta` stream
+          BEFORE the prose output starts, surfacing the Manus-style
+          "the AI is reasoning" moment that distinguishes the paid
+          tier from a faster-model upgrade. Italic Cormorant on a
+          subtle paper card; smaller than the streaming-output
+          scroller so the visual hierarchy reads as "reasoning →
+          answer". Hidden entirely for free + pro tier (Llama has
+          no equivalent — thinkingText stays empty). */}
+      {thinkingText && thinkingText.length > 0 && (
+        <div className="mt-8 w-full max-w-2xl">
+          <div className="mb-2 flex items-center gap-2 font-sans text-[10px] uppercase tracking-[0.32em] text-gold-deep">
+            <span className="inline-block h-px w-4 bg-gold/60" aria-hidden />
+            <span>Sonnet 4.5 · reasoning</span>
+            <span className="inline-block h-px flex-1 bg-gold/30" aria-hidden />
+          </div>
+          <div
+            ref={thinkingRef}
+            aria-hidden
+            className="overflow-y-auto rounded-card border border-gold/25 bg-creme/60 px-4 py-3 text-left font-serif italic leading-relaxed text-graphit/70"
+            style={{ maxHeight: '7rem', fontSize: '12.5px' }}
+          >
+            {thinkingText}
+            <span
+              className="cursor-blink ml-0.5 inline-block h-[0.85em] w-[0.45em] translate-y-[0.08em] bg-gold/55 align-baseline"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Streaming typewriter view — visible only when the
           GeneratorPage feeds in live deltas from streamInsights.

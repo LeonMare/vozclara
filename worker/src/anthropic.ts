@@ -101,6 +101,29 @@ export interface AnthropicCallOptions {
    * disconnects.
    */
   signal?: AbortSignal;
+  /**
+   * Enable Sonnet 4.5 extended thinking. The model emits a separate
+   * `thinking` content block (interleaved as `thinking_delta` events
+   * in the SSE stream) BEFORE the prose response — visible to the
+   * frontend as a Manus-style "the AI is reasoning" surface that
+   * lands the Pro Plus tier as a distinct UX, not just a faster model.
+   *
+   * `budgetTokens` is the cap on how many reasoning tokens the model
+   * may spend before composing the answer. 1024 minimum (Anthropic
+   * spec), 16384 max for Sonnet 4.5; we default callers to 4096 for
+   * the pack-generation use case where the reasoning is "find the
+   * throughline" — denser reasoning than tool-use or coding tasks
+   * need.
+   *
+   * Cost: thinking tokens are billed at the same rate as output
+   * tokens. 4096 thinking + 5000 output ≈ $0.014 per Pro Plus pack
+   * on top of the input-token cost. Inside the Pro Plus margin.
+   *
+   * When thinking is enabled Anthropic requires `temperature: 1`.
+   * The client overrides any caller-supplied temperature in that
+   * case (and logs once via a comment in the request-body builder).
+   */
+  thinking?: { budgetTokens?: number };
 }
 
 export interface AnthropicMessage {
@@ -306,6 +329,28 @@ function buildRequestBody(options: AnthropicCallOptions): Record<string, unknown
   };
   if (systemBlocks) payload.system = systemBlocks;
   if (options.stream) payload.stream = true;
+
+  // Extended thinking (Sonnet 4.5). When enabled the model emits a
+  // separate `thinking` content block (streamed as `thinking_delta`
+  // events) before the prose response — the Manus-style "the AI is
+  // reasoning" moment. Anthropic requires `temperature: 1` whenever
+  // thinking is active, so we override any caller-supplied value
+  // here. The override is local to the request body; the original
+  // options.temperature isn't mutated.
+  if (options.thinking) {
+    const budget = Math.max(1024, Math.min(16384, options.thinking.budgetTokens ?? 4096));
+    payload.thinking = { type: 'enabled', budget_tokens: budget };
+    payload.temperature = 1;
+    // Anthropic also requires max_tokens > budget_tokens — the budget
+    // is reasoning that doesn't show up in the prose, so the response
+    // cap has to accommodate both. If the caller's maxTokens is at or
+    // below the thinking budget, bump it just enough to keep the API
+    // happy (1024 token headroom for the actual answer is the
+    // documented minimum that still produces useful output).
+    if (typeof payload.max_tokens === 'number' && payload.max_tokens <= budget) {
+      payload.max_tokens = budget + 1024;
+    }
+  }
 
   return payload;
 }

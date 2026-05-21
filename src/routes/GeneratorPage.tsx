@@ -80,6 +80,13 @@ export function GeneratorPage() {
   // GenerationProgress' `streamingText` prop. Cleared on every new
   // generation so the typewriter view starts blank.
   const [streamedText, setStreamedText] = useState<string>('');
+  // Live trace of the model's extended thinking (Sonnet 4.5 only,
+  // when the Pro Plus tier is detected server-side). Yielded by
+  // streamInsights as `{ kind: 'thinking', accumulated }` events
+  // separate from the text-delta stream. Rendered above the
+  // streaming output in GenerationProgress so the user sees "the AI
+  // is reasoning" before the pack itself starts composing.
+  const [thinkingText, setThinkingText] = useState<string>('');
 
   usePageHead({
     title: generatorTitle(locale),
@@ -175,6 +182,7 @@ export function GeneratorPage() {
       //    itself errors out (network drop, parse failure) so the
       //    visible-tokens UX never costs us reliability.
       setStreamedText('');
+      setThinkingText('');
       let result: InsightsResult | undefined;
       let streamFailed: string | null = null;
       try {
@@ -187,6 +195,13 @@ export function GeneratorPage() {
         })) {
           if (evt.kind === 'delta') {
             setStreamedText(evt.accumulated);
+          } else if (evt.kind === 'thinking') {
+            // Sonnet 4.5 extended-thinking deltas. Only the Pro Plus
+            // tier produces these (worker enables `thinking` for
+            // userTier === 'pro_plus' in handleInsightsStream). The
+            // free + pro tiers stream straight through with empty
+            // thinkingText so the panel stays hidden for them.
+            setThinkingText(evt.accumulated);
           } else if (evt.kind === 'done') {
             result = evt.result;
           } else if (evt.kind === 'error') {
@@ -433,6 +448,7 @@ export function GeneratorPage() {
             meta={progressMeta}
             mergeMode={!!mergeIntoPackId}
             streamingText={streamedText}
+            thinkingText={thinkingText}
           />
         )}
       </div>

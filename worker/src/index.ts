@@ -900,6 +900,15 @@ ${bounded}`;
         temperature: 0.35,
         cacheSystemPrompt: true,
         cacheTTL: '1h',
+        // Extended thinking — Pro Plus only. Surfaces Sonnet 4.5's
+        // reasoning trace in a separate `thinking` block that the
+        // streaming client renders as the Manus-style "the AI is
+        // reasoning" region above the prose output. 4096-token
+        // budget is tuned for the pack-synthesis use case (denser
+        // than tool-use, lighter than research). Free + Pro tiers
+        // route through Llama which has no equivalent — the option
+        // is silently ignored on that branch.
+        thinking: userTier === 'pro_plus' ? { budgetTokens: 4096 } : undefined,
       },
       env,
     );

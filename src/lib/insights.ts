@@ -108,7 +108,14 @@ export async function fetchInsights({
  */
 export type StreamInsightsEvent =
   | { kind: 'meta'; provider?: string; model?: string; genre?: Genre }
+  /** A token delta from the prose output (text_delta event). */
   | { kind: 'delta'; delta: string; accumulated: string }
+  /** A token delta from the model's reasoning trace
+   *  (thinking_delta event — only fires on the Pro Plus / Sonnet
+   *  path when extended thinking is enabled server-side). Yielded
+   *  separately from text-deltas so the UI can render it in a
+   *  distinct region above the prose output (Manus pattern). */
+  | { kind: 'thinking'; delta: string; accumulated: string }
   | { kind: 'done'; result: InsightsResult }
   | {
       kind: 'error';
@@ -174,6 +181,7 @@ export async function* streamInsights(
   const decoder = new TextDecoder('utf-8');
   let buffer = '';
   let accumulated = '';
+  let thinkingAccumulated = '';
 
   try {
     while (true) {
@@ -199,16 +207,32 @@ export async function* streamInsights(
         try {
           const event = JSON.parse(json) as {
             type: string;
-            delta?: { type: string; text?: string };
+            delta?: { type: string; text?: string; thinking?: string };
           };
-          if (
-            event.type === 'content_block_delta' &&
-            event.delta?.type === 'text_delta' &&
-            typeof event.delta.text === 'string' &&
-            event.delta.text.length > 0
-          ) {
-            accumulated += event.delta.text;
-            yield { kind: 'delta', delta: event.delta.text, accumulated };
+          if (event.type === 'content_block_delta' && event.delta) {
+            if (
+              event.delta.type === 'text_delta' &&
+              typeof event.delta.text === 'string' &&
+              event.delta.text.length > 0
+            ) {
+              accumulated += event.delta.text;
+              yield { kind: 'delta', delta: event.delta.text, accumulated };
+            } else if (
+              event.delta.type === 'thinking_delta' &&
+              typeof event.delta.thinking === 'string' &&
+              event.delta.thinking.length > 0
+            ) {
+              // Sonnet 4.5 extended-thinking trace. Only arrives on
+              // the Pro Plus path. Surfaced as a separate `thinking`
+              // event so the UI can render it in its own region
+              // (Manus pattern — see GenerationProgress.tsx).
+              thinkingAccumulated += event.delta.thinking;
+              yield {
+                kind: 'thinking',
+                delta: event.delta.thinking,
+                accumulated: thinkingAccumulated,
+              };
+            }
           }
           // message_delta + message_stop carry the stop reason +
           // usage but we don't surface them yet — the v1 UI doesn't

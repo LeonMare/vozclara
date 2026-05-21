@@ -90,6 +90,16 @@ export interface LlmCallOptions {
   cacheTTL?: CacheTtl;
   /** Optional AbortSignal — forwarded to the underlying provider. */
   signal?: AbortSignal;
+  /**
+   * Enable Sonnet 4.5 extended thinking (Manus-style reasoning
+   * surface). Only takes effect on the Anthropic path — the Llama
+   * branch silently ignores the option since Workers AI doesn't
+   * expose an equivalent. Pass `{ budgetTokens: N }` to override
+   * the default 4096-token budget. Costs same as output tokens.
+   * See worker/src/anthropic.ts:AnthropicCallOptions.thinking for
+   * the cost / temperature gotchas.
+   */
+  thinking?: { budgetTokens?: number };
 }
 
 export interface LlmResult {
@@ -290,6 +300,12 @@ export async function callLLMStream(
           cacheTTL: options.cacheTTL,
           temperature: options.temperature,
           signal: options.signal,
+          // Extended thinking only fires when the caller explicitly
+          // opts in. Skipped for the non-stream path (callLLM) since
+          // Manus-style reasoning UX only makes sense when surfaced
+          // in real time; a non-stream call collapses the thinking
+          // into invisible token-cost.
+          thinking: options.thinking,
           stream: true,
         },
         env,
