@@ -78,6 +78,86 @@ export const THRESHOLDS = {
   ANKI_EXPORT_MIN_COUNT: 2,
 } as const;
 
+/* ─── localStorage-backed event counters ─────────────────────────── */
+
+/**
+ * Counter keys for the count-based triggers (T3 ask, T5 anki).
+ * Cross-session counters — localStorage persists indefinitely so
+ * one heavy week of usage doesn't get reset by a browser-close.
+ */
+const COUNTER_KEYS = {
+  ASK_HITS: 'vozclara:counter:ask-hits',
+  ANKI_EXPORTS: 'vozclara:counter:anki-exports',
+} as const;
+
+function getCounter(key: string): number {
+  if (typeof window === 'undefined') return 0;
+  const raw = window.localStorage.getItem(key);
+  if (!raw) return 0;
+  const n = Number.parseInt(raw, 10);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+function incrementCounter(key: string): number {
+  const next = getCounter(key) + 1;
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage.setItem(key, String(next));
+    } catch {
+      /* private mode / quota — accept the lost increment */
+    }
+  }
+  return next;
+}
+
+/** Increment + return the new Ask-success count. Call once per
+ *  successful `/api/ask` response. */
+export function incrementAskHitCount(): number {
+  return incrementCounter(COUNTER_KEYS.ASK_HITS);
+}
+
+/** Read the current Ask-success count without incrementing. */
+export function getAskHitCount(): number {
+  return getCounter(COUNTER_KEYS.ASK_HITS);
+}
+
+/** Increment + return the new Anki-export count. Call once per
+ *  successful `.apkg` download. */
+export function incrementAnkiExportCount(): number {
+  return incrementCounter(COUNTER_KEYS.ANKI_EXPORTS);
+}
+
+/** Read the current Anki-export count without incrementing. */
+export function getAnkiExportCount(): number {
+  return getCounter(COUNTER_KEYS.ANKI_EXPORTS);
+}
+
+/* ─── Playlist URL detection (T4) ─────────────────────────────────── */
+
+/**
+ * True iff the input string is a YouTube URL with a `list=` query
+ * parameter — i.e. a playlist URL the visitor could route to the
+ * Season Pack pipeline once UI integration ships. Returns false for
+ * single-video URLs (`watch?v=…` without `list=`), bare video ids,
+ * and any non-YouTube URL.
+ */
+export function isPlaylistUrl(input: string): boolean {
+  const trimmed = input.trim();
+  if (!trimmed) return false;
+  try {
+    const url = new URL(trimmed);
+    const host = url.hostname.replace(/^www\./, '').replace(/^m\./, '');
+    if (host !== 'youtube.com' && host !== 'youtube-nocookie.com') return false;
+    const list = url.searchParams.get('list');
+    // YouTube playlist ids start with PL / UU / FL / LL / etc.
+    // Anything 2+ chars long is a real playlist; "WL" (watch later)
+    // is also a real playlist but we treat all of them the same.
+    return Boolean(list && list.length >= 2);
+  } catch {
+    return false;
+  }
+}
+
 /* ─── localStorage-backed dismissal state ─────────────────────────── */
 
 const DISMISSED_KEY = (id: TriggerId): string =>
@@ -167,10 +247,108 @@ export function triggerCopy(id: TriggerId, locale: string): TriggerCopy {
     };
   }
 
-  // T3/T4/T5 — placeholder copy until the eligibility wiring lands.
-  // The chip stays usable so design integration can proceed in
-  // parallel with the per-trigger logic; replace these strings as
-  // the eligibility predicate for each trigger ships.
+  if (id === TRIGGERS.ASK_MY_KNOWLEDGE_HIT) {
+    if (locale.startsWith('es')) {
+      return {
+        message: 'Usas Ask con frecuencia. Pro Plus corre Sonnet 4.5 — respuestas con matices que el modelo gratuito no capta.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Cerrar',
+      };
+    }
+    if (locale.startsWith('pt')) {
+      return {
+        message: 'Usas o Ask com frequência. Pro Plus usa Sonnet 4.5 — respostas com nuances que o modelo gratuito não capta.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Fechar',
+      };
+    }
+    if (locale.startsWith('de')) {
+      return {
+        message: 'Du nutzt Ask schon häufig. Pro Plus läuft auf Sonnet 4.5 — Antworten mit Nuancen die das freie Modell nicht trifft.',
+        ctaLabel: 'Founder Deal ansehen',
+        ctaHref: '/founder',
+        dismissLabel: 'Schließen',
+      };
+    }
+    return {
+      message: 'You ask the library often. Pro Plus runs Sonnet 4.5 — answers that catch nuances the free model misses.',
+      ctaLabel: 'See Founder Deal',
+      ctaHref: '/founder',
+      dismissLabel: 'Dismiss',
+    };
+  }
+
+  if (id === TRIGGERS.LONG_VIDEO_OR_PLAYLIST) {
+    if (locale.startsWith('es')) {
+      return {
+        message: 'Parece una playlist. Season Pack (Pro Plus) hace síntesis multi-episodio — temas y contradicciones por toda la temporada.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Cerrar',
+      };
+    }
+    if (locale.startsWith('pt')) {
+      return {
+        message: 'Parece uma playlist. Season Pack (Pro Plus) faz síntese multi-episódio — temas e contradições por toda a temporada.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Fechar',
+      };
+    }
+    if (locale.startsWith('de')) {
+      return {
+        message: 'Sieht aus wie eine Playlist. Season Pack (Pro Plus) macht episodenübergreifende Synthese — Themen + Widersprüche über die ganze Season.',
+        ctaLabel: 'Founder Deal ansehen',
+        ctaHref: '/founder',
+        dismissLabel: 'Schließen',
+      };
+    }
+    return {
+      message: 'Looks like a playlist. Season Pack (Pro Plus) does cross-episode synthesis — themes + contradictions across the season.',
+      ctaLabel: 'See Founder Deal',
+      ctaHref: '/founder',
+      dismissLabel: 'Dismiss',
+    };
+  }
+
+  if (id === TRIGGERS.ANKI_EXPORT_REPEAT) {
+    if (locale.startsWith('es')) {
+      return {
+        message: 'Parece estudio en serio. Pro Plus quita los límites de exportación y añade calidad Sonnet a las tarjetas.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Cerrar',
+      };
+    }
+    if (locale.startsWith('pt')) {
+      return {
+        message: 'Parece estudo a sério. Pro Plus tira os limites de exportação e adiciona qualidade Sonnet aos cards.',
+        ctaLabel: 'Ver Founder Deal',
+        ctaHref: '/founder',
+        dismissLabel: 'Fechar',
+      };
+    }
+    if (locale.startsWith('de')) {
+      return {
+        message: 'Sieht nach ernsthaftem Lernen aus. Pro Plus nimmt die Export-Limits weg + bringt Sonnet-Qualität auf die Karten.',
+        ctaLabel: 'Founder Deal ansehen',
+        ctaHref: '/founder',
+        dismissLabel: 'Schließen',
+      };
+    }
+    return {
+      message: 'Looks like serious study. Pro Plus removes the export-frequency limits and brings Sonnet-grade card quality.',
+      ctaLabel: 'See Founder Deal',
+      ctaHref: '/founder',
+      dismissLabel: 'Dismiss',
+    };
+  }
+
+  // Defensive fallback — should never hit since the registry above
+  // covers every TriggerId, but keeps the type-checker happy if a
+  // future trigger ships without copy.
   return {
     message: '— trigger copy not yet written —',
     ctaLabel: 'See pricing',

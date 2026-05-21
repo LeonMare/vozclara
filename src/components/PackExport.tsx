@@ -9,6 +9,7 @@ import {
   type ExportFormat,
 } from '../lib/export';
 import { activeView, type KnowledgePack } from '../lib/pack';
+import { incrementAnkiExportCount } from '../lib/conversionTriggers';
 
 interface Props {
   pack: KnowledgePack;
@@ -96,6 +97,13 @@ export function PackExport({ pack }: Props) {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      // T5 trigger — count this Anki export. When the user opens
+      // any pack page from this point on, the PackPage tail will
+      // surface the "looks like serious study, Pro Plus removes
+      // export-frequency limits" chip once the count hits 2.
+      // Done client-side via localStorage so the counter survives
+      // refreshes + works for anonymous users.
+      incrementAnkiExportCount();
       flashToast(labels.downloaded);
     } catch (err) {
       console.warn('Anki export failed:', err);

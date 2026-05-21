@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import { useLocale } from '../lib/i18n';
 import { askKnowledge, condensePack, AskError, type AskResult } from '../lib/ask';
 import type { KnowledgePack } from '../lib/pack';
+import {
+  incrementAskHitCount,
+  getAskHitCount,
+  THRESHOLDS,
+  TRIGGERS,
+} from '../lib/conversionTriggers';
+import { ConversionChip } from './ConversionChip';
 
 interface Props {
   packs: KnowledgePack[];
@@ -73,6 +80,13 @@ export function AskPanel({
       const brainId = packs[0]?.brainId;
       const res = await askKnowledge(question.trim(), condensed, locale, brainId);
       setResult(res);
+      // T3 trigger — count this successful Ask. The chip below
+      // surfaces once the running total crosses 3, signalling the
+      // user is leaning on the cross-library Q&A enough that
+      // Sonnet-grade answers would land harder than Llama-grade.
+      // Increment AFTER setResult so a failure path never inflates
+      // the counter.
+      incrementAskHitCount();
     } catch (err) {
       if (err instanceof AskError) {
         setError(labels.errors[err.code] ?? err.message);
@@ -169,6 +183,19 @@ export function AskPanel({
                   </Link>
                 ))}
               </div>
+            </div>
+          )}
+          {/* T3 conversion chip — only on the library scope (PackPage's
+              single-pack Ask is shorter usage), only past the 3-hit
+              threshold. Re-reads the counter each render so it appears
+              naturally as the user crosses the threshold mid-session. */}
+          {scope === 'library' && getAskHitCount() >= THRESHOLDS.ASK_MY_KNOWLEDGE_MIN_HITS && (
+            <div className="mt-5">
+              <ConversionChip
+                triggerId={TRIGGERS.ASK_MY_KNOWLEDGE_HIT}
+                locale={locale}
+                analyticsProps={{ ask_hit_count: getAskHitCount() }}
+              />
             </div>
           )}
         </article>

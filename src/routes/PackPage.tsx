@@ -5,7 +5,7 @@ import { BrandMark } from '../components/BrandMark';
 import { RouteSkeleton } from '../components/RouteSkeleton';
 import { getPack, getTranscript, deletePack, savePack, activeView, listPacks, type KnowledgePack, type PackTranslation, type Segment, type Language } from '../lib/pack';
 import { ConversionChip } from '../components/ConversionChip';
-import { TRIGGERS, THRESHOLDS } from '../lib/conversionTriggers';
+import { TRIGGERS, THRESHOLDS, getAnkiExportCount } from '../lib/conversionTriggers';
 import { TextWithCitations } from '../components/TextWithCitations';
 import { recordView, forgetView } from '../lib/recentlyViewed';
 import { deindexPack } from '../lib/packIndex';
@@ -431,22 +431,39 @@ export function PackPage() {
             the reader has actually engaged with the pack. */}
         {!isSample && <PackFeedback pack={pack} />}
 
-        {/* T2 conversion chip — "pack habit forming". Fires only on
-            real user packs (not samples), once the user's library has
-            reached the habit-forming threshold. Sits at the very tail
-            of the pack so the reader has finished engaging before
-            seeing the soft Founder Deal nudge. CLAUDE.md §5: declar-
-            ative, dismissible, persists across sessions, no count-
-            down or hard wall. */}
-        {!isSample && libraryPackCount >= THRESHOLDS.PACK_HABIT_FORMING_MIN_PACKS && (
-          <div className="mt-10">
-            <ConversionChip
-              triggerId={TRIGGERS.PACK_HABIT_FORMING}
-              locale={locale}
-              analyticsProps={{ pack_count: libraryPackCount }}
-            />
-          </div>
-        )}
+        {/* Conversion chip at the pack tail. Two triggers can fire on
+            this surface; T5 is more specific (study habit, signalled by
+            repeat Anki exports) and takes precedence when both are
+            eligible. T2 is the broader "library is becoming a habit"
+            fallback. The user only sees one chip at a time. CLAUDE.md
+            §5: declarative, dismissible, persists across sessions, no
+            countdown or hard wall. */}
+        {!isSample && (() => {
+          const ankiCount = getAnkiExportCount();
+          if (ankiCount >= THRESHOLDS.ANKI_EXPORT_MIN_COUNT) {
+            return (
+              <div className="mt-10">
+                <ConversionChip
+                  triggerId={TRIGGERS.ANKI_EXPORT_REPEAT}
+                  locale={locale}
+                  analyticsProps={{ anki_export_count: ankiCount }}
+                />
+              </div>
+            );
+          }
+          if (libraryPackCount >= THRESHOLDS.PACK_HABIT_FORMING_MIN_PACKS) {
+            return (
+              <div className="mt-10">
+                <ConversionChip
+                  triggerId={TRIGGERS.PACK_HABIT_FORMING}
+                  locale={locale}
+                  analyticsProps={{ pack_count: libraryPackCount }}
+                />
+              </div>
+            );
+          }
+          return null;
+        })()}
       </div>
     </main>
   );

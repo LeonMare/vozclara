@@ -6,6 +6,8 @@ import { useMagneticHover } from '../../hooks/useMagneticHover';
 import { HeroPackPreview } from './HeroPackPreview';
 import { BrandMark } from '../BrandMark';
 import { track, Events } from '../../lib/analytics';
+import { isPlaylistUrl, TRIGGERS } from '../../lib/conversionTriggers';
+import { ConversionChip } from '../ConversionChip';
 
 /**
  * Hero — the entry point. Tightened above-the-fold so the headline,
@@ -133,6 +135,22 @@ export function Hero() {
               </p>
               {error && (
                 <p role="alert" className="mt-2 font-sans text-sm text-red-700">{error}</p>
+              )}
+              {/* T4 conversion chip — fires when the paste-form value is a
+                  YouTube playlist URL (not a single-video URL). Soft Season-
+                  Pack hint: a playlist is the canonical input shape for that
+                  Pro Plus feature, and detecting it in the moment of paste
+                  is the only place where the suggestion lands as helpful
+                  rather than promotional. The chip dismisses + persists per
+                  conversionTriggers.ts. */}
+              {isPlaylistUrl(value) && (
+                <div className="mt-3">
+                  <ConversionChip
+                    triggerId={TRIGGERS.LONG_VIDEO_OR_PLAYLIST}
+                    locale={locale}
+                    analyticsProps={{ source: 'hero_paste' }}
+                  />
+                </div>
               )}
             </form>
 
