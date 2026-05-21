@@ -120,6 +120,30 @@ export function PackPage() {
     return () => { cancelled = true; };
   }, [pack?.brainId]);
 
+  // First-60-seconds bookplate (#43). When the generator navigates here
+  // with ?welcome=1, render a quiet italic Cormorant strip + gold rule
+  // for ~4.5 s, then fade out and clean the URL via history replace so
+  // refresh / share never re-triggers. Stays in editorial register —
+  // no confetti, no popup, just a typographic bookplate insert.
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeFading, setWelcomeFading] = useState(false);
+  useEffect(() => {
+    if (!id) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('welcome') !== '1') return;
+    setShowWelcome(true);
+    const fadeT = window.setTimeout(() => setWelcomeFading(true), 4500);
+    const removeT = window.setTimeout(() => {
+      setShowWelcome(false);
+      // Clean the URL so a reload of the pack page doesn't replay it.
+      navigate(`/pack/${id}`, { replace: true });
+    }, 5300);
+    return () => {
+      window.clearTimeout(fadeT);
+      window.clearTimeout(removeT);
+    };
+  }, [id, navigate]);
+
   function toggleSection(key: TabKey) {
     setOpenSections((prev) => {
       const next = new Set(prev);
@@ -222,6 +246,25 @@ export function PackPage() {
   return (
     <main className="bg-creme paper">
       <div className="mx-auto max-w-3xl px-5 pb-16 pt-6 sm:px-8 sm:pt-10">
+        {/* First-60-seconds bookplate (#43). One-shot editorial insert
+            that confirms the pack has been filed — italic Cormorant
+            between two gold rules, fades after ~4.5 s, removed from
+            DOM and URL cleaned shortly after. Pure typographic
+            acknowledgement, not a celebration popup. */}
+        {showWelcome && (
+          <div
+            className={`mb-6 flex items-center gap-3 transition-opacity duration-700 ${welcomeFading ? 'opacity-0' : 'opacity-100'}`}
+            aria-live="polite"
+            role="status"
+          >
+            <span className="h-px w-10 bg-gold" aria-hidden />
+            <span className="font-serif italic text-[15px] leading-none text-navy/85">
+              {t.packSavedToLibrary}.
+            </span>
+            <span className="h-px flex-1 bg-gold/30" aria-hidden />
+          </div>
+        )}
+
         {/* Back / actions row — Export available on every pack, Delete
             only on real packs (samples are read-only demos). */}
         <div className="flex items-center justify-between gap-3">

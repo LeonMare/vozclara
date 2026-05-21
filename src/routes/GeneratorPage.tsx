@@ -335,7 +335,11 @@ export function GeneratorPage() {
         });
       }
 
-      navigate(`/pack/${targetPackId}`);
+      // Append ?welcome=1 so PackPage can briefly surface an editorial
+      // "saved to your library" bookplate. The URL is cleaned (history
+      // replace) once the moment fades, so refresh / share never
+      // re-triggers it.
+      navigate(`/pack/${targetPackId}?welcome=1`);
     } catch (err) {
       // Translate the typed worker / network error into a friendly card.
       // friendlyError() reads .code if the err is a typed instance
