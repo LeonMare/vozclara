@@ -55,7 +55,7 @@ export function ImpressumPage() {
           </h2>
           <div className="mt-5 h-px w-12 bg-gold" aria-hidden />
           <div className="mt-6 space-y-2 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
-            <p>Christian Leon</p>
+            <p>Christian José</p>
             <p>LEON MARÉ</p>
             <p>Frauenhofstraße 7</p>
             <p>60528 Frankfurt am Main</p>
@@ -73,8 +73,8 @@ export function ImpressumPage() {
           <div className="mt-6 space-y-2 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
             <p>
               {labels.emailLabel}:{' '}
-              <a href="mailto:hola@vozclara.app" className="underline underline-offset-4 hover:text-gold">
-                hola@vozclara.app
+              <a href="mailto:vozclara@leonmare.de" className="underline underline-offset-4 hover:text-gold">
+                vozclara@leonmare.de
               </a>
             </p>
             <p className="text-base text-graphit/65">{labels.contactNote}</p>
@@ -92,7 +92,7 @@ export function ImpressumPage() {
             {labels.responsibilityBody}
           </p>
           <p className="mt-4 font-serif text-lg leading-relaxed text-graphit/85 sm:text-xl">
-            Christian Leon · Frauenhofstraße 7 · 60528 Frankfurt am Main
+            Christian José · Frauenhofstraße 7 · 60528 Frankfurt am Main
           </p>
         </div>
       </section>
