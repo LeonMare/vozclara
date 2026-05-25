@@ -38,7 +38,7 @@
 
 | Element | Wert |
 |---|---|
-| Handle (priorisiert) | `@leonmare.studio` → fallback `@vozclara.app` |
+| Handle (locked) | `@leonmaregroup` (IG + TikTok bereits live; X / LinkedIn / YouTube pending) |
 | Profilbild | Lighthouse-Glyph (BrandMark aus repo: `public/brand-mark.svg`), navy auf creme |
 | Cover / Banner | „LEON MARÉ — knowledge layer over every video you watch" in Cormorant Garamond, navy/gold/creme |
 | Primärfarbe | navy `#0E1B33` |
@@ -53,7 +53,7 @@
 
 ### A · X / Twitter
 
-**Handle:** `@leonmare_studio` (priority) → `@vozclara_app` (fallback)
+**Handle:** `@leonmaregroup` (locked — matched to IG / TikTok handle for consistency)
 
 **Bio (160-char hard cap):**
 ```
@@ -189,7 +189,7 @@ I'd love your feedback on the tool. Reach out — vozclara@leonmare.de.
 
 ### C · Instagram
 
-**Handle:** `@leonmare.studio` (priority) → `@vozclara.app` (fallback)
+**Handle:** `@leonmaregroup` (already live)
 **Account-Type:** Business Account (nicht Creator) — gibt dir Insights + Link-in-Bio-Tools
 
 **Bio (150-char hard cap):**
@@ -240,7 +240,7 @@ Format: timelapse von Code-/Design-Sessions, terminal-tape, editorial design mom
 ### D · YouTube
 
 **Channel Name:** LEON MARÉ Studio
-**Handle:** `@leonmare.studio` → fallback `@vozclara`
+**Handle:** `@leonmaregroup` (locked — matched to all other platforms)
 **Channel-Type:** Brand-Channel (nicht personal — connectable to Google Workspace later)
 
 **Channel Description (1000 char):**
@@ -312,7 +312,7 @@ Build-in-public update — was wurde diese Woche gebaut, was ist gelernt worden,
 
 ### E · TikTok
 
-**Handle:** `@leonmare.studio` (priority) → `@vozclara.app` (fallback)
+**Handle:** `@leonmaregroup` (already live)
 **Account-Type:** Business Account (gibt Analytics + Link-in-Bio + Trending-Sounds-Access). Switch to Business: Profile → Settings → Manage Account → Switch to Business → Category „Education".
 
 **Bio (80-char hard cap — das ist die brutalste Bio-Restriction von allen Plattformen):**

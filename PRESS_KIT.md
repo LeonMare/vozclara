@@ -249,12 +249,12 @@ UTC+2).
 
 | Platform | Handle |
 |---|---|
-| X / Twitter | `@leonmare_studio` (priority) / `@vozclara_app` (fallback) — *zu erstellen* |
-| LinkedIn (Company) | `linkedin.com/company/leonmare-studio` — *zu erstellen* |
+| Instagram | `@leonmaregroup` — *live* |
+| TikTok | `@leonmaregroup` — *live* |
+| X / Twitter | `@leonmaregroup` — *zu erstellen, Setup-Block in SOCIAL_PLAYBOOK §1 A* |
+| LinkedIn (Company) | `linkedin.com/company/leonmaregroup` — *zu erstellen* |
 | LinkedIn (Personal) | Christian José Gulm — *zu aktualisieren* |
-| Instagram | `@leonmare.studio` / `@vozclara.app` — *zu erstellen* |
-| TikTok | `@leonmare.studio` / `@vozclara.app` — *zu erstellen* |
-| YouTube | `@leonmare.studio` / `@vozclara` — *zu erstellen* |
+| YouTube | `@leonmaregroup` — *zu erstellen* |
 | Reddit | Existing Christian-Karma-Account (not brand-named, by design) |
 | Discord | Existing community server |
 

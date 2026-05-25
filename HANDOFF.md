@@ -169,13 +169,15 @@ send.
   generation).
 - **#31** 10 Mikro-Influencer per language outreach — DMs in 4 locales
   in `OUTREACH_TEMPLATES.md §1`. Follow-up pattern in §6.
-- **β** LEON MARÉ social-media setup — Status Do 21.5. ~22:00:
+- **β** LEON MARÉ social-media setup — Status Do 21.5. ~22:30:
+  - **Handle locked: `@leonmaregroup`** (Konsistenz über alle 5 Plattformen)
   - ✓ Discord (6 Mitglieder), ✓ Reddit (1000 karma + 15 gold),
-    ✓ Instagram (account live, branded), ✓ TikTok (account live, branded)
-  - ◯ X / Twitter — kritischster Blocker für MCP Beat
-  - ◯ LinkedIn Company Page + Personal alignment
-  - ◯ YouTube Channel (Banner + Description, kein Video nötig direkt)
-  - Verbleibender Setup ~2 h total (siehe `SOCIAL_PLAYBOOK.md §1`)
+    ✓ Instagram `@leonmaregroup` (account live), ✓ TikTok `@leonmaregroup` (account live)
+  - ◯ X `@leonmaregroup` — Setup-Block fertig in `SOCIAL_PLAYBOOK §1 A`, copy-paste ready
+  - ◯ LinkedIn Company `linkedin.com/company/leonmaregroup` + Personal Profil — Bio in §1 B
+  - ◯ YouTube `@leonmaregroup` Channel + Banner + Description — §1 D
+  - **Pickup-Frage offen**: Display-Name auf IG/TikTok? „LEON MARÉ" oder „LEON MARÉ Group"? Davon hängt LinkedIn Company-Page-Name ab.
+  - Verbleibender Setup ~2 h total
 
 ### Activation steps (user-only, 5 min each)
 
@@ -285,6 +287,27 @@ If unsure: start with **#4 Plausible activation** (5 min, gives you
 data visibility for everything else). Then **#1 social accounts**
 (creates the runway). Demo videos and posting can land within
 1-2 days of that.
+
+### Resume point on PC (where we paused on the laptop)
+
+Wir waren mitten im Social-Setup-Block, gerade fertig mit IG +
+TikTok als `@leonmaregroup`. Nächster Schritt:
+
+1. **Display-Name confirmen** — auf IG/TikTok ist Display „LEON MARÉ"
+   oder „LEON MARÉ Group"? Sag Bescheid wenn du auf PC bist.
+2. **X / Twitter Setup** durchziehen — kompletter Block fertig
+   in `SOCIAL_PLAYBOOK.md §1 A`. Handle: `@leonmaregroup`. Bio
+   ist 156 chars, copy-paste-ready. Erster Placeholder-Tweet
+   im Block enthalten. Pinned-Tweet noch nicht setzen (kommt
+   später mit MCP-Beat-Thread).
+3. **LinkedIn** (§1 B) — Company Page `leonmaregroup` + Personal
+   Profile Update. Bio-Templates in DE + EN bereit.
+4. **YouTube** (§1 D) — Channel + Banner + Description. Erstes
+   Video später (siehe `DEMO_VIDEO_SCRIPTS.md`).
+
+Nach allen drei: SOCIAL_PLAYBOOK §1 Status-Tracker auf alle 5 ✓
+updaten, dann kannst du den MCP-Beat-Thread auf X posten (Post 5
+aus `LAUNCH_POSTS.md`).
 
 ### Marketing-docs index (alle 7 Dokumente)
 
