@@ -193,9 +193,17 @@ send.
 
 ### Remaining technical pre-launch (open code blocks)
 
-- **#13 (45/50)** Programmatic SEO — scaffold + 5 essays are
-  shipped. Append remaining 45 to `src/data/creatorNotes.ts`
-  (3-4 h autonomous session). Pattern locked.
+- **#13 — DONE (50/50)** — parallel PC session closed the target
+  via 4 commits (`f473e9b` German ×10, `8ef2216` Spanish ×8,
+  `9856d8e` Portuguese ×8, `0bc32e7` expansion ×9, plus laptop
+  original ×5 = 50 essays / 4 locales). All in sitemap, all live
+  at `/notes/<slug>`.
+- **#59 (new follow-up)** — 43 of 50 YouTube IDs in
+  `creatorNotes.ts` carry `// TODO(verify):` comments — they're
+  plausible Training-Data guesses, not confirmed catalogue lookups.
+  Most will resolve correctly, but un-verified IDs are an SEO
+  risk if Google detects broken outbound links. Pre-launch
+  nice-to-have, post-launch P1.
 - **#39** VozClara Lenses (32 h) — needs a focused multi-day sprint.
 - **#15** P1 Post-Launch Week-1 features (14 h) — Public Pack
   Library + Streak-Counter. Post-launch by design.
