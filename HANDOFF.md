@@ -169,9 +169,13 @@ send.
   generation).
 - **#31** 10 Mikro-Influencer per language outreach — DMs in 4 locales
   in `OUTREACH_TEMPLATES.md §1`. Follow-up pattern in §6.
-- **β** LEON MARÉ social-media setup — **5 platforms** (Instagram,
-  LinkedIn, X, YouTube, TikTok). Full bio templates + profile specs
-  + content pillars in `SOCIAL_PLAYBOOK.md §1 A-E`. ~3.5 h total.
+- **β** LEON MARÉ social-media setup — Status Do 21.5. ~22:00:
+  - ✓ Discord (6 Mitglieder), ✓ Reddit (1000 karma + 15 gold),
+    ✓ Instagram (account live, branded), ✓ TikTok (account live, branded)
+  - ◯ X / Twitter — kritischster Blocker für MCP Beat
+  - ◯ LinkedIn Company Page + Personal alignment
+  - ◯ YouTube Channel (Banner + Description, kein Video nötig direkt)
+  - Verbleibender Setup ~2 h total (siehe `SOCIAL_PLAYBOOK.md §1`)
 
 ### Activation steps (user-only, 5 min each)
 

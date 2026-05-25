@@ -5,20 +5,34 @@
 > Operating Layer rundum `LAUNCH_POSTS.md`. Account-Setup,
 > Plattform-Strategie, Cadence, Pre-Flight. Nichts posten ohne §4.
 >
-> **Bestehende Accounts:** Discord, Reddit (Christian-Karma).
-> **Vorzubereiten:** Instagram, LinkedIn, X / Twitter, YouTube, TikTok.
+> **Bestehende Accounts:**
+>   • **Discord** — läuft mit 6 Mitgliedern (Stand Do 21.5.)
+>   • **Reddit** (Christian-Karma) — 1000 Karma + 15 Gold ✓ posting-fähig in allen relevanten Subs
+>   • **Instagram** — Account live (LEON MARÉ branded, Do 21.5.) — noch kein Post
+>   • **TikTok** — Account live (LEON MARÉ branded, Do 21.5.) — noch kein Post
+> **Noch vorzubereiten:** X / Twitter, LinkedIn (Company + Personal), YouTube
 
 ---
 
-## 1 · Account Setup — die 5 vorzubereitenden Plattformen
+## 1 · Account Setup — Status + verbleibende Plattformen
 
-### Reihenfolge (1 Tag, ~3.5 Stunden gesamt)
+### Status-Tracker (Stand Do 21.5.2026, ~22:00)
 
-1. **X / Twitter** — schnellster Setup, sofort posting-fähig
-2. **LinkedIn Company Page** (LEON MARÉ Studio) — danach das persönliche Profil von Christian darauf ausrichten
-3. **Instagram Business Account** — kann sofort eingerichtet, Inhalt kommt schrittweise
-4. **TikTok Business Account** — Setup gleichzeitig mit Instagram (gleiche Asset-Familie, doppelter Reach)
-5. **YouTube Channel** (LEON MARÉ) — Banner + Profilbild + Description; erstes Video kann später kommen
+| Plattform | Status | Was fehlt noch |
+|---|---|---|
+| Discord | ✓ live | 6 Mitglieder, läuft |
+| Reddit | ✓ live | 1000 Karma + 15 Gold — posting-ready |
+| Instagram | ✓ Account erstellt | Bio finalisieren + erster Post |
+| TikTok | ✓ Account erstellt | Bio finalisieren + erster Post |
+| X / Twitter | ◯ noch nicht erstellt | Account + Bio + Banner + Pinned Tweet |
+| LinkedIn Company | ◯ noch nicht erstellt | Company Page + Personal-Profil-Update |
+| YouTube | ◯ noch nicht erstellt | Channel + Banner + Description |
+
+### Reihenfolge der verbleibenden 3 (~2 Stunden gesamt)
+
+1. **X / Twitter** — kritischste fehlende Plattform für den MCP-Beat (kein X-Account → kein Thread → kein MCP-Distribution). Setup ~30 min.
+2. **LinkedIn Company Page** + Personal-Profil-Update (LEON MARÉ Studio). Setup ~60 min (Company Page first, dann Personal alignment).
+3. **YouTube Channel** — Banner + Profilbild + Description. Erstes Video kann später. Setup ~30 min.
 
 ### Konsistenz über alle 4 Plattformen
 
