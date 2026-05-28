@@ -701,7 +701,7 @@ export function LandingFooter() {
       {/* Site-nav columns — three groups so the footer reads like a
           proper colophon rather than a single closing line. */}
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
               <BrandMark variant="monogram" size="md" tone="navy" decorative />
@@ -766,8 +766,19 @@ function footerColumns(locale: string) {
           { label: 'Crear Knowledge Pack', href: '/new' },
           { label: 'Mi biblioteca', href: '/library' },
           { label: 'Pack de ejemplo', href: '/pack/sample' },
+          { label: '¿Qué es un Knowledge Pack?', href: '/knowledge-packs' },
+          { label: 'YouTube → Anki', href: '/youtube-to-anki' },
+          { label: 'MCP para desarrolladores', href: '/mcp' },
           { label: 'Notas de lectura', href: '/notes' },
-          { label: 'Cómo funciona', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Aprender con YouTube',
+        items: [
+          { label: 'Aprender alemán', href: '/learn-german-with-youtube' },
+          { label: 'Aprender inglés', href: '/learn-english-with-youtube' },
+          { label: 'Aprender español', href: '/learn-spanish-with-youtube' },
+          { label: 'Aprender portugués', href: '/learn-portuguese-with-youtube' },
         ],
       },
       {
@@ -783,6 +794,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Legal',
         items: [
+          { label: 'Privacy-first', href: '/privacy-first-ai-study-tool' },
           { label: 'Privacidad', href: '/privacy' },
           { label: 'Términos', href: '/terms' },
           { label: 'Reembolsos', href: '/refund' },
@@ -801,8 +813,19 @@ function footerColumns(locale: string) {
           { label: 'Criar Knowledge Pack', href: '/new' },
           { label: 'A minha biblioteca', href: '/library' },
           { label: 'Pack de exemplo', href: '/pack/sample' },
+          { label: 'O que é um Knowledge Pack?', href: '/knowledge-packs' },
+          { label: 'YouTube → Anki', href: '/youtube-to-anki' },
+          { label: 'MCP para developers', href: '/mcp' },
           { label: 'Notas de leitura', href: '/notes' },
-          { label: 'Como funciona', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Aprender com YouTube',
+        items: [
+          { label: 'Aprender alemão', href: '/learn-german-with-youtube' },
+          { label: 'Aprender inglês', href: '/learn-english-with-youtube' },
+          { label: 'Aprender espanhol', href: '/learn-spanish-with-youtube' },
+          { label: 'Aprender português', href: '/learn-portuguese-with-youtube' },
         ],
       },
       {
@@ -818,6 +841,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Legal',
         items: [
+          { label: 'Privacy-first', href: '/privacy-first-ai-study-tool' },
           { label: 'Privacidade', href: '/privacy' },
           { label: 'Termos', href: '/terms' },
           { label: 'Reembolsos', href: '/refund' },
@@ -836,8 +860,19 @@ function footerColumns(locale: string) {
           { label: 'Knowledge Pack erstellen', href: '/new' },
           { label: 'Meine Bibliothek', href: '/library' },
           { label: 'Beispiel-Pack', href: '/pack/sample' },
+          { label: 'Was ist ein Knowledge Pack?', href: '/knowledge-packs' },
+          { label: 'YouTube → Anki', href: '/youtube-to-anki' },
+          { label: 'MCP für Entwickler', href: '/mcp' },
           { label: 'Lesenotizen', href: '/notes' },
-          { label: 'So funktioniert es', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Mit YouTube lernen',
+        items: [
+          { label: 'Deutsch lernen', href: '/learn-german-with-youtube' },
+          { label: 'Englisch lernen', href: '/learn-english-with-youtube' },
+          { label: 'Spanisch lernen', href: '/learn-spanish-with-youtube' },
+          { label: 'Portugiesisch lernen', href: '/learn-portuguese-with-youtube' },
         ],
       },
       {
@@ -853,6 +888,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Rechtliches',
         items: [
+          { label: 'Privacy-first', href: '/privacy-first-ai-study-tool' },
           { label: 'Datenschutz', href: '/privacy' },
           { label: 'Nutzungsbedingungen', href: '/terms' },
           { label: 'Rückerstattung', href: '/refund' },
@@ -871,8 +907,19 @@ function footerColumns(locale: string) {
           { label: 'Create Knowledge Pack', href: '/new' },
           { label: 'My library', href: '/library' },
           { label: 'Sample pack', href: '/pack/sample' },
+          { label: 'What is a Knowledge Pack?', href: '/knowledge-packs' },
+          { label: 'YouTube → Anki', href: '/youtube-to-anki' },
+          { label: 'MCP for developers', href: '/mcp' },
           { label: 'Reading notes', href: '/notes' },
-          { label: 'How it works', href: '/#how' },
+        ],
+      },
+      {
+        heading: 'Learn with YouTube',
+        items: [
+          { label: 'Learn German', href: '/learn-german-with-youtube' },
+          { label: 'Learn English', href: '/learn-english-with-youtube' },
+          { label: 'Learn Spanish', href: '/learn-spanish-with-youtube' },
+          { label: 'Learn Portuguese', href: '/learn-portuguese-with-youtube' },
         ],
       },
       {
@@ -888,6 +935,7 @@ function footerColumns(locale: string) {
       {
         heading: 'Legal',
         items: [
+          { label: 'Privacy-first', href: '/privacy-first-ai-study-tool' },
           { label: 'Privacy', href: '/privacy' },
           { label: 'Terms', href: '/terms' },
           { label: 'Refunds', href: '/refund' },
