@@ -78,6 +78,17 @@
     <priority>0.85</priority>
   </url>
 
+  <!-- /knowledge-packs — foundational concept page. Defines what a
+       Knowledge Pack actually is (eight components, mode-agnostic,
+       multilingual, timestamped). Anchor target for other landings'
+       "learn more" links. Ranks for "what is a knowledge pack",
+       "youtube knowledge pack", "ai knowledge pack". -->
+  <url>
+    <loc>https://vozclara.app/knowledge-packs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>
