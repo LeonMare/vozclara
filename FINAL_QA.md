@@ -26,10 +26,15 @@
 
 - [ ] Landing loads under 2 s on a normal connection
 - [ ] Hero headline reads correctly in your locale (DE/ES/PT/EN)
+- [ ] Ambient hero video plays in background (gold-line pulse + bokeh ghosting through cream paper via `mix-blend-screen`)
+- [ ] Hero italic gold line "Any video, Anki deck in one click." (or locale variant) renders directly under the trust note
+- [ ] AudienceTiles language tile shows "YouTube → Anki in one click" as the FIRST bullet (not CEFR vocabulary)
 - [ ] AudienceTiles: click one (e.g. „Sprachen lernen") → active state
       shows „Aktiv"-Badge + green dot
 - [ ] WhyNotChatGPT-section renders the 4-row comparison cleanly
-- [ ] PricingPreview shows the Founder-Banner between hero and Free/Pro
+- [ ] PricingPreview shows the Founder-Banner above the Free/Pro tier cards (sticky-style editorial banner with live "X of 100 remaining" counter pulled from /api/founder/status)
+- [ ] Free tier card name reads "Free · in beta" (or locale variant), blurb mentions "narrows after public launch" and "beta users keep extended access"
+- [ ] Pricing disclaimer at bottom reads the new beta-framing copy ("beta users keep extended access as a thank-you")
 - [ ] FounderNote feels human, not corporate
 - [ ] Footer columns are aligned, all links resolve (Impressum, Privacy,
       Terms, GitHub, Sitemap)
@@ -92,6 +97,17 @@
 - [ ] Library card on that pack shows the rating badge
 - [ ] /discover/top-rated → at least the pack you just rated appears
 
+## Block F·b · SEO Landing /youtube-to-anki
+
+- [ ] /youtube-to-anki loads cleanly in all four locales (ES/PT/DE/EN)
+- [ ] H1 reads "Turn any YouTube video into an Anki deck" (or locale variant)
+- [ ] `/anki-moment.png` image renders below the hero form, vocabulary cards readable
+- [ ] Card-format spec table shows Front / Back / Deck / Tags / Compatibility rows
+- [ ] Founder Deal callout appears mid-page with live remaining-seats counter
+- [ ] Paste-URL form on this page navigates to /new on submit (track event source: 'youtube-to-anki')
+- [ ] Secondary CTAs link to /pack/sample-learn and back to /
+- [ ] Crawler-fetched HTML (curl with User-Agent: Twitterbot or paste URL into opengraph.xyz) returns the anki-moment.png og:image and Anki-focused og:title — confirms functions/youtube-to-anki.ts is intercepting correctly
+
 ## Block F · Sample Packs (anonymous-friendly)
 
 - [ ] /pack/sample → loads Tagesschau pack (BRIEFING · ES + EN)
@@ -106,6 +122,7 @@
 ## Block G · Founder Deal Flow
 
 - [ ] /founder loads — Counter shows correct n/100 (matches Paddle dashboard)
+- [ ] Crawler-fetched HTML at vozclara.app/founder returns /og-founder.png as og:image (confirm via opengraph.xyz or `curl -A "Twitterbot/1.0" https://vozclara.app/founder | grep og:image`) — confirms functions/founder.ts is intercepting correctly
 - [ ] Click „Founder werden" / „Become a Founder" → **embedded Paddle.js overlay opens in-page** (no new tab — overlay since Mi 20.5.)
 - [ ] Paddle overlay shows:
   - [ ] Merchant of Record: **Paddle.com Market Ltd** (footer disclosure)
