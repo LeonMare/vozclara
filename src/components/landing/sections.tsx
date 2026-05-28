@@ -15,6 +15,7 @@ import { BrandMark } from '../BrandMark';
 import { LandingAskDemo } from './LandingAskDemo';
 import { WaitlistButton } from '../WaitlistButton';
 import { type Audience, getAudience, setAudience } from '../../lib/audience';
+import { fetchFounderStatus, type FounderStatus } from '../../lib/founder';
 
 /* ─── 02 · Problem ─────────────────────────────────────────────────────── */
 
@@ -205,6 +206,21 @@ export function LanguageSection() {
 export function PricingPreview() {
   const { t, locale } = useLocale();
   const ctaLabels = pricingCtaLabels(locale);
+  const founderLabels = founderBannerLabels(locale);
+
+  // Founder status — populates the banner above the tier-cards with
+  // live "X seats remaining" so the visitor sees scarcity rather than
+  // a static counter. Falls back to silent unknown if the worker hasn't
+  // bound KV yet (FounderStatus.claimed === null).
+  const [founderStatus, setFounderStatus] = useState<FounderStatus | null>(null);
+  useEffect(() => {
+    void fetchFounderStatus().then(setFounderStatus);
+  }, []);
+  const remaining =
+    founderStatus && founderStatus.claimed !== null
+      ? Math.max(0, founderStatus.max - founderStatus.claimed)
+      : null;
+  const founderAvailable = founderStatus?.available !== false;
 
   return (
     <section id="pricing" className="bg-white/70 py-16 sm:py-24">
@@ -215,6 +231,43 @@ export function PricingPreview() {
         </h2>
         <div className="mt-4 h-px w-12 bg-gold" aria-hidden />
         <p className="mt-3 font-serif italic text-graphit/70 sm:text-lg">{t.pricingSub}</p>
+
+        {/* Founder Deal banner — sits ABOVE the Free / Pro cards so a
+            visitor who reads top-to-bottom sees the only actually-
+            purchasable offer first. The Pro card below is on a waitlist
+            until billing infrastructure ships; the Founder Deal is what
+            Paddle is processing today. Scarcity counter pulls live from
+            /api/founder/status. */}
+        {founderAvailable && (
+          <Link
+            to="/founder"
+            className="group mx-auto mt-8 block max-w-4xl rounded-card border border-gold/50 bg-creme p-5 shadow-card transition hover:border-gold hover:shadow-lg sm:p-6"
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex-1">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-sans text-[10px] uppercase tracking-[0.4em] text-gold-deep">
+                    {founderLabels.eyebrow}
+                  </span>
+                  {remaining !== null && (
+                    <span className="font-sans text-[11px] text-graphit/60">
+                      {founderLabels.remaining(remaining)}
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-2 font-serif text-2xl leading-tight text-navy sm:text-3xl">
+                  {founderLabels.headline}
+                </h3>
+                <p className="mt-1 font-serif italic text-sm text-graphit/70 sm:text-base">
+                  {founderLabels.sub}
+                </p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-2 rounded-card bg-navy px-5 py-2.5 font-sans text-sm font-medium text-creme transition group-hover:bg-navy/90">
+                {founderLabels.cta} <span aria-hidden>→</span>
+              </span>
+            </div>
+          </Link>
+        )}
 
         <div className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-2">
           {t.tiers.map((tier, i) => {
@@ -282,6 +335,44 @@ export function PricingPreview() {
       </div>
     </section>
   );
+}
+
+/**
+ * Founder Deal banner copy — sits above the Free / Pro cards on
+ * PricingPreview so a visitor who lands on /pricing sees the actually-
+ * purchasable offer (€99 lifetime Pro Plus, capped at 100 seats) before
+ * the waitlist-only tier card below. Lives in PricingPreview rather
+ * than t.* so it is co-located with the only surface that uses it.
+ */
+function founderBannerLabels(locale: string) {
+  if (locale.startsWith('es')) return {
+    eyebrow: 'Founder Deal · Limitado',
+    headline: '€99 una vez. Pro Plus de por vida.',
+    sub: 'Hasta que 100 founders firmen. Después, nunca más.',
+    cta: 'Reservar plaza founder',
+    remaining: (n: number) => `Quedan ${n} de 100`,
+  };
+  if (locale.startsWith('pt')) return {
+    eyebrow: 'Founder Deal · Limitado',
+    headline: '€99 uma vez. Pro Plus para sempre.',
+    sub: 'Até que 100 founders se inscrevam. Depois, nunca mais.',
+    cta: 'Reservar lugar founder',
+    remaining: (n: number) => `Restam ${n} de 100`,
+  };
+  if (locale.startsWith('de')) return {
+    eyebrow: 'Founder Deal · Limitiert',
+    headline: '€99 einmal. Pro Plus lebenslang.',
+    sub: 'Bis 100 Founders eingetragen sind. Danach nie wieder.',
+    cta: 'Founder-Platz sichern',
+    remaining: (n: number) => `${n} von 100 verfügbar`,
+  };
+  return {
+    eyebrow: 'Founder Deal · Limited',
+    headline: '€99 once. Lifetime Pro Plus.',
+    sub: 'Until 100 founders sign up. Then never offered again.',
+    cta: 'Claim a founder seat',
+    remaining: (n: number) => `${n} of 100 remaining`,
+  };
 }
 
 function pricingCtaLabels(locale: string) {
