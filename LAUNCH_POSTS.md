@@ -189,9 +189,11 @@ Languages covered: German, Spanish, English, Portuguese. Source can
 be in any of those; output (vocab translations, quiz, chapters) is
 in whichever you set as your study language.
 
-Free, no account needed. There's a Pro plan (€9/mo) with premium
-LLMs and bigger limits, but the core language-learning loop is free
-and stays free.
+Open during beta — no account needed. There's a Pro plan (€9/mo,
+coming soon) with premium LLMs and bigger limits, plus a Founder Deal
+(€99 lifetime Pro Plus, capped at 100 seats) for early adopters who
+want to lock in. Beta users keep extended access on the core language-
+learning loop after the public launch as a thank-you.
 
 Sample pack you can poke without signing up:
 https://vozclara.app/pack/sample-learn
@@ -216,7 +218,86 @@ I'll be in the comments — please be specific if it sucks.
 
 ---
 
-## Post 3 — r/productivity (Day 4, ~18:00 UTC, Friday)
+## Post 3 — r/Anki (Day 3, ~18:00 UTC, Thursday)
+
+**Subreddit:** r/Anki (~155k)
+**Flair:** "Add-ons" or "Discussion" (depending on what mod has live)
+
+**Title (≤300 chars, no all-caps):**
+```
+Built YouTube → .apkg with sentence-context cards + source-timestamp
+links. Beta feedback wanted from serious Anki users.
+```
+
+**Body:**
+```
+Hi r/Anki,
+
+Quick context: my partner is a Spanish speaker, I'm German, we live
+in Frankfurt. She watches German news + YouTube but the vocabulary
+keeps killing her. I got tired of being a real-time dictionary, so I
+wrote a tool that takes any YouTube URL and gives back a structured
+Knowledge Pack — including a downloadable .apkg deck with proper
+sentence-context cards.
+
+The Anki part is what I'm here to ask about.
+
+So I built VozClara: https://vozclara.app
+
+How the .apkg generation works:
+
+1. Paste a YouTube URL, pick your target + source language.
+2. The tool extracts vocabulary at your CEFR level (A1 → C1) using
+   the transcript as context.
+3. Cards are exported as a standard .apkg with this front/back shape:
+
+   Front:  [target word in sentence context]
+   Back:   [translation in your language]
+           [source sentence + speaker timestamp]
+           [direct link back to the video at that timestamp]
+
+   Deck hierarchy: VozClara::<video-title>
+   Tags: source-language, target-language, CEFR-level, video-id
+
+4. The .apkg drops into AnkiDesktop / AnkiMobile / AnkiDroid cleanly.
+   Tested against current Anki 23.x.
+
+You can poke a sample pack without signing up:
+https://vozclara.app/pack/sample-learn
+
+Open during beta — beta users keep extended access after the public
+launch as a thank-you. A Pro plan (€9/mo, coming soon) is on the way
+for premium voices, sync across devices, and PDF export, plus a
+Founder Deal (€99 lifetime Pro Plus, 100 seats) for early adopters
+who want to lock in.
+
+What I'd love feedback on from people who actually use Anki seriously
+for language learning:
+
+— Is the front/back format right? Some communities prefer cloze
+  deletions on the sentence — would a cloze export option be useful,
+  or is sentence-front / translation-back enough?
+
+— Does the deck hierarchy VozClara::<video-title> mesh with how you
+  organise existing decks, or would a flat VozClara deck work better
+  as the default?
+
+— Source-timestamp links: I'm using youtu.be/<id>?t=<seconds> in the
+  back of each card so review jumps back to the exact moment the word
+  was used. Useful, or noise?
+
+— Is the CEFR-level vocab calibration actually right at your level?
+  It's a prompt heuristic right now — I'd love contrastive feedback
+  ("I'm B2 and this is too easy / too hard").
+
+I'll be in the comments — please be specific if something breaks.
+
+— Christian (Frankfurt)
+```
+
+---
+
+## Post 4 — r/productivity (Day 4, ~18:00 UTC, Friday)
 
 **Subreddit:** r/productivity (3M)
 **Flair:** "Software / Tools"
@@ -287,7 +368,7 @@ because they don't know the source video's structure.
 
 ---
 
-## Post 4 — r/getstudying (Day 6, ~19:00 UTC, Sunday)
+## Post 5 — r/getstudying (Day 6, ~19:00 UTC, Sunday)
 
 **Subreddit:** r/getstudying (700k)
 **Flair:** "Resources / Apps"
@@ -346,9 +427,11 @@ Why I think it's worth your time:
    interval scheduling. One-tap Anki export if you'd rather use your
    own deck.
 
-4. It's free. There's a Pro tier (€9/mo) for premium AI and unlimited
-   packs, but the core study loop — packs, quiz, SRS, Anki export —
-   stays free.
+4. Open during beta. A Pro tier (€9/mo, coming soon) for premium AI
+   and unlimited packs is on the way, plus a Founder Deal (€99 lifetime
+   Pro Plus, 100 seats) for early adopters. Beta users keep extended
+   access on the core study loop — packs, quiz, SRS, Anki export —
+   after the public launch as a thank-you.
 
 What I'd love feedback on:
 
@@ -454,7 +537,7 @@ this is it.
 > the full-product launch later — a second "Show HN" within the same
 > month gets flagged.
 
-### Post 5 — X / Twitter thread (MCP Beat)
+### Post 6 — X / Twitter thread (MCP Beat)
 
 **Tweet 1 — the hook:**
 ```
@@ -507,7 +590,7 @@ extended-thinking reasoning surface streamed back live.
 → https://smithery.ai/server/salvador7eon/vozclara
 ```
 
-### Post 6 — LinkedIn long-form (MCP Beat)
+### Post 7 — LinkedIn long-form (MCP Beat)
 
 ```
 A small win that took a year of reading to set up correctly.
@@ -551,7 +634,7 @@ stack inside your team, I'd love your feedback on what's clunky.
 → https://smithery.ai/server/salvador7eon/vozclara
 ```
 
-### Post 7 — Reddit r/ClaudeAI (MCP Beat)
+### Post 8 — Reddit r/ClaudeAI (MCP Beat)
 
 **Title:** `Built an MCP server for YouTube → multilingual study packs (Claude/Cursor/Windsurf compatible)`
 
