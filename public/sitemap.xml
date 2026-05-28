@@ -35,6 +35,17 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Learn English with YouTube — broadest-market SEO landing.
+       Targets "learn english with youtube", "englisch lernen youtube",
+       "aprender inglés con youtube", "aprender inglês com youtube".
+       Biggest search volume of the language-pair cluster; lower
+       emotional fit than the German page but compensates with reach. -->
+  <url>
+    <loc>https://vozclara.app/learn-english-with-youtube</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>
