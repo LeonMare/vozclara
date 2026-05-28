@@ -112,6 +112,9 @@ const LearnSpanishWithYouTubePage = lazy(() =>
 const LearnPortugueseWithYouTubePage = lazy(() =>
   import('./routes/LearnPortugueseWithYouTubePage').then((m) => ({ default: m.LearnPortugueseWithYouTubePage })),
 );
+const McpPage = lazy(() =>
+  import('./routes/McpPage').then((m) => ({ default: m.McpPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -272,6 +275,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <LearnPortugueseWithYouTubePage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/mcp"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <McpPage />
               </Suspense>
             </AppShell>
           }

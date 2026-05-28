@@ -67,6 +67,17 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- /mcp — developer-facing page for the Model Context Protocol
+       server. Different audience from the consumer landings: AI
+       engineers, Claude Desktop / Cursor / Continue / Claude Code
+       users, anyone arriving from Smithery / Glama / awesome-mcp-
+       servers. Tight install snippet + tool list + endpoint table. -->
+  <url>
+    <loc>https://vozclara.app/mcp</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>
