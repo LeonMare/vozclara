@@ -6,7 +6,7 @@ FSL-1.1-Apache-2.0
 
 ## Notice
 
-Copyright 2026 Christian Gulm dba LEON MARÉ
+Copyright 2026 Christian José Gonçalves Leon dba LEON MARÉ
 
 ## Terms and Conditions
 
