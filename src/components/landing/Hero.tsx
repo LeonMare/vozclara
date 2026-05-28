@@ -52,6 +52,24 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-creme paper">
+      {/* Ambient hero video — dark navy + gold particles. `mix-blend-screen`
+          makes the navy background transparent, so only the warm gold-line
+          pulse and drifting amber bokeh ghost through onto the creme paper.
+          Reads as "live light on the page" rather than a competing visual.
+          Hidden for prefers-reduced-motion, and behind the existing radial
+          gradient so the brand chiaroscuro layering is preserved. */}
+      <video
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40 mix-blend-screen motion-reduce:hidden"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden
+      >
+        <source src="/hero-loop.mp4" type="video/mp4" />
+      </video>
+
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[75vh] opacity-70"
         style={{
