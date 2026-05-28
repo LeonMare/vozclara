@@ -24,6 +24,17 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Learn German with YouTube — founder-story-aligned SEO landing.
+       Targets "learn german with youtube", "deutsch lernen youtube",
+       "aprender alemán con youtube". Highest emotional fit because
+       the founder story IS exactly this audience (Spanish partner +
+       German content in Frankfurt). -->
+  <url>
+    <loc>https://vozclara.app/learn-german-with-youtube</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>

@@ -100,6 +100,9 @@ const CreatorNotePage = lazy(() =>
 const YouTubeToAnkiPage = lazy(() =>
   import('./routes/YouTubeToAnkiPage').then((m) => ({ default: m.YouTubeToAnkiPage })),
 );
+const LearnGermanWithYouTubePage = lazy(() =>
+  import('./routes/LearnGermanWithYouTubePage').then((m) => ({ default: m.LearnGermanWithYouTubePage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -220,6 +223,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <YouTubeToAnkiPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/learn-german-with-youtube"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <LearnGermanWithYouTubePage />
               </Suspense>
             </AppShell>
           }
