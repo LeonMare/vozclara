@@ -89,6 +89,18 @@
     <priority>0.85</priority>
   </url>
 
+  <!-- /privacy-first-ai-study-tool — positioning page for the
+       EU-tech + privacy-conscious audience. Five privacy promises,
+       comparison vs typical summarizers, GDPR Art. 13 + 17 +
+       EU AI Act Art. 50(1) + 50(2) compliance points. Different
+       conversion shape from intent-volume landings — lower traffic
+       ceiling, higher conversion among EU privacy-aware segment. -->
+  <url>
+    <loc>https://vozclara.app/privacy-first-ai-study-tool</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>

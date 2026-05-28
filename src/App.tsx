@@ -118,6 +118,9 @@ const McpPage = lazy(() =>
 const KnowledgePacksPage = lazy(() =>
   import('./routes/KnowledgePacksPage').then((m) => ({ default: m.KnowledgePacksPage })),
 );
+const PrivacyFirstStudyToolPage = lazy(() =>
+  import('./routes/PrivacyFirstStudyToolPage').then((m) => ({ default: m.PrivacyFirstStudyToolPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -298,6 +301,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <KnowledgePacksPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/privacy-first-ai-study-tool"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <PrivacyFirstStudyToolPage />
               </Suspense>
             </AppShell>
           }
