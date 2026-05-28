@@ -14,6 +14,16 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- YouTube → Anki — SEO landing for the killer-feature intent
+       cluster. Targets "youtube to anki", "convert youtube to anki",
+       "youtube anki export", "youtube to apkg" queries. Conversion
+       funnel feeds /new same as the homepage hero. -->
+  <url>
+    <loc>https://vozclara.app/youtube-to-anki</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>

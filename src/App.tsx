@@ -97,6 +97,9 @@ const CreatorNotesIndex = lazy(() =>
 const CreatorNotePage = lazy(() =>
   import('./routes/CreatorNotePage').then((m) => ({ default: m.CreatorNotePage })),
 );
+const YouTubeToAnkiPage = lazy(() =>
+  import('./routes/YouTubeToAnkiPage').then((m) => ({ default: m.YouTubeToAnkiPage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -207,6 +210,16 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <PricingPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/youtube-to-anki"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <YouTubeToAnkiPage />
               </Suspense>
             </AppShell>
           }
