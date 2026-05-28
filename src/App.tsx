@@ -121,6 +121,12 @@ const KnowledgePacksPage = lazy(() =>
 const PrivacyFirstStudyToolPage = lazy(() =>
   import('./routes/PrivacyFirstStudyToolPage').then((m) => ({ default: m.PrivacyFirstStudyToolPage })),
 );
+const LearnFrenchWithYouTubePage = lazy(() =>
+  import('./routes/LearnFrenchWithYouTubePage').then((m) => ({ default: m.LearnFrenchWithYouTubePage })),
+);
+const LearnItalianWithYouTubePage = lazy(() =>
+  import('./routes/LearnItalianWithYouTubePage').then((m) => ({ default: m.LearnItalianWithYouTubePage })),
+);
 
 /**
  * Scroll to top on every route change. SPA navigation otherwise inherits
@@ -311,6 +317,26 @@ export default function App() {
             <AppShell>
               <Suspense fallback={<RouteSkeleton />}>
                 <PrivacyFirstStudyToolPage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/learn-french-with-youtube"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <LearnFrenchWithYouTubePage />
+              </Suspense>
+            </AppShell>
+          }
+        />
+        <Route
+          path="/learn-italian-with-youtube"
+          element={
+            <AppShell>
+              <Suspense fallback={<RouteSkeleton />}>
+                <LearnItalianWithYouTubePage />
               </Suspense>
             </AppShell>
           }
