@@ -151,6 +151,14 @@ export function Hero() {
               <p className="mt-2.5 font-sans text-[12px] text-graphit/65">
                 {trustNote(locale)}
               </p>
+              {/* Anki signal — single line, gold-deep eyebrow register. The
+                  concrete killer feature that separates us from the generic
+                  YouTube-summarizer category. Placed under the trust note so
+                  it lands the moment a hesitant visitor would scan for
+                  reasons. */}
+              <p className="mt-1 font-sans text-[12px] italic text-gold-deep">
+                {ankiSignal(locale)}
+              </p>
               {error && (
                 <p role="alert" className="mt-2 font-sans text-sm text-red-700">{error}</p>
               )}
@@ -216,4 +224,17 @@ function trustNote(locale: string): string {
   if (locale.startsWith('pt')) return 'Grátis para experimentar. Sem registo. Pronto num instante.';
   if (locale.startsWith('de')) return 'Kostenlos testen. Ohne Anmeldung. Sofort startklar.';
   return 'Free to try. No signup. Start instantly.';
+}
+
+// Anki signal — surfaced as a single italic line beneath the trust note.
+// YouTube → Anki is the most concrete differentiator we have versus the
+// generic YouTube-summarizer category (Eightify, NoteGPT, Recall, etc.
+// all do summaries; none ship a real .apkg deck per video). Naming it
+// out loud at the moment of hesitation moves more first-paste conversions
+// than any other line on this page.
+function ankiSignal(locale: string): string {
+  if (locale.startsWith('es')) return 'Cualquier vídeo, mazo Anki en un clic.';
+  if (locale.startsWith('pt')) return 'Qualquer vídeo, deck Anki num clique.';
+  if (locale.startsWith('de')) return 'Jedes Video, Anki-Deck in einem Klick.';
+  return 'Any video, Anki deck in one click.';
 }

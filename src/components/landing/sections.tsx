@@ -1033,7 +1033,7 @@ function audienceTiles(locale: string): AudienceTile[] {
       audience: 'language',
       title: 'Aprende un idioma con vídeo real.',
       body: 'Guarda noticias en alemán, podcasts en inglés, vlogs en portugués. Recibe vocabulario adaptado a tu nivel, citas clave y material de práctica.',
-      bullets: ['Vocabulario por nivel MCER (A1–C1)', 'Shadowing y pronunciación', 'Exportación a Anki en un clic'],
+      bullets: ['YouTube → Anki en un clic', 'Vocabulario por nivel MCER (A1–C1)', 'Shadowing y pronunciación'],
     },
     {
       audience: 'news',
@@ -1053,7 +1053,7 @@ function audienceTiles(locale: string): AudienceTile[] {
       audience: 'language',
       title: 'Aprende um idioma com vídeo real.',
       body: 'Guarda notícias em alemão, podcasts em inglês, vlogs em espanhol. Recebe vocabulário adaptado ao teu nível, citações-chave e material de prática.',
-      bullets: ['Vocabulário por nível QECR (A1–C1)', 'Shadowing e pronúncia', 'Exportação para Anki num clique'],
+      bullets: ['YouTube → Anki num clique', 'Vocabulário por nível QECR (A1–C1)', 'Shadowing e pronúncia'],
     },
     {
       audience: 'news',
@@ -1073,7 +1073,7 @@ function audienceTiles(locale: string): AudienceTile[] {
       audience: 'language',
       title: 'Lern eine Sprache mit echtem Video.',
       body: 'Speichere Tagesschau, spanische Podcasts, englische YouTuber. Bekomm Vokabular auf deinem Niveau, Schlüssel-Zitate und Übungs-Material.',
-      bullets: ['Vokabular nach GER-Niveau (A1–C1)', 'Shadowing & Aussprache', 'Anki-Export in einem Klick'],
+      bullets: ['YouTube → Anki in einem Klick', 'Vokabular nach GER-Niveau (A1–C1)', 'Shadowing & Aussprache'],
     },
     {
       audience: 'news',
@@ -1093,7 +1093,7 @@ function audienceTiles(locale: string): AudienceTile[] {
       audience: 'language',
       title: 'Learn a language from real video.',
       body: 'Save German news, Spanish podcasts, French YouTubers. Get vocabulary tuned to your level, key quotes, and practice material.',
-      bullets: ['Vocabulary by CEFR level (A1–C1)', 'Shadowing & pronunciation', 'Anki export in one click'],
+      bullets: ['YouTube → Anki in one click', 'Vocabulary by CEFR level (A1–C1)', 'Shadowing & pronunciation'],
     },
     {
       audience: 'news',
