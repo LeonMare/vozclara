@@ -383,7 +383,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Apuntarme a la lista',
       requestAccess: 'Solicitar acceso',
       waitlistConfirm: '¡Gracias! Apuntado. Te avisaremos cuando esté disponible.',
-      disclaimer: 'Los planes de pago llegarán cuando la app esté madura. Hasta entonces, todo gratis y sin cuenta.',
+      disclaimer: 'Mientras estemos en beta, todo abierto. Con el launch público arrancan los planes pagos — los miembros beta conservan acceso ampliado como agradecimiento.',
     };
   }
   if (lang.startsWith('pt')) {
@@ -392,7 +392,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Inscrever-me na lista',
       requestAccess: 'Solicitar acesso',
       waitlistConfirm: 'Obrigado! Inscrito. Avisamos quando estiver disponível.',
-      disclaimer: 'Os planos pagos chegam quando a app estiver madura. Até lá, tudo grátis e sem conta.',
+      disclaimer: 'Enquanto estivermos em beta, tudo aberto. Com o launch público arrancam os planos pagos — os membros da beta mantêm acesso alargado como agradecimento.',
     };
   }
   if (lang.startsWith('de')) {
@@ -401,7 +401,7 @@ function pricingCtaLabels(locale: string) {
       waitlist: 'Auf Warteliste eintragen',
       requestAccess: 'Zugang anfragen',
       waitlistConfirm: 'Danke! Eingetragen. Wir melden uns wenn es verfügbar ist.',
-      disclaimer: 'Bezahlte Pläne kommen, wenn die App reif ist. Bis dahin: alles gratis, ohne Anmeldung.',
+      disclaimer: 'Solang wir in der Beta sind, alles offen. Beim öffentlichen Launch starten die bezahlten Pläne — Beta-Nutzer behalten erweiterten Zugang als Dankeschön.',
     };
   }
   return {
@@ -409,7 +409,7 @@ function pricingCtaLabels(locale: string) {
     waitlist: 'Join waitlist',
     requestAccess: 'Request access',
     waitlistConfirm: 'Thanks! You\'re on the list. We\'ll let you know when it ships.',
-    disclaimer: 'Paid tiers arrive when the app is mature. Until then, everything is free — no account needed.',
+    disclaimer: 'Open while VozClara is in beta. Paid tiers ship with public launch — beta users keep extended access as a thank-you.',
   };
 }
 
