@@ -56,6 +56,17 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Learn Portuguese with YouTube — closes the four-locale square.
+       Handles both Brazilian (Globo News, Manual do Mundo) and
+       European (RTP) varieties as separate sources. Smaller market
+       than EN / ES / DE but VozClara is the only tool that handles
+       both PT variants natively. -->
+  <url>
+    <loc>https://vozclara.app/learn-portuguese-with-youtube</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>
