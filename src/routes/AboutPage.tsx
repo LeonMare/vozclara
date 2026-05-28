@@ -181,10 +181,6 @@ function aboutLabels(locale: string) {
         body: 'Vectorización del conocimiento para librerías de cientos de Packs. La pregunta "¿qué dije en abril sobre IA?" encuentra el Pack adecuado en segundos.',
       },
       {
-        title: 'Dominio propio',
-        body: 'vozclara.leonmare.de — junto al resto de la familia LEON MARÉ.',
-      },
-      {
         title: 'Repeticiones espaciadas',
         body: 'Los Quiz y Vocabulario de tus Packs en formato de tarjeta. Aprender de verdad lo que has guardado.',
       },
@@ -233,7 +229,6 @@ function aboutLabels(locale: string) {
     roadmapItems: [
       { title: 'Voz de estúdio', body: 'Áudio narrado com IA premium em vez da voz do navegador. Infraestrutura já construída, falta ativação.' },
       { title: 'Pesquisa semântica em escala', body: 'Vetorização do conhecimento para bibliotecas de centenas de Packs.' },
-      { title: 'Domínio próprio', body: 'vozclara.leonmare.de — junto ao resto da família LEON MARÉ.' },
       { title: 'Repetições espaçadas', body: 'Os Quiz e Vocabulário dos teus Packs em formato de cartão.' },
       { title: 'Notion / Obsidian sync', body: 'Exportação automática para o teu sistema de notas.' },
     ],
@@ -277,7 +272,6 @@ function aboutLabels(locale: string) {
     roadmapItems: [
       { title: 'Studio-Stimme', body: 'Audio-Vorlesung mit KI-Premium-Stimme statt Browser-Stimme. Infrastruktur ist gebaut, fehlt nur die Aktivierung.' },
       { title: 'Semantische Suche im großen Maßstab', body: 'Vektorisierung deines Wissens für Bibliotheken mit hunderten Packs. Die Frage „was sagte ich im April über KI?" findet den richtigen Pack in Sekunden.' },
-      { title: 'Eigene Domain', body: 'vozclara.leonmare.de — zur Rest-Familie LEON MARÉ.' },
       { title: 'Spaced Repetition', body: 'Quiz und Vokabeln deiner Packs als Karteikarten. Wirklich behalten was du gespeichert hast.' },
       { title: 'Notion / Obsidian Sync', body: 'Automatischer Export ins Notiz-System. Heute: manueller Markdown-Download. Morgen: Hintergrund-Sync.' },
     ],
@@ -321,7 +315,6 @@ function aboutLabels(locale: string) {
     roadmapItems: [
       { title: 'Studio voice', body: 'Audio narration with a premium AI voice instead of the browser default. Infrastructure already built, activation pending.' },
       { title: 'Semantic search at scale', body: 'Vector embeddings of your knowledge for libraries of hundreds of Packs. "What did I say about AI in April?" finds the right Pack in seconds.' },
-      { title: 'Own domain', body: 'vozclara.leonmare.de — alongside the rest of the LEON MARÉ family.' },
       { title: 'Spaced repetition', body: 'Quiz and Vocabulary from your Packs as flashcards. Actually remember what you saved.' },
       { title: 'Notion / Obsidian sync', body: 'Automatic export into your notes system. Today: manual Markdown download. Tomorrow: background sync.' },
     ],

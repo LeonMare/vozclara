@@ -83,6 +83,92 @@
     />
 
     <title>Voz Clara · A LEON MARÉ product</title>
+
+    <!-- Schema.org structured data via JSON-LD. Single @graph with
+         three cross-referenced entities so Google can render rich
+         snippets: WebSite (Sitelinks search box), Organization (LEON
+         MARÉ as publisher), SoftwareApplication (free + founder-deal
+         offers, multilingual support, EducationalApplication category).
+         %VITE_SITE_URL% gets substituted at build time same as the
+         og:url + og:image lines above. -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "%VITE_SITE_URL%/#website",
+      "url": "%VITE_SITE_URL%/",
+      "name": "VozClara",
+      "alternateName": "VozClara by LEON MARÉ",
+      "description": "Multilingual YouTube to Knowledge Pack engine. Summary, key ideas, vocabulary, flashcards, quiz, and transcript in Spanish, Portuguese, German, or English.",
+      "inLanguage": ["es", "pt", "de", "en"],
+      "publisher": { "@id": "%VITE_SITE_URL%/#org" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "%VITE_SITE_URL%/library?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "%VITE_SITE_URL%/#org",
+      "name": "LEON MARÉ",
+      "url": "https://leonmare.de",
+      "founder": {
+        "@type": "Person",
+        "name": "Christian José Gonçalves Leon"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "%VITE_SITE_URL%/#app",
+      "name": "VozClara",
+      "url": "%VITE_SITE_URL%/",
+      "applicationCategory": "EducationalApplication",
+      "applicationSubCategory": "Language Learning",
+      "operatingSystem": "Web",
+      "description": "Turn any YouTube video into a structured Knowledge Pack — summary, flashcards, quiz, transcript — in Spanish, Portuguese, German, or English. Anki export, OAuth-gated library search, RAG Q&A on a single pack, MCP server for Claude Desktop and Cursor.",
+      "inLanguage": ["es", "pt", "de", "en"],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free during beta",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "name": "Founder Deal — lifetime Pro Plus, capped at 100 seats",
+          "price": "99",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/LimitedAvailability",
+          "url": "%VITE_SITE_URL%/founder"
+        }
+      ],
+      "publisher": { "@id": "%VITE_SITE_URL%/#org" },
+      "featureList": [
+        "YouTube transcript extraction with timestamps",
+        "Multilingual summaries (ES, PT, DE, EN)",
+        "CEFR-tuned vocabulary extraction (A1 to C1)",
+        "Anki .apkg deck export with sentence-context cards",
+        "Spaced repetition review",
+        "Voice shadowing with pronunciation scoring",
+        "AI tutor chat per pack",
+        "Library search across saved packs",
+        "MCP server for Claude Desktop, Cursor, Continue",
+        "OAuth 2.1 with PKCE S256",
+        "GDPR Article 13 + 17 compliant, EU AI Act Article 50 compliant",
+        "Cookieless analytics, no tracking, no model training on user content"
+      ]
+    }
+  ]
+}
+    </script>
   </head>
   <body>
     <div id="root"></div>
