@@ -46,6 +46,16 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Learn Spanish with YouTube — 4th most-spoken language globally,
+       huge market across Anglophone + Germanophone + Lusophone
+       learners. Channel ladder: Dreaming Spanish, Easy Spanish,
+       BBC Mundo, RTVE. -->
+  <url>
+    <loc>https://vozclara.app/learn-spanish-with-youtube</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Discover — Michelin-style top-rated. High refresh, high priority. -->
   <url>
     <loc>https://vozclara.app/discover</loc>
