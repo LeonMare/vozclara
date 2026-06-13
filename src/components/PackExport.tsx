@@ -5,6 +5,7 @@ import {
   downloadFile,
   exportFilename,
   packToMarkdown,
+  packToObsidianMarkdown,
   packToText,
   type ExportFormat,
 } from '../lib/export';
@@ -69,6 +70,15 @@ export function PackExport({ pack }: Props) {
     downloadFile(exportFilename(pack, ext), content, mime);
     setOpen(false);
     flashToast(labels.downloaded);
+  }
+
+  function handleObsidian() {
+    // Obsidian-flavoured Markdown: YAML frontmatter + clickable
+    // [mm:ss] YouTube deep-links + callouts + Dataview vocab table.
+    // The downloaded .md drops straight into a vault folder.
+    downloadFile(exportFilename(pack, 'md'), packToObsidianMarkdown(pack), 'text/markdown');
+    setOpen(false);
+    flashToast(labels.obsidianDone);
   }
 
   async function handleCopy() {
@@ -142,6 +152,11 @@ export function PackExport({ pack }: Props) {
             onClick={() => handleDownload('markdown')}
           />
           <MenuItem
+            label={labels.obsidian}
+            hint="Obsidian"
+            onClick={handleObsidian}
+          />
+          <MenuItem
             label={labels.text}
             hint=".txt"
             onClick={() => handleDownload('text')}
@@ -203,10 +218,12 @@ function exportLabels(locale: string) {
   if (locale.startsWith('es')) return {
     button: 'Exportar',
     markdown: 'Descargar como Markdown',
+    obsidian: 'Enviar a Obsidian',
     text: 'Descargar como texto',
     anki: 'Mazo Anki (vocabulario)',
     copy: 'Copiar al portapapeles',
     downloaded: 'Archivo guardado',
+    obsidianDone: 'Markdown para tu bóveda guardado',
     copied: 'Copiado al portapapeles',
     copyFailed: 'No se pudo copiar',
     ankiPreparing: 'Generando mazo Anki…',
@@ -216,10 +233,12 @@ function exportLabels(locale: string) {
   if (locale.startsWith('pt')) return {
     button: 'Exportar',
     markdown: 'Descarregar como Markdown',
+    obsidian: 'Enviar para o Obsidian',
     text: 'Descarregar como texto',
     anki: 'Baralho Anki (vocabulário)',
     copy: 'Copiar para a área de transferência',
     downloaded: 'Ficheiro guardado',
+    obsidianDone: 'Markdown para o teu cofre guardado',
     copied: 'Copiado',
     copyFailed: 'Não foi possível copiar',
     ankiPreparing: 'A gerar baralho Anki…',
@@ -229,10 +248,12 @@ function exportLabels(locale: string) {
   if (locale.startsWith('de')) return {
     button: 'Exportieren',
     markdown: 'Als Markdown herunterladen',
+    obsidian: 'An Obsidian senden',
     text: 'Als Text herunterladen',
     anki: 'Anki-Deck (Vokabular)',
     copy: 'In die Zwischenablage kopieren',
     downloaded: 'Datei gespeichert',
+    obsidianDone: 'Markdown für deinen Vault gespeichert',
     copied: 'In Zwischenablage kopiert',
     copyFailed: 'Kopieren fehlgeschlagen',
     ankiPreparing: 'Anki-Deck wird erstellt…',
@@ -242,10 +263,12 @@ function exportLabels(locale: string) {
   return {
     button: 'Export',
     markdown: 'Download as Markdown',
+    obsidian: 'Send to Obsidian',
     text: 'Download as plain text',
     anki: 'Anki deck (vocabulary)',
     copy: 'Copy to clipboard',
     downloaded: 'File saved',
+    obsidianDone: 'Markdown for your vault saved',
     copied: 'Copied to clipboard',
     copyFailed: 'Copy failed',
     ankiPreparing: 'Building Anki deck…',

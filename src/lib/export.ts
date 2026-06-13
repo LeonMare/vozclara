@@ -19,6 +19,176 @@ import { SITE_URL } from './site';
 
 export type ExportFormat = 'markdown' | 'text';
 
+/**
+ * Build a YouTube deep-link that opens the source video at a given
+ * second. Used by the Obsidian export so every [mm:ss] citation in
+ * the vault is one click from the exact source moment — the same
+ * click-to-seek promise the in-app citation chips make, preserved
+ * after the pack leaves vozclara.app.
+ */
+function youtubeTimestampUrl(videoId: string, seconds: number): string {
+  return `https://www.youtube.com/watch?v=${videoId}&t=${Math.floor(seconds)}s`;
+}
+
+/** Escape a string for safe use as a double-quoted YAML scalar. */
+function yamlString(s: string): string {
+  return `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+}
+
+/**
+ * Serialise a pack as Obsidian-flavoured Markdown.
+ *
+ * Differs from packToMarkdown in three Obsidian-native ways:
+ *   1. YAML frontmatter — title, source, channel, pack_id, language,
+ *      mode, genre, created, difficulty, tags, aliases. Obsidian reads
+ *      these as note Properties + Dataview can query them.
+ *   2. Timestamps as clickable YouTube deep-links (?t=Ns) — every
+ *      chapter / quote / key-idea citation stays click-to-seek inside
+ *      the vault, not a dead [mm:ss] string.
+ *   3. Obsidian callout for the summary (> [!quote]) + a Dataview-
+ *      friendly vocabulary table.
+ *
+ * Why a separate exporter: the strategic read (Obsidian is a
+ * destination vault, not a competitor — the user already pipes Claude
+ * output into it) means meeting that workflow with a first-class
+ * "lands cleanly in your vault" artefact, rather than a generic .md.
+ */
+export function packToObsidianMarkdown(pack: KnowledgePack): string {
+  const view = activeView(pack);
+  const date = new Date(pack.createdAt).toISOString().split('T')[0];
+  const vid = pack.source.videoId;
+  const tsLink = (sec: number) => `[${formatTime(sec)}](${youtubeTimestampUrl(vid, sec)})`;
+
+  const out: string[] = [];
+
+  // ── YAML frontmatter ───────────────────────────────────────────
+  out.push('---');
+  out.push(`title: ${yamlString(pack.title)}`);
+  out.push(`source: ${pack.source.url}`);
+  if (pack.source.channel) out.push(`channel: ${yamlString(pack.source.channel)}`);
+  out.push(`videoId: ${vid}`);
+  out.push(`pack_id: ${pack.id}`);
+  out.push(`language: ${pack.outputLang}`);
+  out.push(`source_language: ${pack.sourceLang}`);
+  out.push(`mode: ${pack.mode}`);
+  out.push(`genre: ${pack.genre}`);
+  out.push(`created: ${date}`);
+  if (pack.difficulty) out.push(`difficulty: ${pack.difficulty}`);
+  out.push('tags:');
+  out.push('  - vozclara');
+  out.push('  - knowledge-pack');
+  out.push(`  - ${slugify(pack.genre)}`);
+  out.push('aliases:');
+  out.push(`  - ${yamlString(pack.title)}`);
+  out.push('generator: VozClara');
+  out.push(`url: ${SITE_URL}`);
+  out.push('---');
+  out.push('');
+
+  // ── Title + summary callout ────────────────────────────────────
+  out.push(`# ${pack.title}`);
+  out.push('');
+  out.push(`> [!quote] ${view.tldr ?? view.summary.short}`);
+  if (view.tldr && view.summary.short && view.tldr !== view.summary.short) {
+    out.push(`> ${view.summary.short}`);
+  }
+  out.push('');
+  out.push(`**Source:** [${pack.source.channel ? pack.source.channel + ' — ' : ''}YouTube](${pack.source.url})  ·  **${pack.sourceLang.toUpperCase()} → ${pack.outputLang.toUpperCase()}**  ·  **Mode:** ${pack.mode}  ·  **Genre:** ${pack.genre}`);
+  out.push('');
+  out.push('---');
+  out.push('');
+
+  if (view.summary.long) {
+    out.push('## Summary');
+    out.push('');
+    out.push(view.summary.long);
+    out.push('');
+  }
+
+  if (view.keyIdeas.length > 0) {
+    out.push('## Key Ideas');
+    out.push('');
+    view.keyIdeas.forEach((idea, i) => {
+      const cite = idea.timestampSec != null ? `  ${tsLink(idea.timestampSec)}` : '';
+      out.push(`### ${String(i + 1).padStart(2, '0')}. ${idea.title}${cite}`);
+      out.push('');
+      out.push(idea.body);
+      out.push('');
+    });
+  }
+
+  if (view.chapters.length > 0) {
+    out.push('## Chapters');
+    out.push('');
+    view.chapters.forEach((ch) => {
+      out.push(`- ${tsLink(ch.startSec)} — **${ch.title}**: ${ch.summary}`);
+    });
+    out.push('');
+  }
+
+  if (view.actionPlan.length > 0) {
+    out.push('## Action Plan');
+    out.push('');
+    view.actionPlan.forEach((step) => {
+      out.push(`- [ ] ${step}`);
+    });
+    out.push('');
+  }
+
+  if (view.vocabulary.length > 0) {
+    // Dataview-friendly table — Obsidian users can query/sort these.
+    out.push('## Vocabulary');
+    out.push('');
+    out.push('| Term | Translation | Part of speech |');
+    out.push('| --- | --- | --- |');
+    view.vocabulary.forEach((v) => {
+      const term = v.word.replace(/\|/g, '\\|');
+      const tr = v.translation.replace(/\|/g, '\\|');
+      const pos = (v.partOfSpeech ?? '').replace(/\|/g, '\\|');
+      out.push(`| ${term} | ${tr} | ${pos} |`);
+    });
+    out.push('');
+  }
+
+  if (view.quiz.length > 0) {
+    // Quiz as collapsible Obsidian callouts so answers hide until expanded.
+    out.push('## Quiz');
+    out.push('');
+    view.quiz.forEach((q, i) => {
+      out.push(`> [!question]- Q${i + 1}: ${q.question}`);
+      out.push(`> ${q.answer}`);
+      if (q.explanation) {
+        out.push('>');
+        out.push(`> *${q.explanation}*`);
+      }
+      out.push('');
+    });
+  }
+
+  if (view.keyQuotes.length > 0) {
+    out.push('## Quotes');
+    out.push('');
+    view.keyQuotes.forEach((q) => {
+      out.push(`> "${q.text}"`);
+      const meta: string[] = [];
+      if (q.speaker) meta.push(q.speaker);
+      if (q.timestampSec) meta.push(tsLink(q.timestampSec));
+      if (meta.length > 0) out.push(`> — ${meta.join(' · ')}`);
+      if (q.original && q.original !== q.text) {
+        out.push(`> _${q.original}_`);
+      }
+      out.push('');
+    });
+  }
+
+  out.push('---');
+  out.push('');
+  out.push(`> [!info] AI-generated Knowledge Pack · [VozClara](${SITE_URL}) · ${date}`);
+  out.push('> Generated with Llama 3.3 70B (Free / Pro) or Claude Sonnet 4.5 (Pro Plus). Outputs may be wrong, miss nuance, or carry bias — verify before relying on this content. Watermark per EU AI Act Art. 50(2).');
+
+  return out.join('\n');
+}
+
 export function packToMarkdown(pack: KnowledgePack): string {
   const view = activeView(pack);
   const date = new Date(pack.createdAt).toISOString().split('T')[0];
