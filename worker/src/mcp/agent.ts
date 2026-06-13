@@ -130,6 +130,13 @@ const DEPTH_SCHEMA = z
     'Depth of the generated pack. `short` = one-paragraph summary. `standard` = summary + 3-5 key ideas. `deep` = summary + key ideas + glossary + quiz.',
   );
 
+const FORMAT_SCHEMA = z
+  .enum(['standard', 'obsidian'])
+  .default('standard')
+  .describe(
+    'Output format. `standard` = plain prose for chat. `obsidian` = Markdown with YAML frontmatter (source, videoId, languages, tags) ready to write straight into an Obsidian vault or any Markdown knowledge base. Use `obsidian` when the user asks to save the pack to their vault / second brain / notes.',
+  );
+
 export class VozClaraMcpAgent extends McpAgent<McpEnv, undefined, McpProps> {
   server = new McpServer({
     name: 'vozclara',
@@ -166,14 +173,15 @@ export class VozClaraMcpAgent extends McpAgent<McpEnv, undefined, McpProps> {
       {
         title: 'Generate a Knowledge Pack from a YouTube video',
         description:
-          'Use this when the user asks for a summary, key ideas, or study material from a YouTube video. Returns a structured Knowledge Pack: title, short summary, key ideas, and a link to the full pack on vozclara.app.',
+          'Use this when the user asks for a summary, key ideas, or study material from a YouTube video. Returns a structured Knowledge Pack: title, short summary, key ideas, and a link to the full pack on vozclara.app. Pass format="obsidian" to get vault-ready Markdown with YAML frontmatter the user can save to their second brain.',
         inputSchema: {
           url: VIDEO_URL_SCHEMA,
           language: LANG_SCHEMA,
           depth: DEPTH_SCHEMA,
+          format: FORMAT_SCHEMA,
         },
       },
-      async ({ url, language, depth }) => {
+      async ({ url, language, depth, format }) => {
         // 1. Extract YouTube video ID from any valid URL shape.
         const videoId = extractVideoId(url);
         if (!videoId) {
@@ -243,6 +251,43 @@ export class VozClaraMcpAgent extends McpAgent<McpEnv, undefined, McpProps> {
         // users see "Claude Sonnet 4.5", everyone else sees Llama.
         const modelLabel =
           aiProvider === 'anthropic' ? 'Claude Sonnet 4.5' : 'Llama 3.3 70B';
+
+        // Obsidian format: wrap the prose in YAML frontmatter + footer
+        // so the calling agent (Claude Code, Cursor) can write it
+        // straight into a vault. The worker only has the prose blob +
+        // metadata — not a fully structured pack — so the body stays
+        // the AI prose, but the frontmatter + source link make it a
+        // first-class vault note. Mirrors the in-app "Send to Obsidian"
+        // export (src/lib/export.ts) on the MCP surface.
+        if (format === 'obsidian') {
+          const vault = wrapObsidian(aiResponse, {
+            videoId,
+            sourceUrl: `https://www.youtube.com/watch?v=${videoId}`,
+            sourceLanguage: detectedLang,
+            outputLanguage: language,
+            depth,
+            model: aiModel,
+            packUrl,
+          });
+          return {
+            content: [{ type: 'text', text: vault }],
+            structuredContent: {
+              videoId,
+              sourceLanguage: detectedLang,
+              outputLanguage: language,
+              depth,
+              format,
+              packUrl,
+              provenance: {
+                model: aiModel,
+                provider: aiProvider,
+                watermark: 'vozclara.app',
+                ai_act_disclosure:
+                  'EU AI Act Art. 50(2) — synthetic content marked as AI-generated.',
+              },
+            },
+          };
+        }
 
         return {
           content: [
@@ -637,6 +682,57 @@ function depthToMode(depth: 'short' | 'standard' | 'deep'): string {
   if (depth === 'short') return 'brief';
   if (depth === 'deep') return 'learn';
   return 'brief';
+}
+
+/**
+ * Wrap an AI-generated pack (prose) in Obsidian-flavoured Markdown:
+ * YAML frontmatter the vault reads as note Properties + a footer with
+ * the source link, pack URL, and the EU AI Act Art. 50(2) watermark.
+ *
+ * The worker only holds the prose blob + metadata (it doesn't parse
+ * the output into structured sections the way the web app does), so
+ * the body is the prose as-returned. The frontmatter + source link
+ * are what make it land cleanly in a vault. Mirrors the in-app
+ * "Send to Obsidian" export so the MCP surface and the web surface
+ * produce the same shape of artefact.
+ */
+function wrapObsidian(
+  body: string,
+  meta: {
+    videoId: string;
+    sourceUrl: string;
+    sourceLanguage: string;
+    outputLanguage: string;
+    depth: string;
+    model: string;
+    packUrl: string;
+  },
+): string {
+  const fm: string[] = [];
+  fm.push('---');
+  fm.push(`source: ${meta.sourceUrl}`);
+  fm.push(`videoId: ${meta.videoId}`);
+  fm.push(`source_language: ${meta.sourceLanguage}`);
+  fm.push(`language: ${meta.outputLanguage}`);
+  fm.push(`depth: ${meta.depth}`);
+  fm.push('tags:');
+  fm.push('  - vozclara');
+  fm.push('  - knowledge-pack');
+  fm.push('generator: VozClara');
+  fm.push(`model: ${meta.model}`);
+  fm.push('url: https://vozclara.app');
+  fm.push('---');
+  fm.push('');
+
+  const footer: string[] = [];
+  footer.push('');
+  footer.push('---');
+  footer.push('');
+  footer.push(`> [!info] [Open the interactive pack on VozClara](${meta.packUrl}) — flashcards, quiz, click-to-seek citations.`);
+  footer.push(`> Source video: [${meta.sourceUrl}](${meta.sourceUrl})`);
+  footer.push(`> AI-generated by VozClara using ${meta.model}. Outputs may be wrong — verify before relying on this content. Watermark per EU AI Act Art. 50(2).`);
+
+  return fm.join('\n') + body.trim() + '\n' + footer.join('\n');
 }
 
 /**
