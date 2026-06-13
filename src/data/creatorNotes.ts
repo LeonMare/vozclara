@@ -2154,6 +2154,54 @@ export const CREATOR_NOTES: CreatorNote[] = [
     metaDescription:
       'A reading note on Lex Fridman’s Yann LeCun interview — the architectural argument against LLMs as the path, the open-source bet, and the Joint Embedding Predictive Architecture.',
   },
+
+  // ─── Julian Ivanov · KI-Automatisierung (DE wedge) ──────────────
+  {
+    slug: 'julian-ivanov-claude-video-pipeline',
+    creator: 'Julian Ivanov',
+    creatorHandle: 'julianivanov', // TODO(verify): exact @handle of "Julian Ivanov | KI-Automatisierung"
+    videoTitle: 'So lässt du Claude jedes Video für dich anschauen',
+    youtubeId: 'R403PGBArDY',
+    publishedDate: '2025-01-01', // TODO(verify): exact upload date
+    durationMin: 18,
+    topics: ['ki-automatisierung', 'claude code', 'obsidian', 'zweites gehirn', 'pkm'],
+    lang: 'de',
+    intro:
+      'Julian Ivanov zeigt in dieser Folge, wie man Claude eine Pipeline baut, die jedes YouTube-Video für einen anschaut und als strukturierte Notiz ins zweite Gehirn legt. Das Ziel ist richtig — das Video ist der beste Beweis, dass die Methode trägt. Die offene Frage ist nur, ob man die Pipeline am Wochenende selbst baut oder ob das jemand anderes für einen erledigt.',
+    sections: [
+      {
+        heading: 'Die These ist richtig — das ist das Wichtige zuerst',
+        body:
+          'Ivanovs Ausgangspunkt stimmt: Die meisten langen Videos schaut man einmal und erinnert sich drei Wochen später nur, dass sie gut waren — nicht, was drin stand. Ein Modell, das die Folge vorverdaut und das Ergebnis als Markdown in den Vault legt, löst genau dieses Gedächtnisproblem. Wer das Video kritisch liest, sollte mit dem Ziel nicht hadern. Der eigentliche Streit beginnt eine Ebene tiefer: nicht ob, sondern womit.',
+      },
+      {
+        heading: 'Eine Pipeline ist ein Bauprojekt, kein Werkzeug',
+        body:
+          'Was im Video nach zehn Minuten Konfiguration aussieht, ist in der Praxis ein Stack: ein Transkript-Dienst, Claude Code, ein Prompt-Template, eine Markdown-Vorlage, ein Glossar-Schritt, eine Anki-Brücke. Jeder Teil funktioniert — bis YouTube etwas an seiner Seite ändert und die Transkript-Schicht bricht. Dann ist man nicht mehr Wissensarbeiter, sondern Wartungsingenieur der eigenen Notiz-Maschine. Das ist kein Argument gegen Ivanovs Anleitung, die sauber ist. Es ist ein Argument über Opportunitätskosten: Ein Wochenende Pipeline-Bau plus die laufende Wartung ist teuer für jemanden, dessen knappste Ressource die Zeit ist.',
+      },
+      {
+        heading: 'Was eine Pipeline produziert und was ein fertiger Pack ist',
+        body:
+          'Der selbstgebaute Workflow liefert einen Rohtext: eine Zusammenfassung, vielleicht ein paar Stichpunkte. Ein redaktioneller Pack ist etwas anderes — eine editorial gesetzte Einheit mit klickbaren [mm:ss]-Zitaten, die zurück an die exakte Quellstelle springen, mit einem Glossar in der Zielsprache, mit FSRS-geplanten Karteikarten statt eines SM-2-Plugins. Diese Affordanzen entstehen nicht aus einer Datenpipeline; sie entstehen aus Produktdesign. Genau diese Schicht überspringt der DIY-Stack, weil sie sich nicht prompten lässt.',
+      },
+      {
+        heading: 'Der mehrsprachige Punkt, den der Vault nicht löst',
+        body:
+          'Ivanovs Publikum arbeitet deutsch, und der Vault speichert, was man hineinschreibt — in der Sprache, in der man es schreibt. Eine englische Huberman-Folge in einen deutschen Pack mit spanischem Glossar zu verwandeln, wäre im selbstgebauten Workflow ein eigener Prompt-Engineering-Abend. Cross-lingual als Default ist kein Plugin-Schalter, sondern eine Architekturentscheidung — und sie ist der eine Punkt, an dem ein fertiges Werkzeug strukturell etwas kann, das die Wochenend-Pipeline erst nachbauen müsste.',
+      },
+      {
+        heading: 'Die Versöhnung: der Pack gehört trotzdem in deinen Vault',
+        body:
+          'Das ist kein Entweder-oder. Obsidian ist im Video die richtige Ablage — und bleibt es. Ein Pack lässt sich als Obsidian-Markdown exportieren: mit YAML-Frontmatter, mit den Zitaten als anklickbaren YouTube-Deep-Links, mit einer Dataview-fähigen Vokabeltabelle. Das zweite Gehirn behält seine Hoheit über die Daten; nur der Produktionsschritt davor wird ausgelagert an etwas, das ihn redaktionell und in vier Sprachen erledigt. Wir schreiben den Pack. Du behältst den Vault.',
+      },
+    ],
+    takeaway:
+      'Die richtige Frage ist nicht „selbst bauen oder kaufen", sondern: Ist die vorverdaute Notiz ein fertiges Artefakt oder ein Rohtext, den du noch redigieren musst?',
+    relatedSlugs: ['doktor-whatson-quantencomputer', 'hotel-matze-podcast-interview'],
+    metaTitle: 'Claude jedes Video anschauen lassen — und was wirklich in dein zweites Gehirn fließt',
+    metaDescription:
+      'Eine redaktionelle Notiz zu Julian Ivanovs „So lässt du Claude jedes Video für dich anschauen": warum die Pipeline-zum-Selberbauen mehr Stunden kostet als sie spart, was ein fertiger Knowledge Pack mehr liefert (Zitate, FSRS, Cross-lingual) — und wie er trotzdem in deinen Obsidian-Vault wandert.',
+  },
 ];
 
 /** Lookup helper — returns the note for a slug, or null. */
